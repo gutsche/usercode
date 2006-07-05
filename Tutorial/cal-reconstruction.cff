@@ -1,0 +1,163 @@
+#
+# cal reconstruction
+#
+
+#
+# include geometry service
+#
+include "Geometry/CMSCommonData/data/cmsIdealGeometryXML.cfi"
+
+#
+# include ECAl and HCAL geometry services
+#
+es_module = EcalPreshowerGeometryEP {}
+es_module = EcalBarrelGeometryEP {}
+es_module = EcalEndcapGeometryEP {}
+es_module = HcalHardcodeGeometryEP {}
+es_module = CaloTowerHardcodeGeometryEP {}
+es_module = CaloGeometryBuilder {}
+es_module = CaloTowerConstituentsMapBuilder {
+  untracked string MapFile="Geometry/CaloTopology/data/CaloTowerEEGeometric.map.gz"
+}
+es_module = HcalTopologyIdealEP {}
+es_module = HcalDbProducer {}
+es_source es_hardcode = HcalHardcodeCalibrations
+{
+  untracked vstring toGet =
+  {
+    "Pedestals", "PedestalWidths",
+    "Gains", "GainWidths",
+    "QIEShape", "QIEData",
+    "ChannelQuality", "ElectronicsMap"
+  }
+}
+
+#
+# geometry needed for clustering
+#
+#include "RecoEcal/EgammaClusterProducers/data/geometryForClustering.cff"
+
+#
+# include magnetic field service
+#
+include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
+
+#
+# Get hardcoded conditions the same used for standard digitization
+es_source = EcalTrivialConditionRetriever 
+{
+  untracked double adcToGeVEBConstant = 0.037
+}
+
+#
+# include digitization of ECAL signals
+#
+include "SimCalorimetry/EcalSimProducers/data/ecaldigi.cfi"
+
+#
+# include digitization of HCAL signals
+#
+include "SimCalorimetry/HcalSimProducers/data/hcaldigi.cfi"
+
+#
+# include conversion of uncalibrated ecal rechits
+#
+include "RecoLocalCalo/EcalRecProducers/data/EcalWeightUncalibratedRecHitProducer.cfi"
+
+#
+# include conversion of calibrated rechits
+#
+include "RecoLocalCalo/EcalRecProducers/data/EcalRecHitProducer.cfi"
+
+#
+# include ES RecHit producer (from Digis)
+#
+#include "RecoLocalCalo/EcalRecProducers/data/ESRecHitProducer.cfi"	
+
+#
+# include island clustering
+#
+include "RecoEcal/EgammaClusterProducers/data/islandClusteringSequence.cff"
+
+#
+# include hybrid clustering
+#
+include "RecoEcal/EgammaClusterProducers/data/hybridClusteringSequence.cff"
+
+#
+# include HCAL simple reconstruction
+#
+module recohbhe = HcalSimpleReconstructor 
+{
+  int32 firstSample = 4
+  int32 samplesToAdd = 4
+  string Subdetector = 'HBHE'
+  string digiLabel = 'hcaldigi'
+  bool correctForTimeslew = true
+}
+
+module recoho = HcalSimpleReconstructor {
+  int32 firstSample = 4
+  int32 samplesToAdd = 4
+  string Subdetector = 'HO'
+  string digiLabel = 'hcaldigi'
+  bool correctForTimeslew = false
+}
+
+module recohf = HcalSimpleReconstructor {
+  int32 firstSample = 3
+  int32 samplesToAdd = 1
+  string Subdetector = 'HF'
+  string digiLabel = 'hcaldigi'
+  bool correctForTimeslew = true
+}
+
+
+#
+# include CaloTowerCreator
+#
+module towermaker = CaloTowersCreator 
+{
+  double HBThreshold = 0.9     // GeV, Scheme B
+  double HOThreshold = 1.1     // GeV, Scheme B
+  double HESThreshold = 1.4    // GeV, Scheme B
+  double HEDThreshold = 1.4    // GeV, Scheme B
+  double HF1Threshold = 0.5    // GeV, ORCA value
+  double HF2Threshold = 0.5    // GeV, ORCA value
+  double EBThreshold = 0.09    // GeV, ORCA value w/o selective readout
+  double EEThreshold = 0.45    // GeV, ORCA value w/o selective readout
+  
+  double EBSumThreshold = 0.2  // GeV, Scheme B
+  double EESumThreshold = 0.45 // GeV, Scheme B
+  double HcalThreshold = -1000 // GeV, -1000 means cut not used 
+  double EcutTower = -1000     // GeV, -1000 means cut not used
+  double EBWeight = 1.0
+  double EEWeight = 1.0
+  double HBWeight = 1.0
+  double HESWeight = 1.0
+  double HEDWeight = 1.0
+  double HOWeight = 1.0
+  double HF1Weight = 1.0
+  double HF2Weight = 1.0
+  bool UseHO = true
+  string hbheInput = "recohbhe"
+  string hoInput = "recoho"
+  string hfInput = "recohf"
+  vstring ecalInputs = {"ecalrechit/EcalRecHitsEB" }
+  untracked bool AllowMissingInputs = true
+}
+
+#
+# define CAL reconstruction sequence
+#
+sequence cal-reconstruction =
+{
+ ecaldigi,
+  hcaldigi,
+  ecaluncalibrechit, 
+  ecalrechit,
+  recohbhe, 
+  recoho, 
+  recohf,
+  towermaker
+}

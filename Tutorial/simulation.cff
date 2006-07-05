@@ -1,0 +1,42 @@
+#
+# Geant4 simulation of generated events
+#
+
+#
+# include geometry service
+#
+include "Geometry/CMSCommonData/data/cmsIdealGeometryXML.cfi"
+
+#
+# tracker numbering
+# needed for tracker simulation
+#
+include "Geometry/TrackerNumberingBuilder/data/trackerNumberingGeometry.cfi"
+
+#
+# include magnetic field service
+#
+include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
+
+#
+# include geant4 simulation
+#
+include "SimG4Core/Application/data/SimG4Object.cfi"
+
+#
+# Mixing module 
+# needed to digitize Ecal/Hcal/Muon
+#
+module mix = MixingModule
+{
+  int32 bunchspace = 25
+}
+
+#
+# define simulation sequence
+#
+sequence simulation =
+{
+  SimG4Object,
+  mix
+}
