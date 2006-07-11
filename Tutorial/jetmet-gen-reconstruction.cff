@@ -1,0 +1,68 @@
+#
+# Jet/MET reconstruction from generated information
+#
+
+#
+# include geometry service
+#
+include "Geometry/CMSCommonData/data/cmsIdealGeometryXML.cfi"
+
+#
+# include magnetic field service
+#
+include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
+
+#
+# include the PDT service
+#
+include "SimGeneral/HepPDTESSource/data/pdt.cfi"
+
+#
+# make candidates from generator particles
+#
+module genCandidates = HepMCCandidateProducer {
+  string src = "source"
+  untracked bool verbose = true
+  bool stableOnly = true
+  vstring excludeList = { }
+}
+
+#
+# Kt Jets
+#
+include "RecoJets/JetProducers/data/GenJetKt.cfi"
+
+#
+# Cone Jets MCone5
+#
+include "RecoJets/JetProducers/data/GenJetMcone5.cfi"
+
+#
+# Cone Jets MCone7
+#
+include "RecoJets/JetProducers/data/GenJetMcone7.cfi"
+
+#
+# Cone Jets ICone5
+#
+include "RecoJets/JetProducers/data/GenJetIcone5.cfi"
+
+#
+# Missing ET
+#
+module genMet =  METProducer {
+  string src = "genCandidates"
+}
+
+#
+# define Jet/MET reconstruction sequence
+#
+sequence jetmet-gen-reconstruction =
+{
+  genCandidates,
+  GenJetKt,
+  GenJetMcone5,
+  GenJetMcone7,
+  GenJetIcone5,
+  genMet
+}

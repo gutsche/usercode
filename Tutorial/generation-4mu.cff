@@ -1,5 +1,5 @@
 #
-# generation of 1 muon per event
+# generation of 4 muon per event
 #
 
 service = RandomNumberGeneratorService
@@ -17,7 +17,7 @@ source = FlatRandomPtGunSource
   untracked int32 maxEvents = 10
   untracked PSet PGunParameters =
   {
-    untracked vint32  PartID = {13}
+    untracked vint32  PartID = {13,-13,13,-13}
     untracked double MinEta = -2.5
     untracked double MaxEta =  2.5
     untracked double MinPhi = -3.14159265358979323846 # in radians

@@ -19,6 +19,22 @@ include "Geometry/TrackerNumberingBuilder/data/trackerNumberingGeometry.cfi"
 include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
 
 #
+# vertex smearing
+#
+module VtxSmeared = VertexGenerator 
+{
+  string type = "IOMC/EventVertexGenerators/GaussianEventVertexGenerator"
+  double MeanX = 0.
+  double MeanY = 0.
+  double MeanZ = 0.
+  double SigmaX = 0.015
+  double SigmaY = 0.015
+  double SigmaZ = 53.0  // in mm
+}
+
+
+
+#
 # include geant4 simulation
 #
 include "SimG4Core/Application/data/SimG4Object.cfi"
@@ -37,6 +53,7 @@ module mix = MixingModule
 #
 sequence simulation =
 {
+  VtxSmeared,
   SimG4Object,
   mix
 }
