@@ -1,0 +1,29 @@
+process A = 
+{
+
+  #
+  # initialize  MessageLogger
+  #
+  include "FWCore/MessageLogger/data/MessageLogger.cfi"
+
+  #
+  # load input file
+  #
+  source = PoolSource 
+  {
+    untracked vstring fileNames = {"file:tutorial.root"}
+    untracked int32 maxEvents = -1
+  }
+
+  module analyzer = MyTrackAnalyzer
+  {
+    string TrackProducer = "RSWMaterial"
+  }
+
+
+  path p = 
+  {
+    analyzer
+  }
+
+}

@@ -1,0 +1,12 @@
+<use name=FWCore/Framework>
+<use name=Foundation/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=DataFormats/TrackReco>
+<use name=FWCore/MessageLogger>
+<flags SEAL_PLUGIN_NAME="MyCodeMyTrackAnalyzer">
+<export>
+   <lib name=MyCodeMyTrackAnalyzer>
+   <use name=FWCore/Framework>
+   <use name=Foundation/PluginManager>
+   <use name=FWCore/ParameterSet>
+</export>
