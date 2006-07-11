@@ -1,0 +1,109 @@
+// -*- C++ -*-
+//
+// Package:    MyTrackFilter
+// Class:      MyTrackFilter
+// 
+/**\class MyTrackFilter MyTrackFilter.cc MyCode/MyTrackFilter/src/MyTrackFilter.cc
+
+ Description: <one line class summary>
+
+ Implementation:
+     <Notes on implementation>
+*/
+//
+// Original Author:  Oliver Gutsche
+//         Created:  Tue Jul 11 13:15:20 CDT 2006
+// $Id$
+//
+//
+
+
+// system include files
+#include <memory>
+#include <string>
+
+// user include files
+#include "FWCore/Framework/interface/Frameworkfwd.h"
+#include "FWCore/Framework/interface/EDFilter.h"
+
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/MakerMacros.h"
+
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+
+#include "DataFormats/TrackReco/interface/TrackFwd.h"
+#include "DataFormats/TrackReco/interface/Track.h"
+#include "FWCore/MessageLogger/interface/MessageLogger.h"
+
+//
+// class declaration
+//
+
+class MyTrackFilter : public edm::EDFilter {
+   public:
+      explicit MyTrackFilter(const edm::ParameterSet&);
+      ~MyTrackFilter();
+
+
+      virtual bool filter(edm::Event&, const edm::EventSetup&);
+   private:
+      // ----------member data ---------------------------
+      std::string trackProducerName;
+      unsigned int minimalNumberOfTracks;
+      unsigned int maximalNumberOfTracks;
+};
+
+//
+// constants, enums and typedefs
+//
+
+//
+// static data member definitions
+//
+
+//
+// constructors and destructor
+//
+MyTrackFilter::MyTrackFilter(const edm::ParameterSet& iConfig)
+{
+   //now do what ever initialization is needed
+   trackProducerName = iConfig.getParameter<std::string>("TrackProducer");
+   minimalNumberOfTracks = iConfig.getParameter<unsigned int>("MinimalNumberOfTracks");
+   maximalNumberOfTracks = iConfig.getParameter<unsigned int>("MaximalNumberOfTracks");
+}
+
+
+MyTrackFilter::~MyTrackFilter()
+{
+ 
+   // do anything here that needs to be done at desctruction time
+   // (e.g. close files, deallocate resources etc.)
+
+}
+
+
+//
+// member functions
+//
+
+// ------------ method called to produce the data  ------------
+bool
+MyTrackFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
+{
+   // Get Inputs
+   edm::Handle<reco::TrackCollection> tracks;
+   iEvent.getByLabel(trackProducerName, tracks);
+
+   bool result = false;
+
+   if ( (tracks->size() <= maximalNumberOfTracks) &&
+        (tracks->size() >= minimalNumberOfTracks) ) {
+        edm::LogInfo("Tutorial") << "Event passed MyTrackFilter with " << tracks->size() << " tracks!";
+	result = true;
+   }
+
+  return result;
+}
+
+//define this as a plug-in
+DEFINE_FWK_MODULE(MyTrackFilter)

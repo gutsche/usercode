@@ -1,0 +1,6 @@
+module trackFilter = MyTrackFilter
+{
+  string TrackProducer = "RSWMaterial"
+  uint32 MinimalNumberOfTracks = 0
+  uint32 MaximalNumberOfTracks = 999999
+}

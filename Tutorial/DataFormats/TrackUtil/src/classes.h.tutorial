@@ -1,0 +1,14 @@
+#ifndef TRACKUTIL_CLASSES_H
+#define TRACKUTIL_CLASSES_H
+
+#include "DataFormats/TrackUtil/interface/TrackUtilCollection.h"
+#include "DataFormats/Common/interface/Wrapper.h"
+#include <vector>
+
+namespace {
+  namespace {
+    edm::Wrapper<TrackUtilCollection> trackUtilCollectionWrapper;
+  }
+}
+
+#endif // TRACKUTIL_CLASSES_H

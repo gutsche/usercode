@@ -1,0 +1,5 @@
+<lcgdict>
+  <class name="TrackUtil"/>
+  <class name="std::vector<TrackUtil>"/>
+  <class name="edm::Wrapper<std::vector<TrackUtil> >"/>
+</lcgdict>
