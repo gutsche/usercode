@@ -28,14 +28,9 @@ process F =
     untracked string fileName = "tutorial-filtered.root"
   }
 
-  path p =
-  {
-    trackFilter
-  }
-
   endpath e = 
   {
-    Out
+    trackFilter,Out
   }
 }
 
