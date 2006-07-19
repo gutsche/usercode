@@ -1,0 +1,35 @@
+<flags SEAL_PLUGIN_NAME="OlisDebugProducersRoadSearchSeedHitDumper">
+
+<use name=FWCore/Framework>
+<use name=FWCore/ParameterSet>
+<use name=FWCore/MessageLogger>
+
+<use name=DataFormats/Common>
+<use name=DataFormats/RecHitGlobalPosition>
+<use name=DataFormats/SeedHitsGlobalPositions>
+<use name=DataFormats/TrackerRecHit2D>
+<use name=DataFormats/TrackingRecHit>
+<use name=Geometry/Records>
+<use name=RecoTracker/RoadMapRecord>
+<use name=Geometry/TrackerGeometryBuilder>
+
+<use name=DataFormats/TrajectorySeed>
+
+<export>
+ <lib name=OlisDebugProducersRoadSearchSeedHitDumper>
+ <use name=FWCore/Framework>
+ <use name=FWCore/ParameterSet>
+ <use name=FWCore/MessageLogger>
+
+ <use name=DataFormats/Common>
+ <use name=DataFormats/RecHitGlobalPosition>
+ <use name=DataFormats/SeedHitsGlobalPositions>
+ <use name=DataFormats/TrackerRecHit2D>
+ <use name=DataFormats/TrackingRecHit>
+ <use name=Geometry/Records>
+ <use name=RecoTracker/RoadMapRecord>
+ <use name=Geometry/TrackerGeometryBuilder>
+
+<use name=DataFormats/TrajectorySeed>
+
+</export>

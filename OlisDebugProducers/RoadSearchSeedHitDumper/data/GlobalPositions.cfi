@@ -1,0 +1,10 @@
+module GlobalPositions = RoadSearchSeedHitDumper
+{
+
+  # module label of RoadSearchSeedFinder
+  string SeedProducer = "RoadSearchSeeds"
+
+  # module label of SiStripRecHitConverter
+  string RecHitProducer = "LocalMeasurementConverter"
+
+}
