@@ -1,0 +1,5 @@
+<lcgdict>
+  <class name="SeedHitsGlobalPositions"/>
+  <class name="std::vector<SeedHitsGlobalPositions>"/>
+  <class name="edm::Wrapper<std::vector<SeedHitsGlobalPositions> >"/>
+</lcgdict>
