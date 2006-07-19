@@ -1,5 +1,5 @@
-#ifndef TRACKUTIL_CLASSES_H
-#define TRACKUTIL_CLASSES_H
+#ifndef RECHITGLOBALPOSITION_CLASSES_H
+#define RECHITGLOBALPOSITION_CLASSES_H
 
 #include "DataFormats/RecHitGlobalPosition/interface/RecHitGlobalPositionCollection.h"
 #include "DataFormats/Common/interface/Wrapper.h"
@@ -11,4 +11,4 @@ namespace {
   }
 }
 
-#endif // TRACKUTIL_CLASSES_H
+#endif // RECHITGLOBALPOSITION_CLASSES_H

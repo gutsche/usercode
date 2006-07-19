@@ -1,6 +1,7 @@
 #ifndef DATAFORMATS_RECHITGLOBALPOSITION_H
 #define DATAFORMATS_RECHITGLOBALPOSITION_H
 
+#include <vector>
 #include "Geometry/Vector/interface/GlobalPoint.h"
 
 class RecHitGlobalPosition {
@@ -9,8 +10,8 @@ public:
   RecHitGlobalPosition() {}
   RecHitGlobalPosition(GlobalPoint point): globalPoint_(point) {}
 
-  inline GlobalPoint GetGlobalPoint() { return globalPoint_;}
-  inline void SetGlobalPoint(GlobalPoint input) { globalPoint_ = input; }
+  inline const GlobalPoint GetGlobalPoint() const { return globalPoint_;}
+  inline void SetGlobalPoint(GlobalPoint point) { globalPoint_ = point; }
 
 private:
 
