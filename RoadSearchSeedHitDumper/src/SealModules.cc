@@ -3,7 +3,7 @@
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 
-#include "OlisDebugProducers/RoadSearchSeedHitDumper/interface/RoadSearchSeedHitDumper.h"
+#include "Gutsche/RoadSearchSeedHitDumper/interface/RoadSearchSeedHitDumper.h"
 
 using cms::RoadSearchSeedHitDumper;
 DEFINE_SEAL_MODULE();

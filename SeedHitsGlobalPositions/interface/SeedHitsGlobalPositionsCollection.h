@@ -2,7 +2,7 @@
 #define DATAFORMATS_SEEDHITSGLOBALPOSITIONSCOLLECTION_H
 
 #include <vector>
-#include "DataFormats/SeedHitsGlobalPositions/interface/SeedHitsGlobalPositions.h"
+#include "Gutsche/SeedHitsGlobalPositions/interface/SeedHitsGlobalPositions.h"
 
 typedef std::vector<SeedHitsGlobalPositions> SeedHitsGlobalPositionsCollection;
 

@@ -1,5 +1,5 @@
 <use name=DataFormats/Common>
 <export>
- <lib name=DataFormatsSeedHitsGlobalPositions>
+ <lib name=GutscheSeedHitsGlobalPositions>
  <use name=DataFormats/Common>
 </export>

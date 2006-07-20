@@ -1,5 +1,5 @@
 //
-// Package:         OlisDebugProducers/RoadSearchSeedHitDumper
+// Package:         Gutsche/RoadSearchSeedHitDumper
 // Class:           RoadSearchSeedHitDumperAlgorithm
 // 
 // Description:     dumps global positions of Seed RecHits
@@ -7,14 +7,14 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Jul 19 18:20:00 UTC 2006
 //
-// $Author: burkett $
-// $Date: 2006/03/15 16:07:16 $
-// $Revision: 1.2 $
+// $Author: gutsche $
+// $Date: 2006/07/19 23:20:31 $
+// $Revision: 1.1 $
 //
 
 #include <vector>
 
-#include "OlisDebugProducers/RoadSearchSeedHitDumper/interface/RoadSearchSeedHitDumperAlgorithm.h"
+#include "Gutsche/RoadSearchSeedHitDumper/interface/RoadSearchSeedHitDumperAlgorithm.h"
 
 #include "FWCore/Framework/interface/Handle.h"
 #include "FWCore/Framework/interface/ESHandle.h"
@@ -24,8 +24,8 @@
 #include "DataFormats/TrackerRecHit2D/interface/SiStripRecHit2DLocalPos.h"
 #include "DataFormats/TrackerRecHit2D/interface/SiStripRecHit2DMatchedLocalPos.h"
 #include "DataFormats/TrajectorySeed/interface/TrajectorySeed.h"
-#include "DataFormats/RecHitGlobalPosition/interface/RecHitGlobalPosition.h"
-#include "DataFormats/SeedHitsGlobalPositions/interface/SeedHitsGlobalPositions.h"
+#include "Gutsche/RecHitGlobalPosition/interface/RecHitGlobalPosition.h"
+#include "Gutsche/SeedHitsGlobalPositions/interface/SeedHitsGlobalPositions.h"
 
 #include "Geometry/CommonDetUnit/interface/GeomDetUnit.h"
 #include "Geometry/Records/interface/TrackerDigiGeometryRecord.h"

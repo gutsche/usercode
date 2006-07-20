@@ -1,7 +1,7 @@
 #ifndef RECHITGLOBALPOSITION_CLASSES_H
 #define RECHITGLOBALPOSITION_CLASSES_H
 
-#include "DataFormats/RecHitGlobalPosition/interface/RecHitGlobalPositionCollection.h"
+#include "Gutsche/RecHitGlobalPosition/interface/RecHitGlobalPositionCollection.h"
 #include "DataFormats/Common/interface/Wrapper.h"
 #include <vector>
 

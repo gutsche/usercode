@@ -2,7 +2,7 @@
 #define RoadSearchSeedHitDumperAlgorithm_h
 
 //
-// Package:         OlisDebugProducers/RoadSearchSeedHitDumper
+// Package:         Gutsche/RoadSearchSeedHitDumper
 // Class:           RoadSearchSeedHitDumperAlgorithm
 // 
 // Description:     dumps global positions of Seed RecHits
@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Jul 19 18:20:00 UTC 2006
 //
-// $Author: burkett $
-// $Date: 2006/03/15 16:07:16 $
-// $Revision: 1.2 $
+// $Author: gutsche $
+// $Date: 2006/07/19 23:20:31 $
+// $Revision: 1.1 $
 //
 
 #include <string>
@@ -25,8 +25,8 @@
 #include "DataFormats/TrajectorySeed/interface/TrajectorySeedCollection.h"
 #include "DataFormats/TrackerRecHit2D/interface/SiStripRecHit2DLocalPosCollection.h"
 #include "DataFormats/TrackerRecHit2D/interface/SiStripRecHit2DMatchedLocalPosCollection.h"
-#include "DataFormats/RecHitGlobalPosition/interface/RecHitGlobalPositionCollection.h"
-#include "DataFormats/SeedHitsGlobalPositions/interface/SeedHitsGlobalPositionsCollection.h"
+#include "Gutsche/RecHitGlobalPosition/interface/RecHitGlobalPositionCollection.h"
+#include "Gutsche/SeedHitsGlobalPositions/interface/SeedHitsGlobalPositionsCollection.h"
 
 class RoadSearchSeedHitDumperAlgorithm 
 {
