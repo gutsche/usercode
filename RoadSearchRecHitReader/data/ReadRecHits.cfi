@@ -1,0 +1,10 @@
+module ReadRecHits = RoadSearchRecHitReader
+{
+
+  # module label of SiStripRecHitConverter
+  string StripRecHitProducer = "LocalMeasurementConverter"
+
+  # module label of SiPixelRecHitConverter
+  string PixelRecHitProducer = "pixRecHitConverter"
+
+}
