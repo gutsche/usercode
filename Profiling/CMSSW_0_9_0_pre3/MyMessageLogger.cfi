@@ -1,0 +1,110 @@
+service = MessageLogger
+{
+  untracked vstring destinations =
+  {
+    "cout"
+  }
+
+  untracked vstring categories =
+  { 
+    "FwkJob", 
+    "FwkReport",
+    "DDLParser",
+    "TrackerGeom",
+    "PixelGeom",
+    "TIBGeom",
+    "TIDGeom",
+    "TOBGeom",
+    "TECGeom",
+    "HCalGeom",
+    "EventSetupDependency",
+    "RoadSearch",
+    "RoadSearchCloudMakerAlgoritm",
+    "TrackProducer"
+  }
+
+  untracked PSet cout =  
+  {
+    untracked string threshold = "INFO"
+    untracked PSet default = 
+    { 
+      untracked int32 limit = 100000000 
+    }
+    untracked PSet FwkJob = 
+    { 
+      untracked int32 limit = 0 
+    }
+    untracked PSet FwkReport = 
+    { 
+      untracked int32 reportEvery = 1
+    }
+    untracked PSet DDLParser =
+    {
+      untracked int32 limit = 0
+    }
+    untracked PSet TrackerGeom =
+    {
+      untracked int32 limit = 0
+    }
+    untracked PSet PixelGeom =
+    {
+      untracked int32 limit = 0
+    }
+    untracked PSet TIBGeom =
+    {
+      untracked int32 limit = 0
+    }
+    untracked PSet TIDGeom =
+    {
+      untracked int32 limit = 0
+    }
+    untracked PSet TOBGeom =
+    {
+      untracked int32 limit = 0
+    }
+    untracked PSet TECGeom =
+    {
+      untracked int32 limit = 0
+    }
+    untracked PSet HCalGeom =
+    {
+      untracked int32 limit = 0
+    }
+    untracked PSet EventSetupDependency =
+    {
+      untracked int32 limit = 0
+    }
+    untracked PSet RoadSearch =
+    {
+      untracked int32 reportEvery = 1
+      untracked int32 limit = 0
+    }
+    untracked PSet RoadSearchCloudMakerAlgoritm =
+    {
+      untracked int32 limit = 0
+    }
+    untracked PSet TrackProducer =
+    {
+      untracked int32 reportEvery = 1
+      untracked int32 limit = 0
+    }
+  }
+
+  untracked vstring fwkJobReports = 
+  {
+    "FrameworkJobReport"
+  }
+
+  untracked PSet FrameworkJobReport = 
+  {
+    untracked PSet default = 
+    { 
+      untracked int32 limit = 0 
+    }
+    untracked PSet FwkJob  = 
+    { 
+      untracked int32 limit = 10000000 
+    }
+  }
+
+}
