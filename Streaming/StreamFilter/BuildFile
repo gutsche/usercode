@@ -1,0 +1,12 @@
+<use name=FWCore/Framework>
+<use name=Foundation/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=DataFormats/StreamDecision>
+<flags SEAL_PLUGIN_NAME="StreamingStreamFilter">
+<export>
+   <lib name=StreamingStreamFilter>
+   <use name=FWCore/Framework>
+   <use name=Foundation/PluginManager>
+   <use name=FWCore/ParameterSet>
+   <use name=DataFormats/StreamDecision>
+</export>

@@ -1,0 +1,8 @@
+module streamFilterIN2P3 = StreamFilter 
+{
+  string DecisionMaker = "streamDecision"
+
+  # stream decision filter
+  # valid modes are  fnal, cnaf, ral, in2p3, asgc, fzk, pic
+  string Mode          = "in2p3"
+}

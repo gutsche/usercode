@@ -1,0 +1,5 @@
+<lcgdict>
+  <class name="StreamDecision"/>
+  <class name="std::vector<StreamDecision>"/>
+  <class name="edm::Wrapper<std::vector<StreamDecision> >"/>
+</lcgdict>

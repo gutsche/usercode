@@ -1,0 +1,14 @@
+module streamDecision = StreamDecider
+{
+
+  # fraction of events which should go to this site
+  # fractions have to add up to 1.0
+  double fnal  =  0.9
+  double cnaf  =  0.05
+  double ral   =  0.01
+  double in2p3 =  0.01
+  double asgc  =  0.01
+  double fzk   =  0.01
+  double pic   =  0.01
+
+}
