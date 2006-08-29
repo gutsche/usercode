@@ -79,7 +79,7 @@ def main(argv) :
                 if len(linearray) == 6 :
                     temptime = float(linearray[-1])
                     addedmoduletime += temptime
-                    tempmodule = linearray[-2]
+                    tempmodule = linearray[-3]
                     if tempmodule in timeModuleDict.keys() :
                         timeModuleDict[tempmodule] += temptime
                     else :
