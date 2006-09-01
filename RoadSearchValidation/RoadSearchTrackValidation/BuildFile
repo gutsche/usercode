@@ -1,0 +1,22 @@
+<use name=FWCore/Framework>
+<use name=Foundation/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=DataFormats/TrajectorySeed>
+<use name=DataFormats/RoadSearchCloud>
+<use name=DataFormats/TrackCandidate>
+<use name=DataFormats/TrackReco>
+<use name=root>
+<use name=rootcore>
+<flags SEAL_PLUGIN_NAME="RoadSearchValidationRoadSearchTrackValidation">
+<export>
+   <lib name=RoadSearchValidationRoadSearchTrackValidation>
+   <use name=FWCore/Framework>
+   <use name=Foundation/PluginManager>
+   <use name=FWCore/ParameterSet>
+   <use name=DataFormats/TrajectorySeed>
+   <use name=DataFormats/RoadSearchCloud>
+   <use name=DataFormats/TrackCandidate>
+   <use name=DataFormats/TrackReco>
+   <use name=root>
+   <use name=rootcore>
+</export>

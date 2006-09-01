@@ -1,0 +1,16 @@
+module trackValidation = RoadSearchTrackValidation 
+{
+
+  untracked string OutputFileName = "validation.root"  
+
+  untracked string rsSeedProducerLabel = "roadSearchSeeds"
+  untracked string rsRawCloudProducerLabel = "rawRoadSearchClouds"
+  untracked string rsCleanCloudProducerLabel = "cleanRoadSearchClouds"
+  untracked string rsTrackCandidateProducerLabel = "rsTrackCandidates"
+  untracked string rsTrackProducerLabel = "rsWithMaterialTracks"
+
+  untracked string ckfSeedProducerLabel = "globalMixedSeeds"
+  untracked string ckfTrackCandidateProducerLabel = "ckfTrackCandidates"
+  untracked string ckfTrackProducerLabel = "ctfWithMaterialTracks"
+
+}
