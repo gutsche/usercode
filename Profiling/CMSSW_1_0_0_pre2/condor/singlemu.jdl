@@ -1,10 +1,10 @@
 universe = vanilla
 Executable = cmssw_on_condor.sh
 should_transfer_files = NO
-Output = /uscmst1b_scratch/lpc1/lpctrk/gutsche/SingleMu/cmssw_$(cluster)_$(process).stdout
-Error  = /uscmst1b_scratch/lpc1/lpctrk/gutsche/SingleMu/cmssw_$(cluster)_$(process).stderr
-Log    = /uscmst1b_scratch/lpc1/lpctrk/gutsche/SingleMu/cmssw_$(cluster)_$(process).condor
-Arguments = $(cluster) $(process) /uscms_data/d1/gutsche/Profiling/CMSSW_1_0_0_pre2 /uscmst1b_scratch/lpc1/lpctrk/gutsche/SingleMu /uscms_data/d1/gutsche/Profiling/CMSSW_1_0_0_pre2/src/Profiling/CMSSW_1_0_0_pre2/profiling-singlemu.cfg 1000
+Output = /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/060831/SingleMu/cmssw_$(cluster)_$(process).stdout
+Error  = /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/060831/SingleMu/cmssw_$(cluster)_$(process).stderr
+Log    = /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/060831/SingleMu/cmssw_$(cluster)_$(process).condor
+Arguments = $(cluster) $(process) /uscms_data/d1/gutsche/Profiling/CMSSW_1_0_0_pre2 /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/060831/SingleMu /uscms_data/d1/gutsche/Profiling/CMSSW_1_0_0_pre2/src/Profiling/CMSSW_1_0_0_pre2/profiling-singlemu.cfg 1000
 Requirements = (Arch == "X86_64" && HasSL4 == TRUE)
 +UseSL4 = TRUE
 Queue 5
