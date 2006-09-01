@@ -10,7 +10,7 @@ def main(argv) :
     activate timing service in CMSSW and use this python script tp average timing per module
 
     required parameters
-    --logfiles <names>                        :       logfile names
+    --logfile <names>                         :       logfile names, single name or wildcard expression in \"
 
     optional parameters                       :
     --help (-h)                               :       help
