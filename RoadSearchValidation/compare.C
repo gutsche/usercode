@@ -41,8 +41,8 @@ void compare () {
 
   TCanvas *canvas = new TCanvas;
 
-  TFile *file1 = new TFile("before/validate-minbias.root");
-  TFile *file2 = new TFile("after/validate-minbias.root");
+  TFile *file1 = new TFile("after_2/validate-minbias.root");
+  TFile *file2 = new TFile("validate-minbias.root");
 
   TH1F *histo1;
   TH1F *histo2;

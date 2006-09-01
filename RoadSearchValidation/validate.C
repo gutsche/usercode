@@ -38,13 +38,13 @@
 
   // Tell root we only want some branches
   chain.SetBranchStatus("*",0);
-  chain.SetBranchStatus("TrajectorySeeds_roadSearchSeeds__P.obj*",1);
-  chain.SetBranchStatus("RoadSearchClouds_rawRoadSearchClouds__P.obj*",1);
-  chain.SetBranchStatus("RoadSearchClouds_cleanRoadSearchClouds__P.obj*",1);
-  chain.SetBranchStatus("TrackCandidates_rsTrackCandidates__P.obj*",1);
+//   chain.SetBranchStatus("TrajectorySeeds_roadSearchSeeds__P.obj*",1);
+//   chain.SetBranchStatus("RoadSearchClouds_rawRoadSearchClouds__P.obj*",1);
+//   chain.SetBranchStatus("RoadSearchClouds_cleanRoadSearchClouds__P.obj*",1);
+//   chain.SetBranchStatus("TrackCandidates_rsTrackCandidates__P.obj*",1);
   chain.SetBranchStatus("recoTracks_rsWithMaterialTracks__P.obj*",1);
-  chain.SetBranchStatus("TrajectorySeeds_globalMixedSeeds__P.obj*",1);
-  chain.SetBranchStatus("TrackCandidates_ckfTrackCandidates__P.obj*",1);
+//   chain.SetBranchStatus("TrajectorySeeds_globalMixedSeeds__P.obj*",1);
+//   chain.SetBranchStatus("TrackCandidates_ckfTrackCandidates__P.obj*",1);
   chain.SetBranchStatus("recoTracks_ctfWithMaterialTracks__P.obj*",1);
 
   std::vector<TrajectorySeed>  rsSeedCollection;
@@ -70,14 +70,14 @@
       chain.GetEvent(index); 
 
       //Set the branch address for this new tree
-      chain.SetBranchAddress("TrajectorySeeds_roadSearchSeeds__P.obj",&rsSeedCollection);
-      chain.SetBranchAddress("RoadSearchClouds_rawRoadSearchClouds__P.obj",&rsRawCloudCollection);
-      chain.SetBranchAddress("RoadSearchClouds_cleanRoadSearchClouds__P.obj",&rsCleanCloudCollection);
-      chain.SetBranchAddress("TrackCandidates_rsTrackCandidates__P.obj",&rsTrackCandidateCollection);
+//       chain.SetBranchAddress("TrajectorySeeds_roadSearchSeeds__P.obj",&rsSeedCollection);
+//       chain.SetBranchAddress("RoadSearchClouds_rawRoadSearchClouds__P.obj",&rsRawCloudCollection);
+//       chain.SetBranchAddress("RoadSearchClouds_cleanRoadSearchClouds__P.obj",&rsCleanCloudCollection);
+//       chain.SetBranchAddress("TrackCandidates_rsTrackCandidates__P.obj",&rsTrackCandidateCollection);
       chain.SetBranchAddress("recoTracks_rsWithMaterialTracks__P.obj",&rsTrackCollection);
 
-      chain.SetBranchAddress("TrajectorySeeds_globalMixedSeeds__P.obj",&ckfSeedCollection);
-      chain.SetBranchAddress("TrackCandidates_ckfTrackCandidates__P.obj",&ckfTrackCandidateCollection);
+//       chain.SetBranchAddress("TrajectorySeeds_globalMixedSeeds__P.obj",&ckfSeedCollection);
+//       chain.SetBranchAddress("TrackCandidates_ckfTrackCandidates__P.obj",&ckfTrackCandidateCollection);
       chain.SetBranchAddress("recoTracks_ctfWithMaterialTracks__P.obj",&ckfTrackCollection);
       
     }
@@ -103,11 +103,11 @@
       rs_dZ->Fill(track->dz());
     }
 
-    rs_numSeeds->Fill(rsSeedCollection.size());
-    rs_numRawClouds->Fill(rsRawCloudCollection.size());
-    rs_numCleanClouds->Fill(rsCleanCloudCollection.size());
-    rs_numTrackCandidates->Fill(rsTrackCandidateCollection.size());
-    rs_numTracks->Fill(rsTrackCollection.size());
+//     rs_numSeeds->Fill(rsSeedCollection.size());
+//     rs_numRawClouds->Fill(rsRawCloudCollection.size());
+//     rs_numCleanClouds->Fill(rsCleanCloudCollection.size());
+//     rs_numTrackCandidates->Fill(rsTrackCandidateCollection.size());
+//     rs_numTracks->Fill(rsTrackCollection.size());
 
     for ( unsigned int bindex = 0; bindex < ckfTrackCollection.size(); ++bindex ) {
       reco::Track* track = (reco::Track*)ckfTrackCollection[bindex];
@@ -123,9 +123,9 @@
       ckf_dZ->Fill(track->dz());
     }
 
-    ckf_numSeeds->Fill(ckfSeedCollection.size());
-    ckf_numTrackCandidates->Fill(ckfTrackCandidateCollection.size());
-    ckf_numTracks->Fill(ckfTrackCollection.size());
+//     ckf_numSeeds->Fill(ckfSeedCollection.size());
+//     ckf_numTrackCandidates->Fill(ckfTrackCandidateCollection.size());
+//     ckf_numTracks->Fill(ckfTrackCollection.size());
 
   }
   
