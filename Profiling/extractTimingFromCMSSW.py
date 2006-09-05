@@ -69,8 +69,9 @@ def main(argv) :
                 linearray = line.split()
                 try:
                     tempeventtime = float(linearray[-1])
-                    timeEvent      += tempeventtime
-                    timeEventCount += 1
+                    if tempeventtime < 1000000000. :
+                        timeEvent      += tempeventtime
+                        timeEventCount += 1
                 except ValueError:
                     print 'line:',line,'could not be used to extract time of the event'
             if line.count('TimeModule>') > 0 :
