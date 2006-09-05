@@ -41,22 +41,22 @@ void compare () {
 
   TCanvas *canvas = new TCanvas;
 
-  TFile *file1 = new TFile("after_2/validate-minbias.root");
-  TFile *file2 = new TFile("validate-minbias.root");
+  TFile *file1 = new TFile("/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/060901/SingleMu_01/validation_12540_0.root");
+  TFile *file2 = new TFile("/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/060901/SingleMu/validation_12542_0.root");
 
   TH1F *histo1;
   TH1F *histo2;
 
-  createPlot("chi2",canvas,file1,file2,histo1,histo2);
-  createPlot("pt",canvas,file1,file2,histo1,histo2);
-  createPlot("nhit",canvas,file1,file2,histo1,histo2);
-  createPlot("eta",canvas,file1,file2,histo1,histo2);
-  createPlot("phi",canvas,file1,file2,histo1,histo2);
-  createPlot("transCurv",canvas,file1,file2,histo1,histo2);
-  createPlot("phiZero",canvas,file1,file2,histo1,histo2);
-  createPlot("theta",canvas,file1,file2,histo1,histo2);
-  createPlot("dZero",canvas,file1,file2,histo1,histo2);
-  createPlot("dZ",canvas,file1,file2,histo1,histo2);
+  createPlot("rs_chi2",canvas,file1,file2,histo1,histo2);
+  createPlot("rs_pt",canvas,file1,file2,histo1,histo2);
+  createPlot("rs_nhit",canvas,file1,file2,histo1,histo2);
+  createPlot("rs_eta",canvas,file1,file2,histo1,histo2);
+  createPlot("rs_phi",canvas,file1,file2,histo1,histo2);
+  createPlot("rs_transCurv",canvas,file1,file2,histo1,histo2);
+  createPlot("rs_phiZero",canvas,file1,file2,histo1,histo2);
+  createPlot("rs_theta",canvas,file1,file2,histo1,histo2);
+  createPlot("rs_dZero",canvas,file1,file2,histo1,histo2);
+  createPlot("rs_dZ",canvas,file1,file2,histo1,histo2);
 
   
 

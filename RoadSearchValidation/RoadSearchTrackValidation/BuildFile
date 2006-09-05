@@ -5,6 +5,9 @@
 <use name=DataFormats/RoadSearchCloud>
 <use name=DataFormats/TrackCandidate>
 <use name=DataFormats/TrackReco>
+<use name=DataFormats/DetId>
+<use name=DataFormats/SiStripDetId>
+<use name=DataFormats/SiPixelDetId>
 <use name=root>
 <use name=rootcore>
 <flags SEAL_PLUGIN_NAME="RoadSearchValidationRoadSearchTrackValidation">
@@ -17,6 +20,9 @@
    <use name=DataFormats/RoadSearchCloud>
    <use name=DataFormats/TrackCandidate>
    <use name=DataFormats/TrackReco>
+   <use name=DataFormats/DetId>
+   <use name=DataFormats/SiStripDetId>
+   <use name=DataFormats/SiPixelDetId>
    <use name=root>
    <use name=rootcore>
 </export>

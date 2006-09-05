@@ -13,4 +13,5 @@ module trackValidation = RoadSearchTrackValidation
   untracked string ckfTrackCandidateProducerLabel = "ckfTrackCandidates"
   untracked string ckfTrackProducerLabel = "ctfWithMaterialTracks"
 
+  untracked uint32 sameNumberOfTracks = 1
 }
