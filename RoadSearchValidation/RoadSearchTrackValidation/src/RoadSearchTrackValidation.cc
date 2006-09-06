@@ -8,8 +8,8 @@
 // Created:         Fri Sep  1 15:39:57 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/09/01 16:49:02 $
-// $Revision: 1.1 $
+// $Date: 2006/09/05 21:58:43 $
+// $Revision: 1.2 $
 //
 
 #include <string>
@@ -64,9 +64,9 @@ RoadSearchTrackValidation::RoadSearchTrackValidation(const edm::ParameterSet& iC
   double       theta_low   = 0.;
   double       theta_high  = 4.;
 
-  unsigned int dZero_nbins = 160;
-  double       dZero_low   = -20.;
-  double       dZero_high  = 20.;
+  unsigned int dZero_nbins = 120;
+  double       dZero_low   = -0.1;
+  double       dZero_high  = 0.1;
 
   unsigned int dZ_nbins = 400;
   double       dZ_low   = -100.;
