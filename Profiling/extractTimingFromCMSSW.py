@@ -110,15 +110,19 @@ def main(argv) :
 
     rsTimePerEvent = 0.
     for rsmodule in rsmodules :
-        rsTimePerEvent += timeModuleDict[rsmodule]/timeModuleCount[rsmodule]
+        if rsmodule in timeModuleDict.keys() :
+            rsTimePerEvent += timeModuleDict[rsmodule]/timeModuleCount[rsmodule]
 
     ckfTimePerEvent = 0.
     for ckfmodule in ckfmodules :
-        ckfTimePerEvent += timeModuleDict[ckfmodule]/timeModuleCount[ckfmodule]
+        if ckfmodule in timeModuleDict.keys() :
+            ckfTimePerEvent += timeModuleDict[ckfmodule]/timeModuleCount[ckfmodule]
 
     print ''
-    print 'module: %30s time: %7.5f percentage: %03.1f' % ('RS', rsTimePerEvent, rsTimePerEvent/(timeEvent/timeEventCount)*100)
-    print 'module: %30s time: %7.5f percentage: %03.1f' % ('CKF', ckfTimePerEvent, ckfTimePerEvent/(timeEvent/timeEventCount)*100)
+    if  rsTimePerEvent != 0 :
+        print 'module: %30s time: %7.5f percentage: %03.1f' % ('RS', rsTimePerEvent, rsTimePerEvent/(timeEvent/timeEventCount)*100)
+    if  ckfTimePerEvent != 0 :
+        print 'module: %30s time: %7.5f percentage: %03.1f' % ('CKF', ckfTimePerEvent, ckfTimePerEvent/(timeEvent/timeEventCount)*100)
 
 
         
