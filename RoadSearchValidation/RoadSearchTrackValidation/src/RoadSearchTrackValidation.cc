@@ -8,13 +8,15 @@
 // Created:         Fri Sep  1 15:39:57 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/09/05 21:58:43 $
-// $Revision: 1.2 $
+// $Date: 2006/09/06 15:34:31 $
+// $Revision: 1.3 $
 //
 
 #include <string>
 
 #include "RoadSearchValidation/RoadSearchTrackValidation/interface/RoadSearchTrackValidation.h"
+
+#include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include "DataFormats/TrajectorySeed/interface/TrajectorySeed.h"
 #include "DataFormats/TrajectorySeed/interface/TrajectorySeedCollection.h"
@@ -816,6 +818,45 @@ RoadSearchTrackValidation::analyze(const edm::Event& iEvent, const edm::EventSet
 
   // RS seeds
   rs_same_numSeeds->Fill(rsSeedCollection->size());
+  for ( TrajectorySeedCollection::const_iterator seed1 = rsSeedCollection->begin();
+	seed1 != rsSeedCollection->end();
+	++seed1 ) {
+
+    for ( TrajectorySeedCollection::const_iterator seed2 = seed1+1;
+	  seed2 != rsSeedCollection->end();
+	  ++seed2 ) {
+
+      unsigned int counter = 0;
+      for (TrajectorySeed::const_iterator hit1 = seed1->recHits().first;
+	   hit1 != seed1->recHits().second;
+	   ++hit1 ) {
+	for (TrajectorySeed::const_iterator hit2 = seed2->recHits().first;
+	     hit2 != seed2->recHits().second;
+	     ++hit2 ) {
+	  if (hit1->geographicalId() == hit2->geographicalId())
+	    if (hit1->localPosition().x() == hit2->localPosition().x())
+	      if (hit1->localPosition().y() == hit2->localPosition().y())
+		++counter;
+	}
+      }
+      if ( counter > 1 ) {
+	edm::LogVerbatim("RoadSearch") << "two seeds with the same hits";
+	edm::LogVerbatim("RoadSearch") << " Seed 1 hit 1 id: " << seed1->recHits().first->geographicalId().rawId()
+				       << " x: " << seed1->recHits().first->localPosition().x()
+				       << " y: " << seed1->recHits().first->localPosition().y()
+				       << " hit 2 id: " << (--(seed1->recHits().second))->geographicalId().rawId()
+				       << " x: " << (--(seed1->recHits().second))->localPosition().x()
+				       << " y: " << (--(seed1->recHits().second))->localPosition().y();
+	edm::LogVerbatim("RoadSearch") << " Seed 2 hit 1 id: " << seed2->recHits().first->geographicalId().rawId()
+				       << " x: " << seed2->recHits().first->localPosition().x()
+				       << " y: " << seed2->recHits().first->localPosition().y()
+				       << " hit 2 id: " << (--(seed2->recHits().second))->geographicalId().rawId()
+				       << " x: " << (--(seed2->recHits().second))->localPosition().x()
+				       << " y: " << (--(seed2->recHits().second))->localPosition().y();
+      }
+    }
+  }
+
 
   // RS raw clouds
   rs_same_numRawClouds->Fill(rsRawCloudCollection->size());
