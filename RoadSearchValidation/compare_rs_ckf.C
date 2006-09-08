@@ -75,7 +75,7 @@ void compare_rs_ckf() {
   gStyle->SetOptFit(1);
   TCanvas *canvas = new TCanvas;
 
-  TFile *file = new TFile("validation_147_0.root");
+  TFile *file = new TFile("validation_1182_0.root");
 
   TH1 *histo1;
   TH1 *histo2;
