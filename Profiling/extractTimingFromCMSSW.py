@@ -124,6 +124,27 @@ def main(argv) :
     if  ckfTimePerEvent != 0 :
         print 'module: %30s time: %7.5f percentage: %03.1f' % ('CKF', ckfTimePerEvent, ckfTimePerEvent/(timeEvent/timeEventCount)*100)
 
+    # column for overview table
+    print ''
+    print 'Column for overview table, orderer after:'
+    print 'globalMixedSeeds ckfTrackCandidates ctfWithMaterialTracks roadSearchSeeds rawRoadSearchClouds cleanRoadSearchClouds rsTrackCandidates rsWithMaterialTracks'
+    print ''
+    module = 'globalMixedSeeds'
+    print timeModuleDict[module]/timeModuleCount[module]
+    module = 'ckfTrackCandidates'
+    print timeModuleDict[module]/timeModuleCount[module]
+    module = 'ctfWithMaterialTracks'
+    print timeModuleDict[module]/timeModuleCount[module]
+    module = 'roadSearchSeeds'
+    print timeModuleDict[module]/timeModuleCount[module]
+    module = 'rawRoadSearchClouds'
+    print timeModuleDict[module]/timeModuleCount[module]
+    module = 'cleanRoadSearchClouds'
+    print timeModuleDict[module]/timeModuleCount[module]
+    module = 'rsTrackCandidates'
+    print timeModuleDict[module]/timeModuleCount[module]
+    module = 'rsWithMaterialTracks'
+    print timeModuleDict[module]/timeModuleCount[module]
 
         
 
