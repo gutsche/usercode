@@ -1,0 +1,10 @@
+universe = vanilla
+Executable = condorSimulation.sh
+should_transfer_files = NO
+Output = /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/060908_04/single_mu_pt_5_positive/simulate_$(cluster)_$(process).stdout
+Error  = /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/060908_04/single_mu_pt_5_positive/simulate_$(cluster)_$(process).stderr
+Log    = /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/060908_04/single_mu_pt_5_positive/simulate_$(cluster)_$(process).condor
+Arguments = $(cluster) $(process) /uscms_data/d1/gutsche/Profiling/CMSSW_1_1_0_pre1 /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/060908_04/single_mu_pt_5_positive /uscms_data/d1/gutsche/Profiling/CMSSW_1_1_0_pre1/src/Profiling/CMSSW_1_1_0_pre1/single_mu_pt_5_positive.cfg 12345 single_mu_pt_5_positive 20 500
+Requirements = (Arch == "X86_64" && HasSL4 == TRUE)
++UseSL4 = TRUE
+Queue 20
