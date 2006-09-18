@@ -1,0 +1,11 @@
+#!/bin/bash
+#./submit_job caltech.cfg
+./submit_job fnal.cfg
+./submit_job mit.cfg
+./submit_job purdue.cfg
+#./submit_job sprace.cfg
+#./submit_job ucsd.cfg
+./submit_job ufl.cfg
+./submit_job unl.cfg
+./submit_job wisc.cfg
+

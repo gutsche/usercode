@@ -1,0 +1,13 @@
+#!/bin/bash
+
+cfg=$1
+name=`echo $cfg | sed s/.cfg//`
+echo ""
+echo "    cfg  : $cfg"
+echo "    name : $name"
+
+crab -create 10 -submit 10 -cfg $cfg
+rm -f $name
+crabdir=`ls -td crab_* | head -n 1`
+rm -f $name
+ln -s $crabdir $name
