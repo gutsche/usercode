@@ -1,11 +1,14 @@
 #!/bin/bash
-#./submit_job caltech.cfg
-./submit_job fnal.cfg
-./submit_job mit.cfg
-./submit_job purdue.cfg
-#./submit_job sprace.cfg
-#./submit_job ucsd.cfg
-./submit_job ufl.cfg
-./submit_job unl.cfg
-./submit_job wisc.cfg
 
+#deactivated: caltech sprace ucsd unl
+sites="fnal mit ufl wisc purdue"
+
+echo ""
+echo "submitting $1 jobs to: $sites"
+echo ""
+
+for site in $sites
+do
+    echo "Submitting $1 jobs to: $site"
+    ./submit_job $site.cfg $1 > $site.log 2>&1
+done

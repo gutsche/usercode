@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #deactivated: caltech sprace ucsd unl
-sites="fnal mit ufl wisc purdue"
+sites="fnal mit ufl wisc purdue caltech sprace unl"
 
 echo ""
 echo "submitting $1 jobs to: $sites"
