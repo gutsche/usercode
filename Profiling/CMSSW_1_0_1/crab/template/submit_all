@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#deactivated:
+sites="fnal mit ufl wisc purdue caltech sprace unl ucsd"
+
+echo ""
+echo "submitting $1 jobs to: $sites"
+echo ""
+
+for site in $sites
+do
+    echo "Submitting $1 jobs to: $site"
+    ./submit_job $site.cfg $1 > $site.log 2>&1
+done
