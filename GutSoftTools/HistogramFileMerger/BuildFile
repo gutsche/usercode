@@ -1,0 +1,11 @@
+<use name=root>
+<use name=rootcore>
+<use name=FWCore/MessageLogger>
+<use name=GutSoftTools/StringTools>
+<export>
+   <lib name=GutSoftToolsHistogramFileMerger>
+   <use name=root>
+   <use name=rootcore>
+   <use name=FWCore/MessageLogger>
+   <use name=GutSoftTools/StringTools>
+</export>
