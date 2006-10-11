@@ -1,0 +1,5 @@
+<use name=FWCore/MessageLogger>
+<export>
+   <lib name=GutSoftToolsStringTools>
+   <use name=FWCore/MessageLogger>
+</export>
