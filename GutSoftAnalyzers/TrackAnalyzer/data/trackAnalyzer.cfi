@@ -1,0 +1,8 @@
+module trackAnalyzer = TrackAnalyzer 
+{
+
+  untracked string OutputFileName     = "roadSearchCloudAnalyzer.root"  
+  untracked string trackProducerLabel = "rsWithMaterialTracks"
+  untracked string BaseDirectoryName  = "Tracks"
+
+}
