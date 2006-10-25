@@ -1,0 +1,5 @@
+module histogramFileMergerModule = HistogramFileMergerModule
+{
+  untracked string  OutputFileName               = "output.root"  
+  untracked vstring InputFileNamed               = { "input.root" }  
+}
