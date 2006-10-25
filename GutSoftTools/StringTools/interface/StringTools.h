@@ -12,7 +12,7 @@
 // Created:         Wed Oct 11 02:40:58 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/06 14:42:01 $
+// $Date: 2006/10/11 03:24:56 $
 // $Revision: 1.1 $
 //
 
@@ -27,6 +27,10 @@ class StringTools {
 
   static std::vector<std::string> split(const std::string& str, 
 					const std::string& splitter);
+
+  static bool ReplaceAll(std::string& source, 
+			 const std::string find, 
+			 const std::string replace );
  private:
 
 };

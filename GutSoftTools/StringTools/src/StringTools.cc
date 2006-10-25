@@ -9,7 +9,7 @@
 // Created:         Wed Oct 11 02:40:58 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/06 14:42:01 $
+// $Date: 2006/10/11 03:24:56 $
 // $Revision: 1.1 $
 //
 
@@ -53,3 +53,22 @@ std::vector<std::string> StringTools::split(const std::string& str,
     }
   return result;
 }
+
+bool StringTools::ReplaceAll(std::string& source, 
+			     const std::string find, 
+			     const std::string replace ) { 
+  //
+  // replace all occurances of find in source with replace
+  //
+
+  // output value
+  bool result = false;
+  
+  size_t j; 
+  for (;(j = source.find( find )) != std::string::npos;) { 
+    source.replace( j, find.length(), replace ); 
+    result = true;
+  } 
+  
+  return result;
+} 
