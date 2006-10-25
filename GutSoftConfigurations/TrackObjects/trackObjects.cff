@@ -1,0 +1,28 @@
+# seed analyzers
+include "GutSoftAnalyzers/TrajectorySeedAnalyzer/data/rsSeedAnalyzer.cff" 
+include "GutSoftAnalyzers/TrajectorySeedAnalyzer/data/ckfSeedAnalyzer.cff" 
+
+# cloud analyzers
+include "GutSoftAnalyzers/RoadSearchCloudAnalyzer/data/rawRoadSearchCloudAnalyzer.cff" 
+include "GutSoftAnalyzers/RoadSearchCloudAnalyzer/data/cleanRoadSearchCloudAnalyzer.cff" 
+
+# track candidate analyzers
+include "GutSoftAnalyzers/TrackCandidateAnalyzer/data/rsTrackCandidateAnalyzer.cff" 
+include "GutSoftAnalyzers/TrackCandidateAnalyzer/data/ckfTrackCandidateAnalyzer.cff" 
+
+# track analyzers
+include "GutSoftAnalyzers/TrackAnalyzer/data/rsTrackAnalyzer.cff" 
+include "GutSoftAnalyzers/TrackAnalyzer/data/ckfTrackAnalyzer.cff" 
+
+
+sequence trackObjects = 
+{
+  rsSeedAnalyzer, 
+  ckfSeedAnalyzer, 
+  rawRoadSearchCloudAnalyzer, 
+  cleanRoadSearchCloudAnalyzer, 
+  rsTrackCandidateAnalyzer, 
+  ckfTrackCandidateAnalyzer, 
+  rsTrackAnalyzer, 
+  ckfTrackAnalyzer 
+}
