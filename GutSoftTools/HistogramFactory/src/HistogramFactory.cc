@@ -4,9 +4,7 @@
 // 
 // Description:     standardized histogram creation
 //
-//                  histograms are identified by their TH1 name
-//                  which has to include the type (1d,1dlabel,2d) appended with "_"
-//                  booking and fillling all uses this name
+//                  histograms are booked and filled all uses their UNIQUE name
 //                  and arguments to booking and filling has to adapted to the type by the user
 //                  sub-directories are automatically created, directory separation by "/"
 //
@@ -14,8 +12,8 @@
 // Created:         Thu Sep 28 22:41:24 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/06 14:42:01 $
-// $Revision: 1.1 $
+// $Date: 2006/10/11 03:26:04 $
+// $Revision: 1.2 $
 //
 
 #include <iostream>
@@ -67,35 +65,27 @@ bool HistogramFactory::bookHistogram(std::string name,
 				     std::string ytitle) {
   // 
   // book TH1D histogram
-  // in given directory in file
+  // in given directory
   //
 
   // return value
-  bool success = false;
+  bool result = false;
 
-  HistogramType type = extractHistogramType(name);
+  // create directory
+  HistogramFileMerger::getDirectory(file_,directory)->cd();
 
-  if ( type == OneD ) {
-    // create directory
-    HistogramFileMerger::getDirectory(file_,directory)->cd();
+  // create histogram
+  TH1D *dummy = new TH1D(name.c_str(),title.c_str(),nbin,low,high);
+  dummy->SetXTitle(xtitle.c_str());
+  dummy->SetYTitle(ytitle.c_str());
+  dummy->Sumw2();
 
-    // create histogram
-    TH1D *dummy = new TH1D(name.c_str(),title.c_str(),nbin,low,high);
-    dummy->SetXTitle(xtitle.c_str());
-    dummy->SetYTitle(ytitle.c_str());
-    dummy->Sumw2();
+  // add to map
+  histograms_[name] = (TH1*)dummy;
 
-    // add to map
-    histograms_[name] = (TH1*)dummy;
-
-    success = true;
+  result = true;
     
-  } else {
-    edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be booked because the HistogramType does not correspond to the chosen parameters. Please make sure that name appendix corresponds to the parameters of the booking function";
-
-  }
-
-  return success;
+  return result;
 }
   
 bool HistogramFactory::bookHistogram(std::string name, 
@@ -111,31 +101,23 @@ bool HistogramFactory::bookHistogram(std::string name,
   //
 
   // return value
-  bool success = false;
+  bool result = false;
 
-  HistogramType type = extractHistogramType(name);
+  // create directory
+  HistogramFileMerger::getDirectory(file_,directory)->cd();
 
-  if ( type == OneD ) {
-    // create directory
-    HistogramFileMerger::getDirectory(file_,directory)->cd();
+  // create histogram
+  TH1D *dummy = new TH1D(name.c_str(),title.c_str(),nbin,array);
+  dummy->SetXTitle(xtitle.c_str());
+  dummy->SetYTitle(ytitle.c_str());
+  dummy->Sumw2();
 
-    // create histogram
-    TH1D *dummy = new TH1D(name.c_str(),title.c_str(),nbin,array);
-    dummy->SetXTitle(xtitle.c_str());
-    dummy->SetYTitle(ytitle.c_str());
-    dummy->Sumw2();
-
-    // add to map
-    histograms_[name] = (TH1*)dummy;
-
-    success = true;
+  // add to map
+  histograms_[name] = (TH1*)dummy;
+  
+  result = true;
     
-  } else {
-    edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be booked because the HistogramType does not correspond to the chosen parameters. Please make sure that name appendix corresponds to the parameters of the booking function";
-
-  }
-
-  return success;
+  return result;
 }
 
 bool HistogramFactory::bookHistogram(std::string name, 
@@ -150,40 +132,32 @@ bool HistogramFactory::bookHistogram(std::string name,
   //
 
   // return value
-  bool success = false;
+  bool result = false;
 
-  HistogramType type = extractHistogramType(name);
+  // create directory
+  HistogramFileMerger::getDirectory(file_,directory)->cd();
 
-  if ( type == OneDLabel ) {
-    // create directory
-    HistogramFileMerger::getDirectory(file_,directory)->cd();
+  // create histogram
+  // fill string array for bins
+  std::vector<std::string> labelArray = StringTools::split(labels,",");
+  
+  TH1D *dummy = new TH1D(name.c_str(),title.c_str(),labelArray.size(),0.,labelArray.size());
+  dummy->SetXTitle(xtitle.c_str());
+  dummy->SetYTitle(ytitle.c_str());
 
-    // create histogram
-    // fill string array for bins
-    std::vector<std::string> labelArray = StringTools::split(labels,",");
+  // set bin labels
+  for ( unsigned int i = 1; i <= labelArray.size(); ++i)
+    dummy->GetXaxis()->SetBinLabel(i,labelArray[i-1].c_str());
 
-    TH1D *dummy = new TH1D(name.c_str(),title.c_str(),labelArray.size(),0.,labelArray.size());
-    dummy->SetXTitle(xtitle.c_str());
-    dummy->SetYTitle(ytitle.c_str());
-
-    // set bin labels
-    for ( unsigned int i = 1; i <= labelArray.size(); ++i)
-      dummy->GetXaxis()->SetBinLabel(i,labelArray[i-1].c_str());
-
-    // draw vertical labels
-    dummy->LabelsOption("v");
-
-    // add to map
-    histograms_[name] = (TH1*)dummy;
-
-    success = true;
+  // draw vertical labels
+  dummy->LabelsOption("v");
+  
+  // add to map
+  histograms_[name] = (TH1*)dummy;
+  
+  result = true;
     
-  } else {
-    edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be booked because the HistogramType does not correspond to the chosen parameters. Please make sure that name appendix corresponds to the parameters of the booking function";
-
-  }
-
-  return success;
+  return result;
 }
 
 bool HistogramFactory::bookHistogram(std::string name, 
@@ -204,32 +178,24 @@ bool HistogramFactory::bookHistogram(std::string name,
   //
 
   // return value
-  bool success = false;
+  bool result = false;
 
-  HistogramType type = extractHistogramType(name);
+  // create directory
+  HistogramFileMerger::getDirectory(file_,directory)->cd();
 
-  if ( type == TwoD ) {
-    // create directory
-    HistogramFileMerger::getDirectory(file_,directory)->cd();
+  // create histogram
+  TH2D *dummy = new TH2D(name.c_str(),title.c_str(),nbinx,lowx,highx,nbiny,lowy,highy);
+  dummy->SetXTitle(xtitle.c_str());
+  dummy->SetYTitle(ytitle.c_str());
+  dummy->SetZTitle(ztitle.c_str());
+  dummy->Sumw2();
 
-    // create histogram
-    TH2D *dummy = new TH2D(name.c_str(),title.c_str(),nbinx,lowx,highx,nbiny,lowy,highy);
-    dummy->SetXTitle(xtitle.c_str());
-    dummy->SetYTitle(ytitle.c_str());
-    dummy->SetZTitle(ztitle.c_str());
-    dummy->Sumw2();
+  // add to map
+  histograms_[name] = (TH1*)dummy;
 
-    // add to map
-    histograms_[name] = (TH1*)dummy;
-
-    success = true;
+  result = true;
     
-  } else {
-    edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be booked because the HistogramType does not correspond to the chosen parameters. Please make sure that name appendix corresponds to the parameters of the booking function";
-
-  }
-
-  return success;
+  return result;
 }
 
 bool HistogramFactory::bookHistogram(std::string name, 
@@ -249,32 +215,24 @@ bool HistogramFactory::bookHistogram(std::string name,
   //
 
   // return value
-  bool success = false;
+  bool result = false;
 
-  HistogramType type = extractHistogramType(name);
+  // create directory
+  HistogramFileMerger::getDirectory(file_,directory)->cd();
 
-  if ( type == TwoD ) {
-    // create directory
-    HistogramFileMerger::getDirectory(file_,directory)->cd();
-
-    // create histogram
-    TH2D *dummy = new TH2D(name.c_str(),title.c_str(),nbinx,xarray,nbiny,lowy,highy);
-    dummy->SetXTitle(xtitle.c_str());
-    dummy->SetYTitle(ytitle.c_str());
-    dummy->SetZTitle(ztitle.c_str());
-    dummy->Sumw2();
-
-    // add to map
-    histograms_[name] = (TH1*)dummy;
-
-    success = true;
+  // create histogram
+  TH2D *dummy = new TH2D(name.c_str(),title.c_str(),nbinx,xarray,nbiny,lowy,highy);
+  dummy->SetXTitle(xtitle.c_str());
+  dummy->SetYTitle(ytitle.c_str());
+  dummy->SetZTitle(ztitle.c_str());
+  dummy->Sumw2();
+  
+  // add to map
+  histograms_[name] = (TH1*)dummy;
+  
+  result = true;
     
-  } else {
-    edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be booked because the HistogramType does not correspond to the chosen parameters. Please make sure that name appendix corresponds to the parameters of the booking function";
-
-  }
-
-  return success;
+  return result;
 }
 
 bool HistogramFactory::bookHistogram(std::string name, 
@@ -294,32 +252,24 @@ bool HistogramFactory::bookHistogram(std::string name,
   //
 
   // return value
-  bool success = false;
+  bool result = false;
 
-  HistogramType type = extractHistogramType(name);
+  // create directory
+  HistogramFileMerger::getDirectory(file_,directory)->cd();
 
-  if ( type == TwoD ) {
-    // create directory
-    HistogramFileMerger::getDirectory(file_,directory)->cd();
+  // create histogram
+  TH2D *dummy = new TH2D(name.c_str(),title.c_str(),nbinx,lowx,highx,nbiny,yarray);
+  dummy->SetXTitle(xtitle.c_str());
+  dummy->SetYTitle(ytitle.c_str());
+  dummy->SetZTitle(ztitle.c_str());
+  dummy->Sumw2();
 
-    // create histogram
-    TH2D *dummy = new TH2D(name.c_str(),title.c_str(),nbinx,lowx,highx,nbiny,yarray);
-    dummy->SetXTitle(xtitle.c_str());
-    dummy->SetYTitle(ytitle.c_str());
-    dummy->SetZTitle(ztitle.c_str());
-    dummy->Sumw2();
+  // add to map
+  histograms_[name] = (TH1*)dummy;
 
-    // add to map
-    histograms_[name] = (TH1*)dummy;
-
-    success = true;
+  result = true;
     
-  } else {
-    edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be booked because the HistogramType does not correspond to the chosen parameters. Please make sure that name appendix corresponds to the parameters of the booking function";
-
-  }
-
-  return success;
+  return result;
 }
 
 bool HistogramFactory::bookHistogram(std::string name, 
@@ -338,145 +288,185 @@ bool HistogramFactory::bookHistogram(std::string name,
   //
 
   // return value
-  bool success = false;
+  bool result = false;
 
-  HistogramType type = extractHistogramType(name);
+  // create directory
+  HistogramFileMerger::getDirectory(file_,directory)->cd();
 
-  if ( type == TwoD ) {
-    // create directory
-    HistogramFileMerger::getDirectory(file_,directory)->cd();
+  // create histogram
+  TH2D *dummy = new TH2D(name.c_str(),title.c_str(),nbinx,xarray,nbiny,yarray);
+  dummy->SetXTitle(xtitle.c_str());
+  dummy->SetYTitle(ytitle.c_str());
+  dummy->SetZTitle(ztitle.c_str());
+  dummy->Sumw2();
 
-    // create histogram
-    TH2D *dummy = new TH2D(name.c_str(),title.c_str(),nbinx,xarray,nbiny,yarray);
-    dummy->SetXTitle(xtitle.c_str());
-    dummy->SetYTitle(ytitle.c_str());
-    dummy->SetZTitle(ztitle.c_str());
-    dummy->Sumw2();
+  // add to map
+  histograms_[name] = (TH1*)dummy;
 
-    // add to map
-    histograms_[name] = (TH1*)dummy;
-
-    success = true;
+  result = true;
     
-  } else {
-    edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be booked because the HistogramType does not correspond to the chosen parameters. Please make sure that name appendix corresponds to the parameters of the booking function";
-
-  }
-
-  return success;
+  return result;
 }
 
 bool HistogramFactory::fill(std::string name, 
-			    std::string input, 
-			    double weight){
+			    const double& input_x){
   //
-  // fill histogram by looking it up by its name in the histograms_ map
+  // fill TH1D histogram
   //
 
   // return value
-  bool success = false;
-
-  // determine type
-  HistogramType type = extractHistogramType(name);
-
-  if ( type == OneDLabel ) {
-
-    TH1D *histo = (TH1D*)(histograms_[name]);
-
-    if ( histo ) {
-      histo->Fill(input.c_str(),weight);
-      success = true;
+  bool result = false;
+  
+  TH1 *org_histo = histograms_[name];
+  if ( org_histo ) {
+    if (org_histo->IsA()->InheritsFrom("TH1D")) {
+      TH1D *histo = (TH1D*)org_histo;
+      histo->Fill(input_x);
+      result = true;
     } else {
-      edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be found. Please book the histogram before filling";
+      edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " is not a TH1D histograms and therefore cannot be filled using this fillFunction.";
     }
   } else {
-    edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be filled because the HistogramType does not correspond to the chosen parameters. Please make sure that name appendix corresponds to the parameters of the filling function";
-
+    edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be found. Please book the histogram before filling";
   }
 
-  return success;
+  return result;
+  
+}
+
+bool HistogramFactory::fill(std::string name, 
+			    std::string input){
+  //
+  // fill labeled TH1D histogram
+  //
+
+  // return value
+  bool result = false;
+  
+  TH1 *org_histo = histograms_[name];
+  if ( org_histo ) {
+    if (org_histo->IsA()->InheritsFrom("TH1D")) {
+      TH1D *histo = (TH1D*)org_histo;
+      histo->Fill(input.c_str(),1.);
+      result = true;
+    } else {
+      edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " is not a Label-TH1D histogram and therefore cannot be filled using this fillFunction.";
+    }
+  } else {
+    edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be found. Please book the histogram before filling";
+  }
+
+  return result;
   
 }
 
 bool HistogramFactory::fill(std::string name, 
 			    const double& input_x, 
-			    const double& input_y, 
-			    const double& weight){
+			    const double& input_y){
   //
-  // fill histogram by looking it up by its name in the histograms_ map
+  // fill TH2D histogram
   //
 
   // return value
-  bool success = false;
-
-  // determine type
-  HistogramType type = extractHistogramType(name);
-
-  if ( type == OneD ) {
-
-    TH1D *histo = (TH1D*)(histograms_[name]);
-
-    if ( histo ) {
-      histo->Fill(input_x,weight);
-      success = true;
+  bool result = false;
+  
+  TH1 *org_histo = histograms_[name];
+  if ( org_histo ) {
+    if (org_histo->IsA()->InheritsFrom("TH2D")) {
+      TH2D *histo = (TH2D*)org_histo;
+      histo->Fill(input_x,input_y);
+      result = true;
     } else {
-      edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be found. Please book the histogram before filling";
-    }
-  } else if ( type == TwoD ) {
-
-    TH2D *histo = (TH2D*)(histograms_[name]);
-
-    if ( histo ) {
-      histo->Fill(input_x,input_y,weight);
-      success = true;
-    } else {
-      edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be found. Please book the histogram before filling";
+      edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " is not a TH2D histogram and therefore cannot be filled using this fillFunction.";
     }
   } else {
-    edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be filled because the HistogramType does not correspond to the chosen parameters. Please make sure that name appendix corresponds to the parameters of the filling function";
-
+    edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be found. Please book the histogram before filling";
   }
 
-  return success;
+  return result;
   
+
 }
 
-HistogramFactory::HistogramType HistogramFactory::extractHistogramType(const std::string& name) {
+bool HistogramFactory::fillWeighted(std::string name, 
+				    const double& input_x, 
+				    const double& weight){
   //
-  // extract HistogramType from name
-  // type has to be appended to name separated by "_"
+  // fill TH1D histogram  with weighted content
   //
 
   // return value
-  HistogramType type = inValid;
-
-  // parse name
-  std::vector<std::string> array = StringTools::split(name,"_");
-  std::string typeString = *(array.end()-1);
+  bool result = false;
   
-  if ( typeString == "1d") {
-    type = OneD;
-  } else if ( typeString == "1dlabel") {
-    type = OneDLabel;
-    } else if ( typeString == "2d") {
-    type = TwoD;
+  TH1 *org_histo = histograms_[name];
+  if ( org_histo ) {
+    if (org_histo->IsA()->InheritsFrom("TH1D")) {
+      TH1D *histo = (TH1D*)org_histo;
+      histo->Fill(input_x,weight);
+      result = true;
+    } else {
+      edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " is not a TH1D histograms and therefore cannot be filled using this fillFunction.";
+    }
+  } else {
+    edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be found. Please book the histogram before filling";
   }
 
-  return type;
-    
+  return result;
+  
 }
 
-bool HistogramFactory::isValidHistogramType(HistogramType type) {
+bool HistogramFactory::fillWeighted(std::string name, 
+				    std::string input, 
+				    double weight){
   //
-  // checks if HistogramType is not inValid
+  // fill labeled TH1D histogram with weighted content
   //
 
   // return value
-  bool status = false;
-
-  if ( type != inValid ) {
-    status = true;
+  bool result = false;
+  
+  TH1 *org_histo = histograms_[name];
+  if ( org_histo ) {
+    if (org_histo->IsA()->InheritsFrom("TH1D")) {
+      TH1D *histo = (TH1D*)org_histo;
+      histo->Fill(input.c_str(),weight);
+      result = true;
+    } else {
+      edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " is not a Label-TH1D histogram and therefore cannot be filled using this fillFunction.";
+    }
+  } else {
+    edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be found. Please book the histogram before filling";
   }
 
-  return status;
+  return result;
+  
+}
+
+bool HistogramFactory::fillWeighted(std::string name, 
+				    const double& input_x, 
+				    const double& input_y, 
+				    const double& weight){
+  //
+  // fill TH2D histogram  with weighted content
+  //
+
+  // return value
+  bool result = false;
+  
+  TH1 *org_histo = histograms_[name];
+  if ( org_histo ) {
+    if (org_histo->IsA()->InheritsFrom("TH2D")) {
+      TH2D *histo = (TH2D*)org_histo;
+      histo->Fill(input_x,input_y,weight);
+      result = true;
+    } else {
+      edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " is not a TH2D histogram and therefore cannot be filled using this fillFunction.";
+    }
+  } else {
+    edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << name << " could not be found. Please book the histogram before filling";
+  }
+
+  return result;
+  
+
 }

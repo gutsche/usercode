@@ -7,9 +7,7 @@
 // 
 // Description:     standardized histogram creation
 //
-//                  histograms are identified by their TH1 name
-//                  which has to include the type (1d,1i,2d,..) appended with "_"
-//                  booking and fillling all uses this name
+//                  histograms are booked and filled all uses their UNIQUE name
 //                  and arguments to booking and filling has to adapted to the type by the user
 //                  sub-directories are automatically created, directory separation by "/"
 //
@@ -17,8 +15,8 @@
 // Created:         Thu Sep 28 22:41:24 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/06 14:42:01 $
-// $Revision: 1.1 $
+// $Date: 2006/10/11 03:26:04 $
+// $Revision: 1.2 $
 //
 
 #include <string>
@@ -31,14 +29,6 @@ class TH1;
 
 class HistogramFactory {
  public:
-
-  enum HistogramType {
-    OneD,
-    OneDLabel,
-    TwoD,
-    inValid
-  };
-
 
   HistogramFactory(std::string filename);
   ~HistogramFactory();
@@ -117,16 +107,27 @@ class HistogramFactory {
 		     std::string ztitle);
 
   bool fill(std::string name, 
-	    std::string input, 
-	    double weight = 1.);
+	    const double& input_x);
+
+  bool fill(std::string name, 
+	    std::string input);
 
   bool fill(std::string name, 
 	    const double& input_x, 
-	    const double& input_y = 0., 
-	    const double& weight = 1.);
+	    const double& input_y);
 
-  HistogramType extractHistogramType(const std::string& name);
-  bool isValidHistogramType(HistogramType type);
+  bool fillWeighted(std::string name, 
+		    const double& input_x, 
+		    const double& weight);
+
+  bool fillWeighted(std::string name, 
+		    std::string input, 
+		    double weight);
+
+  bool fillWeighted(std::string name, 
+		    const double& input_x, 
+		    const double& input_y, 
+		    const double& weight);
 
  private:
 
