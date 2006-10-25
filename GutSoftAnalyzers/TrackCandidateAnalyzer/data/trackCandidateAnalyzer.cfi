@@ -2,7 +2,7 @@ module trackCandidateAnalyzer = TrackCandidateAnalyzer
 {
 
   untracked string OutputFileName              = "trackCandidateAnalyzer.root"  
-  untracked string trackCandidateProducerLabel = "rsTrackCandidates"
+  untracked string TrackCandidateProducerLabel = "rsTrackCandidates"
   untracked string BaseDirectoryName           = "TrackCandidates"
 
 }

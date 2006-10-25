@@ -8,8 +8,8 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/11 03:21:18 $
-// $Revision: 1.3 $
+// $Date: 2006/10/18 01:45:49 $
+// $Revision: 1.1 $
 //
 
 #include <string>
@@ -38,7 +38,7 @@ TrackAnalyzer::TrackAnalyzer(const edm::ParameterSet& iConfig)
 TrackAnalyzer::~TrackAnalyzer()
 {
  
-  if ( !histograms_ ) {
+  if ( histograms_ ) {
     delete histograms_;
     histograms_ = 0;
   }
@@ -267,7 +267,7 @@ void
 TrackAnalyzer::endJob() {
 
   // delete HistogramFactory, histogram file is written out and can be handled in module endJob functions of the following modules
-  if (!histograms_) {
+  if (histograms_) {
     delete histograms_;
     histograms_ = 0;
   }

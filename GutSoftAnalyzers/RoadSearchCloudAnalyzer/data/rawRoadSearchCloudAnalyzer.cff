@@ -1,0 +1,5 @@
+module rawRoadSearchCloudAnalyzer = roadSearchCloudAnalyzer from "GutSoftAnalyzers/RoadSearchCloudAnalyzer/data/roadSearchCloudAnalyzer.cfi"
+replace rawRoadSearchCloudAnalyzer.OutputFileName               = "rawRoadSearchCloudAnalyzer.root"  
+replace rawRoadSearchCloudAnalyzer.RoadSearchCloudProducerLabel = "rawRoadSearchClouds"
+replace rawRoadSearchCloudAnalyzer.BaseDirectoryName            = "rawClouds"
+

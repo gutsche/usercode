@@ -1,0 +1,4 @@
+module rsTrackCandidateAnalyzer = trackCandidateAnalyzer from "GutSoftAnalyzers/TrackCandidateAnalyzer/data/trackCandidateAnalyzer.cfi"
+replace rsTrackCandidateAnalyzer.OutputFileName              = "rsTrackCandidateAnalyzer.root"  
+replace rsTrackCandidateAnalyzer.TrackCandidateProducerLabel = "rsTrackCandidates"
+replace rsTrackCandidateAnalyzer.BaseDirectoryName           = "rsTrackCandidates"

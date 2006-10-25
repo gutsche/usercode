@@ -8,8 +8,8 @@
 // Created:         Tue Oct 17 02:07:51 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/11 03:21:18 $
-// $Revision: 1.3 $
+// $Date: 2006/10/17 03:12:34 $
+// $Revision: 1.1 $
 //
 
 #include <string>
@@ -34,7 +34,7 @@ TrajectorySeedAnalyzer::TrajectorySeedAnalyzer(const edm::ParameterSet& iConfig)
 TrajectorySeedAnalyzer::~TrajectorySeedAnalyzer()
 {
 
-  if ( !histograms_ ) {
+  if ( histograms_ ) {
     delete histograms_;
     histograms_ = 0;
   }
@@ -90,7 +90,7 @@ void
 TrajectorySeedAnalyzer::endJob() {
 
   // delete HistogramFactory, histogram file is written out and can be handled in module endJob functions of the following modules
-  if (!histograms_) {
+  if (histograms_) {
     delete histograms_;
     histograms_ = 0;
   }

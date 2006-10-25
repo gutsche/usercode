@@ -1,0 +1,4 @@
+module ckfTrackCandidateAnalyzer = trackCandidateAnalyzer from "GutSoftAnalyzers/TrackCandidateAnalyzer/data/trackCandidateAnalyzer.cfi"
+replace ckfTrackCandidateAnalyzer.OutputFileName              = "ckfTrackCandidateAnalyzer.root"  
+replace ckfTrackCandidateAnalyzer.TrackCandidateProducerLabel = "ckfTrackCandidates"
+replace ckfTrackCandidateAnalyzer.BaseDirectoryName           = "ckfTrackCandidates"
