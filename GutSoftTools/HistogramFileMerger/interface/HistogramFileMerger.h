@@ -11,8 +11,8 @@
 // Created:         Wed Oct 11 02:40:58 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/11 03:25:19 $
-// $Revision: 1.1 $
+// $Date: 2006/10/17 00:08:40 $
+// $Revision: 1.2 $
 //
 
 #include <string>
@@ -62,9 +62,13 @@ class HistogramFileMerger {
   bool check2DHistogramCompatibility(TH2 *histogramOne,
 				     TH2 *histogramTwo);
 
+  bool deleteInputFiles();
+
  private:
 
   FileContent outputFileContent_;
+  std::string outputFileName_;
+  std::vector<std::string> inputFileNames_;
 
 };
 

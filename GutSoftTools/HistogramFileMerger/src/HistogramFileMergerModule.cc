@@ -10,7 +10,7 @@
 // Created:         Wed Oct 25 20:48:20 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/17 03:12:34 $
+// $Date: 2006/10/25 21:09:36 $
 // $Revision: 1.1 $
 //
 
@@ -25,6 +25,7 @@ HistogramFileMergerModule::HistogramFileMergerModule(const edm::ParameterSet& iC
 
   outputFileName_              = iConfig.getUntrackedParameter<std::string>("OutputFileName");
   inputFileNames_              = iConfig.getUntrackedParameter<std::vector<std::string> >("InputFileNames");
+  deleteInputFiles_            = iConfig.getUntrackedParameter<bool>("DeleteInputFiles");
 
 }
 
@@ -53,5 +54,8 @@ HistogramFileMergerModule::endJob() {
 
   // merge inputFileNames
   HistogramFileMerger merger(outputFileName_,inputFileNames_);
+  if ( deleteInputFiles_ ) {
+    merger.deleteInputFiles();
+  }
 
 }

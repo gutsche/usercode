@@ -1,5 +1,6 @@
 module histogramFileMergerModule = HistogramFileMergerModule
 {
   untracked string  OutputFileName               = "output.root"  
-  untracked vstring InputFileNamed               = { "input.root" }  
+  untracked vstring InputFileNames               = { "input.root" }  
+  untracked bool    DeleteInputFiles             = false
 }

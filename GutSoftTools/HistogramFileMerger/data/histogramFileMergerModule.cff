@@ -1,1 +1,1 @@
-include "GutSoftAnalyzers/HistogramFileMerger/data/histogramFileMergerModule.cfi"
+include "GutSoftTools/HistogramFileMerger/data/histogramFileMergerModule.cfi"

@@ -14,6 +14,19 @@ include "GutSoftAnalyzers/TrackCandidateAnalyzer/data/ckfTrackCandidateAnalyzer.
 include "GutSoftAnalyzers/TrackAnalyzer/data/rsTrackAnalyzer.cff" 
 include "GutSoftAnalyzers/TrackAnalyzer/data/ckfTrackAnalyzer.cff" 
 
+# histogram file merger
+include "GutSoftTools/HistogramFileMerger/data/histogramFileMergerModule.cff"
+replace histogramFileMergerModule.OutputFileName   = "trackObjects.root"
+replace histogramFileMergerModule.InputFileNames   = { "rsSeedAnalyzer.root",
+                                                       "ckfSeedAnalyzer.root",
+                                                       "rawRoadSearchCloudAnalyzer.root",
+                                                       "cleanRoadSearchCloudAnalyzer.root",
+                                                       "rsTrackCandidateAnalyzer.root",
+                                                       "ckfTrackCandidateAnalyzer.root",
+                                                       "rsTrackAnalyzer.root",
+                                                       "ckfTrackAnalyzer.root" }
+replace histogramFileMergerModule.DeleteInputFiles = true
+
 
 sequence trackObjects = 
 {
@@ -24,5 +37,6 @@ sequence trackObjects =
   rsTrackCandidateAnalyzer, 
   ckfTrackCandidateAnalyzer, 
   rsTrackAnalyzer, 
-  ckfTrackAnalyzer 
+  ckfTrackAnalyzer,
+  histogramFileMergerModule 
 }

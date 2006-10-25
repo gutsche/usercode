@@ -8,11 +8,12 @@
 // Created:         Wed Oct 11 02:40:58 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/11 03:25:19 $
-// $Revision: 1.1 $
+// $Date: 2006/10/17 00:08:40 $
+// $Revision: 1.2 $
 //
 
 #include <iostream>
+#include <cstdio>
 
 #include "GutSoftTools/HistogramFileMerger/interface/HistogramFileMerger.h"
 
@@ -29,15 +30,16 @@
 #include "TKey.h"
 
 HistogramFileMerger::HistogramFileMerger(std::string outputFileName,
-					 std::vector<std::string> inputFileNames) {
+					 std::vector<std::string> inputFileNames) 
+  : outputFileName_(outputFileName) , inputFileNames_(inputFileNames) {
   //
   // constructor
   //
 
   // open input files
   std::vector<TFile*> inputFiles;
-  for ( std::vector<std::string>::const_iterator inputFileName = inputFileNames.begin();
-	inputFileName != inputFileNames.end();
+  for ( std::vector<std::string>::const_iterator inputFileName = inputFileNames_.begin();
+	inputFileName != inputFileNames_.end();
 	++inputFileName ) {
     TFile *file = new TFile(inputFileName->c_str());
     if ( !file->IsZombie() ) {
@@ -56,7 +58,7 @@ HistogramFileMerger::HistogramFileMerger(std::string outputFileName,
   }
 
   // write FileContent structure into output file
-  TFile *outputFile = new TFile(outputFileName.c_str(),"RECREATE");
+  TFile *outputFile = new TFile(outputFileName_.c_str(),"RECREATE");
   std::cout << "Writing out file: " << outputFile->GetName() << std::endl;
   writeFile(outputFileContent_, outputFile);
 
@@ -416,3 +418,22 @@ bool HistogramFileMerger::check2DHistogramCompatibility(TH2 *histogramOne,
   return result;
 }
   
+bool HistogramFileMerger::deleteInputFiles() {
+  // 
+  // deleteInputFiles
+  //
+
+  // return value
+  bool result = true;
+  
+  for ( std::vector<std::string>::const_iterator inputFileName = inputFileNames_.begin();
+	inputFileName != inputFileNames_.end();
+	++inputFileName ) {
+    if ( std::remove(inputFileName->c_str()) != 0 ) {
+      std::cout << "Could not remove file: " << *inputFileName << std::endl;
+      result = false;
+    }
+  }
+
+  return result;
+}

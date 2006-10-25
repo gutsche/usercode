@@ -13,7 +13,7 @@
 // Created:         Wed Oct 25 20:48:20 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/17 03:12:34 $
+// $Date: 2006/10/25 21:09:36 $
 // $Revision: 1.1 $
 //
 
@@ -37,6 +37,7 @@ class HistogramFileMergerModule : public edm::EDAnalyzer {
 
   std::string outputFileName_;
   std::vector<std::string> inputFileNames_;
+  bool deleteInputFiles_;
 
 };
 

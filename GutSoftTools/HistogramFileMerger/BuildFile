@@ -1,12 +1,18 @@
 <flags SEAL_PLUGIN_NAME="GutSoftToolsHistogramFileMerger">
+<use name=FWCore/MessageLogger>
+<use name=FWCore/Framework>
+<use name=Foundation/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=GutSoftTools/StringTools>
 <use name=root>
 <use name=rootcore>
-<use name=FWCore/MessageLogger>
-<use name=GutSoftTools/StringTools>
 <export>
    <lib name=GutSoftToolsHistogramFileMerger>
+   <use name=FWCore/MessageLogger>
+   <use name=FWCore/Framework>
+   <use name=Foundation/PluginManager>
+   <use name=FWCore/ParameterSet>
+   <use name=GutSoftTools/StringTools>
    <use name=root>
    <use name=rootcore>
-   <use name=FWCore/MessageLogger>
-   <use name=GutSoftTools/StringTools>
 </export>
