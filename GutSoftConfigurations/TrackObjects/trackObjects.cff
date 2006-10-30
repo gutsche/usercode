@@ -14,22 +14,53 @@ include "GutSoftAnalyzers/TrackCandidateAnalyzer/data/ckfTrackCandidateAnalyzer.
 include "GutSoftAnalyzers/TrackAnalyzer/data/rsTrackAnalyzer.cff" 
 include "GutSoftAnalyzers/TrackAnalyzer/data/ckfTrackAnalyzer.cff" 
 
-# histogram file merger
-include "GutSoftTools/HistogramFileMerger/data/histogramFileMergerModule.cff"
-replace histogramFileMergerModule.OutputFileName   = "trackObjects.root"
-replace histogramFileMergerModule.InputFileNames   = { "rsSeedAnalyzer.root",
-                                                       "ckfSeedAnalyzer.root",
-                                                       "rawRoadSearchCloudAnalyzer.root",
-                                                       "cleanRoadSearchCloudAnalyzer.root",
-                                                       "rsTrackCandidateAnalyzer.root",
-                                                       "ckfTrackCandidateAnalyzer.root",
-                                                       "rsTrackAnalyzer.root",
-                                                       "ckfTrackAnalyzer.root" }
-replace histogramFileMergerModule.DeleteInputFiles = true
+# same number of tracks filter
+include "GutSoftFilters/SameNumberOfTracksFilter/data/sameNumberOfTracksFilter.cff"
+replace sameNumberOfTracksFilter.NumberOfTracks = 1
+replace sameNumberOfTracksFilter.TrackProducerLabels = { "rsWithMaterialTracks",
+                                                   "ctfWithMaterialTracks" }
 
+# seed analyzers for same number of tracks
+module rsSeedAnalyzerSameNumberOfTracks = trajectorySeedAnalyzer from "GutSoftAnalyzers/TrajectorySeedAnalyzer/data/trajectorySeedAnalyzer.cfi"
+replace rsSeedAnalyzerSameNumberOfTracks.OutputFileName              = "rsSeedAnalyzer_Same_1.root"  
+replace rsSeedAnalyzerSameNumberOfTracks.TrajectorySeedProducerLabel = "roadSearchSeeds"
+replace rsSeedAnalyzerSameNumberOfTracks.BaseDirectoryName           = "rsSeeds_Same_1"
+module ckfSeedAnalyzerSameNumberOfTracks = trajectorySeedAnalyzer from "GutSoftAnalyzers/TrajectorySeedAnalyzer/data/trajectorySeedAnalyzer.cfi"
+replace ckfSeedAnalyzerSameNumberOfTracks.OutputFileName              = "ckfSeedAnalyzer_Same_1.root"  
+replace ckfSeedAnalyzerSameNumberOfTracks.TrajectorySeedProducerLabel = "globalMixedSeeds"
+replace ckfSeedAnalyzerSameNumberOfTracks.BaseDirectoryName           = "ckfSeeds_Same_1"
 
-sequence trackObjects = 
-{
+# cloud analyzers for same number of tracks
+module rawRoadSearchCloudAnalyzerSameNumberOfTracks = roadSearchCloudAnalyzer from "GutSoftAnalyzers/RoadSearchCloudAnalyzer/data/roadSearchCloudAnalyzer.cfi"
+replace rawRoadSearchCloudAnalyzerSameNumberOfTracks.OutputFileName               = "rawRoadSearchCloudAnalyzer_Same_1.root"  
+replace rawRoadSearchCloudAnalyzerSameNumberOfTracks.RoadSearchCloudProducerLabel = "rawRoadSearchClouds"
+replace rawRoadSearchCloudAnalyzerSameNumberOfTracks.BaseDirectoryName            = "rawClouds_Same_1"
+module cleanRoadSearchCloudAnalyzerSameNumberOfTracks = roadSearchCloudAnalyzer from "GutSoftAnalyzers/RoadSearchCloudAnalyzer/data/roadSearchCloudAnalyzer.cfi"
+replace cleanRoadSearchCloudAnalyzerSameNumberOfTracks.OutputFileName               = "cleanRoadSearchCloudAnalyzer_Same_1.root"  
+replace cleanRoadSearchCloudAnalyzerSameNumberOfTracks.RoadSearchCloudProducerLabel = "cleanRoadSearchClouds"
+replace cleanRoadSearchCloudAnalyzerSameNumberOfTracks.BaseDirectoryName            = "cleanClouds_Same_1"
+
+# track candidate analyzers for same number of tracks
+module rsTrackCandidateAnalyzerSameNumberOfTracks = trackCandidateAnalyzer from "GutSoftAnalyzers/TrackCandidateAnalyzer/data/trackCandidateAnalyzer.cfi"
+replace rsTrackCandidateAnalyzerSameNumberOfTracks.OutputFileName              = "rsTrackCandidateAnalyzer_Same_1.root"  
+replace rsTrackCandidateAnalyzerSameNumberOfTracks.TrackCandidateProducerLabel = "rsTrackCandidates"
+replace rsTrackCandidateAnalyzerSameNumberOfTracks.BaseDirectoryName           = "rsTrackCandidates_Same_1"
+module ckfTrackCandidateAnalyzerSameNumberOfTracks = trackCandidateAnalyzer from "GutSoftAnalyzers/TrackCandidateAnalyzer/data/trackCandidateAnalyzer.cfi"
+replace ckfTrackCandidateAnalyzerSameNumberOfTracks.OutputFileName              = "ckfTrackCandidateAnalyzer_Same_1.root"  
+replace ckfTrackCandidateAnalyzerSameNumberOfTracks.TrackCandidateProducerLabel = "ckfTrackCandidates"
+replace ckfTrackCandidateAnalyzerSameNumberOfTracks.BaseDirectoryName           = "ckfTrackCandidates_Same_1"
+
+# track analyzers for same number of tracks
+module rsTrackAnalyzerSameNumberOfTracks = trackAnalyzer from "GutSoftAnalyzers/TrackAnalyzer/data/trackAnalyzer.cfi"
+replace rsTrackAnalyzerSameNumberOfTracks.OutputFileName     = "rsTrackAnalyzer_Same_1.root"  
+replace rsTrackAnalyzerSameNumberOfTracks.TrackProducerLabel = "rsWithMaterialTracks"
+replace rsTrackAnalyzerSameNumberOfTracks.BaseDirectoryName  = "rsTracks_Same_1"
+module ckfTrackAnalyzerSameNumberOfTracks = trackAnalyzer from "GutSoftAnalyzers/TrackAnalyzer/data/trackAnalyzer.cfi"
+replace ckfTrackAnalyzerSameNumberOfTracks.OutputFileName     = "ckfTrackAnalyzer_Same_1.root"  
+replace ckfTrackAnalyzerSameNumberOfTracks.TrackProducerLabel = "ctfWithMaterialTracks"
+replace ckfTrackAnalyzerSameNumberOfTracks.BaseDirectoryName  = "ckfTracks_Same_1"
+
+sequence allTracks = {
   rsSeedAnalyzer, 
   ckfSeedAnalyzer, 
   rawRoadSearchCloudAnalyzer, 
@@ -37,6 +68,22 @@ sequence trackObjects =
   rsTrackCandidateAnalyzer, 
   ckfTrackCandidateAnalyzer, 
   rsTrackAnalyzer, 
-  ckfTrackAnalyzer,
-  histogramFileMergerModule 
+  ckfTrackAnalyzer
+}
+
+sequence filteredTracks = {
+  sameNumberOfTracksFilter,
+  rsSeedAnalyzerSameNumberOfTracks,
+  ckfSeedAnalyzerSameNumberOfTracks,
+  rawRoadSearchCloudAnalyzerSameNumberOfTracks, 
+  cleanRoadSearchCloudAnalyzerSameNumberOfTracks, 
+  rsTrackCandidateAnalyzerSameNumberOfTracks, 
+  ckfTrackCandidateAnalyzerSameNumberOfTracks, 
+  rsTrackAnalyzerSameNumberOfTracks, 
+  ckfTrackAnalyzerSameNumberOfTracks
+}
+
+sequence trackObjects = {
+  allTracks,
+  filteredTracks
 }
