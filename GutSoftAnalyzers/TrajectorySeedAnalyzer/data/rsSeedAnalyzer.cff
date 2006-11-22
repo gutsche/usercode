@@ -1,4 +1,0 @@
-module rsSeedAnalyzer = trajectorySeedAnalyzer from "GutSoftAnalyzers/TrajectorySeedAnalyzer/data/trajectorySeedAnalyzer.cfi"
-replace rsSeedAnalyzer.OutputFileName              = "rsSeedAnalyzer.root"  
-replace rsSeedAnalyzer.TrajectorySeedProducerLabel = "roadSearchSeeds"
-replace rsSeedAnalyzer.BaseDirectoryName           = "rsSeeds"

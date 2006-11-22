@@ -1,8 +1,0 @@
-module trackCandidateAnalyzer = TrackCandidateAnalyzer
-{
-
-  untracked string OutputFileName              = "trackCandidateAnalyzer.root"  
-  untracked string TrackCandidateProducerLabel = "rsTrackCandidates"
-  untracked string BaseDirectoryName           = "TrackCandidates"
-
-}

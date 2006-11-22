@@ -1,4 +1,0 @@
-module ckfSeedAnalyzer = trajectorySeedAnalyzer from "GutSoftAnalyzers/TrajectorySeedAnalyzer/data/trajectorySeedAnalyzer.cfi"
-replace ckfSeedAnalyzer.OutputFileName              = "ckfSeedAnalyzer.root"  
-replace ckfSeedAnalyzer.TrajectorySeedProducerLabel = "globalMixedSeeds"
-replace ckfSeedAnalyzer.BaseDirectoryName           = "ckfSeeds"

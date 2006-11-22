@@ -1,4 +1,0 @@
-module rsTrackAnalyzer = trackAnalyzer from "GutSoftAnalyzers/TrackAnalyzer/data/trackAnalyzer.cfi"
-replace rsTrackAnalyzer.OutputFileName     = "rsTrackAnalyzer.root"  
-replace rsTrackAnalyzer.TrackProducerLabel = "rsWithMaterialTracks"
-replace rsTrackAnalyzer.BaseDirectoryName  = "rsTracks"

@@ -1,4 +1,0 @@
-module ckfTrackAnalyzer = trackAnalyzer from "GutSoftAnalyzers/TrackAnalyzer/data/trackAnalyzer.cfi"
-replace ckfTrackAnalyzer.OutputFileName     = "ckfTrackAnalyzer.root"  
-replace ckfTrackAnalyzer.TrackProducerLabel = "ctfWithMaterialTracks"
-replace ckfTrackAnalyzer.BaseDirectoryName  = "ckfTracks"

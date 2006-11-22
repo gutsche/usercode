@@ -1,9 +1,0 @@
-#ifndef DATAFORMATS_TRACKUTILCOLLECTION_H
-#define DATAFORMATS_TRACKUTILCOLLECTION_H
-
-#include <vector>
-#include "DataFormats/TrackUtil/interface/TrackUtil.h"
-
-typedef std::vector<TrackUtil> TrackUtilCollection;
-
-#endif // 
