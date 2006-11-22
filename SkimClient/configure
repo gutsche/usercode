@@ -1,0 +1,60 @@
+#! /bin/sh
+#
+# Stefano Lacaprara  <lacaprara@pd.infn.it>  INFN Padova
+#
+# Installation script for Skim
+#
+# 09-March-2006
+
+# top/
+#     ClientTool
+#     PsetCode
+#
+TopDir=`\pwd`
+
+function configureSkim {
+## prapare the skim env
+cd $TopDir
+
+# sh style
+cat > skim.sh <<EOF
+#! /bin/sh
+export SKIMDIR=$TopDir/ClientTool
+export SKIMPSETPYTHON=$TopDir/PsetCode
+
+if [ -z "\$PATH" ]; then
+export PATH=\${SKIMDIR}
+else
+export PATH=\${SKIMDIR}:\${PATH}
+fi
+if [ -z "\$PYTHONPATH" ]; then
+export PYTHONPATH=\${SKIMDIR}:\${SKIMPSETPYTHON}
+else
+export PYTHONPATH=\${SKIMDIR}:\${PYTHONPATH}:\${SKIMPSETPYTHON}
+fi
+EOF
+
+# csh style
+cat > skim.csh <<EOF
+#! /bin/csh
+# SKIM related Stuff
+setenv SKIMDIR $TopDir
+setenv SKIMPSETPYTHON $TopDir/PsetCode
+
+if ( ! \$?path ) then
+set path=(\${SKIMPATH})
+else
+set path=( \${SKIMPATH} \${path})
+endif
+if ( ! \$?PYTHONPATH ) then
+setenv PYTHONPATH \${SKIMDIR}:\${SKIMPSETPYTHON}
+else
+setenv PYTHONPATH \${SKIMDIR}:\${PYTHONPATH}:\${SKIMPSETPYTHON}
+endif
+
+EOF
+return
+}
+
+configureSkim
+
