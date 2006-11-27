@@ -1,0 +1,8 @@
+module gutSoftSameNumberOfTracksFilter = GutSoftSameNumberOfTracksFilter
+{
+
+  untracked vstring TrackProducerLabels = { "rsWithMaterialTracks",
+                                            "ctfWithMaterialTracks" }
+  untracked uint32  NumberOfTracks      = 2
+
+}

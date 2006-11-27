@@ -1,0 +1,20 @@
+<use name=FWCore/Framework>
+<use name=Foundation/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=DataFormats/RoadSearchCloud>
+<use name=DataFormats/DetId>
+<use name=DataFormats/SiStripDetId>
+<use name=DataFormats/SiPixelDetId>
+<use name=GutSoftTools/GutSoftHistogramFactory>
+<flags SEAL_PLUGIN_NAME="GutSoftAnalyzersGutSoftRoadSearchCloudAnalyzer">
+<export>
+   <lib name=GutSoftAnalyzersGutSoftRoadSearchCloudAnalyzer>
+   <use name=FWCore/Framework>
+   <use name=Foundation/PluginManager>
+   <use name=FWCore/ParameterSet>
+   <use name=DataFormats/RoadSearchCloud>
+   <use name=DataFormats/DetId>
+   <use name=DataFormats/SiStripDetId>
+   <use name=DataFormats/SiPixelDetId>
+   <use name=GutSoftTools/GutSoftHistogramFactory>
+</export>

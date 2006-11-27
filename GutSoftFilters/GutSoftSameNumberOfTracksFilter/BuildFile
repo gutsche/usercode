@@ -1,0 +1,12 @@
+<use name=FWCore/Framework>
+<use name=Foundation/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=DataFormats/TrackReco>
+<flags SEAL_PLUGIN_NAME="GutSoftFiltersGutSoftSameNumberOfTracksFilter">
+<export>
+   <lib name=GutSoftFiltersGutSoftSameNumberOfTracksFilter>
+   <use name=FWCore/Framework>
+   <use name=Foundation/PluginManager>
+   <use name=FWCore/ParameterSet>
+   <use name=DataFormats/TrackReco>
+</export>

@@ -1,0 +1,5 @@
+<bin file=GutSoftHistogramFileMerger.cpp>
+ <use name=root>
+ <use name=rootcore>
+ <use name=GutSoftTools/GutSoftHistogramFileMerger>
+</bin>

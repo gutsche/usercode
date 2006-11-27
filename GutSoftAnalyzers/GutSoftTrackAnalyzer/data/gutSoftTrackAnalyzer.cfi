@@ -1,0 +1,8 @@
+module gutSoftTrackAnalyzer = GutSoftTrackAnalyzer 
+{
+
+  untracked string OutputFileName     = "gutSoftrackAnalyzer.root"  
+  untracked string TrackProducerLabel = "rsWithMaterialTracks"
+  untracked string BaseDirectoryName  = "Tracks"
+
+}
