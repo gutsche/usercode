@@ -1,4 +1,0 @@
-module cleanRoadSearchCloudAnalyzer = roadSearchCloudAnalyzer from "GutSoftAnalyzers/RoadSearchCloudAnalyzer/data/roadSearchCloudAnalyzer.cfi"
-replace cleanRoadSearchCloudAnalyzer.OutputFileName               = "cleanRoadSearchCloudAnalyzer.root"  
-replace cleanRoadSearchCloudAnalyzer.RoadSearchCloudProducerLabel = "cleanRoadSearchClouds"
-replace cleanRoadSearchCloudAnalyzer.BaseDirectoryName            = "cleanClouds"

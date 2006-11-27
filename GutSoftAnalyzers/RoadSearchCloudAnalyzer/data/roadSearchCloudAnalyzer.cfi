@@ -1,6 +1,0 @@
-module roadSearchCloudAnalyzer = RoadSearchCloudAnalyzer
-{
-  untracked string OutputFileName               = "roadSearchCloudAnalyzer.root"  
-  untracked string RoadSearchCloudProducerLabel = "rawRoadSearchClouds"
-  untracked string BaseDirectoryName            = "RoadSearchClouds"
-}

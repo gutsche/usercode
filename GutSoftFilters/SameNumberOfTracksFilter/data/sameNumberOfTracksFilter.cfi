@@ -1,8 +1,0 @@
-module sameNumberOfTracksFilter = SameNumberOfTracksFilter
-{
-
-  untracked vstring TrackProducerLabels = { "rsWithMaterialTracks",
-                                            "ctfWithMaterialTracks" }
-  untracked uint32  NumberOfTracks      = 2
-
-}

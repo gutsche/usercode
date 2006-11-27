@@ -1,8 +1,0 @@
-module trackAnalyzer = TrackAnalyzer 
-{
-
-  untracked string OutputFileName     = "trackAnalyzer.root"  
-  untracked string TrackProducerLabel = "rsWithMaterialTracks"
-  untracked string BaseDirectoryName  = "Tracks"
-
-}

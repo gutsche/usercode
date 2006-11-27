@@ -1,6 +1,0 @@
-module trajectorySeedAnalyzer = TrajectorySeedAnalyzer
-{
-  untracked string OutputFileName              = "trajectorySeedAnalyzer.root"  
-  untracked string TrajectorySeedProducerLabel = "roadSearchSeeds"
-  untracked string BaseDirectoryName           = "TrajectorySeeds"
-}
