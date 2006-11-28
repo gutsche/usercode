@@ -1,3 +1,6 @@
+# include GutSoftHistogramFileService
+include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
+
 # same number of tracks filter
 include "GutSoftFilters/GutSoftSameNumberOfTracksFilter/data/gutSoftSameNumberOfTracksFilter.cff"
 replace gutSoftSameNumberOfTracksFilter.NumberOfTracks = 1
@@ -6,41 +9,33 @@ replace gutSoftSameNumberOfTracksFilter.TrackProducerLabels = { "rsWithMaterialT
 
 # seed analyzers for same number of tracks
 module rsSeedAnalyzerSameNumberOfTracks = gutSoftTrajectorySeedAnalyzer from "GutSoftAnalyzers/GutSoftTrajectorySeedAnalyzer/data/gutSoftTrajectorySeedAnalyzer.cfi"
-replace rsSeedAnalyzerSameNumberOfTracks.OutputFileName              = "rsSeedAnalyzer_Same_1.root"  
 replace rsSeedAnalyzerSameNumberOfTracks.TrajectorySeedProducerLabel = "roadSearchSeeds"
 replace rsSeedAnalyzerSameNumberOfTracks.BaseDirectoryName           = "rsSeeds_Same_1"
 module ckfSeedAnalyzerSameNumberOfTracks = gutSoftTrajectorySeedAnalyzer from "GutSoftAnalyzers/GutSoftTrajectorySeedAnalyzer/data/gutSoftTrajectorySeedAnalyzer.cfi"
-replace ckfSeedAnalyzerSameNumberOfTracks.OutputFileName              = "ckfSeedAnalyzer_Same_1.root"  
 replace ckfSeedAnalyzerSameNumberOfTracks.TrajectorySeedProducerLabel = "globalMixedSeeds"
 replace ckfSeedAnalyzerSameNumberOfTracks.BaseDirectoryName           = "ckfSeeds_Same_1"
 
 # cloud analyzers for same number of tracks
 module rawRoadSearchCloudAnalyzerSameNumberOfTracks = gutSoftRoadSearchCloudAnalyzer from "GutSoftAnalyzers/GutSoftRoadSearchCloudAnalyzer/data/gutSoftRoadSearchCloudAnalyzer.cfi"
-replace rawRoadSearchCloudAnalyzerSameNumberOfTracks.OutputFileName               = "rawRoadSearchCloudAnalyzer_Same_1.root"  
 replace rawRoadSearchCloudAnalyzerSameNumberOfTracks.RoadSearchCloudProducerLabel = "rawRoadSearchClouds"
 replace rawRoadSearchCloudAnalyzerSameNumberOfTracks.BaseDirectoryName            = "rawClouds_Same_1"
 module cleanRoadSearchCloudAnalyzerSameNumberOfTracks = gutSoftRoadSearchCloudAnalyzer from "GutSoftAnalyzers/GutSoftRoadSearchCloudAnalyzer/data/gutSoftRoadSearchCloudAnalyzer.cfi"
-replace cleanRoadSearchCloudAnalyzerSameNumberOfTracks.OutputFileName               = "cleanRoadSearchCloudAnalyzer_Same_1.root"  
 replace cleanRoadSearchCloudAnalyzerSameNumberOfTracks.RoadSearchCloudProducerLabel = "cleanRoadSearchClouds"
 replace cleanRoadSearchCloudAnalyzerSameNumberOfTracks.BaseDirectoryName            = "cleanClouds_Same_1"
 
 # track candidate analyzers for same number of tracks
 module rsTrackCandidateAnalyzerSameNumberOfTracks = gutSoftTrackCandidateAnalyzer from "GutSoftAnalyzers/GutSoftTrackCandidateAnalyzer/data/gutSoftTrackCandidateAnalyzer.cfi"
-replace rsTrackCandidateAnalyzerSameNumberOfTracks.OutputFileName              = "rsTrackCandidateAnalyzer_Same_1.root"  
 replace rsTrackCandidateAnalyzerSameNumberOfTracks.TrackCandidateProducerLabel = "rsTrackCandidates"
 replace rsTrackCandidateAnalyzerSameNumberOfTracks.BaseDirectoryName           = "rsTrackCandidates_Same_1"
 module ckfTrackCandidateAnalyzerSameNumberOfTracks = gutSoftTrackCandidateAnalyzer from "GutSoftAnalyzers/GutSoftTrackCandidateAnalyzer/data/gutSoftTrackCandidateAnalyzer.cfi"
-replace ckfTrackCandidateAnalyzerSameNumberOfTracks.OutputFileName              = "ckfTrackCandidateAnalyzer_Same_1.root"  
 replace ckfTrackCandidateAnalyzerSameNumberOfTracks.TrackCandidateProducerLabel = "ckfTrackCandidates"
 replace ckfTrackCandidateAnalyzerSameNumberOfTracks.BaseDirectoryName           = "ckfTrackCandidates_Same_1"
 
 # track analyzers for same number of tracks
 module rsTrackAnalyzerSameNumberOfTracks = gutSoftTrackAnalyzer from "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/gutSoftTrackAnalyzer.cfi"
-replace rsTrackAnalyzerSameNumberOfTracks.OutputFileName     = "rsTrackAnalyzer_Same_1.root"  
 replace rsTrackAnalyzerSameNumberOfTracks.TrackProducerLabel = "rsWithMaterialTracks"
 replace rsTrackAnalyzerSameNumberOfTracks.BaseDirectoryName  = "rsTracks_Same_1"
 module ckfTrackAnalyzerSameNumberOfTracks = gutSoftTrackAnalyzer from "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/gutSoftTrackAnalyzer.cfi"
-replace ckfTrackAnalyzerSameNumberOfTracks.OutputFileName     = "ckfTrackAnalyzer_Same_1.root"  
 replace ckfTrackAnalyzerSameNumberOfTracks.TrackProducerLabel = "ctfWithMaterialTracks"
 replace ckfTrackAnalyzerSameNumberOfTracks.BaseDirectoryName  = "ckfTracks_Same_1"
 
