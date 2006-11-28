@@ -1,0 +1,4 @@
+service = GutSoftHistogramFileService 
+{
+  untracked string OutputFileName = "histograms.root"
+}
