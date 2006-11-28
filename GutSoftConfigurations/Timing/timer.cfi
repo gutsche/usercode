@@ -1,0 +1,9 @@
+# timing service
+service = Timing {}
+
+# put timing information into event
+module timing = Timer 
+{
+  // whether to include timing info about Timer itself
+  untracked bool includeSelf = false
+}

@@ -1,2 +1,1 @@
-include "FWCore/MessageLogger/data/MessageLogger.cfi"
-replace MessageLogger.cout.default.limit = 100000000
+include "GutSoftConfigurations/MessageLogger/messageLogger.cfi"
