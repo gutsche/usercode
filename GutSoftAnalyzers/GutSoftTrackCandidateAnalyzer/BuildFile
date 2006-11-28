@@ -1,6 +1,7 @@
 <use name=FWCore/Framework>
 <use name=Foundation/PluginManager>
 <use name=FWCore/ParameterSet>
+<use name=FWCore/ServiceRegistry>>
 <use name=DataFormats/TrackCandidate>
 <use name=DataFormats/DetId>
 <use name=DataFormats/SiStripDetId>
@@ -12,6 +13,7 @@
    <use name=FWCore/Framework>
    <use name=Foundation/PluginManager>
    <use name=FWCore/ParameterSet>
+   <use name=FWCore/ServiceRegistry>>
    <use name=DataFormats/TrackCandidate>
    <use name=DataFormats/DetId>
    <use name=DataFormats/SiStripDetId>

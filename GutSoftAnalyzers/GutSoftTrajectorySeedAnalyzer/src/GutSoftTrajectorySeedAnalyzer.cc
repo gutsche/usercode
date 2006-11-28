@@ -8,14 +8,17 @@
 // Created:         Tue Oct 17 02:07:51 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/25 02:07:31 $
-// $Revision: 1.2 $
+// $Date: 2006/11/27 23:57:16 $
+// $Revision: 1.1 $
 //
 
 #include <string>
 
 #include "GutSoftAnalyzers/GutSoftTrajectorySeedAnalyzer/interface/GutSoftTrajectorySeedAnalyzer.h"
 
+#include "GutSoftTools/GutSoftHistogramFileService/interface/GutSoftHistogramFileService.h"
+
+#include "FWCore/ServiceRegistry/interface/Service.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include "DataFormats/TrajectorySeed/interface/TrajectorySeed.h"
@@ -24,9 +27,11 @@
 GutSoftTrajectorySeedAnalyzer::GutSoftTrajectorySeedAnalyzer(const edm::ParameterSet& iConfig)
 {
 
-  outputFileName_              = iConfig.getUntrackedParameter<std::string>("OutputFileName");
   trajectorySeedProducerLabel_ = iConfig.getUntrackedParameter<std::string>("TrajectorySeedProducerLabel");
   baseDirectoryName_           = iConfig.getUntrackedParameter<std::string>("BaseDirectoryName");
+
+  // GutSoftHistogramFactory
+  histograms_ = edm::Service<GutSoftHistogramFileService>()->getFactory();
 
 }
 
@@ -40,6 +45,9 @@ GutSoftTrajectorySeedAnalyzer::~GutSoftTrajectorySeedAnalyzer()
 void
 GutSoftTrajectorySeedAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
+
+  // set baseDirectory in GutSoftHistogramFactory
+  histograms_->setBaseDirectory(baseDirectoryName_);
 
   // get collection
   const TrajectorySeedCollection *seedCollection = 0;
@@ -67,9 +75,6 @@ void
 GutSoftTrajectorySeedAnalyzer::beginJob(const edm::EventSetup&)
 {
 
-  // GutSoftHistogramFactory
-  histograms_ = new GutSoftHistogramFactory(outputFileName_);
-
   // binning for histograms
   unsigned int nSeed_nbins    = 100000;
   unsigned int nSeed_low      = 0;
@@ -83,11 +88,5 @@ GutSoftTrajectorySeedAnalyzer::beginJob(const edm::EventSetup&)
 
 void 
 GutSoftTrajectorySeedAnalyzer::endJob() {
-
-  // delete GutSoftHistogramFactory, histogram file is written out and can be handled in module endJob functions of the following modules
-  if (histograms_) {
-    delete histograms_;
-    histograms_ = 0;
-  }
 
 }

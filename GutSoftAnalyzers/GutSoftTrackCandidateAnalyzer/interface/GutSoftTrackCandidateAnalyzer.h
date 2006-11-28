@@ -11,7 +11,7 @@
 // Created:         Wed Oct 18 01:05:12 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/18 01:45:49 $
+// $Date: 2006/11/27 23:57:15 $
 // $Revision: 1.1 $
 //
 
@@ -36,7 +36,6 @@ class GutSoftTrackCandidateAnalyzer : public edm::EDAnalyzer {
 
   GutSoftHistogramFactory *histograms_;
 
-  std::string outputFileName_;
   std::string trackCandidateProducerLabel_;
   std::string baseDirectoryName_;
 

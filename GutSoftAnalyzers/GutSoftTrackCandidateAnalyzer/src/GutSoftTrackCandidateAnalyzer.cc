@@ -8,14 +8,17 @@
 // Created:         Wed Oct 18 01:05:12 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/25 02:07:30 $
-// $Revision: 1.2 $
+// $Date: 2006/11/27 23:57:15 $
+// $Revision: 1.1 $
 //
 
 #include <string>
 
 #include "GutSoftAnalyzers/GutSoftTrackCandidateAnalyzer/interface/GutSoftTrackCandidateAnalyzer.h"
 
+#include "GutSoftTools/GutSoftHistogramFileService/interface/GutSoftHistogramFileService.h"
+
+#include "FWCore/ServiceRegistry/interface/Service.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include "DataFormats/TrackCandidate/interface/TrackCandidate.h"
@@ -27,9 +30,11 @@
 GutSoftTrackCandidateAnalyzer::GutSoftTrackCandidateAnalyzer(const edm::ParameterSet& iConfig)
 {
 
-  outputFileName_               = iConfig.getUntrackedParameter<std::string>("OutputFileName");
   trackCandidateProducerLabel_  = iConfig.getUntrackedParameter<std::string>("TrackCandidateProducerLabel");
   baseDirectoryName_            = iConfig.getUntrackedParameter<std::string>("BaseDirectoryName");
+
+  // GutSoftHistogramFactory
+  histograms_ = edm::Service<GutSoftHistogramFileService>()->getFactory();
 
 }
 
@@ -43,6 +48,9 @@ GutSoftTrackCandidateAnalyzer::~GutSoftTrackCandidateAnalyzer()
 void
 GutSoftTrackCandidateAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
+
+  // set baseDirectory in GutSoftHistogramFactory
+  histograms_->setBaseDirectory(baseDirectoryName_);
 
   const TrackCandidateCollection *trackCandidateCollection = 0;
   try {
@@ -121,8 +129,6 @@ GutSoftTrackCandidateAnalyzer::analyze(const edm::Event& iEvent, const edm::Even
 void 
 GutSoftTrackCandidateAnalyzer::beginJob(const edm::EventSetup&)
 {
-  // GutSoftHistogramFactory
-  histograms_ = new GutSoftHistogramFactory(outputFileName_);
 
   // binning for histograms
   unsigned int nTrackCandidates_nbins    = 100000;
@@ -173,11 +179,5 @@ GutSoftTrackCandidateAnalyzer::beginJob(const edm::EventSetup&)
 
 void 
 GutSoftTrackCandidateAnalyzer::endJob() {
-
-  // delete GutSoftHistogramFactory, histogram file is written out and can be handled in module endJob functions of the following modules
-  if (histograms_) {
-    delete histograms_;
-    histograms_ = 0;
-  }
 
 }

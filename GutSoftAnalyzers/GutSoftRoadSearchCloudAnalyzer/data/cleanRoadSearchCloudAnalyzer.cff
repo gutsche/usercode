@@ -1,4 +1,7 @@
+# include GutSoftHistogramFileService
+include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
+
+#include analyzer
 module cleanRoadSearchCloudAnalyzer = gutSoftRoadSearchCloudAnalyzer from "GutSoftAnalyzers/GutSoftRoadSearchCloudAnalyzer/data/gutSoftRoadSearchCloudAnalyzer.cfi"
-replace cleanRoadSearchCloudAnalyzer.OutputFileName               = "cleanRoadSearchCloudAnalyzer.root"  
 replace cleanRoadSearchCloudAnalyzer.RoadSearchCloudProducerLabel = "cleanRoadSearchClouds"
 replace cleanRoadSearchCloudAnalyzer.BaseDirectoryName            = "cleanClouds"

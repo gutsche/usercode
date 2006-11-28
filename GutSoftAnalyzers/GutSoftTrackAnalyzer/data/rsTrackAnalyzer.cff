@@ -1,4 +1,7 @@
+# include GutSoftHistogramFileService
+include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
+
+#include analyzer
 module rsTrackAnalyzer = gutSoftTrackAnalyzer from "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/gutSoftTrackAnalyzer.cfi"
-replace rsTrackAnalyzer.OutputFileName     = "rsTrackAnalyzer.root"  
 replace rsTrackAnalyzer.TrackProducerLabel = "rsWithMaterialTracks"
 replace rsTrackAnalyzer.BaseDirectoryName  = "rsTracks"

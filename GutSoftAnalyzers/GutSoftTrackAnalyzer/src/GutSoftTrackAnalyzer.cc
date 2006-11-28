@@ -8,14 +8,17 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/25 02:07:30 $
-// $Revision: 1.2 $
+// $Date: 2006/11/27 23:57:14 $
+// $Revision: 1.1 $
 //
 
 #include <string>
 
 #include "GutSoftAnalyzers/GutSoftTrackAnalyzer/interface/GutSoftTrackAnalyzer.h"
 
+#include "GutSoftTools/GutSoftHistogramFileService/interface/GutSoftHistogramFileService.h"
+
+#include "FWCore/ServiceRegistry/interface/Service.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include "DataFormats/TrackReco/interface/Track.h"
@@ -28,9 +31,11 @@
 GutSoftTrackAnalyzer::GutSoftTrackAnalyzer(const edm::ParameterSet& iConfig)
 {
 
-  outputFileName_     = iConfig.getUntrackedParameter<std::string>("OutputFileName");
   trackProducerLabel_ = iConfig.getUntrackedParameter<std::string>("TrackProducerLabel");
   baseDirectoryName_  = iConfig.getUntrackedParameter<std::string>("BaseDirectoryName");
+
+  // GutSoftHistogramFactory
+  histograms_ = edm::Service<GutSoftHistogramFileService>()->getFactory();
 
 }
 
@@ -44,6 +49,9 @@ GutSoftTrackAnalyzer::~GutSoftTrackAnalyzer()
 void
 GutSoftTrackAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
+
+  // set baseDirectory in GutSoftHistogramFactory
+  histograms_->setBaseDirectory(baseDirectoryName_);
 
   const reco::TrackCollection *trackCollection = 0;
   try {
@@ -135,9 +143,6 @@ GutSoftTrackAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 void 
 GutSoftTrackAnalyzer::beginJob(const edm::EventSetup&)
 {
-
-  // GutSoftHistogramFactory
-  histograms_ = new GutSoftHistogramFactory(outputFileName_);
 
   // binning for histograms
   std::string  nTrackDirectory = baseDirectoryName_;
@@ -260,11 +265,5 @@ GutSoftTrackAnalyzer::beginJob(const edm::EventSetup&)
 
 void 
 GutSoftTrackAnalyzer::endJob() {
-
-  // delete GutSoftHistogramFactory, histogram file is written out and can be handled in module endJob functions of the following modules
-  if (histograms_) {
-    delete histograms_;
-    histograms_ = 0;
-  }
 
 }

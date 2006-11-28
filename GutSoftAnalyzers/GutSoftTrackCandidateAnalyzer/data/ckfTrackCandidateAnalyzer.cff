@@ -1,4 +1,7 @@
+# include GutSoftHistogramFileService
+include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
+
+#include analyzer
 module ckfTrackCandidateAnalyzer = gutSoftTrackCandidateAnalyzer from "GutSoftAnalyzers/GutSoftTrackCandidateAnalyzer/data/gutSoftTrackCandidateAnalyzer.cfi"
-replace ckfTrackCandidateAnalyzer.OutputFileName              = "ckfTrackCandidateAnalyzer.root"  
 replace ckfTrackCandidateAnalyzer.TrackCandidateProducerLabel = "ckfTrackCandidates"
 replace ckfTrackCandidateAnalyzer.BaseDirectoryName           = "ckfTrackCandidates"

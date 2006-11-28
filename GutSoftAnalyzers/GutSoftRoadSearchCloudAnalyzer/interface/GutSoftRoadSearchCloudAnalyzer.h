@@ -11,7 +11,7 @@
 // Created:         Tue Oct 17 02:41:12 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/17 03:12:33 $
+// $Date: 2006/11/27 23:57:13 $
 // $Revision: 1.1 $
 //
 
@@ -36,7 +36,6 @@ class GutSoftRoadSearchCloudAnalyzer : public edm::EDAnalyzer {
 
   GutSoftHistogramFactory *histograms_;
 
-  std::string outputFileName_;
   std::string roadSearchCloudProducerLabel_;
   std::string baseDirectoryName_;
 
