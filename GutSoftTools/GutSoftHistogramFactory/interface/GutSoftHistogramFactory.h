@@ -15,8 +15,8 @@
 // Created:         Thu Sep 28 22:41:24 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/25 02:06:35 $
-// $Revision: 1.3 $
+// $Date: 2006/11/27 23:51:37 $
+// $Revision: 1.1 $
 //
 
 #include <string>
@@ -129,10 +129,15 @@ class GutSoftHistogramFactory {
 		    const double& input_y, 
 		    const double& weight);
 
+  inline void setBaseDirectory(std::string baseDirectory) { baseDirectory_ = baseDirectory; }
+
+  std::string concatenateName(std::string name);
+
  private:
 
   TFile *file_;
   std::map<std::string,TH1*> histograms_;
+  std::string baseDirectory_;
 
 };
 
