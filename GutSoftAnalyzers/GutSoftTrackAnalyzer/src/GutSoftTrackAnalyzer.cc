@@ -8,8 +8,8 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/27 23:57:14 $
-// $Revision: 1.1 $
+// $Date: 2006/11/28 20:36:41 $
+// $Revision: 1.2 $
 //
 
 #include <string>
@@ -62,7 +62,8 @@ GutSoftTrackAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   catch (edm::Exception const& x) {
     if ( x.categoryCode() == edm::errors::ProductNotFound ) {
       if ( x.history().size() == 1 ) {
-	trackCollection = new reco::TrackCollection();
+	static const reco::TrackCollection s_empty;
+	trackCollection = &s_empty;
 	edm::LogWarning("GutSoftTrackAnalyzer") << "Collection reco::TrackCollection with label " << trackProducerLabel_ << " cannot be found, using empty collection of same type";
       }
     }

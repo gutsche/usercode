@@ -8,8 +8,8 @@
 // Created:         Tue Oct 17 02:07:51 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/27 23:57:16 $
-// $Revision: 1.1 $
+// $Date: 2006/11/28 20:36:43 $
+// $Revision: 1.2 $
 //
 
 #include <string>
@@ -59,7 +59,8 @@ GutSoftTrajectorySeedAnalyzer::analyze(const edm::Event& iEvent, const edm::Even
   catch (edm::Exception const& x) {
     if ( x.categoryCode() == edm::errors::ProductNotFound ) {
       if ( x.history().size() == 1 ) {
-	seedCollection = new TrajectorySeedCollection();
+	static const TrajectorySeedCollection s_empty;
+	seedCollection = &s_empty;
 	edm::LogWarning("GutSoftTrajectorySeedAnalyzer") << "Collection TrajectorySeedCollection with label " << trajectorySeedProducerLabel_ << " cannot be found, using empty collection of same type";
       }
     }

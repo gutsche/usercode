@@ -8,8 +8,8 @@
 // Created:         Tue Oct 17 02:41:12 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/27 23:57:14 $
-// $Revision: 1.1 $
+// $Date: 2006/11/28 20:36:40 $
+// $Revision: 1.2 $
 //
 
 #include <string>
@@ -61,7 +61,8 @@ GutSoftRoadSearchCloudAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
   catch (edm::Exception const& x) {
     if ( x.categoryCode() == edm::errors::ProductNotFound ) {
       if ( x.history().size() == 1 ) {
-	roadSearchCloudCollection = new RoadSearchCloudCollection();
+	static const RoadSearchCloudCollection s_empty;
+	roadSearchCloudCollection = &s_empty;
 	edm::LogWarning("GutSoftRoadSearchCloudAnalyzer") << "Collection RoadSearchCloudCollection with label " << roadSearchCloudProducerLabel_ << " cannot be found, using empty collection of same type";
       }
     }

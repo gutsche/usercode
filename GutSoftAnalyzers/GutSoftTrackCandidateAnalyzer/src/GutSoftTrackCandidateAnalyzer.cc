@@ -8,8 +8,8 @@
 // Created:         Wed Oct 18 01:05:12 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/27 23:57:15 $
-// $Revision: 1.1 $
+// $Date: 2006/11/28 20:36:42 $
+// $Revision: 1.2 $
 //
 
 #include <string>
@@ -61,7 +61,8 @@ GutSoftTrackCandidateAnalyzer::analyze(const edm::Event& iEvent, const edm::Even
   catch (edm::Exception const& x) {
     if ( x.categoryCode() == edm::errors::ProductNotFound ) {
       if ( x.history().size() == 1 ) {
-	trackCandidateCollection = new TrackCandidateCollection();
+	static const TrackCandidateCollection s_empty;
+	trackCandidateCollection = &s_empty;
 	edm::LogWarning("GutSoftTrackCandidateAnalyzer") << "Collection TrackCandidateCollection with label " << trackCandidateProducerLabel_ << " cannot be found, using empty collection of same type";
       }
     }
