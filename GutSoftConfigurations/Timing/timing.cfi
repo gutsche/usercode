@@ -1,5 +1,5 @@
 # put timing information into event
-module timer = Timer 
+module timing = Timer 
 {
   // whether to include timing info about Timer itself
   untracked bool includeSelf = false
