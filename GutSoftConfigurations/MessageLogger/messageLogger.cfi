@@ -1,54 +1,33 @@
-   service = MessageLogger
-   {
-      untracked vstring destinations =  {
-					 "warnings"
-					,"errors"
-					,"infos"
-					,"cout"
-					,"cerr"
-					}
-      untracked vstring categories    =	{ "FwkJob", "FwkReport", "Root_NoDictionary" }
+service = MessageLogger
+{
+  untracked vstring destinations =  
+  {
+    "cout"
+  }
+  untracked vstring categories =
+  { 
+    "FwkJob",
+    "FwkReport",
+    "Root_NoDictionary" 
+  }
 
-      #untracked vstring statistics = { "job_statistics" }
-
-      untracked PSet cout   =  {
-				 untracked string threshold = "INFO"
-				 untracked PSet default   = { untracked int32 limit = 1000000000 }
-                                 untracked PSet default   = { untracked int32 reportEvery = 1 }
-				 untracked PSet FwkJob    = { untracked int32 limit = 1000000000 }
-                                 untracked PSet FwkJob    = { untracked int32 reportEvery = 1 }
-				 untracked PSet FwkReport = { untracked int32 limit = 1000000000 }
-                                 untracked PSet FwkReport = { untracked int32 reportEvery = 1 }
-			       }
-
-      untracked PSet cerr    = {
-				untracked string threshold = "WARNING"
-				untracked PSet default = { untracked int32 limit = 0  }
-			       }
-
-      untracked PSet errors   = { untracked bool placeholder = true }
-
-      untracked PSet warnings = { untracked bool placeholder = true }
-
-      untracked PSet infos    = { untracked bool placeholder = true
-                                  untracked PSet Root_NoDictionary = { untracked int32 limit = 0 }
-				}
-
-      untracked PSet default  = { }
-
-      #untracked vstring fwkJobReports = {"FrameworkJobReport"}
-
-      #untracked PSet FrameworkJobReport = {
-      #         			untracked PSet default = { untracked int32 limit = 0 }
-      #         			untracked PSet FwkJob  = { untracked int32 limit = 0 }
-      #                                       }
-
-      untracked vstring debugModules    = { }
-
-      untracked vstring suppressDebug   = { }
-
-      untracked vstring suppressInfo    = { }
-
-      untracked vstring suppressWarning = { }
-
-   }
+  untracked PSet cout =
+  {
+    untracked string threshold = "INFO"
+    untracked PSet default = 
+    { 
+      untracked int32 limit       = 1000000000
+      untracked int32 reportEvery = 1 
+    }
+    untracked PSet FwkJob = 
+    { 
+      untracked int32 limit       = 1000000000
+      untracked int32 reportEvery = 1
+    }
+    untracked PSet FwkReport = 
+    { 
+      untracked int32 limit       = 1000000000
+      untracked int32 reportEvery = 1
+    }
+  }
+}
