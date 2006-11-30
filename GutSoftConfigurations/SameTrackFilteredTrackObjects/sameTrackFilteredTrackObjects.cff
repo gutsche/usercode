@@ -19,9 +19,6 @@ replace ckfSeedAnalyzerSameNumberOfTracks.BaseDirectoryName           = "ckfSeed
 module rawRoadSearchCloudAnalyzerSameNumberOfTracks = gutSoftRoadSearchCloudAnalyzer from "GutSoftAnalyzers/GutSoftRoadSearchCloudAnalyzer/data/gutSoftRoadSearchCloudAnalyzer.cfi"
 replace rawRoadSearchCloudAnalyzerSameNumberOfTracks.RoadSearchCloudProducerLabel = "rawRoadSearchClouds"
 replace rawRoadSearchCloudAnalyzerSameNumberOfTracks.BaseDirectoryName            = "rawClouds_Same_1"
-module cleanRoadSearchCloudAnalyzerSameNumberOfTracks = gutSoftRoadSearchCloudAnalyzer from "GutSoftAnalyzers/GutSoftRoadSearchCloudAnalyzer/data/gutSoftRoadSearchCloudAnalyzer.cfi"
-replace cleanRoadSearchCloudAnalyzerSameNumberOfTracks.RoadSearchCloudProducerLabel = "cleanRoadSearchClouds"
-replace cleanRoadSearchCloudAnalyzerSameNumberOfTracks.BaseDirectoryName            = "cleanClouds_Same_1"
 
 # track candidate analyzers for same number of tracks
 module rsTrackCandidateAnalyzerSameNumberOfTracks = gutSoftTrackCandidateAnalyzer from "GutSoftAnalyzers/GutSoftTrackCandidateAnalyzer/data/gutSoftTrackCandidateAnalyzer.cfi"
@@ -44,7 +41,6 @@ sequence sameTrackFilteredTrackObjects = {
   rsSeedAnalyzerSameNumberOfTracks,
   ckfSeedAnalyzerSameNumberOfTracks,
   rawRoadSearchCloudAnalyzerSameNumberOfTracks, 
-  cleanRoadSearchCloudAnalyzerSameNumberOfTracks, 
   rsTrackCandidateAnalyzerSameNumberOfTracks, 
   ckfTrackCandidateAnalyzerSameNumberOfTracks, 
   rsTrackAnalyzerSameNumberOfTracks, 

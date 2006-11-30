@@ -4,7 +4,6 @@ include "GutSoftAnalyzers/GutSoftTrajectorySeedAnalyzer/data/ckfSeedAnalyzer.cff
 
 # cloud analyzers
 include "GutSoftAnalyzers/GutSoftRoadSearchCloudAnalyzer/data/rawRoadSearchCloudAnalyzer.cff" 
-include "GutSoftAnalyzers/GutSoftRoadSearchCloudAnalyzer/data/cleanRoadSearchCloudAnalyzer.cff" 
 
 # track candidate analyzers
 include "GutSoftAnalyzers/GutSoftTrackCandidateAnalyzer/data/rsTrackCandidateAnalyzer.cff" 
@@ -18,7 +17,6 @@ sequence trackObjects = {
   rsSeedAnalyzer, 
   ckfSeedAnalyzer, 
   rawRoadSearchCloudAnalyzer, 
-  cleanRoadSearchCloudAnalyzer, 
   rsTrackCandidateAnalyzer, 
   ckfTrackCandidateAnalyzer, 
   rsTrackAnalyzer, 
