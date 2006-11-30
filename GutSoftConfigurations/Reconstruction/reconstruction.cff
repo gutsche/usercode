@@ -4,7 +4,8 @@ include "GutSoftConfigurations/MessageLogger/messageLogger.cff"
 # input
 source = PoolSource
 {
-  untracked vstring fileNames = {
+  untracked vstring fileNames = 
+  {
     "file:test.root"
   }
   untracked int32  maxEvents  = -1
@@ -12,7 +13,7 @@ source = PoolSource
 }
 
 # timer
-include "GutSoftConfigurations/Timing/timer.cff"
+include "GutSoftConfigurations/Timing/timing.cff"
 
 # include track reconstruction
 include "RecoTracker/Configuration/data/RecoTracker.cff"
@@ -27,7 +28,8 @@ include "GutSoftConfigurations/SameTrackFilteredTrackObjects/sameTrackFilteredTr
 module out = PoolOutputModule 
 {
   untracked string fileName = 'output.root'
-  untracked vstring outputCommands = {
+  untracked vstring outputCommands = 
+  {
     "keep *",
     "drop recoMETs_*_*_PROD",
     "drop *_ecalUnsuppressedDigis_*_*",
@@ -45,6 +47,6 @@ path p =
 
 endpath e =
 {
-  timer,
+  timing,
   out
 }
