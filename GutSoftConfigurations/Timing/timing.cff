@@ -1,5 +1,15 @@
 # timing service
 include "GutSoftConfigurations/Timing/timing_service.cfi"
 
+# normalization counter analyzer
+include "GutSoftAnalyzers/GutSoftTimingNormalizationAnalyzer/data/gutSoftTimingNormalizationAnalyzer.cff"
+
 # timer
-include "GutSoftConfigurations/Timing/timing.cfi"
+module timer = timing from "GutSoftConfigurations/Timing/timing.cfi"
+
+# sequence
+sequence timing =
+{
+  gutSoftTimingNormalizationAnalyzer,
+  timer
+}
