@@ -1,0 +1,14 @@
+<use name=FWCore/Framework>
+<use name=Foundation/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=FWCore/ServiceRegistry>>
+<use name=FWCore/MessageLogger>
+<flags SEAL_PLUGIN_NAME="GutSoftAnalyzersGutSoftTimingNormalizationAnalyzer">
+<export>
+   <lib name=GutSoftAnalyzersGutSoftTimingNormalizationAnalyzer>
+   <use name=FWCore/Framework>
+   <use name=Foundation/PluginManager>
+   <use name=FWCore/ParameterSet>
+   <use name=FWCore/ServiceRegistry>>
+   <use name=FWCore/MessageLogger>
+</export>

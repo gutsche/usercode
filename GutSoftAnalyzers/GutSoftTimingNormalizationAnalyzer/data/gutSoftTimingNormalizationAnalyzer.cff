@@ -1,0 +1,5 @@
+# timing service
+include "GutSoftConfigurations/Timing/timing_service.cfi"
+
+# include analyzer
+include "GutSoftAnalyzers/GutSoftTimingNormalizationAnalyzer/data/gutSoftTimingNormalizationAnalyzer.cfi"
