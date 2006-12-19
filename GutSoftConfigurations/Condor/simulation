@@ -53,7 +53,7 @@ def main(argv) :
     for line in input.readlines() :
         line = line.replace('CONDORMAXEVENTS',num_events_per_job)
         line = line.replace('CONDORGENERATIONCFF',generator_cff)
-        line = line.replace('CONDORSEED',final_seed)
+        line = line.replace('CONDORSEED',str(final_seed))
         line = line.replace('CONDOR',cluster + '_' + process)
         output.write(line)
 
