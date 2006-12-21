@@ -1,0 +1,15 @@
+CSA06-106-os-EWKSoup-0.cff		981004
+CSA06-106-os-ExoticSoup-0.cff		294663
+CSA06-106-os-Jets-0.cff			503313
+CSA06-106-os-minbias6-0.cff		260646
+CSA06-106-os-SoftMuon-0.cff		635442
+CSA06-106-os-TTbar-0.cff		406994
+CSA06-106-os-Wenu-0.cff			331731
+CSA06-106-os-ZMuMu-0.cff		264964
+RelVal120BJets50-120.cff		549
+RelVal120CJets50-120.cff		548
+RelVal120Higgs-ZZ-4Mu.cff		1200
+RelVal120SingleMuPt100.cff		6000
+RelVal120SingleMuPt10.cff		10400
+RelVal120SingleMuPt1.cff		10400
+
