@@ -8,8 +8,8 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/28 20:36:41 $
-// $Revision: 1.2 $
+// $Date: 2006/11/29 01:44:38 $
+// $Revision: 1.3 $
 //
 
 #include <string>
@@ -125,16 +125,16 @@ GutSoftTrackAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& i
       }
     }
     
-    histograms_->fill("nHitPerTrackVsEta",nHit,track->momentum().eta());
-    histograms_->fill("nStripHitPerTrackVsEta",nStripHit,track->momentum().eta());
-    histograms_->fill("nPixelHitPerTrackVsEta",nPixelHit,track->momentum().eta());
-    histograms_->fill("nTIBHitPerTrackVsEta",nTIBHit,track->momentum().eta());
-    histograms_->fill("nTOBHitPerTrackVsEta",nTOBHit,track->momentum().eta());
-    histograms_->fill("nTIDHitPerTrackVsEta",nTIDHit,track->momentum().eta());
-    histograms_->fill("nTECHitPerTrackVsEta",nTECHit,track->momentum().eta());
-    histograms_->fill("nPXBHitPerTrackVsEta",nPXBHit,track->momentum().eta());
-    histograms_->fill("nPXFHitPerTrackVsEta",nPXFHit,track->momentum().eta());
-    histograms_->fill("nHitPerTrackVsPhi",nHit,track->momentum().phi());
+    histograms_->fill("nHitPerTrackVsEta",track->momentum().eta(),nHit);
+    histograms_->fill("nStripHitPerTrackVsEta",track->momentum().eta(),nStripHit);
+    histograms_->fill("nPixelHitPerTrackVsEta",track->momentum().eta(),nPixelHit);
+    histograms_->fill("nTIBHitPerTrackVsEta",track->momentum().eta(),nTIBHit);
+    histograms_->fill("nTOBHitPerTrackVsEta",track->momentum().eta(),nTOBHit);
+    histograms_->fill("nTIDHitPerTrackVsEta",track->momentum().eta(),nTIDHit);
+    histograms_->fill("nTECHitPerTrackVsEta",track->momentum().eta(),nTECHit);
+    histograms_->fill("nPXBHitPerTrackVsEta",track->momentum().eta(),nPXBHit);
+    histograms_->fill("nPXFHitPerTrackVsEta",track->momentum().eta(),nPXFHit);
+    histograms_->fill("nHitPerTrackVsPhi",track->momentum().phi(),nHit);
 
   }
 
@@ -229,38 +229,38 @@ GutSoftTrackAnalyzer::beginJob(const edm::EventSetup&)
 			     "n_{Tracks}","Events");
 
   histograms_->bookHistogram("nHitPerTrackVsEta","Number of hits per track vs. #eta",
-			     nTrackDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nHitPerTrackCandidateVsEta","Number of hits per track candidate vs. #eta",
-			     nTrackDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nHitPerTrackVsPhi","Number of hits per track vs. #phi",
-			     nTrackDirectory,nhit_nbins,nhit_low,nhit_high,phi_nbins,phi_low,phi_high,
+			     nTrackDirectory,phi_nbins,phi_low,phi_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#phi","Events");
 
   histograms_->bookHistogram("nStripHitPerTrackVsEta","Number of strip hits per track vs. #eta",
-			     nTrackDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nPixelHitPerTrackVsEta","Number of pixel hits per track vs. #eta",
-			     nTrackDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nTIBHitPerTrackVsEta","Number of TIB hits per track vs. #eta",
-			     nTrackDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nTOBHitPerTrackVsEta","Number of TOB hits per track vs. #eta",
-			     nTrackDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nTIDHitPerTrackVsEta","Number of TID hits per track vs. #eta",
-			     nTrackDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nTECHitPerTrackVsEta","Number of TEC hits per track vs. #eta",
-			     nTrackDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nPXBHitPerTrackVsEta","Number of PXB hits per track vs. #eta",
-			     nTrackDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nPXFHitPerTrackVsEta","Number of PXF hits per track vs. #eta",
-			     nTrackDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
 }
 

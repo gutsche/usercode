@@ -8,8 +8,8 @@
 // Created:         Tue Oct 17 02:41:12 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/28 20:36:40 $
-// $Revision: 1.2 $
+// $Date: 2006/11/29 01:44:38 $
+// $Revision: 1.3 $
 //
 
 #include <string>
@@ -112,15 +112,15 @@ GutSoftRoadSearchCloudAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
       }
     }
     
-    histograms_->fill("nHitPerCloudVsEta",nHit,0.);
-    histograms_->fill("nStripHitPerCloudVsEta",nStripHit,0.);
-    histograms_->fill("nPixelHitPerCloudVsEta",nPixelHit,0.);
-    histograms_->fill("nTIBHitPerCloudVsEta",nTIBHit,0.);
-    histograms_->fill("nTOBHitPerCloudVsEta",nTOBHit,0.);
-    histograms_->fill("nTIDHitPerCloudVsEta",nTIDHit,0.);
-    histograms_->fill("nTECHitPerCloudVsEta",nTECHit,0.);
-    histograms_->fill("nPXBHitPerCloudVsEta",nPXBHit,0.);
-    histograms_->fill("nPXFHitPerCloudVsEta",nPXFHit,0.);
+    histograms_->fill("nHitPerCloudVsEta",0.,nHit);
+    histograms_->fill("nStripHitPerCloudVsEta",0.,nStripHit);
+    histograms_->fill("nPixelHitPerCloudVsEta",0.,nPixelHit);
+    histograms_->fill("nTIBHitPerCloudVsEta",0.,nTIBHit);
+    histograms_->fill("nTOBHitPerCloudVsEta",0.,nTOBHit);
+    histograms_->fill("nTIDHitPerCloudVsEta",0.,nTIDHit);
+    histograms_->fill("nTECHitPerCloudVsEta",0.,nTECHit);
+    histograms_->fill("nPXBHitPerCloudVsEta",0.,nPXBHit);
+    histograms_->fill("nPXFHitPerCloudVsEta",0.,nPXFHit);
 
   }
 
@@ -150,31 +150,31 @@ GutSoftRoadSearchCloudAnalyzer::beginJob(const edm::EventSetup&)
 			     nCloudDirectory,nCloud_nbins,nCloud_low,nCloud_high,
 			     "n_{Cloud}","Events");
   histograms_->bookHistogram("nHitPerCloudVsEta","Number of hits per cloud vs. #eta",
-			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nStripHitPerCloudVsEta","Number of strip hits per cloud vs. #eta",
-			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nPixelHitPerCloudVsEta","Number of pixel hits per cloud vs. #eta",
-			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nTIBHitPerCloudVsEta","Number of TIB hits per cloud vs. #eta",
-			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nTOBHitPerCloudVsEta","Number of TOB hits per cloud vs. #eta",
-			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nTIDHitPerCloudVsEta","Number of TID hits per cloud vs. #eta",
-			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nTECHitPerCloudVsEta","Number of TEC hits per cloud vs. #eta",
-			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nPXBHitPerCloudVsEta","Number of PXB hits per cloud vs. #eta",
-			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nPXFHitPerCloudVsEta","Number of PXF hits per cloud vs. #eta",
-			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
+			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
 
 }
