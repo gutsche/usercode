@@ -54,8 +54,8 @@ void compareTwoHistograms(std::string name, TH1 *histo1, TH1* histo2) {
   // scale x axis of histograms if number of tracks
   TString rootName(name.c_str());
   if ( rootName.Contains("nTracks") ) {
-    histo1->GetXaxis()->SetRange(0,10);
-    histo2->GetXaxis()->SetRange(0,10);
+    histo1->GetXaxis()->SetRange(0,100);
+    histo2->GetXaxis()->SetRange(0,100);
   }
 
   histo1->SetLineColor(2);
