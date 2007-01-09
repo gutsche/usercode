@@ -9,8 +9,8 @@
 // Created:         Tue Nov 28 00:08:15 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/25 02:07:31 $
-// $Revision: 1.2 $
+// $Date: 2006/11/28 20:34:49 $
+// $Revision: 1.1 $
 //
 
 #include "GutSoftTools/GutSoftHistogramFileService/interface/GutSoftHistogramFileService.h"
@@ -42,4 +42,4 @@ GutSoftHistogramFileService::~GutSoftHistogramFileService()
 
 
 //define this as a plug-in
-DEFINE_FWK_SERVICE(GutSoftHistogramFileService)
+DEFINE_FWK_SERVICE(GutSoftHistogramFileService);
