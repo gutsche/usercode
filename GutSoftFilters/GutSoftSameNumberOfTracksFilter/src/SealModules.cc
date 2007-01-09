@@ -3,4 +3,4 @@
 #include "GutSoftFilters/GutSoftSameNumberOfTracksFilter/interface/GutSoftSameNumberOfTracksFilter.h"
 
 DEFINE_SEAL_MODULE();
-DEFINE_ANOTHER_FWK_MODULE(GutSoftSameNumberOfTracksFilter)
+DEFINE_ANOTHER_FWK_MODULE(GutSoftSameNumberOfTracksFilter);
