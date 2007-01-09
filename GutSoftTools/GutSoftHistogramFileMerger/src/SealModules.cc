@@ -3,4 +3,4 @@
 #include "GutSoftTools/GutSoftHistogramFileMerger/interface/GutSoftHistogramFileMergerModule.h"
 
 DEFINE_SEAL_MODULE();
-DEFINE_ANOTHER_FWK_MODULE(GutSoftHistogramFileMergerModule)
+DEFINE_ANOTHER_FWK_MODULE(GutSoftHistogramFileMergerModule);
