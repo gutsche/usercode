@@ -1,0 +1,26 @@
+<use name=FWCore/Framework>
+<use name=Foundation/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=FWCore/ServiceRegistry>>
+<use name=DataFormats/TrackReco>
+<use name=SimDataFormats/TrackingAnalysis>
+<use name=Validation/RecoTrack>
+<use name=SimTracker/TrackAssociation>
+<use name=SimTracker/Records>
+<use name=GutSoftTools/GutSoftHistogramFactory>
+<use name=GutSoftTools/GutSoftHistogramFileService>
+<flags SEAL_PLUGIN_NAME="GutSoftAnalyzersGutSoftTrackingEfficiencyAnalyzer">
+<export>
+   <lib name=GutSoftAnalyzersGutSoftTrackingEfficiencyAnalyzer>
+   <use name=FWCore/Framework>
+   <use name=Foundation/PluginManager>
+   <use name=FWCore/ParameterSet>
+   <use name=FWCore/ServiceRegistry>>
+   <use name=DataFormats/TrackReco>
+   <use name=SimDataFormats/TrackingAnalysis>
+   <use name=Validation/RecoTrack>
+   <use name=SimTracker/TrackAssociation>
+   <use name=SimTracker/Records>
+   <use name=GutSoftTools/GutSoftHistogramFactory>
+   <use name=GutSoftTools/GutSoftHistogramFileService>
+</export>

@@ -1,0 +1,13 @@
+# include GutSoftHistogramFileService
+include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
+
+# Track Associators
+include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
+include "SimTracker/TrackAssociation/data/TrackAssociatorByChi2.cfi"
+include "SimTracker/TrackAssociation/data/TrackAssociatorByHits.cfi"
+
+#include analyzer
+module rsTrackingEfficiencyAnalyzerChi2                     = gutSoftTrackingEfficiencyAnalyzer from "GutSoftAnalyzers/GutSoftTrackingEfficiencyAnalyzer/data/gutSoftTrackingEfficiencyAnalyzer.cfi"
+replace rsTrackingEfficiencyAnalyzerChi2.TrackInputTag      = rsWithMaterialTracks
+replace rsTrackingEfficiencyAnalyzerChi2.Associator         = TrackAssociatorByChi2
+replace rsTrackingEfficiencyAnalyzerChi2.BaseDirectoryName  = "rsTrackingEfficiency_Chi2"
