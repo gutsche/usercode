@@ -11,8 +11,8 @@
 // Created:         Wed Oct 11 02:40:58 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/25 22:01:37 $
-// $Revision: 1.3 $
+// $Date: 2006/11/27 23:51:38 $
+// $Revision: 1.1 $
 //
 
 #include <string>
@@ -55,12 +55,12 @@ class GutSoftHistogramFileMerger {
 		       TH1 *toMerge);
   bool merge1DHistograms(TH1 *existing,
 			 TH1 *toMerge);
-  bool check1DHistogramCompatibility(TH1 *histogramOne,
-				     TH1 *histogramTwo);
+  static bool check1DHistogramCompatibility(TH1 *histogramOne,
+					    TH1 *histogramTwo);
   bool merge2DHistograms(TH2 *existing,
 			 TH2 *toMerge);
-  bool check2DHistogramCompatibility(TH2 *histogramOne,
-				     TH2 *histogramTwo);
+  static bool check2DHistogramCompatibility(TH2 *histogramOne,
+					    TH2 *histogramTwo);
 
   bool deleteInputFiles();
 

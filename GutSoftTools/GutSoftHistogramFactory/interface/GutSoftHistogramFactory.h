@@ -15,8 +15,8 @@
 // Created:         Thu Sep 28 22:41:24 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/27 23:51:37 $
-// $Revision: 1.1 $
+// $Date: 2006/11/28 20:33:32 $
+// $Revision: 1.2 $
 //
 
 #include <string>
@@ -132,6 +132,13 @@ class GutSoftHistogramFactory {
   inline void setBaseDirectory(std::string baseDirectory) { baseDirectory_ = baseDirectory; }
 
   std::string concatenateName(std::string name);
+
+  bool divideHistograms(std::string denominator_name,
+			std::string enumerator_name,
+			std::string output_name,
+			std::string title,
+			std::string xtitle,
+			std::string ytitle);
 
  private:
 
