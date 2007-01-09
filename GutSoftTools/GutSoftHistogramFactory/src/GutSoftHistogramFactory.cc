@@ -13,8 +13,8 @@
 // Created:         Thu Sep 28 22:41:24 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/27 23:51:37 $
-// $Revision: 1.1 $
+// $Date: 2006/11/28 20:33:32 $
+// $Revision: 1.2 $
 //
 
 #include <iostream>
@@ -553,4 +553,87 @@ std::string GutSoftHistogramFactory::concatenateName(std::string name) {
 
   return result;
 
+}
+
+bool GutSoftHistogramFactory::divideHistograms(std::string denominator_name,
+					       std::string enumerator_name,
+					       std::string output_name,
+					       std::string title,
+					       std::string xtitle,
+					       std::string ytitle) {
+  //
+  // divide denominator by enumerator and store it in output
+  //
+
+  // return value
+  bool result = false;
+  
+  // concatenate names
+  std::string unique_denominator_name = concatenateName(denominator_name);
+  std::string unique_enumerator_name = concatenateName(enumerator_name);
+  std::string unique_output_name = concatenateName(output_name);
+
+  // get histograms
+  TH1 *denominator = histograms_[unique_denominator_name];
+  TH1 *enumerator = histograms_[unique_enumerator_name];
+
+  if ( denominator != 0 ) {
+    if ( enumerator != 0 ) {
+      if ( denominator->IsA()->InheritsFrom("TH2") &&
+	   enumerator->IsA()->InheritsFrom("TH2") ) {
+	if ( GutSoftHistogramFileMerger::check2DHistogramCompatibility((TH2*)denominator,
+								       (TH2*)enumerator) ) {
+	  // get directory
+	  GutSoftHistogramFileMerger::getDirectory(file_,baseDirectory_)->cd();
+
+	  // clone denominator and divide by enumerator
+	  TH1 *output = (TH1*)denominator->Clone();
+	  output->Divide(enumerator);
+	  output->SetTitle(title.c_str());
+	  output->SetXTitle(xtitle.c_str());
+	  output->SetYTitle(ytitle.c_str());
+	  output->SetName(unique_output_name.c_str());
+	  
+	  // add to map
+	  histograms_[unique_output_name] = output;
+
+	  result = true;
+	  
+	} else {
+	  edm::LogWarning("GutSoftHistogramFactory") << "The histogram " << denominator_name << " cannot be divided by the histogram " << enumerator_name << " in directory " << baseDirectory_ <<". They don't have compatible binning.";
+	}
+      } else if ( denominator->IsA()->InheritsFrom("TH1") &&
+		  enumerator->IsA()->InheritsFrom("TH1") ) {
+	if ( GutSoftHistogramFileMerger::check1DHistogramCompatibility(denominator,
+								       enumerator) ) {
+	  // get directory
+	  GutSoftHistogramFileMerger::getDirectory(file_,baseDirectory_)->cd();
+
+	  // clone denominator and divide by enumerator
+	  TH1 *output = (TH1*)denominator->Clone();
+	  output->Divide(enumerator);
+	  output->SetTitle(title.c_str());
+	  output->SetXTitle(xtitle.c_str());
+	  output->SetYTitle(ytitle.c_str());
+	  output->SetName(unique_output_name.c_str());
+	  
+	  // add to map
+	  histograms_[unique_output_name] = output;
+	  
+	  result = true;
+	  
+	} else {
+	  edm::LogWarning("GutSoftHistogramFactory") << "The histogram " << denominator_name << " cannot be divided by the histogram " << enumerator_name << " in directory " << baseDirectory_ <<". They don't have compatible binning.";
+	}
+      } else {
+	edm::LogWarning("GutSoftHistogramFactory") << "The histogram " << denominator_name << " cannot be divided by the histogram " << enumerator_name << " in directory " << baseDirectory_ <<". They are of different type (TH1 or TH2).";
+      }
+    } else {
+      edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << enumerator_name << " could not be found in directory " << baseDirectory_ << ". The histogram " << denominator_name << " cannot be divided by the histogram " << enumerator_name << ".";
+    }
+  } else {
+    edm::LogWarning("GutSoftHistogramFactory") << "Histogram " << denominator_name << " could not be found in directory " << baseDirectory_ << ". The histogram " << denominator_name << " cannot be divided by the histogram " << enumerator_name << ".";
+  }
+
+  return result;
 }
