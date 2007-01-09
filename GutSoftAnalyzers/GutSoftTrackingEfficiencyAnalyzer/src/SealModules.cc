@@ -3,4 +3,4 @@
 #include "GutSoftAnalyzers/GutSoftTrackingEfficiencyAnalyzer/interface/GutSoftTrackingEfficiencyAnalyzer.h"
 
 DEFINE_SEAL_MODULE();
-DEFINE_ANOTHER_FWK_MODULE(GutSoftTrackingEfficiencyAnalyzer)
+DEFINE_ANOTHER_FWK_MODULE(GutSoftTrackingEfficiencyAnalyzer);

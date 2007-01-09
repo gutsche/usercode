@@ -3,4 +3,4 @@
 #include "GutSoftAnalyzers/GutSoftTrackCandidateAnalyzer/interface/GutSoftTrackCandidateAnalyzer.h"
 
 DEFINE_SEAL_MODULE();
-DEFINE_ANOTHER_FWK_MODULE(GutSoftTrackCandidateAnalyzer)
+DEFINE_ANOTHER_FWK_MODULE(GutSoftTrackCandidateAnalyzer);

@@ -11,8 +11,8 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/28 20:36:41 $
-// $Revision: 1.2 $
+// $Date: 2007/01/09 02:35:08 $
+// $Revision: 1.1 $
 //
 
 #include <string>
@@ -58,7 +58,7 @@ class GutSoftTrackingEfficiencyAnalyzer : public edm::EDAnalyzer {
 
   std::string associatorName_;
 
-  TrackAssociatorBase *associator_;
+  const TrackAssociatorBase *associator_;
 
 };
 
