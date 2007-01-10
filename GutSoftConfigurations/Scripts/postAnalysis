@@ -150,9 +150,7 @@ def main(argv) :
     # print run and event summary
     print ''
     counter = 0
-    sorted_runs = runs.keys()
-    sorted_runs.sort()
-    for run in sorted_runs:
+    for run in runs.keys():
         print 'Run:',run,'Events:',len(runs[run])
         counter += len(runs[run])
 
