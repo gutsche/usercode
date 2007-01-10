@@ -1,6 +1,0 @@
-module gutSoftHistogramFileMergerModule = GutSoftHistogramFileMergerModule
-{
-  untracked string  OutputFileName               = "output.root"  
-  untracked vstring InputFileNames               = { "input.root" }  
-  untracked bool    DeleteInputFiles             = false
-}
