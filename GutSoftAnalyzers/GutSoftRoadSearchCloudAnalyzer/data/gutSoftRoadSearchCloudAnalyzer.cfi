@@ -1,5 +1,0 @@
-module gutSoftRoadSearchCloudAnalyzer = GutSoftRoadSearchCloudAnalyzer
-{
-  untracked string RoadSearchCloudProducerLabel = "rawRoadSearchClouds"
-  untracked string BaseDirectoryName            = "RoadSearchClouds"
-}
