@@ -1,5 +1,0 @@
-module gutSoftTrackCandidateAnalyzer = GutSoftTrackCandidateAnalyzer
-{
-  untracked string TrackCandidateProducerLabel = "rsTrackCandidates"
-  untracked string BaseDirectoryName           = "TrackCandidates"
-}

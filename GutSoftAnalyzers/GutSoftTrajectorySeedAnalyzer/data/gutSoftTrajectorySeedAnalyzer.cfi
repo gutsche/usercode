@@ -1,5 +1,0 @@
-module gutSoftTrajectorySeedAnalyzer = GutSoftTrajectorySeedAnalyzer
-{
-  untracked string TrajectorySeedProducerLabel = "roadSearchSeeds"
-  untracked string BaseDirectoryName           = "TrajectorySeeds"
-}
