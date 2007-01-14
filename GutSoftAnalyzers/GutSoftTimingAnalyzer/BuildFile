@@ -1,0 +1,26 @@
+<use name=FWCore/Framework>
+<use name=Foundation/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=FWCore/ServiceRegistry>>
+<use name=DataFormats/HLTReco>
+<use name=DataFormats/TrajectorySeed>
+<use name=DataFormats/RoadSearchCloud>
+<use name=DataFormats/TrackCandidate>
+<use name=DataFormats/TrackReco>
+<use name=GutSoftTools/GutSoftHistogramFactory>
+<use name=GutSoftTools/GutSoftHistogramFileService>
+<flags SEAL_PLUGIN_NAME="GutSoftAnalyzersGutSoftTimingAnalyzer">
+<export>
+   <lib name=GutSoftAnalyzersGutSoftTimingAnalyzer>
+   <use name=FWCore/Framework>
+   <use name=Foundation/PluginManager>
+   <use name=FWCore/ParameterSet>
+   <use name=FWCore/ServiceRegistry>>
+   <use name=DataFormats/HLTReco>
+   <use name=DataFormats/TrajectorySeed>
+   <use name=DataFormats/RoadSearchCloud>
+   <use name=DataFormats/TrackCandidate>
+   <use name=DataFormats/TrackReco>
+   <use name=GutSoftTools/GutSoftHistogramFactory>
+   <use name=GutSoftTools/GutSoftHistogramFileService>
+</export>

@@ -1,0 +1,9 @@
+# include GutSoftHistogramFileService
+include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
+
+# include analyzer
+module ckfGutSoftTimingAnalyzer = gutSoftTimingAnalyzer from "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/gutSoftTimingAnalyzer.cfi"
+replace ckfGutSoftTimingAnalyzer.BaseDirectoryName      = "Timing_ckf"
+replace ckfGutSoftTimingAnalyzer.SeedInputTag           = globalMixedSeeds
+replace ckfGutSoftTimingAnalyzer.TrackCandidateInputTag = ckfTrackCandidates
+replace ckfGutSoftTimingAnalyzer.TrackInputTag          = ctfWithMaterialTracks
