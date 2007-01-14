@@ -8,8 +8,8 @@
 // Created:         Tue Oct 17 02:41:12 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/29 01:44:38 $
-// $Revision: 1.3 $
+// $Date: 2006/12/21 21:29:50 $
+// $Revision: 1.4 $
 //
 
 #include <string>
@@ -122,6 +122,8 @@ GutSoftRoadSearchCloudAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
     histograms_->fill("nPXBHitPerCloudVsEta",0.,nPXBHit);
     histograms_->fill("nPXFHitPerCloudVsEta",0.,nPXFHit);
 
+    histograms_->fill("nHits",cloud->size());
+
   }
 
 }
@@ -131,11 +133,12 @@ void
 GutSoftRoadSearchCloudAnalyzer::beginJob(const edm::EventSetup&)
 {
 
+  std::string  nCloudDirectory = baseDirectoryName_;
+
   // binning for histograms
   unsigned int nCloud_nbins    = 100000;
   unsigned int nCloud_low      = 0;
   unsigned int nCloud_high     = 100000;
-  std::string  nCloudDirectory = baseDirectoryName_;
 
   unsigned int nhit_nbins      = 31;
   double       nhit_low        = -0.5;
@@ -144,6 +147,11 @@ GutSoftRoadSearchCloudAnalyzer::beginJob(const edm::EventSetup&)
   unsigned int eta_nbins       = 30;
   double       eta_low         = -3.;
   double       eta_high        =  3.;
+
+  unsigned int nHits_nbins     = 1000;
+  double       nHits_low       = 0.;
+  double       nHits_high      = 1000.;
+
 
   // book histogram
   histograms_->bookHistogram("nCloud","Number of cloud per event",
@@ -176,7 +184,9 @@ GutSoftRoadSearchCloudAnalyzer::beginJob(const edm::EventSetup&)
   histograms_->bookHistogram("nPXFHitPerCloudVsEta","Number of PXF hits per cloud vs. #eta",
 			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#eta","Events");
-
+  histograms_->bookHistogram("nHits","Number of hits per cloud",
+			     nCloudDirectory,nHits_nbins,nHits_low,nHits_high,
+			     "n_{Hits}","Events");
 }
 
 void 
