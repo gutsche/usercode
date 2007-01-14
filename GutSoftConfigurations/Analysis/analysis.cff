@@ -20,25 +20,9 @@ include "GutSoftConfigurations/TrackObjects/trackObjects.cff"
 # same track filtered trackObjects
 include "GutSoftConfigurations/SameTrackFilteredTrackObjects/sameTrackFilteredTrackObjects.cff"
 
-# global muon analyzer
-include "GutSoftAnalyzers/GutSoftGlobalMuonAnalyzer/data/gutSoftGlobalMuonAnalyzer.cff"
-
-path p1 = 
+path p = 
 {
-  trackObjects
-}
-
-path p2 =
-{
-  sameTrackFilteredTrackObjects
-}
-
-path p3 =
-{
-  gutSoftGlobalMuonAnalyzer
-}
-
-endpath e =
-{
- timing
+  trackObjects,
+  sameTrackFilteredTrackObjects,
+  timing
 }
