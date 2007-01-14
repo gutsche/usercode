@@ -21,6 +21,8 @@ void compareTwoHistogramFiles(std::string fileName1,
   histos.push_back("rsTracks/nhit");
   histos.push_back("rsTracks/phi");
   histos.push_back("rsTracks/pt");
+  histos.push_back("rsTrackingEfficiency_Hits/efficiencyEta");
+  histos.push_back("rsTrackingEfficiency_Hits/purityEta");
 
   for ( unsigned int i = 0;
 	i < histos.size();

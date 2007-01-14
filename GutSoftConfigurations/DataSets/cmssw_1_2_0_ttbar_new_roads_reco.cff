@@ -1,0 +1,133 @@
+replace PoolSource.fileNames = {
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_0.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_1.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_10.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_11.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_12.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_13.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_14.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_15.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_16.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_17.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_18.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_19.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_2.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_20.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_21.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_22.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_23.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_24.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_25.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_26.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_27.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_28.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_29.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_3.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_30.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_31.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_32.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_33.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_34.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_35.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_36.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_37.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_38.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_39.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_4.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_40.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_41.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_42.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_43.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_44.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_45.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_46.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_47.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_48.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_49.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_5.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_50.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_51.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_52.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_53.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_54.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_55.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_56.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_57.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_58.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_59.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_6.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_60.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_61.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_62.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_63.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_64.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_65.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_66.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_67.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_68.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_69.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_7.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_70.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_71.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_72.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_73.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_74.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_75.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_76.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_77.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_78.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_79.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_8.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_80.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_81.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_82.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_83.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_84.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_85.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_86.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_87.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_88.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_89.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_9.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_90.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_91.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_92.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_93.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_94.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_95.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_96.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_97.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_98.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/061221_06/2009_99.root"
+}
+replace ckfGutSoftTimingAnalyzer.Time_NBins = 1000
+replace ckfGutSoftTimingAnalyzer.Time_LowerBorder = 0.
+replace ckfGutSoftTimingAnalyzer.Time_UpperBorder = 1000.
+replace ckfGutSoftTimingAnalyzer.NumSeeds_NBins = 1000
+replace ckfGutSoftTimingAnalyzer.NumSeeds_LowerBorder   = 0.
+replace ckfGutSoftTimingAnalyzer.NumSeeds_UpperBorder  = 500000.
+replace ckfGutSoftTimingAnalyzer.NumClouds_NBins = 1000
+replace ckfGutSoftTimingAnalyzer.NumClouds_LowerBorder   = 0.
+replace ckfGutSoftTimingAnalyzer.NumClouds_UpperBorder  = 30000.
+replace ckfGutSoftTimingAnalyzer.NumTrackCandidates_NBins = 1000
+replace ckfGutSoftTimingAnalyzer.NumTrackCandidates_LowerBorder   = 0.
+replace ckfGutSoftTimingAnalyzer.NumTrackCandidates_UpperBorder  = 1000.
+replace ckfGutSoftTimingAnalyzer.NumTracks_NBins = 1000
+replace ckfGutSoftTimingAnalyzer.NumTracks_LowerBorder   = 0.
+replace ckfGutSoftTimingAnalyzer.NumTracks_UpperBorder  = 1000.
+
+replace rsGutSoftTimingAnalyzer.Time_NBins = 1000
+replace rsGutSoftTimingAnalyzer.Time_LowerBorder = 0.
+replace rsGutSoftTimingAnalyzer.Time_UpperBorder = 1000.
+replace rsGutSoftTimingAnalyzer.NumSeeds_NBins = 1000
+replace rsGutSoftTimingAnalyzer.NumSeeds_LowerBorder   = 0.
+replace rsGutSoftTimingAnalyzer.NumSeeds_UpperBorder  = 500000.
+replace rsGutSoftTimingAnalyzer.NumClouds_NBins = 1000
+replace rsGutSoftTimingAnalyzer.NumClouds_LowerBorder   = 0.
+replace rsGutSoftTimingAnalyzer.NumClouds_UpperBorder  = 30000.
+replace rsGutSoftTimingAnalyzer.NumTrackCandidates_NBins = 1000
+replace rsGutSoftTimingAnalyzer.NumTrackCandidates_LowerBorder   = 0.
+replace rsGutSoftTimingAnalyzer.NumTrackCandidates_UpperBorder  = 1000.
+replace rsGutSoftTimingAnalyzer.NumTracks_NBins = 1000
+replace rsGutSoftTimingAnalyzer.NumTracks_LowerBorder   = 0.
+replace rsGutSoftTimingAnalyzer.NumTracks_UpperBorder  = 1000.
