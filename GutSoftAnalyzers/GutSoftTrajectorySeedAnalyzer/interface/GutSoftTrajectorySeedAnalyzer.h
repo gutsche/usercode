@@ -11,8 +11,8 @@
 // Created:         Tue Oct 17 02:07:51 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/27 23:57:16 $
-// $Revision: 1.1 $
+// $Date: 2006/11/28 20:36:42 $
+// $Revision: 1.2 $
 //
 
 #include <string>
@@ -21,6 +21,7 @@
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "FWCore/ParameterSet/interface/InputTag.h"
 
 #include "GutSoftTools/GutSoftHistogramFactory/interface/GutSoftHistogramFactory.h"
 
@@ -36,8 +37,8 @@ class GutSoftTrajectorySeedAnalyzer : public edm::EDAnalyzer {
 
   GutSoftHistogramFactory *histograms_;
 
-  std::string trajectorySeedProducerLabel_;
-  std::string baseDirectoryName_;
+  edm::InputTag trajectorySeedInputTag_;
+  std::string   baseDirectoryName_;
 
 };
 

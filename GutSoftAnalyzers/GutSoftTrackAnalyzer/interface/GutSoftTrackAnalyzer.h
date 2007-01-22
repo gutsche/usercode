@@ -11,8 +11,8 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/27 23:57:14 $
-// $Revision: 1.1 $
+// $Date: 2006/11/28 20:36:41 $
+// $Revision: 1.2 $
 //
 
 #include <string>
@@ -21,6 +21,8 @@
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "FWCore/ParameterSet/interface/InputTag.h"
+
 
 #include "GutSoftTools/GutSoftHistogramFactory/interface/GutSoftHistogramFactory.h"
 
@@ -36,8 +38,8 @@ class GutSoftTrackAnalyzer : public edm::EDAnalyzer {
 
   GutSoftHistogramFactory *histograms_;
 
-  std::string trackProducerLabel_;
-  std::string baseDirectoryName_;
+  edm::InputTag trackInputTag_;
+  std::string   baseDirectoryName_;
 
 };
 

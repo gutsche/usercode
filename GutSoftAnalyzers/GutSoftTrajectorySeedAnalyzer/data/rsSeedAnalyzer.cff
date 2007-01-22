@@ -3,5 +3,5 @@ include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileServi
 
 #include analyzer
 module rsSeedAnalyzer = gutSoftTrajectorySeedAnalyzer from "GutSoftAnalyzers/GutSoftTrajectorySeedAnalyzer/data/gutSoftTrajectorySeedAnalyzer.cfi"
-replace rsSeedAnalyzer.TrajectorySeedProducerLabel = "roadSearchSeeds"
-replace rsSeedAnalyzer.BaseDirectoryName           = "rsSeeds"
+replace rsSeedAnalyzer.TrajectorySeedInputTag = roadSearchSeeds
+replace rsSeedAnalyzer.BaseDirectoryName      = "rsSeeds"

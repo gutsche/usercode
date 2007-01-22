@@ -3,5 +3,5 @@ include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileServi
 
 #include analyzer
 module ckfTrackCandidateAnalyzer = gutSoftTrackCandidateAnalyzer from "GutSoftAnalyzers/GutSoftTrackCandidateAnalyzer/data/gutSoftTrackCandidateAnalyzer.cfi"
-replace ckfTrackCandidateAnalyzer.TrackCandidateProducerLabel = "ckfTrackCandidates"
-replace ckfTrackCandidateAnalyzer.BaseDirectoryName           = "ckfTrackCandidates"
+replace ckfTrackCandidateAnalyzer.TrackCandidateInputTag = ckfTrackCandidates
+replace ckfTrackCandidateAnalyzer.BaseDirectoryName      = "ckfTrackCandidates"

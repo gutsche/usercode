@@ -3,5 +3,5 @@ include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileServi
 
 #include analyzer
 module ckfSeedAnalyzer = gutSoftTrajectorySeedAnalyzer from "GutSoftAnalyzers/GutSoftTrajectorySeedAnalyzer/data/gutSoftTrajectorySeedAnalyzer.cfi"
-replace ckfSeedAnalyzer.TrajectorySeedProducerLabel = "globalMixedSeeds"
-replace ckfSeedAnalyzer.BaseDirectoryName           = "ckfSeeds"
+replace ckfSeedAnalyzer.TrajectorySeedInputTag = globalMixedSeeds
+replace ckfSeedAnalyzer.BaseDirectoryName      = "ckfSeeds"

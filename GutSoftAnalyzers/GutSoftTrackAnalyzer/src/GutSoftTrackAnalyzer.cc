@@ -8,8 +8,8 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/29 01:44:38 $
-// $Revision: 1.3 $
+// $Date: 2006/12/21 21:29:50 $
+// $Revision: 1.4 $
 //
 
 #include <string>
@@ -31,7 +31,7 @@
 GutSoftTrackAnalyzer::GutSoftTrackAnalyzer(const edm::ParameterSet& iConfig)
 {
 
-  trackProducerLabel_ = iConfig.getUntrackedParameter<std::string>("TrackProducerLabel");
+  trackInputTag_ = iConfig.getUntrackedParameter<edm::InputTag>("TrackInputTag");
   baseDirectoryName_  = iConfig.getUntrackedParameter<std::string>("BaseDirectoryName");
 
   // GutSoftHistogramFactory
@@ -56,7 +56,7 @@ GutSoftTrackAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   const reco::TrackCollection *trackCollection = 0;
   try {
     edm::Handle<reco::TrackCollection> trackCollectionHandle;
-    iEvent.getByLabel(trackProducerLabel_,trackCollectionHandle);
+    iEvent.getByLabel(trackInputTag_,trackCollectionHandle);
     trackCollection = trackCollectionHandle.product();
   }
   catch (edm::Exception const& x) {
@@ -64,7 +64,7 @@ GutSoftTrackAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& i
       if ( x.history().size() == 1 ) {
 	static const reco::TrackCollection s_empty;
 	trackCollection = &s_empty;
-	edm::LogWarning("GutSoftTrackAnalyzer") << "Collection reco::TrackCollection with label " << trackProducerLabel_ << " cannot be found, using empty collection of same type";
+	edm::LogWarning("GutSoftTrackAnalyzer") << "Collection reco::TrackCollection with label " << trackInputTag_ << " cannot be found, using empty collection of same type";
       }
     }
   }

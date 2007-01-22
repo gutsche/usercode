@@ -11,8 +11,8 @@
 // Created:         Thu Jan 11 01:09:09 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/01/09 21:10:59 $
-// $Revision: 1.2 $
+// $Date: 2007/01/11 01:51:04 $
+// $Revision: 1.1 $
 //
 
 #include <string>
@@ -22,10 +22,10 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "FWCore/ParameterSet/interface/InputTag.h"
 
 #include "GutSoftTools/GutSoftHistogramFactory/interface/GutSoftHistogramFactory.h"
 
-#include "FWCore/ParameterSet/interface/InputTag.h"
 
 class GutSoftGlobalMuonAnalyzer : public edm::EDAnalyzer {
  public:

@@ -8,8 +8,8 @@
 // Created:         Tue Oct 17 02:41:12 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/12/21 21:29:50 $
-// $Revision: 1.4 $
+// $Date: 2007/01/14 18:20:15 $
+// $Revision: 1.5 $
 //
 
 #include <string>
@@ -30,7 +30,7 @@
 GutSoftRoadSearchCloudAnalyzer::GutSoftRoadSearchCloudAnalyzer(const edm::ParameterSet& iConfig)
 {
 
-  roadSearchCloudProducerLabel_ = iConfig.getUntrackedParameter<std::string>("RoadSearchCloudProducerLabel");
+  roadSearchCloudInputTag_      = iConfig.getUntrackedParameter<std::string>("RoadSearchCloudInputTag");
   baseDirectoryName_            = iConfig.getUntrackedParameter<std::string>("BaseDirectoryName");
 
   // GutSoftHistogramFactory
@@ -55,7 +55,7 @@ GutSoftRoadSearchCloudAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
   const RoadSearchCloudCollection *roadSearchCloudCollection = 0;
   try {
     edm::Handle<RoadSearchCloudCollection> roadSearchCloudCollectionHandle;
-    iEvent.getByLabel(roadSearchCloudProducerLabel_,roadSearchCloudCollectionHandle);
+    iEvent.getByLabel(roadSearchCloudInputTag_,roadSearchCloudCollectionHandle);
     roadSearchCloudCollection = roadSearchCloudCollectionHandle.product();
   }
   catch (edm::Exception const& x) {
@@ -63,7 +63,7 @@ GutSoftRoadSearchCloudAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
       if ( x.history().size() == 1 ) {
 	static const RoadSearchCloudCollection s_empty;
 	roadSearchCloudCollection = &s_empty;
-	edm::LogWarning("GutSoftRoadSearchCloudAnalyzer") << "Collection RoadSearchCloudCollection with label " << roadSearchCloudProducerLabel_ << " cannot be found, using empty collection of same type";
+	edm::LogWarning("GutSoftRoadSearchCloudAnalyzer") << "Collection RoadSearchCloudCollection with label " << roadSearchCloudInputTag_ << " cannot be found, using empty collection of same type";
       }
     }
   }

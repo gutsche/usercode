@@ -1,5 +1,5 @@
 module gutSoftTrackAnalyzer = GutSoftTrackAnalyzer 
 {
-  untracked string TrackProducerLabel = "rsWithMaterialTracks"
-  untracked string BaseDirectoryName  = "Tracks"
+  untracked InputTag  TrackInputTag      = rsWithMaterialTracks
+  untracked string    BaseDirectoryName  = "Tracks"
 }

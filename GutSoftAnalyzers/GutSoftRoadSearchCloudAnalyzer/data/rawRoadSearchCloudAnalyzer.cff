@@ -3,6 +3,6 @@ include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileServi
 
 #include analyzer
 module rawRoadSearchCloudAnalyzer = gutSoftRoadSearchCloudAnalyzer from "GutSoftAnalyzers/GutSoftRoadSearchCloudAnalyzer/data/gutSoftRoadSearchCloudAnalyzer.cfi"
-replace rawRoadSearchCloudAnalyzer.RoadSearchCloudProducerLabel = "rawRoadSearchClouds"
-replace rawRoadSearchCloudAnalyzer.BaseDirectoryName            = "rawClouds"
+replace rawRoadSearchCloudAnalyzer.RoadSearchCloudInputTag = rawRoadSearchClouds
+replace rawRoadSearchCloudAnalyzer.BaseDirectoryName       = "rawClouds"
 
