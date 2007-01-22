@@ -11,49 +11,18 @@ source = PoolSource
   untracked uint32 skipEvents = 0
 }
 
-# include tracking truth
-include "SimGeneral/TrackingAnalysis/data/trackingtruth.cfi"
+# timing
+include "GutSoftConfigurations/Timing/timing.cff"
 
 # trackObjects
 include "GutSoftConfigurations/TrackObjects/trackObjects.cff"
 
-# trackEfficiencyObjects
-include "GutSoftConfigurations/TrackObjects/trackEfficiencyObjects.cff"
-
 # same track filtered trackObjects
-#include "GutSoftConfigurations/SameTrackFilteredTrackObjects/sameTrackFilteredTrackObjects.cff"
+include "GutSoftConfigurations/SameTrackFilteredTrackObjects/sameTrackFilteredTrackObjects.cff"
 
-# global muon analyzer
-include "GutSoftAnalyzers/GutSoftGlobalMuonAnalyzer/data/gutSoftGlobalMuonAnalyzer.cff"
-
-# timing analyzer
-include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/ckfGutSoftTimingAnalyzer.cff"
-include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/rsGutSoftTimingAnalyzer.cff"
-
-path pR = {
-  trackingtruth
-}
-
-path p1 = 
+path p = 
 {
   trackObjects,
-  trackEfficiencyObjects
+  sameTrackFilteredTrackObjects,
+  timing
 }
-
-#path p2 =
-#{
-#  sameTrackFilteredTrackObjects
-#}
-
-path p3 =
-{
-  gutSoftGlobalMuonAnalyzer
-}
-
-path p4 =
-{
-  ckfGutSoftTimingAnalyzer,
-  rsGutSoftTimingAnalyzer
-}
-
-schedule = {pR,p1,p3,p4}
