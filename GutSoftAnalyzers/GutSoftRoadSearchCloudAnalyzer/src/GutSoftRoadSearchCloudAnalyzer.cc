@@ -8,8 +8,8 @@
 // Created:         Tue Oct 17 02:41:12 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2007/01/14 18:20:15 $
-// $Revision: 1.5 $
+// $Date: 2007/01/22 01:35:06 $
+// $Revision: 1.6 $
 //
 
 #include <string>
@@ -30,7 +30,7 @@
 GutSoftRoadSearchCloudAnalyzer::GutSoftRoadSearchCloudAnalyzer(const edm::ParameterSet& iConfig)
 {
 
-  roadSearchCloudInputTag_      = iConfig.getUntrackedParameter<std::string>("RoadSearchCloudInputTag");
+  roadSearchCloudInputTag_      = iConfig.getUntrackedParameter<edm::InputTag>("RoadSearchCloudInputTag");
   baseDirectoryName_            = iConfig.getUntrackedParameter<std::string>("BaseDirectoryName");
 
   // GutSoftHistogramFactory
