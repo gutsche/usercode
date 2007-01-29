@@ -1,0 +1,2 @@
+# include analyzer
+include "CMS1/MuonAnalyzer/data/muonAnalyzer.cfi"

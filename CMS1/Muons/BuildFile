@@ -1,0 +1,6 @@
+<use name=DataFormats/MuonReco>
+<flags SEAL_PLUGIN_NAME="CMS1Muons">
+<export>
+   <lib name=CMS1Muons>
+   <use name=DataFormats/MuonReco>
+</export>
