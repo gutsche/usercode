@@ -4,6 +4,10 @@ module gutSoftTrackingEfficiencyAnalyzer = GutSoftTrackingEfficiencyAnalyzer
   untracked InputTag TrackInputTag         = rsWithMaterialTracks
   untracked string BaseDirectoryName       = "TrackingEfficiency"
 
+  # cut on track and tracking particle pt in GeV
+  untracked double TrackPtCut              = 2.
+  untracked double TrackingParticlePtCut   = 2.
+
   # associators: "TrackAssociatorByHits","TrackAssociatorByChi2"
   untracked string Associator = "TrackAssociatorByHits"
 

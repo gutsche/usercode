@@ -11,8 +11,8 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2007/01/09 02:35:08 $
-// $Revision: 1.1 $
+// $Date: 2007/01/09 21:10:59 $
+// $Revision: 1.2 $
 //
 
 #include <string>
@@ -59,6 +59,9 @@ class GutSoftTrackingEfficiencyAnalyzer : public edm::EDAnalyzer {
   std::string associatorName_;
 
   const TrackAssociatorBase *associator_;
+
+  double trackPtCut_;
+  double trackingParticlePtCut_;
 
 };
 
