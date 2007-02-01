@@ -1,5 +1,0 @@
-module gutSoftTrackAnalyzer = GutSoftTrackAnalyzer 
-{
-  untracked InputTag  TrackInputTag      = rsWithMaterialTracks
-  untracked string    BaseDirectoryName  = "Tracks"
-}
