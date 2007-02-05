@@ -13,6 +13,12 @@ include "GutSoftAnalyzers/GutSoftTrackCandidateAnalyzer/data/ckfTrackCandidateAn
 include "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/rsTrackAnalyzer.cff" 
 include "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/ckfTrackAnalyzer.cff" 
 
+# tracking efficiency analyzers
+include "GutSoftAnalyzers/GutSoftTrackingEfficiencyAnalyzer/data/rsTrackingEfficiencyAnalyzerHits.cff" 
+include "GutSoftAnalyzers/GutSoftTrackingEfficiencyAnalyzer/data/ckfTrackingEfficiencyAnalyzerHits.cff" 
+include "GutSoftAnalyzers/GutSoftTrackingEfficiencyAnalyzer/data/rsTrackingEfficiencyAnalyzerChi2.cff" 
+include "GutSoftAnalyzers/GutSoftTrackingEfficiencyAnalyzer/data/ckfTrackingEfficiencyAnalyzerChi2.cff"
+
 sequence trackObjects = {
   rsSeedAnalyzer, 
   ckfSeedAnalyzer, 
@@ -20,5 +26,9 @@ sequence trackObjects = {
   rsTrackCandidateAnalyzer, 
   ckfTrackCandidateAnalyzer, 
   rsTrackAnalyzer, 
-  ckfTrackAnalyzer
+  ckfTrackAnalyzer,
+  rsTrackingEfficiencyAnalyzerHits, 
+  ckfTrackingEfficiencyAnalyzerHits,
+  rsTrackingEfficiencyAnalyzerChi2,
+  ckfTrackingEfficiencyAnalyzerChi2
 }
