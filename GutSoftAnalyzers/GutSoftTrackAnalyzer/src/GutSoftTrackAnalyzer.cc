@@ -8,8 +8,8 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/12/21 21:29:50 $
-// $Revision: 1.4 $
+// $Date: 2007/01/22 01:35:07 $
+// $Revision: 1.5 $
 //
 
 #include <string>
@@ -79,8 +79,8 @@ GutSoftTrackAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     histograms_->fill("nhit",track->found());
     histograms_->fill("eta",track->momentum().eta());
     histograms_->fill("phi",track->momentum().phi());
-    histograms_->fill("transCurv",track->transverseCurvature());
-    histograms_->fill("phiZero",track->phi0());
+    histograms_->fill("qoverp",track->qoverp());
+    histograms_->fill("lambda",track->lambda());
     histograms_->fill("theta",track->theta());
     histograms_->fill("dZero",track->d0());
     histograms_->fill("dZ",track->dz());
@@ -164,13 +164,13 @@ GutSoftTrackAnalyzer::beginJob(const edm::EventSetup&)
   double       phi_low   = -3.1416;
   double       phi_high  = 3.1416;
 
-  unsigned int transCurv_nbins = 100;
-  double       transCurv_low   = -0.25;
-  double       transCurv_high  =  0.25;
+  unsigned int qoverp_nbins = 100;
+  double       qoverp_low   = -0.25;
+  double       qoverp_high  =  0.25;
 
-  unsigned int phiZero_nbins = 100;
-  double       phiZero_low   = -5.;
-  double       phiZero_high  = 5.;
+  unsigned int lambda_nbins = 100;
+  double       lambda_low   = -5.;
+  double       lambda_high  = 5.;
 
   unsigned int theta_nbins = 40;
   double       theta_low   = 0.;
@@ -205,12 +205,12 @@ GutSoftTrackAnalyzer::beginJob(const edm::EventSetup&)
   histograms_->bookHistogram("phi","Track #phi",
 			     nTrackDirectory,phi_nbins,phi_low,phi_high,
 			     "#phi","Events");
-  histograms_->bookHistogram("transCurv","Transverse curvature",
-			     nTrackDirectory,transCurv_nbins,transCurv_low,transCurv_high,
-			     "transCurv","");
-  histograms_->bookHistogram("phiZero","phiZero",
-			     nTrackDirectory,phiZero_nbins,phiZero_low,phiZero_high,
-			     "#phi_{0}","Events");
+  histograms_->bookHistogram("qoverp","Q/p",
+			     nTrackDirectory,qoverp_nbins,qoverp_low,qoverp_high,
+			     "Q/p [1/GeV]","");
+  histograms_->bookHistogram("lambda","lambda",
+			     nTrackDirectory,lambda_nbins,lambda_low,lambda_high,
+			     "lambda","Events");
   histograms_->bookHistogram("theta","Theta",
 			     nTrackDirectory,theta_nbins,theta_low,theta_high,
 			     "#theta","Events");
