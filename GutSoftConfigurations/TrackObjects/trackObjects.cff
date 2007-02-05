@@ -14,7 +14,7 @@ include "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/rsTrackAnalyzer.cff"
 include "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/ckfTrackAnalyzer.cff" 
 
 sequence trackObjects = {
-  rsSeedAnalyzer, 
+  rsSeedAnalyzer,
   ckfSeedAnalyzer, 
   rawRoadSearchCloudAnalyzer, 
   rsTrackCandidateAnalyzer, 

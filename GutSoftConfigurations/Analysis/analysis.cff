@@ -12,7 +12,7 @@ source = PoolSource
 }
 
 # include tracking truth
-include "SimGeneral/TrackingAnalysis/data/trackingtruth.cfi"
+#include "SimGeneral/TrackingAnalysis/data/trackingtruth.cfi"
 
 # trackObjects
 include "GutSoftConfigurations/TrackObjects/trackObjects.cff"
@@ -24,15 +24,15 @@ include "GutSoftConfigurations/TrackObjects/trackEfficiencyObjects.cff"
 #include "GutSoftConfigurations/SameTrackFilteredTrackObjects/sameTrackFilteredTrackObjects.cff"
 
 # global muon analyzer
-include "GutSoftAnalyzers/GutSoftGlobalMuonAnalyzer/data/gutSoftGlobalMuonAnalyzer.cff"
+#include "GutSoftAnalyzers/GutSoftGlobalMuonAnalyzer/data/gutSoftGlobalMuonAnalyzer.cff"
 
 # timing analyzer
 include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/ckfGutSoftTimingAnalyzer.cff"
 include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/rsGutSoftTimingAnalyzer.cff"
 
-path pR = {
-  trackingtruth
-}
+#path pR = {
+#  trackingtruth
+#}
 
 path p1 = 
 {
@@ -45,10 +45,10 @@ path p1 =
 #  sameTrackFilteredTrackObjects
 #}
 
-path p3 =
-{
-  gutSoftGlobalMuonAnalyzer
-}
+#path p3 =
+#{
+#  gutSoftGlobalMuonAnalyzer
+#}
 
 path p4 =
 {
@@ -56,4 +56,4 @@ path p4 =
   rsGutSoftTimingAnalyzer
 }
 
-schedule = {pR,p1,p3,p4}
+schedule = {p1,p4}

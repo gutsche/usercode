@@ -19,10 +19,12 @@ include "GutSoftConfigurations/Timing/timing.cff"
 include "SimGeneral/TrackingAnalysis/data/trackingtruth.cfi"
 
 # RoadSearchHitDumper
-include "RecoTracker/RoadSearchSeedFinder/data/roadSearchHitDumper.cff"
+#include "RecoTracker/RoadSearchSeedFinder/data/roadSearchHitDumper.cff"
 
 # include track reconstruction
 include "RecoTracker/Configuration/data/RecoTracker.cff"
+replace roadSearchSeeds.MinimalReconstructedTransverseMomentum = 0.9 
+replace roadSearchSeeds.PhiRangeForDetIdLookupInRings = 0.9
 
 # trackObjects
 include "GutSoftConfigurations/TrackObjects/trackObjects.cff"
@@ -41,11 +43,18 @@ include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/rsGutSoftTimingAnalyzer.cff
 module out = PoolOutputModule 
 {
   untracked string fileName = 'output.root'
+  untracked vstring outputCommands = 
+  {
+    "keep *",
+    "drop recoMETs_*_*_PROD",
+    "drop *_ecalUnsuppressedDigis_*_*",
+    "drop recoCandidatesOwned_*_*_*"
+  }
 } 
 
 
 path pR = {
-  roadSearchHitDumper,
+#  roadSearchHitDumper,
   trackingtruth,
   ckftracks,
   rstracks

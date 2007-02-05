@@ -7,10 +7,12 @@ void compareTwoHistogramFiles(std::string fileName1,
   TFile *file1 = new TFile(fileName1.c_str());
   if ( file1->IsZombie() ) {
     std::cout << "File: " << fileName1 << " cannot be opened!" << std::endl;
+    return;
   }
   TFile *file2 = new TFile(fileName2.c_str());
   if ( file2->IsZombie() ) {
     std::cout << "File: " << fileName2 << " cannot be opened!" << std::endl;
+    return;
   }
 
   // define histograms to compare
