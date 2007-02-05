@@ -18,8 +18,8 @@ include "GutSoftConfigurations/Timing/timing.cff"
 # include tracking truth
 include "SimGeneral/TrackingAnalysis/data/trackingtruth.cfi"
 
-# RoadSearchHitDumper
-include "RecoTracker/RoadSearchSeedFinder/data/roadSearchHitDumper.cff"
+# object dumper
+include "GutSoftConfigurations/TrackObjects/dumpObjects.cff"
 
 # include track reconstruction
 include "RecoTracker/Configuration/data/RecoTracker.cff"
@@ -45,10 +45,10 @@ module out = PoolOutputModule
 
 
 path pR = {
-  roadSearchHitDumper,
   trackingtruth,
   ckftracks,
-  rstracks
+  rstracks,
+  dumpObjects
 }
 
 path pT = {

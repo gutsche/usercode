@@ -1,0 +1,14 @@
+# hit dumper
+include "TrackingTools/RoadSearchHitAccess/data/roadSearchHitDumper.cff"
+
+# seed dumper
+include "RecoTracker/RoadSearchSeedFinder/data/roadSearchSeedDumper.cff"
+
+# cloud dumper
+include "RecoTracker/RoadSearchCloudMaker/data/roadSearchCloudDumper.cff"
+
+sequence dumpObjects = {
+  roadSearchHitDumper,
+  roadSearchSeedDumper,
+  roadSearchCloudDumper
+}
