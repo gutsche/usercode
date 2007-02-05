@@ -1,5 +1,0 @@
-module gutSoftRoadSearchCloudAnalyzer = GutSoftRoadSearchCloudAnalyzer
-{
-  untracked InputTag RoadSearchCloudInputTag = rawRoadSearchClouds
-  untracked string   BaseDirectoryName       = "RoadSearchClouds"
-}
