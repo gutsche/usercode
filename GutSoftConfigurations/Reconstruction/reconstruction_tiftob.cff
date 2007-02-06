@@ -12,8 +12,8 @@ source = PoolSource
   untracked uint32 skipEvents = 0
 }
 
-# RoadSearchHitDumper
-include "RecoTracker/RoadSearchSeedFinder/data/roadSearchHitDumper.cff"
+# object dumper
+include "GutSoftConfigurations/TrackObjects/dumpObjects.cff"
 
 # include track reconstruction
 include "GutSoftConfigurations/Reconstruction/RecoTrackerTIFTOB.cff"
@@ -27,8 +27,7 @@ module out = PoolOutputModule
 
 path pR = {
   rstracks,
-  roadSearchHitDumper
-
+  dumpObjects
 }
 
 endpath e =
