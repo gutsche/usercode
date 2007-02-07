@@ -23,8 +23,7 @@ include "SimGeneral/TrackingAnalysis/data/trackingtruth.cfi"
 
 # include track reconstruction
 include "RecoTracker/Configuration/data/RecoTracker.cff"
-replace roadSearchSeeds.MinimalReconstructedTransverseMomentum = 0.9 
-replace roadSearchSeeds.PhiRangeForDetIdLookupInRings = 0.9
+replace roadSearchSeeds.MergeSeedsCompareLast = 25
 
 # trackObjects
 include "GutSoftConfigurations/TrackObjects/trackObjects.cff"

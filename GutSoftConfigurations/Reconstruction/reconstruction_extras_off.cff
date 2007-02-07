@@ -19,12 +19,16 @@ include "GutSoftConfigurations/Timing/timing.cff"
 include "SimGeneral/TrackingAnalysis/data/trackingtruth.cfi"
 
 # object dumper
-#include "GutSoftConfigurations/TrackObjects/dumpObjects.cff"
+include "GutSoftConfigurations/TrackObjects/dumpObjects.cff"
 
 # include track reconstruction
 include "RecoTracker/Configuration/data/RecoTracker.cff"
-replace roadSearchSeeds.MinimalReconstructedTransverseMomentum = 0.9 
-replace roadSearchSeeds.PhiRangeForDetIdLookupInRings = 0.9
+replace roadSearchSeeds.InnerSeedRecHitAccessMode = "STANDARD"
+replace roadSearchSeeds.InnerSeedRecHitAccessUseRPhi = false
+replace roadSearchSeeds.InnerSeedRecHitAccessUseStereo = false
+replace roadSearchSeeds.OuterSeedRecHitAccessMode = "STANDARD"
+replace roadSearchSeeds.OuterSeedRecHitAccessUseRPhi = false
+replace roadSearchSeeds.OuterSeedRecHitAccessUseStereo = false
 
 # trackObjects
 include "GutSoftConfigurations/TrackObjects/trackObjects.cff"
@@ -49,8 +53,8 @@ module out = PoolOutputModule
 path pR = {
   trackingtruth,
   ckftracks,
-  rstracks
-#  dumpObjects
+  rstracks,
+  dumpObjects
 }
 
 path pT = {
