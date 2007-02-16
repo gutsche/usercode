@@ -1,0 +1,7 @@
+# include GutSoftHistogramFileService
+include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
+
+#include analyzer
+module rsSeedingEfficiencyAnalyzer = gutSoftSeedingEfficiencyAnalyzer from "GutSoftAnalyzers/GutSoftSeedingEfficiencyAnalyzer/data/gutSoftSeedingEfficiencyAnalyzer.cfi"
+replace rsSeedingEfficiencyAnalyzer.TrajectorySeedInputTag = roadSearchSeeds
+replace rsSeedingEfficiencyAnalyzer.BaseDirectoryName      = "rsSeedEfficiency"

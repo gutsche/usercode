@@ -1,0 +1,7 @@
+# include GutSoftHistogramFileService
+include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
+
+#include analyzer
+module ctfSeedingEfficiencyAnalyzer = gutSoftSeedingEfficiencyAnalyzer from "GutSoftAnalyzers/GutSoftSeedingEfficiencyAnalyzer/data/gutSoftSeedingEfficiencyAnalyzer.cfi"
+replace ctfSeedingEfficiencyAnalyzer.TrajectorySeedInputTag = globalMixedSeeds
+replace ctfSeedingEfficiencyAnalyzer.BaseDirectoryName      = "ckfSeedingEfficiency"
