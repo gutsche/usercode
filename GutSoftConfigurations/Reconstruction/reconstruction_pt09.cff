@@ -15,8 +15,8 @@ source = PoolSource
 # timer
 include "GutSoftConfigurations/Timing/timing.cff"
 
-# include tracking truth
-include "SimGeneral/TrackingAnalysis/data/trackingtruth.cfi"
+# include true information
+include "GutSoftConfigurations/TrueInformation/trueInformation.cff"
 
 # object dumper
 #include "GutSoftConfigurations/TrackObjects/dumpObjects.cff"
@@ -46,8 +46,11 @@ module out = PoolOutputModule
 } 
 
 
+path pTR = {
+  trueInformation
+}
+
 path pR = {
-  trackingtruth,
   ckftracks,
   rstracks
 #  dumpObjects
@@ -75,7 +78,7 @@ path p3 =
 }
 
 #schedule = {pR,pT,p1,p2,p3,e}
-schedule = {pR,pT,p1,p3,e}
+schedule = {pTR,pR,pT,p1,p3,e}
 
 endpath e =
 {

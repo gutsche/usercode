@@ -12,23 +12,23 @@ void compareTwoHistograms(std::string fileName1) {
   // define histograms to compare
   std::vector<std::string> histos1;
   std::vector<std::string> histos2;
-//  histos1.push_back("rsTrackingEfficiency_Hits/efficiencyEta");
-//  histos2.push_back("ckfTrackingEfficiency_Hits/efficiencyEta");
+ histos1.push_back("rsTrackingEfficiency_Hits/efficiencyEta");
+ histos2.push_back("ckfTrackingEfficiency_Hits/efficiencyEta");
 
   histos1.push_back("rsSeeds/nSeed");
   histos2.push_back("ckfSeeds/nSeed");
 
-//  histos1.push_back("rsTracks/nTracks");
-//  histos2.push_back("ckfTracks/nTracks");
+ histos1.push_back("rsTracks/nTracks");
+ histos2.push_back("ckfTracks/nTracks");
 
-//  histos1.push_back("rsTracks/eta");
-//  histos2.push_back("ckfTracks/eta");
+ histos1.push_back("rsTracks/eta");
+ histos2.push_back("ckfTracks/eta");
 
-//  histos1.push_back("rsTracks/pt");
-//  histos2.push_back("ckfTracks/pt");
+ histos1.push_back("rsTracks/pt");
+ histos2.push_back("ckfTracks/pt");
 
-//  histos1.push_back("rsTracks/nhit");
-//  histos2.push_back("ckfTracks/nhit");
+ histos1.push_back("rsTracks/nhit");
+ histos2.push_back("ckfTracks/nhit");
 
   for ( unsigned int i = 0;
 	i < histos1.size();
@@ -55,6 +55,50 @@ void compareTwoHistograms(std::string fileName1) {
 
 }
 
+unsigned int highestBinWithNonZeroContent(TH1 *histo) {
+  //
+  // determine highest bin with non_zero entries
+  //
+
+  // return value
+  unsigned int bins = histo->GetNbinsX();
+  unsigned int result = bins;
+
+  for ( unsigned int bin = bins; 
+	bin >= 1;
+	--bin ) {
+    result = bin;
+    if ( histo->GetBinContent(bin) > 0 ) {
+      break;
+    }
+  }
+
+  return result;
+
+}
+
+unsigned int lowestBinWithNonZeroContent(TH1 *histo) {
+  //
+  // determine lowest bin with non_zero entries
+  //
+
+  // return value
+  unsigned int bins = histo->GetNbinsX();
+  unsigned int result = 1;
+
+  for ( unsigned int bin = 1; 
+	bin <= bins;
+	++bin ) {
+    result = bin;
+    if ( histo->GetBinContent(bin) > 0 ) {
+      break;
+    }
+  }
+
+  return result;
+}
+
+
 void compareTwoHistograms(std::string name1, 
 			  std::string name2, 
 			  TH1 *histo1, 
@@ -66,17 +110,32 @@ void compareTwoHistograms(std::string name1,
   canvas->SetRightMargin(0.21);
 
   // rescale
-  TString rootName(name1.c_str());
-  if ( rootName.Contains("nSeed") ) {
-     histo1->GetXaxis()->SetRange(0,15000);
-     histo2->GetXaxis()->SetRange(0,15000);
-//    histo1->GetXaxis()->SetRange(0,40);
-//    histo2->GetXaxis()->SetRange(0,40);
-  } else if ( rootName.Contains("nTracks") ) {
-     histo1->GetXaxis()->SetRange(0,100);
-     histo2->GetXaxis()->SetRange(0,100);
-//    histo1->GetXaxis()->SetRange(0,4);
-//    histo2->GetXaxis()->SetRange(0,4);
+  unsigned int maxBin = highestBinWithNonZeroContent(histo1);
+  unsigned int tmpMaxBin = highestBinWithNonZeroContent(histo2);
+  if ( tmpMaxBin > maxBin ) {
+    maxBin = tmpMaxBin;
+  }
+  unsigned int minBin = lowestBinWithNonZeroContent(histo1);
+  unsigned int tmpMinBin = lowestBinWithNonZeroContent(histo2);
+  if ( tmpMinBin > minBin ) {
+    minBin = tmpMinBin;
+  }
+  double max = histo1->GetBinCenter(maxBin) + histo1->GetBinWidth(maxBin)/2;
+  double maxMax = (histo1->GetBinCenter(histo1->GetNbinsX())+histo1->GetBinWidth(histo1->GetNbinsX())/2);
+  double min = histo1->GetBinCenter(minBin) - histo1->GetBinWidth(minBin)/2;
+  double minMin = (histo1->GetBinCenter(1)-histo1->GetBinWidth(1)/2);
+  double fraction = 0.5;
+  if ( max <= fraction * maxMax ) {
+    if ( min >= fraction * minMin ) {
+      histo1->GetXaxis()->SetRangeUser(min,max);
+      histo2->GetXaxis()->SetRangeUser(min,max);
+    } else {
+      histo1->GetXaxis()->SetRangeUser(minMin,max);
+      histo2->GetXaxis()->SetRangeUser(minMin,max);
+    }
+  } else if ( min >= fraction * minMin ) {
+    histo1->GetXaxis()->SetRangeUser(min,maxMax);
+    histo2->GetXaxis()->SetRangeUser(min,maxMax);
   }
 
   histo1->SetLineColor(2);

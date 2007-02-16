@@ -120,6 +120,32 @@ void prepareEfficiencyPlots(std::string filename) {
 		   "Efficiency in p_{T}",
 		   "Efficiency");
 
+  divideHistograms(file,
+		   "rsSeedEfficiency",
+		   "eff_eta_trueNrec",
+		   "eff_eta_rs_true",
+		   "rsSeedingEfficiencyEta",
+		   "Algorithmic Seeding Efficiency in #eta",
+		   "Efficiency");
+
+  divideHistograms(file,
+		   "rsSeedEfficiency",
+		   "eff_eta_trueNrec",
+		   "eff_eta_true",
+		   "seedingEfficiencyEta",
+		   "Seeding Efficiency in #eta",
+		   "Efficiency");
+
+  divideHistograms(file,
+		   "rsSeedEfficiency",
+		   "eff_eta_rs_true",
+		   "eff_eta_true",
+		   "trueSeedingEfficiencyEta",
+		   "RS Seeding Efficiency in #eta",
+		   "Efficiency");
+
+
+
   // write file
   file->Write();
   delete file;
