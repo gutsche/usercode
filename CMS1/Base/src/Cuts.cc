@@ -6,8 +6,8 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: gutsche $
-// $Date: 2007/01/29 18:15:28 $
+// $Author: dmytro $
+// $Date: 2007/02/16 11:49:22 $
 // $Revision: 1.1 $
 //
 
@@ -22,9 +22,12 @@ bool cms1::Cuts::testTrack(const reco::Track& track) const
    return true;
 }
 
-bool cms1::Cuts::testCandidate(const reco::Candidate& ) const
+bool cms1::Cuts::testCandidate(const reco::Candidate& candidate) const
 {
-   std::cout << "Sorry, not implemented yet" << std::endl;
-   return false;
+   if (candidate.pt() < pt_min || candidate.pt() > pt_max) return false;
+   if (candidate.eta() < eta_min || candidate.eta() > eta_max) return false;
+   if (candidate.phi() < phi_min || candidate.phi() > phi_max) return false;
+   
+   return true;
 }
 

@@ -1,0 +1,7 @@
+<use name=DataFormats/EgammaCandidates>
+<use name=CMS1/Base>
+<export>
+   <lib name=CMS1Electrons>
+   <use name=DataFormats/EgammaCandidates>
+</export>
+# <Flags CXXFLAGS=-g>

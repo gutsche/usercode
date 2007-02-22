@@ -1,0 +1,7 @@
+<use name=DataFormats/METReco>
+<use name=CMS1/Base>
+<export>
+   <lib name=CMS1MET>
+   <use name=DataFormats/METReco>
+</export>
+# <Flags CXXFLAGS=-g>

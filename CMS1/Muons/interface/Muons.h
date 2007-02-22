@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
-// $Author$
-// $Date:$
-// $Revision:$
+// $Author: dmytro $
+// $Date: 2007/02/16 11:53:32 $
+// $Revision: 1.2 $
 //
 
 #include "DataFormats/MuonReco/interface/Muon.h"
@@ -38,7 +38,7 @@ namespace cms1 {
      
       // These are "types of muons" that we define.  We can add as amany as we want as
       // people invent new muon requirements
-      enum MuonType { AllTracks, AllGlobalMuons, TightGlobalMuons, AllMuonWithDetectorInfos };
+      enum MuonType { AllTracks, AllGlobalMuons, TightGlobalMuons, LooseGlobalMuons, AllMuonWithDetectorInfos };
      
       // We need to have pointers from the event to the collections that we might want to use.
       // This is done by setting the data_ private member at the beginning of the analysis of 
