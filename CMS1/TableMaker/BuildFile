@@ -1,0 +1,25 @@
+<use name=FWCore/Framework>
+<use name=Foundation/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=FWCore/ServiceRegistry>>
+<use name=DataFormats/MuonReco>
+<use name=CMS1/Muons>
+<use name=CMS1/Electrons>
+<use name=CMS1/Jets>
+<use name=CMS1/MET>
+<use name=DataFormats/Math>
+<flags SEAL_PLUGIN_NAME="CMS1TableMaker">
+<export>
+   <lib name=CMS1TableMaker>
+   <use name=FWCore/Framework>
+   <use name=Foundation/PluginManager>
+   <use name=FWCore/ParameterSet>
+   <use name=FWCore/ServiceRegistry>>
+   <use name=DataFormats/MuonReco>
+   <use name=CMS1/Muons>
+   <use name=CMS1/Electrons>
+   <use name=CMS1/Jets>
+   <use name=CMS1/MET>
+   <use name=DataFormats/Math>
+</export>
+<Flags CXXFLAGS=-g>

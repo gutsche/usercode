@@ -8,8 +8,8 @@
 // Created:         Fri Sep  1 15:39:57 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/10/06 14:42:31 $
-// $Revision: 1.6 $
+// $Date: 2006/09/08 19:36:04 $
+// $Revision: 1.4 $
 //
 
 #include <string>
@@ -31,10 +31,12 @@
 #include "DataFormats/SiStripDetId/interface/StripSubdetector.h"
 #include "DataFormats/SiPixelDetId/interface/PixelSubdetector.h"
 
-RoadSearchTrackValidation::RoadSearchTrackValidation(const edm::ParameterSet& iConfig) :
-  histograms_(iConfig.getUntrackedParameter<std::string>("OutputFileName"))
+
+RoadSearchTrackValidation::RoadSearchTrackValidation(const edm::ParameterSet& iConfig)
 {
 
+  file_ = new TFile(iConfig.getUntrackedParameter<std::string>("OutputFileName").c_str(),"RECREATE");
+  
   // binning
   unsigned int chi2_nbins = 50;
   double       chi2_low   = 0.;
@@ -97,224 +99,224 @@ RoadSearchTrackValidation::RoadSearchTrackValidation(const edm::ParameterSet& iC
   double       nhit_high  = 30.5;
 
   // RS plots
-  histograms_.bookHistogram("rs_chi2_1d","Track reduced chi^{2}","RS",chi2_nbins,chi2_low,chi2_high,"#chi^2","Events");
-  histograms_.bookHistogram("rs_pt_1d","Track p_{T} (GeV)","RS",pt_nbins,pt_low,pt_high,"p_{T} [GeV]","Events");
-  histograms_.bookHistogram("rs_eta_1d","Track #eta","RS",eta_nbins,eta_low,eta_high,"#eta","Events");
-  histograms_.bookHistogram("rs_phi_1d","Track #phi","RS",phi_nbins,phi_low,phi_high,"#phi","Events");
-  histograms_.bookHistogram("rs_transCurv_1d","Transverse curvature","RS",transCurv_nbins,transCurv_low,transCurv_high,"transCurv","");
-  histograms_.bookHistogram("rs_phiZero_1d","phiZero","RS",phiZero_nbins,phiZero_low,phiZero_high,"#phi_{0}","Events");
-  histograms_.bookHistogram("rs_theta_1d","Theta","RS",theta_nbins,theta_low,theta_high,"#theta","Events");
-  histograms_.bookHistogram("rs_dZero_1d",",dZero","RS",dZero_nbins,dZero_low,dZero_high,"d_{0}","Events");
-  histograms_.bookHistogram("rs_dZ_1d","dZ","RS",dZ_nbins,dZ_low,dZ_high,"d_{Z}","Events");
-  histograms_.bookHistogram("rs_nhit_1d","Number of hits per track","RS",nhit_nbins,nhit_low,nhit_high,"n_{hit}","Events");
+  rs_chi2               = new TH1D("rs_chi2","Track reduced chi^{2}",chi2_nbins,chi2_low,chi2_high);
+  rs_pt                 = new TH1D("rs_pt","Track p_{T} (GeV)",pt_nbins,pt_low,pt_high);
+  rs_eta                = new TH1D("rs_eta","Track #eta",eta_nbins,eta_low,eta_high);
+  rs_phi                = new TH1D("rs_phi","Track #phi",phi_nbins,phi_low,phi_high);
+  rs_transCurv          = new TH1D("rs_transCurv","Transverse curvature",transCurv_nbins,transCurv_low,transCurv_high);
+  rs_phiZero            = new TH1D("rs_phiZero","phiZero",phiZero_nbins,phiZero_low,phiZero_high);
+  rs_theta              = new TH1D("rs_theta","Theta",theta_nbins,theta_low,theta_high);
+  rs_dZero              = new TH1D("rs_dZero",",dZero",dZero_nbins,dZero_low,dZero_high);
+  rs_dZ                 = new TH1D("rs_dZ","dZ",dZ_nbins,dZ_low,dZ_high);
+  rs_nhit               = new TH1D("rs_nhit","Number of hits per track",nhit_nbins,nhit_low,nhit_high);
 
-  histograms_.bookHistogram("rs_numSeeds_1d","Number of Seeds per event","RS",numSeeds_nbins,numSeeds_low,numSeeds_high,"n_{seeds}","Events");
-  histograms_.bookHistogram("rs_numRawClouds_1d","Number of raw clouds per event","RS",numRawClouds_nbins,numRawClouds_low,numRawClouds_high,"n_{rawClouds}","Events");
-  histograms_.bookHistogram("rs_numCleanClouds_1d","Number of clean clouds per event","RS",numCleanClouds_nbins,numCleanClouds_low,numCleanClouds_high,"n_{cleanClouds}","Events");
-  histograms_.bookHistogram("rs_numTrackCandidates_1d","Number of track candidates per event","RS",numTrackCandidates_nbins,numTrackCandidates_low,numTrackCandidates_high,"n_{TrackCandidates}","Events");
-  histograms_.bookHistogram("rs_numTracks_1d","Number of tracks per event","RS",numTracks_nbins,numTracks_low,numTracks_high,"n_{Tracks}","Events");
+  rs_numSeeds           = new TH1I("rs_numSeeds","Number of Seeds per event",numSeeds_nbins,numSeeds_low,numSeeds_high);
+  rs_numRawClouds       = new TH1I("rs_numRawClouds","Number of raw clouds per event",numRawClouds_nbins,numRawClouds_low,numRawClouds_high);
+  rs_numCleanClouds     = new TH1I("rs_numCleanClouds","Number of clean clouds per event",numCleanClouds_nbins,numCleanClouds_low,numCleanClouds_high);
+  rs_numTrackCandidates = new TH1I("rs_numTrackCandidates","Number of track candidates per event",numTrackCandidates_nbins,numTrackCandidates_low,numTrackCandidates_high);
+  rs_numTracks          = new TH1I("rs_numTracks","Number of tracks per event",numTracks_nbins,numTracks_low,numTracks_high);
 
-  histograms_.bookHistogram("rs_nHitPerTrackVsEta_2d","Number of hits per track vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nHitPerTrackCandidateVsEta_2d","Number of hits per track candidate vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nHitPerCleanCloudVsEta_2d","Number of hits per clean cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nHitPerRawCloudVsEta_2d","Number of hits per raw cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  rs_nHitPerTrackVsEta = new TH2D("rs_nHitPerTrackVsEta","Number of hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nHitPerTrackCandidateVsEta = new TH2D("rs_nHitPerTrackCandidateVsEta","Number of hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nHitPerCleanCloudVsEta = new TH2D("rs_nHitPerCleanCloudVsEta","Number of hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nHitPerRawCloudVsEta = new TH2D("rs_nHitPerRawCloudVsEta","Number of hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_nHitPerTrackVsPhi_2d","Number of hits per track vs. #phi","RS",nhit_nbins,nhit_low,nhit_high,phi_nbins,phi_low,phi_high,"n_{Hit}","#phi","Events");
+  rs_nHitPerTrackVsPhi = new TH2D("rs_nHitPerTrackVsPhi","Number of hits per track vs. #phi",nhit_nbins,nhit_low,nhit_high,phi_nbins,phi_low,phi_high);
 
-  histograms_.bookHistogram("rs_nStripHitPerTrackVsEta_2d","Number of strip hits per track vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nStripHitPerTrackCandidateVsEta_2d","Number of strip hits per track candidate vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nStripHitPerCleanCloudVsEta_2d","Number of strip hits per clean cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nStripHitPerRawCloudVsEta_2d","Number of strip hits per raw cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  rs_nStripHitPerTrackVsEta = new TH2D("rs_nStripHitPerTrackVsEta","Number of strip hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nStripHitPerTrackCandidateVsEta = new TH2D("rs_nStripHitPerTrackCandidateVsEta","Number of strip hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nStripHitPerCleanCloudVsEta = new TH2D("rs_nStripHitPerCleanCloudVsEta","Number of strip hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nStripHitPerRawCloudVsEta = new TH2D("rs_nStripHitPerRawCloudVsEta","Number of strip hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_nPixelHitPerTrackVsEta_2d","Number of pixel hits per track vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nPixelHitPerTrackCandidateVsEta_2d","Number of pixel hits per track candidate vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nPixelHitPerCleanCloudVsEta_2d","Number of pixel hits per clean cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nPixelHitPerRawCloudVsEta_2d","Number of pixel hits per raw cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  rs_nPixelHitPerTrackVsEta = new TH2D("rs_nPixelHitPerTrackVsEta","Number of pixel hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nPixelHitPerTrackCandidateVsEta = new TH2D("rs_nPixelHitPerTrackCandidateVsEta","Number of pixel hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nPixelHitPerCleanCloudVsEta = new TH2D("rs_nPixelHitPerCleanCloudVsEta","Number of pixel hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nPixelHitPerRawCloudVsEta = new TH2D("rs_nPixelHitPerRawCloudVsEta","Number of pixel hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_nTIBHitPerTrackVsEta_2d","Number of TIB hits per track vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nTIBHitPerTrackCandidateVsEta_2d","Number of TIB hits per track candidate vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nTIBHitPerCleanCloudVsEta_2d","Number of TIB hits per clean cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nTIBHitPerRawCloudVsEta_2d","Number of TIB hits per raw cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  rs_nTIBHitPerTrackVsEta = new TH2D("rs_nTIBHitPerTrackVsEta","Number of TIB hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nTIBHitPerTrackCandidateVsEta = new TH2D("rs_nTIBHitPerTrackCandidateVsEta","Number of TIB hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nTIBHitPerCleanCloudVsEta = new TH2D("rs_nTIBHitPerCleanCloudVsEta","Number of TIB hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nTIBHitPerRawCloudVsEta = new TH2D("rs_nTIBHitPerRawCloudVsEta","Number of TIB hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_nTOBHitPerTrackVsEta_2d","Number of TOB hits per track vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nTOBHitPerTrackCandidateVsEta_2d","Number of TOB hits per track candidate vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nTOBHitPerCleanCloudVsEta_2d","Number of TOB hits per clean cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nTOBHitPerRawCloudVsEta_2d","Number of TOB hits per raw cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  rs_nTOBHitPerTrackVsEta = new TH2D("rs_nTOBHitPerTrackVsEta","Number of TOB hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nTOBHitPerTrackCandidateVsEta = new TH2D("rs_nTOBHitPerTrackCandidateVsEta","Number of TOB hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nTOBHitPerCleanCloudVsEta = new TH2D("rs_nTOBHitPerCleanCloudVsEta","Number of TOB hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nTOBHitPerRawCloudVsEta = new TH2D("rs_nTOBHitPerRawCloudVsEta","Number of TOB hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_nTIDHitPerTrackVsEta_2d","Number of TID hits per track vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nTIDHitPerTrackCandidateVsEta_2d","Number of TID hits per track candidate vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nTIDHitPerCleanCloudVsEta_2d","Number of TID hits per clean cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nTIDHitPerRawCloudVsEta_2d","Number of TID hits per raw cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  rs_nTIDHitPerTrackVsEta = new TH2D("rs_nTIDHitPerTrackVsEta","Number of TID hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nTIDHitPerTrackCandidateVsEta = new TH2D("rs_nTIDHitPerTrackCandidateVsEta","Number of TID hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nTIDHitPerCleanCloudVsEta = new TH2D("rs_nTIDHitPerCleanCloudVsEta","Number of TID hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nTIDHitPerRawCloudVsEta = new TH2D("rs_nTIDHitPerRawCloudVsEta","Number of TID hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_nTECHitPerTrackVsEta_2d","Number of TEC hits per track vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nTECHitPerTrackCandidateVsEta_2d","Number of TEC hits per track candidate vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nTECHitPerCleanCloudVsEta_2d","Number of TEC hits per clean cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nTECHitPerRawCloudVsEta_2d","Number of TEC hits per raw cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  rs_nTECHitPerTrackVsEta = new TH2D("rs_nTECHitPerTrackVsEta","Number of TEC hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nTECHitPerTrackCandidateVsEta = new TH2D("rs_nTECHitPerTrackCandidateVsEta","Number of TEC hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nTECHitPerCleanCloudVsEta = new TH2D("rs_nTECHitPerCleanCloudVsEta","Number of TEC hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nTECHitPerRawCloudVsEta = new TH2D("rs_nTECHitPerRawCloudVsEta","Number of TEC hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_nPXBHitPerTrackVsEta_2d","Number of PXB hits per track vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nPXBHitPerTrackCandidateVsEta_2d","Number of PXB hits per track candidate vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nPXBHitPerCleanCloudVsEta_2d","Number of PXB hits per clean cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nPXBHitPerRawCloudVsEta_2d","Number of PXB hits per raw cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  rs_nPXBHitPerTrackVsEta = new TH2D("rs_nPXBHitPerTrackVsEta","Number of PXB hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nPXBHitPerTrackCandidateVsEta = new TH2D("rs_nPXBHitPerTrackCandidateVsEta","Number of PXB hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nPXBHitPerCleanCloudVsEta = new TH2D("rs_nPXBHitPerCleanCloudVsEta","Number of PXB hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nPXBHitPerRawCloudVsEta = new TH2D("rs_nPXBHitPerRawCloudVsEta","Number of PXB hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_nPXFHitPerTrackVsEta_2d","Number of PXF hits per track vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nPXFHitPerTrackCandidateVsEta_2d","Number of PXF hits per track candidate vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nPXFHitPerCleanCloudVsEta_2d","Number of PXF hits per clean cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_nPXFHitPerRawCloudVsEta_2d","Number of PXF hits per raw cloud vs. #eta","RS",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  rs_nPXFHitPerTrackVsEta = new TH2D("rs_nPXFHitPerTrackVsEta","Number of PXF hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nPXFHitPerTrackCandidateVsEta = new TH2D("rs_nPXFHitPerTrackCandidateVsEta","Number of PXF hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nPXFHitPerCleanCloudVsEta = new TH2D("rs_nPXFHitPerCleanCloudVsEta","Number of PXF hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_nPXFHitPerRawCloudVsEta = new TH2D("rs_nPXFHitPerRawCloudVsEta","Number of PXF hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  // CKF plots
-  histograms_.bookHistogram("ckf_chi2_1d","Track reduced chi^{2}","CKF",chi2_nbins,chi2_low,chi2_high,"#chi^2","Events");
-  histograms_.bookHistogram("ckf_pt_1d","Track p_{T} (GeV)","CKF",pt_nbins,pt_low,pt_high,"p_{T} [GeV]","Events");
-  histograms_.bookHistogram("ckf_eta_1d","Track #eta","CKF",eta_nbins,eta_low,eta_high,"#eta","Events");
-  histograms_.bookHistogram("ckf_phi_1d","Track #phi","CKF",phi_nbins,phi_low,phi_high,"#phi","Events");
-  histograms_.bookHistogram("ckf_transCurv_1d","Transveckfe curvature","CKF",transCurv_nbins,transCurv_low,transCurv_high,"transCurv","");
-  histograms_.bookHistogram("ckf_phiZero_1d","phiZero","CKF",phiZero_nbins,phiZero_low,phiZero_high,"#phi_{0}","Events");
-  histograms_.bookHistogram("ckf_theta_1d","Theta","CKF",theta_nbins,theta_low,theta_high,"#theta","Events");
-  histograms_.bookHistogram("ckf_dZero_1d",",dZero","CKF",dZero_nbins,dZero_low,dZero_high,"d_{0}","Events");
-  histograms_.bookHistogram("ckf_dZ_1d","dZ","CKF",dZ_nbins,dZ_low,dZ_high,"d_{Z}","Events");
-  histograms_.bookHistogram("ckf_nhit_1d","Number of hits per track","CKF",nhit_nbins,nhit_low,nhit_high,"n_{hit}","Events");
+  // CkF plots
+  ckf_chi2               = new TH1D("ckf_chi2","Track reduced chi^{2}",chi2_nbins,chi2_low,chi2_high);
+  ckf_pt                 = new TH1D("ckf_pt","Track p_{T} (GeV)",pt_nbins,pt_low,pt_high);
+  ckf_eta                = new TH1D("ckf_eta","Track #eta",eta_nbins,eta_low,eta_high);
+  ckf_phi                = new TH1D("ckf_phi","Track #phi",phi_nbins,phi_low,phi_high);
+  ckf_transCurv          = new TH1D("ckf_transCurv","Transverse curvature",transCurv_nbins,transCurv_low,transCurv_high);
+  ckf_phiZero            = new TH1D("ckf_phiZero","phiZero",phiZero_nbins,phiZero_low,phiZero_high);
+  ckf_theta              = new TH1D("ckf_theta","Theta",theta_nbins,theta_low,theta_high);
+  ckf_dZero              = new TH1D("ckf_dZero","dZero",dZero_nbins,dZero_low,dZero_high);
+  ckf_dZ                 = new TH1D("ckf_dZ","dZ",dZ_nbins,dZ_low,dZ_high);
+  ckf_nhit               = new TH1D("ckf_nhit","Number of hits per track",nhit_nbins,nhit_low,nhit_high);
 
-  histograms_.bookHistogram("ckf_numSeeds_1d","Number of Seeds per event","CKF",numSeeds_nbins,numSeeds_low,numSeeds_high,"n_{seeds}","Events");
-  histograms_.bookHistogram("ckf_numTrackCandidates_1d","Number of track candidates per event","CKF",numTrackCandidates_nbins,numTrackCandidates_low,numTrackCandidates_high,"n_{TrackCandidates}","Events");
-  histograms_.bookHistogram("ckf_numTracks_1d","Number of tracks per event","CKF",numTracks_nbins,numTracks_low,numTracks_high,"n_{Tracks}","Events");
+  ckf_numSeeds           = new TH1I("ckf_numSeeds","Number of Seeds per event",numSeeds_nbins,numSeeds_low,numSeeds_high);
+  ckf_numRawClouds       = new TH1I("ckf_numRawClouds","Number of raw clouds per event",numRawClouds_nbins,numRawClouds_low,numRawClouds_high);
+  ckf_numCleanClouds     = new TH1I("ckf_numCleanClouds","Number of clean clouds per event",numCleanClouds_nbins,numCleanClouds_low,numCleanClouds_high);
+  ckf_numTrackCandidates = new TH1I("ckf_numTrackCandidates","Number of track candidates per event",numTrackCandidates_nbins,numTrackCandidates_low,numTrackCandidates_high);
+  ckf_numTracks          = new TH1I("ckf_numTracks","Number of tracks per event",numTracks_nbins,numTracks_low,numTracks_high);
+  
+  ckf_nHitPerTrackVsEta = new TH2D("ckf_nHitPerTrackVsEta","Number of hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_nHitPerTrackCandidateVsEta = new TH2D("ckf_nHitPerTrackCandidateVsEta","Number of hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("ckf_nHitPerTrackVsEta_2d","Number of hits per track vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_nHitPerTrackCandidateVsEta_2d","Number of hits per track candidate vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  ckf_nHitPerTrackVsPhi = new TH2D("ckf_nHitPerTrackVsPhi","Number of hits per track vs. #phi",nhit_nbins,nhit_low,nhit_high,phi_nbins,phi_low,phi_high);
 
-  histograms_.bookHistogram("ckf_nHitPerTrackVsPhi_2d","Number of hits per track vs. #phi","CKF",nhit_nbins,nhit_low,nhit_high,phi_nbins,phi_low,phi_high,"n_{Hit}","#phi","Events");
+  ckf_nStripHitPerTrackVsEta = new TH2D("ckf_nStripHitPerTrackVsEta","Number of strip hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_nStripHitPerTrackCandidateVsEta = new TH2D("ckf_nStripHitPerTrackCandidateVsEta","Number of strip hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("ckf_nStripHitPerTrackVsEta_2d","Number of strip hits per track vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_nStripHitPerTrackCandidateVsEta_2d","Number of strip hits per track candidate vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  ckf_nPixelHitPerTrackVsEta = new TH2D("ckf_nPixelHitPerTrackVsEta","Number of pixel hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_nPixelHitPerTrackCandidateVsEta = new TH2D("ckf_nPixelHitPerTrackCandidateVsEta","Number of pixel hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("ckf_nPixelHitPerTrackVsEta_2d","Number of pixel hits per track vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_nPixelHitPerTrackCandidateVsEta_2d","Number of pixel hits per track candidate vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  ckf_nTIBHitPerTrackVsEta = new TH2D("ckf_nTIBHitPerTrackVsEta","Number of TIB hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_nTIBHitPerTrackCandidateVsEta = new TH2D("ckf_nTIBHitPerTrackCandidateVsEta","Number of TIB hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("ckf_nTIBHitPerTrackVsEta_2d","Number of TIB hits per track vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_nTIBHitPerTrackCandidateVsEta_2d","Number of TIB hits per track candidate vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  ckf_nTOBHitPerTrackVsEta = new TH2D("ckf_nTOBHitPerTrackVsEta","Number of TOB hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_nTOBHitPerTrackCandidateVsEta = new TH2D("ckf_nTOBHitPerTrackCandidateVsEta","Number of TOB hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("ckf_nTOBHitPerTrackVsEta_2d","Number of TOB hits per track vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_nTOBHitPerTrackCandidateVsEta_2d","Number of TOB hits per track candidate vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  ckf_nTIDHitPerTrackVsEta = new TH2D("ckf_nTIDHitPerTrackVsEta","Number of TID hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_nTIDHitPerTrackCandidateVsEta = new TH2D("ckf_nTIDHitPerTrackCandidateVsEta","Number of TID hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("ckf_nTIDHitPerTrackVsEta_2d","Number of TID hits per track vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_nTIDHitPerTrackCandidateVsEta_2d","Number of TID hits per track candidate vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  ckf_nTECHitPerTrackVsEta = new TH2D("ckf_nTECHitPerTrackVsEta","Number of TEC hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_nTECHitPerTrackCandidateVsEta = new TH2D("ckf_nTECHitPerTrackCandidateVsEta","Number of TEC hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("ckf_nTECHitPerTrackVsEta_2d","Number of TEC hits per track vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_nTECHitPerTrackCandidateVsEta_2d","Number of TEC hits per track candidate vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  ckf_nPXBHitPerTrackVsEta = new TH2D("ckf_nPXBHitPerTrackVsEta","Number of PXB hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_nPXBHitPerTrackCandidateVsEta = new TH2D("ckf_nPXBHitPerTrackCandidateVsEta","Number of PXB hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("ckf_nPXBHitPerTrackVsEta_2d","Number of PXB hits per track vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_nPXBHitPerTrackCandidateVsEta_2d","Number of PXB hits per track candidate vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  ckf_nPXFHitPerTrackVsEta = new TH2D("ckf_nPXFHitPerTrackVsEta","Number of PXF hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_nPXFHitPerTrackCandidateVsEta = new TH2D("ckf_nPXFHitPerTrackCandidateVsEta","Number of PXF hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("ckf_nPXFHitPerTrackVsEta_2d","Number of PXF hits per track vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_nPXFHitPerTrackCandidateVsEta_2d","Number of PXF hits per track candidate vs. #eta","CKF",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  // RS plots
+  rs_same_chi2               = new TH1D("rs_same_chi2","Track reduced chi^{2}",chi2_nbins,chi2_low,chi2_high);
+  rs_same_pt                 = new TH1D("rs_same_pt","Track p_{T} (GeV)",pt_nbins,pt_low,pt_high);
+  rs_same_eta                = new TH1D("rs_same_eta","Track #eta",eta_nbins,eta_low,eta_high);
+  rs_same_phi                = new TH1D("rs_same_phi","Track #phi",phi_nbins,phi_low,phi_high);
+  rs_same_transCurv          = new TH1D("rs_same_transCurv","Transverse curvature",transCurv_nbins,transCurv_low,transCurv_high);
+  rs_same_phiZero            = new TH1D("rs_same_phiZero","phiZero",phiZero_nbins,phiZero_low,phiZero_high);
+  rs_same_theta              = new TH1D("rs_same_theta","Theta",theta_nbins,theta_low,theta_high);
+  rs_same_dZero              = new TH1D("rs_same_dZero",",dZero",dZero_nbins,dZero_low,dZero_high);
+  rs_same_dZ                 = new TH1D("rs_same_dZ","dZ",dZ_nbins,dZ_low,dZ_high);
+  rs_same_nhit               = new TH1D("rs_same_nhit","Number of hits per track",nhit_nbins,nhit_low,nhit_high);
 
-  // RS_SAME plots, both tracking algorithms have the same number of tracks steered by cards
-  histograms_.bookHistogram("rs_same_chi2_1d","Track reduced chi^{2}","RS_SAME",chi2_nbins,chi2_low,chi2_high,"#chi^2","Events");
-  histograms_.bookHistogram("rs_same_pt_1d","Track p_{T} (GeV)","RS_SAME",pt_nbins,pt_low,pt_high,"p_{T} [GeV]","Events");
-  histograms_.bookHistogram("rs_same_eta_1d","Track #eta","RS_SAME",eta_nbins,eta_low,eta_high,"#eta","Events");
-  histograms_.bookHistogram("rs_same_phi_1d","Track #phi","RS_SAME",phi_nbins,phi_low,phi_high,"#phi","Events");
-  histograms_.bookHistogram("rs_same_transCurv_1d","Transvers_samee curvature","RS_SAME",transCurv_nbins,transCurv_low,transCurv_high,"transCurv","");
-  histograms_.bookHistogram("rs_same_phiZero_1d","phiZero","RS_SAME",phiZero_nbins,phiZero_low,phiZero_high,"#phi_{0}","Events");
-  histograms_.bookHistogram("rs_same_theta_1d","Theta","RS_SAME",theta_nbins,theta_low,theta_high,"#theta","Events");
-  histograms_.bookHistogram("rs_same_dZero_1d",",dZero","RS_SAME",dZero_nbins,dZero_low,dZero_high,"d_{0}","Events");
-  histograms_.bookHistogram("rs_same_dZ_1d","dZ","RS_SAME",dZ_nbins,dZ_low,dZ_high,"d_{Z}","Events");
-  histograms_.bookHistogram("rs_same_nhit_1d","Number of hits per track","RS_SAME",nhit_nbins,nhit_low,nhit_high,"n_{hit}","Events");
+  rs_same_numSeeds           = new TH1I("rs_same_numSeeds","Number of Seeds per event",numSeeds_nbins,numSeeds_low,numSeeds_high);
+  rs_same_numRawClouds       = new TH1I("rs_same_numRawClouds","Number of raw clouds per event",numRawClouds_nbins,numRawClouds_low,numRawClouds_high);
+  rs_same_numCleanClouds     = new TH1I("rs_same_numCleanClouds","Number of clean clouds per event",numCleanClouds_nbins,numCleanClouds_low,numCleanClouds_high);
+  rs_same_numTrackCandidates = new TH1I("rs_same_numTrackCandidates","Number of track candidates per event",numTrackCandidates_nbins,numTrackCandidates_low,numTrackCandidates_high);
+  rs_same_numTracks          = new TH1I("rs_same_numTracks","Number of tracks per event",numTracks_nbins,numTracks_low,numTracks_high);
 
-  histograms_.bookHistogram("rs_same_numSeeds_1d","Number of Seeds per event","RS_SAME",numSeeds_nbins,numSeeds_low,numSeeds_high,"n_{seeds}","Events");
-  histograms_.bookHistogram("rs_same_numRawClouds_1d","Number of raw clouds per event","RS_SAME",numRawClouds_nbins,numRawClouds_low,numRawClouds_high,"n_{rawClouds}","Events");
-  histograms_.bookHistogram("rs_same_numCleanClouds_1d","Number of clean clouds per event","RS_SAME",numCleanClouds_nbins,numCleanClouds_low,numCleanClouds_high,"n_{cleanClouds}","Events");
-  histograms_.bookHistogram("rs_same_numTrackCandidates_1d","Number of track candidates per event","RS_SAME",numTrackCandidates_nbins,numTrackCandidates_low,numTrackCandidates_high,"n_{TrackCandidates}","Events");
-  histograms_.bookHistogram("rs_same_numTracks_1d","Number of tracks per event","RS_SAME",numTracks_nbins,numTracks_low,numTracks_high,"n_{Tracks}","Events");
+  rs_same_nHitPerTrackVsEta = new TH2D("rs_same_nHitPerTrackVsEta","Number of hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nHitPerTrackCandidateVsEta = new TH2D("rs_same_nHitPerTrackCandidateVsEta","Number of hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nHitPerCleanCloudVsEta = new TH2D("rs_same_nHitPerCleanCloudVsEta","Number of hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nHitPerRawCloudVsEta = new TH2D("rs_same_nHitPerRawCloudVsEta","Number of hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_same_nHitPerTrackVsEta_2d","Number of hits per track vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nHitPerTrackCandidateVsEta_2d","Number of hits per track candidate vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nHitPerCleanCloudVsEta_2d","Number of hits per clean cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nHitPerRawCloudVsEta_2d","Number of hits per raw cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  rs_same_nStripHitPerTrackVsEta = new TH2D("rs_same_nStripHitPerTrackVsEta","Number of strip hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nStripHitPerTrackCandidateVsEta = new TH2D("rs_same_nStripHitPerTrackCandidateVsEta","Number of strip hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nStripHitPerCleanCloudVsEta = new TH2D("rs_same_nStripHitPerCleanCloudVsEta","Number of strip hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nStripHitPerRawCloudVsEta = new TH2D("rs_same_nStripHitPerRawCloudVsEta","Number of strip hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_same_nHitPerTrackVsPhi_2d","Number of hits per track vs. #phi","RS_SAME",nhit_nbins,nhit_low,nhit_high,phi_nbins,phi_low,phi_high,"n_{Hit}","#phi","Events");
+  rs_same_nPixelHitPerTrackVsEta = new TH2D("rs_same_nPixelHitPerTrackVsEta","Number of pixel hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nPixelHitPerTrackCandidateVsEta = new TH2D("rs_same_nPixelHitPerTrackCandidateVsEta","Number of pixel hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nPixelHitPerCleanCloudVsEta = new TH2D("rs_same_nPixelHitPerCleanCloudVsEta","Number of pixel hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nPixelHitPerRawCloudVsEta = new TH2D("rs_same_nPixelHitPerRawCloudVsEta","Number of pixel hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_same_nStripHitPerTrackVsEta_2d","Number of strip hits per track vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nStripHitPerTrackCandidateVsEta_2d","Number of strip hits per track candidate vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nStripHitPerCleanCloudVsEta_2d","Number of strip hits per clean cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nStripHitPerRawCloudVsEta_2d","Number of strip hits per raw cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  rs_same_nTIBHitPerTrackVsEta = new TH2D("rs_same_nTIBHitPerTrackVsEta","Number of TIB hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nTIBHitPerTrackCandidateVsEta = new TH2D("rs_same_nTIBHitPerTrackCandidateVsEta","Number of TIB hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nTIBHitPerCleanCloudVsEta = new TH2D("rs_same_nTIBHitPerCleanCloudVsEta","Number of TIB hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nTIBHitPerRawCloudVsEta = new TH2D("rs_same_nTIBHitPerRawCloudVsEta","Number of TIB hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_same_nPixelHitPerTrackVsEta_2d","Number of pixel hits per track vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nPixelHitPerTrackCandidateVsEta_2d","Number of pixel hits per track candidate vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nPixelHitPerCleanCloudVsEta_2d","Number of pixel hits per clean cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nPixelHitPerRawCloudVsEta_2d","Number of pixel hits per raw cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  rs_same_nTOBHitPerTrackVsEta = new TH2D("rs_same_nTOBHitPerTrackVsEta","Number of TOB hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nTOBHitPerTrackCandidateVsEta = new TH2D("rs_same_nTOBHitPerTrackCandidateVsEta","Number of TOB hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nTOBHitPerCleanCloudVsEta = new TH2D("rs_same_nTOBHitPerCleanCloudVsEta","Number of TOB hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nTOBHitPerRawCloudVsEta = new TH2D("rs_same_nTOBHitPerRawCloudVsEta","Number of TOB hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_same_nTIBHitPerTrackVsEta_2d","Number of TIB hits per track vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nTIBHitPerTrackCandidateVsEta_2d","Number of TIB hits per track candidate vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nTIBHitPerCleanCloudVsEta_2d","Number of TIB hits per clean cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nTIBHitPerRawCloudVsEta_2d","Number of TIB hits per raw cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  rs_same_nTIDHitPerTrackVsEta = new TH2D("rs_same_nTIDHitPerTrackVsEta","Number of TID hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nTIDHitPerTrackCandidateVsEta = new TH2D("rs_same_nTIDHitPerTrackCandidateVsEta","Number of TID hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nTIDHitPerCleanCloudVsEta = new TH2D("rs_same_nTIDHitPerCleanCloudVsEta","Number of TID hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nTIDHitPerRawCloudVsEta = new TH2D("rs_same_nTIDHitPerRawCloudVsEta","Number of TID hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_same_nTOBHitPerTrackVsEta_2d","Number of TOB hits per track vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nTOBHitPerTrackCandidateVsEta_2d","Number of TOB hits per track candidate vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nTOBHitPerCleanCloudVsEta_2d","Number of TOB hits per clean cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nTOBHitPerRawCloudVsEta_2d","Number of TOB hits per raw cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  rs_same_nTECHitPerTrackVsEta = new TH2D("rs_same_nTECHitPerTrackVsEta","Number of TEC hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nTECHitPerTrackCandidateVsEta = new TH2D("rs_same_nTECHitPerTrackCandidateVsEta","Number of TEC hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nTECHitPerCleanCloudVsEta = new TH2D("rs_same_nTECHitPerCleanCloudVsEta","Number of TEC hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nTECHitPerRawCloudVsEta = new TH2D("rs_same_nTECHitPerRawCloudVsEta","Number of TEC hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_same_nTIDHitPerTrackVsEta_2d","Number of TID hits per track vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nTIDHitPerTrackCandidateVsEta_2d","Number of TID hits per track candidate vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nTIDHitPerCleanCloudVsEta_2d","Number of TID hits per clean cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nTIDHitPerRawCloudVsEta_2d","Number of TID hits per raw cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  rs_same_nPXBHitPerTrackVsEta = new TH2D("rs_same_nPXBHitPerTrackVsEta","Number of PXB hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nPXBHitPerTrackCandidateVsEta = new TH2D("rs_same_nPXBHitPerTrackCandidateVsEta","Number of PXB hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nPXBHitPerCleanCloudVsEta = new TH2D("rs_same_nPXBHitPerCleanCloudVsEta","Number of PXB hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nPXBHitPerRawCloudVsEta = new TH2D("rs_same_nPXBHitPerRawCloudVsEta","Number of PXB hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_same_nTECHitPerTrackVsEta_2d","Number of TEC hits per track vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nTECHitPerTrackCandidateVsEta_2d","Number of TEC hits per track candidate vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nTECHitPerCleanCloudVsEta_2d","Number of TEC hits per clean cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nTECHitPerRawCloudVsEta_2d","Number of TEC hits per raw cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  rs_same_nPXFHitPerTrackVsEta = new TH2D("rs_same_nPXFHitPerTrackVsEta","Number of PXF hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nPXFHitPerTrackCandidateVsEta = new TH2D("rs_same_nPXFHitPerTrackCandidateVsEta","Number of PXF hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nPXFHitPerCleanCloudVsEta = new TH2D("rs_same_nPXFHitPerCleanCloudVsEta","Number of PXF hits per clean cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  rs_same_nPXFHitPerRawCloudVsEta = new TH2D("rs_same_nPXFHitPerRawCloudVsEta","Number of PXF hits per raw cloud vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("rs_same_nPXBHitPerTrackVsEta_2d","Number of PXB hits per track vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nPXBHitPerTrackCandidateVsEta_2d","Number of PXB hits per track candidate vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nPXBHitPerCleanCloudVsEta_2d","Number of PXB hits per clean cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nPXBHitPerRawCloudVsEta_2d","Number of PXB hits per raw cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  // CkF plots
+  ckf_same_chi2               = new TH1D("ckf_same_chi2","Track reduced chi^{2}",chi2_nbins,chi2_low,chi2_high);
+  ckf_same_pt                 = new TH1D("ckf_same_pt","Track p_{T} (GeV)",pt_nbins,pt_low,pt_high);
+  ckf_same_eta                = new TH1D("ckf_same_eta","Track #eta",eta_nbins,eta_low,eta_high);
+  ckf_same_phi                = new TH1D("ckf_same_phi","Track #phi",phi_nbins,phi_low,phi_high);
+  ckf_same_transCurv          = new TH1D("ckf_same_transCurv","Transverse curvature",transCurv_nbins,transCurv_low,transCurv_high);
+  ckf_same_phiZero            = new TH1D("ckf_same_phiZero","phiZero",phiZero_nbins,phiZero_low,phiZero_high);
+  ckf_same_theta              = new TH1D("ckf_same_theta","Theta",theta_nbins,theta_low,theta_high);
+  ckf_same_dZero              = new TH1D("ckf_same_dZero","dZero",dZero_nbins,dZero_low,dZero_high);
+  ckf_same_dZ                 = new TH1D("ckf_same_dZ","dZ",dZ_nbins,dZ_low,dZ_high);
+  ckf_same_nhit               = new TH1D("ckf_same_nhit","Number of hits per track",nhit_nbins,nhit_low,nhit_high);
 
-  histograms_.bookHistogram("rs_same_nPXFHitPerTrackVsEta_2d","Number of PXF hits per track vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nPXFHitPerTrackCandidateVsEta_2d","Number of PXF hits per track candidate vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nPXFHitPerCleanCloudVsEta_2d","Number of PXF hits per clean cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("rs_same_nPXFHitPerRawCloudVsEta_2d","Number of PXF hits per raw cloud vs. #eta","RS_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  ckf_same_numSeeds           = new TH1I("ckf_same_numSeeds","Number of Seeds per event",numSeeds_nbins,numSeeds_low,numSeeds_high);
+  ckf_same_numRawClouds       = new TH1I("ckf_same_numRawClouds","Number of raw clouds per event",numRawClouds_nbins,numRawClouds_low,numRawClouds_high);
+  ckf_same_numCleanClouds     = new TH1I("ckf_same_numCleanClouds","Number of clean clouds per event",numCleanClouds_nbins,numCleanClouds_low,numCleanClouds_high);
+  ckf_same_numTrackCandidates = new TH1I("ckf_same_numTrackCandidates","Number of track candidates per event",numTrackCandidates_nbins,numTrackCandidates_low,numTrackCandidates_high);
+  ckf_same_numTracks          = new TH1I("ckf_same_numTracks","Number of tracks per event",numTracks_nbins,numTracks_low,numTracks_high);
+  
+  ckf_same_nHitPerTrackVsEta = new TH2D("ckf_same_nHitPerTrackVsEta","Number of hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_same_nHitPerTrackCandidateVsEta = new TH2D("ckf_same_nHitPerTrackCandidateVsEta","Number of hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  // CKF_SAME plots, both tracking algorithms have the same number of tracks steered by cards
-  histograms_.bookHistogram("ckf_same_chi2_1d","Track reduced chi^{2}","CKF_SAME",chi2_nbins,chi2_low,chi2_high,"#chi^2","Events");
-  histograms_.bookHistogram("ckf_same_pt_1d","Track p_{T} (GeV)","CKF_SAME",pt_nbins,pt_low,pt_high,"p_{T} [GeV]","Events");
-  histograms_.bookHistogram("ckf_same_eta_1d","Track #eta","CKF_SAME",eta_nbins,eta_low,eta_high,"#eta","Events");
-  histograms_.bookHistogram("ckf_same_phi_1d","Track #phi","CKF_SAME",phi_nbins,phi_low,phi_high,"#phi","Events");
-  histograms_.bookHistogram("ckf_same_transCurv_1d","Transveckf_samee curvature","CKF_SAME",transCurv_nbins,transCurv_low,transCurv_high,"transCurv","");
-  histograms_.bookHistogram("ckf_same_phiZero_1d","phiZero","CKF_SAME",phiZero_nbins,phiZero_low,phiZero_high,"#phi_{0}","Events");
-  histograms_.bookHistogram("ckf_same_theta_1d","Theta","CKF_SAME",theta_nbins,theta_low,theta_high,"#theta","Events");
-  histograms_.bookHistogram("ckf_same_dZero_1d",",dZero","CKF_SAME",dZero_nbins,dZero_low,dZero_high,"d_{0}","Events");
-  histograms_.bookHistogram("ckf_same_dZ_1d","dZ","CKF_SAME",dZ_nbins,dZ_low,dZ_high,"d_{Z}","Events");
-  histograms_.bookHistogram("ckf_same_nhit_1d","Number of hits per track","CKF_SAME",nhit_nbins,nhit_low,nhit_high,"n_{hit}","Events");
+  ckf_same_nStripHitPerTrackVsEta = new TH2D("ckf_same_nStripHitPerTrackVsEta","Number of strip hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_same_nStripHitPerTrackCandidateVsEta = new TH2D("ckf_same_nStripHitPerTrackCandidateVsEta","Number of strip hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("ckf_same_numSeeds_1d","Number of Seeds per event","CKF_SAME",numSeeds_nbins,numSeeds_low,numSeeds_high,"n_{seeds}","Events");
-  histograms_.bookHistogram("ckf_same_numTrackCandidates_1d","Number of track candidates per event","CKF_SAME",numTrackCandidates_nbins,numTrackCandidates_low,numTrackCandidates_high,"n_{TrackCandidates}","Events");
-  histograms_.bookHistogram("ckf_same_numTracks_1d","Number of tracks per event","CKF_SAME",numTracks_nbins,numTracks_low,numTracks_high,"n_{Tracks}","Events");
+  ckf_same_nPixelHitPerTrackVsEta = new TH2D("ckf_same_nPixelHitPerTrackVsEta","Number of pixel hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_same_nPixelHitPerTrackCandidateVsEta = new TH2D("ckf_same_nPixelHitPerTrackCandidateVsEta","Number of pixel hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("ckf_same_nHitPerTrackVsEta_2d","Number of hits per track vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_same_nHitPerTrackCandidateVsEta_2d","Number of hits per track candidate vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  ckf_same_nTIBHitPerTrackVsEta = new TH2D("ckf_same_nTIBHitPerTrackVsEta","Number of TIB hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_same_nTIBHitPerTrackCandidateVsEta = new TH2D("ckf_same_nTIBHitPerTrackCandidateVsEta","Number of TIB hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("ckf_same_nHitPerTrackVsPhi_2d","Number of hits per track vs. #phi","CKF_SAME",nhit_nbins,nhit_low,nhit_high,phi_nbins,phi_low,phi_high,"n_{Hit}","#phi","Events");
+  ckf_same_nTOBHitPerTrackVsEta = new TH2D("ckf_same_nTOBHitPerTrackVsEta","Number of TOB hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_same_nTOBHitPerTrackCandidateVsEta = new TH2D("ckf_same_nTOBHitPerTrackCandidateVsEta","Number of TOB hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("ckf_same_nStripHitPerTrackVsEta_2d","Number of strip hits per track vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_same_nStripHitPerTrackCandidateVsEta_2d","Number of strip hits per track candidate vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  ckf_same_nTIDHitPerTrackVsEta = new TH2D("ckf_same_nTIDHitPerTrackVsEta","Number of TID hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_same_nTIDHitPerTrackCandidateVsEta = new TH2D("ckf_same_nTIDHitPerTrackCandidateVsEta","Number of TID hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("ckf_same_nPixelHitPerTrackVsEta_2d","Number of pixel hits per track vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_same_nPixelHitPerTrackCandidateVsEta_2d","Number of pixel hits per track candidate vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  ckf_same_nTECHitPerTrackVsEta = new TH2D("ckf_same_nTECHitPerTrackVsEta","Number of TEC hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_same_nTECHitPerTrackCandidateVsEta = new TH2D("ckf_same_nTECHitPerTrackCandidateVsEta","Number of TEC hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("ckf_same_nTIBHitPerTrackVsEta_2d","Number of TIB hits per track vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_same_nTIBHitPerTrackCandidateVsEta_2d","Number of TIB hits per track candidate vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  ckf_same_nPXBHitPerTrackVsEta = new TH2D("ckf_same_nPXBHitPerTrackVsEta","Number of PXB hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_same_nPXBHitPerTrackCandidateVsEta = new TH2D("ckf_same_nPXBHitPerTrackCandidateVsEta","Number of PXB hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
-  histograms_.bookHistogram("ckf_same_nTOBHitPerTrackVsEta_2d","Number of TOB hits per track vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_same_nTOBHitPerTrackCandidateVsEta_2d","Number of TOB hits per track candidate vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-
-  histograms_.bookHistogram("ckf_same_nTIDHitPerTrackVsEta_2d","Number of TID hits per track vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_same_nTIDHitPerTrackCandidateVsEta_2d","Number of TID hits per track candidate vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-
-  histograms_.bookHistogram("ckf_same_nTECHitPerTrackVsEta_2d","Number of TEC hits per track vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_same_nTECHitPerTrackCandidateVsEta_2d","Number of TEC hits per track candidate vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-
-  histograms_.bookHistogram("ckf_same_nPXBHitPerTrackVsEta_2d","Number of PXB hits per track vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_same_nPXBHitPerTrackCandidateVsEta_2d","Number of PXB hits per track candidate vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-
-  histograms_.bookHistogram("ckf_same_nPXFHitPerTrackVsEta_2d","Number of PXF hits per track vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
-  histograms_.bookHistogram("ckf_same_nPXFHitPerTrackCandidateVsEta_2d","Number of PXF hits per track candidate vs. #eta","CKF_SAME",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,"n_{Hit}","#eta","Events");
+  ckf_same_nPXFHitPerTrackVsEta = new TH2D("ckf_same_nPXFHitPerTrackVsEta","Number of PXF hits per track vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
+  ckf_same_nPXFHitPerTrackCandidateVsEta = new TH2D("ckf_same_nPXFHitPerTrackCandidateVsEta","Number of PXF hits per track candidate vs. #eta",nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high);
 
   // get parameter
   rsSeedProducerLabel_ = iConfig.getUntrackedParameter<std::string>("rsSeedProducerLabel");
@@ -335,6 +337,12 @@ RoadSearchTrackValidation::RoadSearchTrackValidation(const edm::ParameterSet& iC
 RoadSearchTrackValidation::~RoadSearchTrackValidation()
 {
  
+  if ( file_ != 0 ) {
+    file_->cd();
+    file_->Write();
+    delete file_;
+  }
+
 }
 
 
@@ -343,143 +351,55 @@ RoadSearchTrackValidation::analyze(const edm::Event& iEvent, const edm::EventSet
 {
 
   // get collections
-  const TrajectorySeedCollection *rsSeedCollection = 0;
-  try {
-    edm::Handle<TrajectorySeedCollection> rsSeedCollectionHandle;
-    iEvent.getByLabel(rsSeedProducerLabel_,rsSeedCollectionHandle);
-    rsSeedCollection = rsSeedCollectionHandle.product();
-  }
-  catch (edm::Exception const& x) {
-    if ( x.categoryCode() == edm::errors::ProductNotFound ) {
-      if ( x.history().size() == 1 ) {
-	rsSeedCollection = new TrajectorySeedCollection();
-	edm::LogWarning("RoadSearchTrackValidation") << "Collection TrajectorySeedCollection with label " << rsSeedProducerLabel_ << " cannot be found, using empty collection of same type";
-      }
-    }
-  }
+  edm::Handle<TrajectorySeedCollection> rsSeedCollectionHandle;
+  iEvent.getByLabel(rsSeedProducerLabel_,rsSeedCollectionHandle);
+  const TrajectorySeedCollection *rsSeedCollection = rsSeedCollectionHandle.product();
 
-  const RoadSearchCloudCollection *rsRawCloudCollection = 0;
-  try {
-    edm::Handle<RoadSearchCloudCollection> rsRawCloudCollectionHandle;
-    iEvent.getByLabel(rsRawCloudProducerLabel_,rsRawCloudCollectionHandle);
-    rsRawCloudCollection = rsRawCloudCollectionHandle.product();
-  }
-  catch (edm::Exception const& x) {
-    if ( x.categoryCode() == edm::errors::ProductNotFound ) {
-      if ( x.history().size() == 1 ) {
-	rsRawCloudCollection = new RoadSearchCloudCollection();
-	edm::LogWarning("RoadSearchTrackValidation") << "Collection RoadSearchCloudCollection with label " << rsRawCloudProducerLabel_ << " cannot be found, using empty collection of same type";
-      }
-    }
-  }
+  edm::Handle<RoadSearchCloudCollection> rsRawCloudCollectionHandle;
+  iEvent.getByLabel(rsRawCloudProducerLabel_,rsRawCloudCollectionHandle);
+  const RoadSearchCloudCollection *rsRawCloudCollection = rsRawCloudCollectionHandle.product();
 
-  const RoadSearchCloudCollection *rsCleanCloudCollection = 0;
-  try {
-    edm::Handle<RoadSearchCloudCollection> rsCleanCloudCollectionHandle;
-    iEvent.getByLabel(rsCleanCloudProducerLabel_,rsCleanCloudCollectionHandle);
-    rsCleanCloudCollection = rsCleanCloudCollectionHandle.product();
-  }
-  catch (edm::Exception const& x) {
-    if ( x.categoryCode() == edm::errors::ProductNotFound ) {
-      if ( x.history().size() == 1 ) {
-	rsCleanCloudCollection = new RoadSearchCloudCollection();
-	edm::LogWarning("RoadSearchTrackValidation") << "Collection RoadSearchCloudCollection with label " << rsCleanCloudProducerLabel_ << " cannot be found, using empty collection of same type";
-      }
-    }
-  }
+  edm::Handle<RoadSearchCloudCollection> rsCleanCloudCollectionHandle;
+  iEvent.getByLabel(rsCleanCloudProducerLabel_,rsCleanCloudCollectionHandle);
+  const RoadSearchCloudCollection *rsCleanCloudCollection = rsCleanCloudCollectionHandle.product();
 
-  const TrackCandidateCollection *rsTrackCandidateCollection = 0;
-  try {
-    edm::Handle<TrackCandidateCollection> rsTrackCandidateCollectionHandle;
-    iEvent.getByLabel(rsTrackCandidateProducerLabel_,rsTrackCandidateCollectionHandle);
-    rsTrackCandidateCollection = rsTrackCandidateCollectionHandle.product();
-  }
-  catch (edm::Exception const& x) {
-    if ( x.categoryCode() == edm::errors::ProductNotFound ) {
-      if ( x.history().size() == 1 ) {
-	rsTrackCandidateCollection = new TrackCandidateCollection();
-	edm::LogWarning("RoadSearchTrackValidation") << "Collection TrackCandidateCollection with label " << rsTrackCandidateProducerLabel_ << " cannot be found, using empty collection of same type";
-      }
-    }
-  }
+  edm::Handle<TrackCandidateCollection> rsTrackCandidateCollectionHandle;
+  iEvent.getByLabel(rsTrackCandidateProducerLabel_,rsTrackCandidateCollectionHandle);
+  const TrackCandidateCollection *rsTrackCandidateCollection = rsTrackCandidateCollectionHandle.product();
 
-  const reco::TrackCollection *rsTrackCollection = 0;
-  try {
-    edm::Handle<reco::TrackCollection> rsTrackCollectionHandle;
-    iEvent.getByLabel(rsTrackProducerLabel_,rsTrackCollectionHandle);
-    rsTrackCollection = rsTrackCollectionHandle.product();
-  }
-  catch (edm::Exception const& x) {
-    if ( x.categoryCode() == edm::errors::ProductNotFound ) {
-      if ( x.history().size() == 1 ) {
-	rsTrackCollection = new reco::TrackCollection();
-	edm::LogWarning("RoadSearchTrackValidation") << "Collection reco::TrackCollection with label " << rsTrackProducerLabel_ << " cannot be found, using empty collection of same type";
-      }
-    }
-  }
+  edm::Handle<reco::TrackCollection> rsTrackCollectionHandle;
+  iEvent.getByLabel(rsTrackProducerLabel_,rsTrackCollectionHandle);
+  const reco::TrackCollection *rsTrackCollection = rsTrackCollectionHandle.product();
 
-  const TrajectorySeedCollection *ckfSeedCollection = 0;
-  try {
-    edm::Handle<TrajectorySeedCollection> ckfSeedCollectionHandle;
-    iEvent.getByLabel(ckfSeedProducerLabel_,ckfSeedCollectionHandle);
-    ckfSeedCollection = ckfSeedCollectionHandle.product();
-  }
-  catch (edm::Exception const& x) {
-    if ( x.categoryCode() == edm::errors::ProductNotFound ) {
-      if ( x.history().size() == 1 ) {
-	ckfSeedCollection = new TrajectorySeedCollection();
-	edm::LogWarning("RoadSearchTrackValidation") << "Collection TrajectorySeedCollection with label " << ckfSeedProducerLabel_ << " cannot be found, using empty collection of same type";
-      }
-    }
-  }
+  edm::Handle<TrajectorySeedCollection> ckfSeedCollectionHandle;
+  iEvent.getByLabel(ckfSeedProducerLabel_,ckfSeedCollectionHandle);
+  const TrajectorySeedCollection *ckfSeedCollection = ckfSeedCollectionHandle.product();
 
-  const TrackCandidateCollection *ckfTrackCandidateCollection = 0;
-  try {
-    edm::Handle<TrackCandidateCollection> ckfTrackCandidateCollectionHandle;
-    iEvent.getByLabel(ckfTrackCandidateProducerLabel_,ckfTrackCandidateCollectionHandle);
-    ckfTrackCandidateCollection = ckfTrackCandidateCollectionHandle.product();
-  }
-  catch (edm::Exception const& x) {
-    if ( x.categoryCode() == edm::errors::ProductNotFound ) {
-      if ( x.history().size() == 1 ) {
-	ckfTrackCandidateCollection = new TrackCandidateCollection();
-	edm::LogWarning("RoadSearchTrackValidation") << "Collection TrackCandidateCollection with label " << ckfTrackCandidateProducerLabel_ << " cannot be found, using empty collection of same type";
-      }
-    }
-  }
+  edm::Handle<TrackCandidateCollection> ckfTrackCandidateCollectionHandle;
+  iEvent.getByLabel(ckfTrackCandidateProducerLabel_,ckfTrackCandidateCollectionHandle);
+  const TrackCandidateCollection *ckfTrackCandidateCollection = ckfTrackCandidateCollectionHandle.product();
 
-  const reco::TrackCollection *ckfTrackCollection = 0;
-  try {
-    edm::Handle<reco::TrackCollection> ckfTrackCollectionHandle;
-    iEvent.getByLabel(ckfTrackProducerLabel_,ckfTrackCollectionHandle);
-    ckfTrackCollection = ckfTrackCollectionHandle.product();
-  }
-  catch (edm::Exception const& x) {
-    if ( x.categoryCode() == edm::errors::ProductNotFound ) {
-      if ( x.history().size() == 1 ) {
-	ckfTrackCollection = new reco::TrackCollection();
-	edm::LogWarning("RoadSearchTrackValidation") << "Collection reco::TrackCollection with label " << ckfTrackProducerLabel_ << " cannot be found, using empty collection of same type";
-      }
-    }
-  }
+  edm::Handle<reco::TrackCollection> ckfTrackCollectionHandle;
+  iEvent.getByLabel(ckfTrackProducerLabel_,ckfTrackCollectionHandle);
+  const reco::TrackCollection *ckfTrackCollection = ckfTrackCollectionHandle.product();
 
   // fill histograms
   
   // RS tracks
-  histograms_.fill("rs_numTracks_1d",rsTrackCollection->size());
+  rs_numTracks->Fill(rsTrackCollection->size());
   for ( reco::TrackCollection::const_iterator track = rsTrackCollection->begin();
 	track != rsTrackCollection->end();
 	++track ) {
-    histograms_.fill("rs_chi2_1d",track->normalizedChi2());
-    histograms_.fill("rs_pt_1d",track->pt());
-    histograms_.fill("rs_nhit_1d",track->found());
-    histograms_.fill("rs_eta_1d",track->momentum().eta());
-    histograms_.fill("rs_phi_1d",track->momentum().phi());
-    histograms_.fill("rs_transCurv_1d",track->transverseCurvature());
-    histograms_.fill("rs_phiZero_1d",track->phi0());
-    histograms_.fill("rs_theta_1d",track->theta());
-    histograms_.fill("rs_dZero_1d",track->d0());
-    histograms_.fill("rs_dZ_1d",track->dz());
+    rs_chi2->Fill(track->normalizedChi2());
+    rs_pt->Fill(track->pt());
+    rs_nhit->Fill(track->found());
+    rs_eta->Fill(track->momentum().eta());
+    rs_phi->Fill(track->momentum().phi());
+    rs_transCurv->Fill(track->transverseCurvature());
+    rs_phiZero->Fill(track->phi0());
+    rs_theta->Fill(track->theta());
+    rs_dZero->Fill(track->d0());
+    rs_dZ->Fill(track->dz());
 
     // loop over hits in tracks, count
     unsigned int nHit      = 0;
@@ -495,50 +415,48 @@ RoadSearchTrackValidation::analyze(const edm::Event& iEvent, const edm::EventSet
     for ( trackingRecHit_iterator recHit = track->recHitsBegin();
 	  recHit != track->recHitsEnd();
 	  ++recHit ) {
-      if ( (*recHit)->isValid() ) {
-	++nHit;
-	DetId id((*recHit)->geographicalId());
+      ++nHit;
+      DetId id((*recHit)->geographicalId());
 
-	if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
-	  ++nStripHit;
-	  ++nTIBHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
-	  ++nStripHit;
-	  ++nTOBHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
-	  ++nStripHit;
-	  ++nTIDHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
-	  ++nStripHit;
-	  ++nTECHit;
-	} else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
-	  ++nPixelHit;
-	  ++nPXBHit;
-	} else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
-	  ++nPixelHit;
-	  ++nPXFHit;
-	}
+      if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
+	++nStripHit;
+	++nTIBHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
+	++nStripHit;
+	++nTOBHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
+	++nStripHit;
+	++nTIDHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
+	++nStripHit;
+	++nTECHit;
+      } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
+	++nPixelHit;
+	++nPXBHit;
+      } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
+	++nPixelHit;
+	++nPXFHit;
       }
     }
     
-    histograms_.fill("rs_nHitPerTrackVsEta_2d",nHit,track->momentum().eta());
-    histograms_.fill("rs_nStripHitPerTrackVsEta_2d",nStripHit,track->momentum().eta());
-    histograms_.fill("rs_nPixelHitPerTrackVsEta_2d",nPixelHit,track->momentum().eta());
-    histograms_.fill("rs_nTIBHitPerTrackVsEta_2d",nTIBHit,track->momentum().eta());
-    histograms_.fill("rs_nTOBHitPerTrackVsEta_2d",nTOBHit,track->momentum().eta());
-    histograms_.fill("rs_nTIDHitPerTrackVsEta_2d",nTIDHit,track->momentum().eta());
-    histograms_.fill("rs_nTECHitPerTrackVsEta_2d",nTECHit,track->momentum().eta());
-    histograms_.fill("rs_nPXBHitPerTrackVsEta_2d",nPXBHit,track->momentum().eta());
-    histograms_.fill("rs_nPXFHitPerTrackVsEta_2d",nPXFHit,track->momentum().eta());
-    histograms_.fill("rs_nHitPerTrackVsPhi_2d",nHit,track->momentum().phi());
+    rs_nHitPerTrackVsEta->Fill(nHit,track->momentum().eta());
+    rs_nStripHitPerTrackVsEta->Fill(nStripHit,track->momentum().eta());
+    rs_nPixelHitPerTrackVsEta->Fill(nPixelHit,track->momentum().eta());
+    rs_nTIBHitPerTrackVsEta->Fill(nTIBHit,track->momentum().eta());
+    rs_nTOBHitPerTrackVsEta->Fill(nTOBHit,track->momentum().eta());
+    rs_nTIDHitPerTrackVsEta->Fill(nTIDHit,track->momentum().eta());
+    rs_nTECHitPerTrackVsEta->Fill(nTECHit,track->momentum().eta());
+    rs_nPXBHitPerTrackVsEta->Fill(nPXBHit,track->momentum().eta());
+    rs_nPXFHitPerTrackVsEta->Fill(nPXFHit,track->momentum().eta());
+    rs_nHitPerTrackVsPhi->Fill(nHit,track->momentum().phi());
 
   }
 
   // RS seeds
-  histograms_.fill("rs_numSeeds_1d",rsSeedCollection->size());
+  rs_numSeeds->Fill(rsSeedCollection->size());
 
   // RS raw clouds
-  histograms_.fill("rs_numRawClouds_1d",rsRawCloudCollection->size());
+  rs_numRawClouds->Fill(rsRawCloudCollection->size());
   for ( RoadSearchCloudCollection::const_iterator cloud = rsRawCloudCollection->begin();
 	cloud != rsRawCloudCollection->end();
 	++cloud ) {
@@ -581,20 +499,20 @@ RoadSearchTrackValidation::analyze(const edm::Event& iEvent, const edm::EventSet
       }
     }
     
-    histograms_.fill("rs_nHitPerRawCloudVsEta_2d",nHit,0.);
-    histograms_.fill("rs_nStripHitPerRawCloudVsEta_2d",nStripHit,0.);
-    histograms_.fill("rs_nPixelHitPerRawCloudVsEta_2d",nPixelHit,0.);
-    histograms_.fill("rs_nTIBHitPerRawCloudVsEta_2d",nTIBHit,0.);
-    histograms_.fill("rs_nTOBHitPerRawCloudVsEta_2d",nTOBHit,0.);
-    histograms_.fill("rs_nTIDHitPerRawCloudVsEta_2d",nTIDHit,0.);
-    histograms_.fill("rs_nTECHitPerRawCloudVsEta_2d",nTECHit,0.);
-    histograms_.fill("rs_nPXBHitPerRawCloudVsEta_2d",nPXBHit,0.);
-    histograms_.fill("rs_nPXFHitPerRawCloudVsEta_2d",nPXFHit,0.);
+    rs_nHitPerRawCloudVsEta->Fill(nHit,0.);
+    rs_nStripHitPerRawCloudVsEta->Fill(nStripHit,0.);
+    rs_nPixelHitPerRawCloudVsEta->Fill(nPixelHit,0.);
+    rs_nTIBHitPerRawCloudVsEta->Fill(nTIBHit,0.);
+    rs_nTOBHitPerRawCloudVsEta->Fill(nTOBHit,0.);
+    rs_nTIDHitPerRawCloudVsEta->Fill(nTIDHit,0.);
+    rs_nTECHitPerRawCloudVsEta->Fill(nTECHit,0.);
+    rs_nPXBHitPerRawCloudVsEta->Fill(nPXBHit,0.);
+    rs_nPXFHitPerRawCloudVsEta->Fill(nPXFHit,0.);
 
   }
 
   // RS clean clouds
-  histograms_.fill("rs_numCleanClouds_1d",rsCleanCloudCollection->size());
+  rs_numCleanClouds->Fill(rsCleanCloudCollection->size());
   for ( RoadSearchCloudCollection::const_iterator cloud = rsCleanCloudCollection->begin();
 	cloud != rsCleanCloudCollection->end();
 	++cloud ) {
@@ -637,20 +555,20 @@ RoadSearchTrackValidation::analyze(const edm::Event& iEvent, const edm::EventSet
       }
     }
     
-    histograms_.fill("rs_nHitPerCleanCloudVsEta_2d",nHit,0.);
-    histograms_.fill("rs_nStripHitPerCleanCloudVsEta_2d",nStripHit,0.);
-    histograms_.fill("rs_nPixelHitPerCleanCloudVsEta_2d",nPixelHit,0.);
-    histograms_.fill("rs_nTIBHitPerCleanCloudVsEta_2d",nTIBHit,0.);
-    histograms_.fill("rs_nTOBHitPerCleanCloudVsEta_2d",nTOBHit,0.);
-    histograms_.fill("rs_nTIDHitPerCleanCloudVsEta_2d",nTIDHit,0.);
-    histograms_.fill("rs_nTECHitPerCleanCloudVsEta_2d",nTECHit,0.);
-    histograms_.fill("rs_nPXBHitPerCleanCloudVsEta_2d",nPXBHit,0.);
-    histograms_.fill("rs_nPXFHitPerCleanCloudVsEta_2d",nPXFHit,0.);
+    rs_nHitPerCleanCloudVsEta->Fill(nHit,0.);
+    rs_nStripHitPerCleanCloudVsEta->Fill(nStripHit,0.);
+    rs_nPixelHitPerCleanCloudVsEta->Fill(nPixelHit,0.);
+    rs_nTIBHitPerCleanCloudVsEta->Fill(nTIBHit,0.);
+    rs_nTOBHitPerCleanCloudVsEta->Fill(nTOBHit,0.);
+    rs_nTIDHitPerCleanCloudVsEta->Fill(nTIDHit,0.);
+    rs_nTECHitPerCleanCloudVsEta->Fill(nTECHit,0.);
+    rs_nPXBHitPerCleanCloudVsEta->Fill(nPXBHit,0.);
+    rs_nPXFHitPerCleanCloudVsEta->Fill(nPXFHit,0.);
 
   }
 
   // RS track candidates
-  histograms_.fill("rs_numTrackCandidates_1d",rsTrackCandidateCollection->size());
+  rs_numTrackCandidates->Fill(rsTrackCandidateCollection->size());
   for ( TrackCandidateCollection::const_iterator candidate = rsTrackCandidateCollection->begin();
 	candidate != rsTrackCandidateCollection->end();
 	++candidate ) {
@@ -693,33 +611,33 @@ RoadSearchTrackValidation::analyze(const edm::Event& iEvent, const edm::EventSet
       }
     }
     
-    histograms_.fill("rs_nHitPerTrackCandidateVsEta_2d",nHit,0.);
-    histograms_.fill("rs_nStripHitPerTrackCandidateVsEta_2d",nStripHit,0.);
-    histograms_.fill("rs_nPixelHitPerTrackCandidateVsEta_2d",nPixelHit,0.);
-    histograms_.fill("rs_nTIBHitPerTrackCandidateVsEta_2d",nTIBHit,0.);
-    histograms_.fill("rs_nTOBHitPerTrackCandidateVsEta_2d",nTOBHit,0.);
-    histograms_.fill("rs_nTIDHitPerTrackCandidateVsEta_2d",nTIDHit,0.);
-    histograms_.fill("rs_nTECHitPerTrackCandidateVsEta_2d",nTECHit,0.);
-    histograms_.fill("rs_nPXBHitPerTrackCandidateVsEta_2d",nPXBHit,0.);
-    histograms_.fill("rs_nPXFHitPerTrackCandidateVsEta_2d",nPXFHit,0.);
+    rs_nHitPerTrackCandidateVsEta->Fill(nHit,0.);
+    rs_nStripHitPerTrackCandidateVsEta->Fill(nStripHit,0.);
+    rs_nPixelHitPerTrackCandidateVsEta->Fill(nPixelHit,0.);
+    rs_nTIBHitPerTrackCandidateVsEta->Fill(nTIBHit,0.);
+    rs_nTOBHitPerTrackCandidateVsEta->Fill(nTOBHit,0.);
+    rs_nTIDHitPerTrackCandidateVsEta->Fill(nTIDHit,0.);
+    rs_nTECHitPerTrackCandidateVsEta->Fill(nTECHit,0.);
+    rs_nPXBHitPerTrackCandidateVsEta->Fill(nPXBHit,0.);
+    rs_nPXFHitPerTrackCandidateVsEta->Fill(nPXFHit,0.);
 
   }
 
   // Ckf tracks
-  histograms_.fill("ckf_numTracks_1d",ckfTrackCollection->size());
+  ckf_numTracks->Fill(ckfTrackCollection->size());
   for ( reco::TrackCollection::const_iterator track = ckfTrackCollection->begin();
 	track != ckfTrackCollection->end();
 	++track ) {
-    histograms_.fill("ckf_chi2_1d",track->normalizedChi2());
-    histograms_.fill("ckf_pt_1d",track->pt());
-    histograms_.fill("ckf_nhit_1d",track->found());
-    histograms_.fill("ckf_eta_1d",track->momentum().eta());
-    histograms_.fill("ckf_phi_1d",track->momentum().phi());
-    histograms_.fill("ckf_transCurv_1d",track->transverseCurvature());
-    histograms_.fill("ckf_phiZero_1d",track->phi0());
-    histograms_.fill("ckf_theta_1d",track->theta());
-    histograms_.fill("ckf_dZero_1d",track->d0());
-    histograms_.fill("ckf_dZ_1d",track->dz());
+    ckf_chi2->Fill(track->normalizedChi2());
+    ckf_pt->Fill(track->pt());
+    ckf_nhit->Fill(track->found());
+    ckf_eta->Fill(track->momentum().eta());
+    ckf_phi->Fill(track->momentum().phi());
+    ckf_transCurv->Fill(track->transverseCurvature());
+    ckf_phiZero->Fill(track->phi0());
+    ckf_theta->Fill(track->theta());
+    ckf_dZero->Fill(track->d0());
+    ckf_dZ->Fill(track->dz());
 
     // loop over hits in tracks, count
     unsigned int nHit      = 0;
@@ -735,49 +653,47 @@ RoadSearchTrackValidation::analyze(const edm::Event& iEvent, const edm::EventSet
     for ( trackingRecHit_iterator recHit = track->recHitsBegin();
 	  recHit != track->recHitsEnd();
 	  ++ recHit ) {
-      if ( (*recHit)->isValid() ) {
-	++nHit;
-	DetId id((*recHit)->geographicalId());
+      ++nHit;
+      DetId id((*recHit)->geographicalId());
 
-	if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
-	  ++nStripHit;
-	  ++nTIBHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
-	  ++nStripHit;
-	  ++nTOBHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
-	  ++nStripHit;
-	  ++nTIDHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
-	  ++nStripHit;
-	  ++nTECHit;
-	} else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
-	  ++nPixelHit;
-	  ++nPXBHit;
-	} else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
-	  ++nPixelHit;
-	  ++nPXFHit;
-	}
+      if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
+	++nStripHit;
+	++nTIBHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
+	++nStripHit;
+	++nTOBHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
+	++nStripHit;
+	++nTIDHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
+	++nStripHit;
+	++nTECHit;
+      } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
+	++nPixelHit;
+	++nPXBHit;
+      } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
+	++nPixelHit;
+	++nPXFHit;
       }
     }
     
-    histograms_.fill("ckf_nHitPerTrackVsEta_2d",nHit,track->momentum().eta());
-    histograms_.fill("ckf_nStripHitPerTrackVsEta_2d",nStripHit,track->momentum().eta());
-    histograms_.fill("ckf_nPixelHitPerTrackVsEta_2d",nPixelHit,track->momentum().eta());
-    histograms_.fill("ckf_nTIBHitPerTrackVsEta_2d",nTIBHit,track->momentum().eta());
-    histograms_.fill("ckf_nTOBHitPerTrackVsEta_2d",nTOBHit,track->momentum().eta());
-    histograms_.fill("ckf_nTIDHitPerTrackVsEta_2d",nTIDHit,track->momentum().eta());
-    histograms_.fill("ckf_nTECHitPerTrackVsEta_2d",nTECHit,track->momentum().eta());
-    histograms_.fill("ckf_nPXBHitPerTrackVsEta_2d",nPXBHit,track->momentum().eta());
-    histograms_.fill("ckf_nPXFHitPerTrackVsEta_2d",nPXFHit,track->momentum().eta());
-    histograms_.fill("ckf_nHitPerTrackVsPhi_2d",nHit,track->momentum().phi());
+    ckf_nHitPerTrackVsEta->Fill(nHit,track->momentum().eta());
+    ckf_nStripHitPerTrackVsEta->Fill(nStripHit,track->momentum().eta());
+    ckf_nPixelHitPerTrackVsEta->Fill(nPixelHit,track->momentum().eta());
+    ckf_nTIBHitPerTrackVsEta->Fill(nTIBHit,track->momentum().eta());
+    ckf_nTOBHitPerTrackVsEta->Fill(nTOBHit,track->momentum().eta());
+    ckf_nTIDHitPerTrackVsEta->Fill(nTIDHit,track->momentum().eta());
+    ckf_nTECHitPerTrackVsEta->Fill(nTECHit,track->momentum().eta());
+    ckf_nPXBHitPerTrackVsEta->Fill(nPXBHit,track->momentum().eta());
+    ckf_nPXFHitPerTrackVsEta->Fill(nPXFHit,track->momentum().eta());
+    ckf_nHitPerTrackVsPhi->Fill(nHit,track->momentum().phi());
 
   }
 
-  histograms_.fill("ckf_numSeeds_1d",ckfSeedCollection->size());
+  ckf_numSeeds->Fill(ckfSeedCollection->size());
 
   // CKF track candidates
-  histograms_.fill("ckf_numTrackCandidates_1d",ckfTrackCandidateCollection->size());
+  ckf_numTrackCandidates->Fill(ckfTrackCandidateCollection->size());
   for ( TrackCandidateCollection::const_iterator candidate = ckfTrackCandidateCollection->begin();
 	candidate != ckfTrackCandidateCollection->end();
 	++candidate ) {
@@ -820,423 +736,419 @@ RoadSearchTrackValidation::analyze(const edm::Event& iEvent, const edm::EventSet
       }
     }
     
-    histograms_.fill("ckf_nHitPerTrackCandidateVsEta_2d",nHit,0.);
-    histograms_.fill("ckf_nStripHitPerTrackCandidateVsEta_2d",nStripHit,0.);
-    histograms_.fill("ckf_nPixelHitPerTrackCandidateVsEta_2d",nPixelHit,0.);
-    histograms_.fill("ckf_nTIBHitPerTrackCandidateVsEta_2d",nTIBHit,0.);
-    histograms_.fill("ckf_nTOBHitPerTrackCandidateVsEta_2d",nTOBHit,0.);
-    histograms_.fill("ckf_nTIDHitPerTrackCandidateVsEta_2d",nTIDHit,0.);
-    histograms_.fill("ckf_nTECHitPerTrackCandidateVsEta_2d",nTECHit,0.);
-    histograms_.fill("ckf_nPXBHitPerTrackCandidateVsEta_2d",nPXBHit,0.);
-    histograms_.fill("ckf_nPXFHitPerTrackCandidateVsEta_2d",nPXFHit,0.);
+    ckf_nHitPerTrackCandidateVsEta->Fill(nHit,0.);
+    ckf_nStripHitPerTrackCandidateVsEta->Fill(nStripHit,0.);
+    ckf_nPixelHitPerTrackCandidateVsEta->Fill(nPixelHit,0.);
+    ckf_nTIBHitPerTrackCandidateVsEta->Fill(nTIBHit,0.);
+    ckf_nTOBHitPerTrackCandidateVsEta->Fill(nTOBHit,0.);
+    ckf_nTIDHitPerTrackCandidateVsEta->Fill(nTIDHit,0.);
+    ckf_nTECHitPerTrackCandidateVsEta->Fill(nTECHit,0.);
+    ckf_nPXBHitPerTrackCandidateVsEta->Fill(nPXBHit,0.);
+    ckf_nPXFHitPerTrackCandidateVsEta->Fill(nPXFHit,0.);
 
   }
 
   if ( (ckfTrackCollection->size() == sameNumberOfTracks) &&
        (rsTrackCollection->size() == sameNumberOfTracks ) ) {
-    // RS tracks
-    histograms_.fill("rs_same_numTracks_1d",rsTrackCollection->size());
-    for ( reco::TrackCollection::const_iterator track = rsTrackCollection->begin();
-	  track != rsTrackCollection->end();
-	  ++track ) {
-      histograms_.fill("rs_same_chi2_1d",track->normalizedChi2());
-      histograms_.fill("rs_same_pt_1d",track->pt());
-      histograms_.fill("rs_same_nhit_1d",track->found());
-      histograms_.fill("rs_same_eta_1d",track->momentum().eta());
-      histograms_.fill("rs_same_phi_1d",track->momentum().phi());
-      histograms_.fill("rs_same_transCurv_1d",track->transverseCurvature());
-      histograms_.fill("rs_same_phiZero_1d",track->phi0());
-      histograms_.fill("rs_same_theta_1d",track->theta());
-      histograms_.fill("rs_same_dZero_1d",track->d0());
-      histograms_.fill("rs_same_dZ_1d",track->dz());
+  // RS tracks
+  rs_same_numTracks->Fill(rsTrackCollection->size());
+  for ( reco::TrackCollection::const_iterator track = rsTrackCollection->begin();
+	track != rsTrackCollection->end();
+	++track ) {
+    rs_same_chi2->Fill(track->normalizedChi2());
+    rs_same_pt->Fill(track->pt());
+    rs_same_nhit->Fill(track->found());
+    rs_same_eta->Fill(track->momentum().eta());
+    rs_same_phi->Fill(track->momentum().phi());
+    rs_same_transCurv->Fill(track->transverseCurvature());
+    rs_same_phiZero->Fill(track->phi0());
+    rs_same_theta->Fill(track->theta());
+    rs_same_dZero->Fill(track->d0());
+    rs_same_dZ->Fill(track->dz());
 
-      // loop over hits in tracks, count
-      unsigned int nHit      = 0;
-      unsigned int nStripHit = 0;
-      unsigned int nPixelHit = 0;
-      unsigned int nTIBHit   = 0;
-      unsigned int nTOBHit   = 0;
-      unsigned int nTIDHit   = 0;
-      unsigned int nTECHit   = 0;
-      unsigned int nPXBHit   = 0;
-      unsigned int nPXFHit   = 0;
+    // loop over hits in tracks, count
+    unsigned int nHit      = 0;
+    unsigned int nStripHit = 0;
+    unsigned int nPixelHit = 0;
+    unsigned int nTIBHit   = 0;
+    unsigned int nTOBHit   = 0;
+    unsigned int nTIDHit   = 0;
+    unsigned int nTECHit   = 0;
+    unsigned int nPXBHit   = 0;
+    unsigned int nPXFHit   = 0;
 
-      for ( trackingRecHit_iterator recHit = track->recHitsBegin();
-	    recHit != track->recHitsEnd();
-	    ++ recHit ) {
-	if ( (*recHit)->isValid() ) {
-	  ++nHit;
-	  DetId id((*recHit)->geographicalId());
+    for ( trackingRecHit_iterator recHit = track->recHitsBegin();
+	  recHit != track->recHitsEnd();
+	  ++ recHit ) {
+      ++nHit;
+      DetId id((*recHit)->geographicalId());
 
-	  if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
-	    ++nStripHit;
-	    ++nTIBHit;
-	  } else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
-	    ++nStripHit;
-	    ++nTOBHit;
-	  } else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
-	    ++nStripHit;
-	    ++nTIDHit;
-	  } else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
-	    ++nStripHit;
-	    ++nTECHit;
-	  } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
-	    ++nPixelHit;
-	    ++nPXBHit;
-	  } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
-	    ++nPixelHit;
-	    ++nPXFHit;
-	  }
-	}
+      if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
+	++nStripHit;
+	++nTIBHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
+	++nStripHit;
+	++nTOBHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
+	++nStripHit;
+	++nTIDHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
+	++nStripHit;
+	++nTECHit;
+      } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
+	++nPixelHit;
+	++nPXBHit;
+      } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
+	++nPixelHit;
+	++nPXFHit;
       }
-    
-      histograms_.fill("rs_same_nHitPerTrackVsEta_2d",nHit,track->momentum().eta());
-      histograms_.fill("rs_same_nStripHitPerTrackVsEta_2d",nStripHit,track->momentum().eta());
-      histograms_.fill("rs_same_nPixelHitPerTrackVsEta_2d",nPixelHit,track->momentum().eta());
-      histograms_.fill("rs_same_nTIBHitPerTrackVsEta_2d",nTIBHit,track->momentum().eta());
-      histograms_.fill("rs_same_nTOBHitPerTrackVsEta_2d",nTOBHit,track->momentum().eta());
-      histograms_.fill("rs_same_nTIDHitPerTrackVsEta_2d",nTIDHit,track->momentum().eta());
-      histograms_.fill("rs_same_nTECHitPerTrackVsEta_2d",nTECHit,track->momentum().eta());
-      histograms_.fill("rs_same_nPXBHitPerTrackVsEta_2d",nPXBHit,track->momentum().eta());
-      histograms_.fill("rs_same_nPXFHitPerTrackVsEta_2d",nPXFHit,track->momentum().eta());
-
     }
+    
+    rs_same_nHitPerTrackVsEta->Fill(nHit,track->momentum().eta());
+    rs_same_nStripHitPerTrackVsEta->Fill(nStripHit,track->momentum().eta());
+    rs_same_nPixelHitPerTrackVsEta->Fill(nPixelHit,track->momentum().eta());
+    rs_same_nTIBHitPerTrackVsEta->Fill(nTIBHit,track->momentum().eta());
+    rs_same_nTOBHitPerTrackVsEta->Fill(nTOBHit,track->momentum().eta());
+    rs_same_nTIDHitPerTrackVsEta->Fill(nTIDHit,track->momentum().eta());
+    rs_same_nTECHitPerTrackVsEta->Fill(nTECHit,track->momentum().eta());
+    rs_same_nPXBHitPerTrackVsEta->Fill(nPXBHit,track->momentum().eta());
+    rs_same_nPXFHitPerTrackVsEta->Fill(nPXFHit,track->momentum().eta());
 
-    // RS seeds, check for doubled seeds, deactivated
-    //   histograms_.fill("rs_same_numSeeds_1d",rsSeedCollection->size());
-    //   for ( TrajectorySeedCollection::const_iterator seed1 = rsSeedCollection->begin();
-    // 	seed1 != rsSeedCollection->end();
-    // 	++seed1 ) {
+  }
 
-    //     for ( TrajectorySeedCollection::const_iterator seed2 = seed1+1;
-    // 	  seed2 != rsSeedCollection->end();
-    // 	  ++seed2 ) {
+  // RS seeds, check for doubled seeds, deactivated
+  //   rs_same_numSeeds->Fill(rsSeedCollection->size());
+  //   for ( TrajectorySeedCollection::const_iterator seed1 = rsSeedCollection->begin();
+  // 	seed1 != rsSeedCollection->end();
+  // 	++seed1 ) {
 
-    //       unsigned int counter = 0;
-    //       for (TrajectorySeed::const_iterator hit1 = seed1->recHits().first;
-    // 	   hit1 != seed1->recHits().second;
-    // 	   ++hit1 ) {
-    // 	for (TrajectorySeed::const_iterator hit2 = seed2->recHits().first;
-    // 	     hit2 != seed2->recHits().second;
-    // 	     ++hit2 ) {
-    // 	  if (hit1->geographicalId() == hit2->geographicalId())
-    // 	    if (hit1->localPosition().x() == hit2->localPosition().x())
-    // 	      if (hit1->localPosition().y() == hit2->localPosition().y())
-    // 		++counter;
-    // 	}
-    //       }
-    //       if ( counter > 1 ) {
-    // 	edm::LogVerbatim("RoadSearch") << "two seeds with the same hits";
-    // 	edm::LogVerbatim("RoadSearch") << " Seed 1 hit 1 id: " << seed1->recHits().first->geographicalId().rawId()
-    // 				       << " x: " << seed1->recHits().first->localPosition().x()
-    // 				       << " y: " << seed1->recHits().first->localPosition().y()
-    // 				       << " hit 2 id: " << (--(seed1->recHits().second))->geographicalId().rawId()
-    // 				       << " x: " << (--(seed1->recHits().second))->localPosition().x()
-    // 				       << " y: " << (--(seed1->recHits().second))->localPosition().y();
-    // 	edm::LogVerbatim("RoadSearch") << " Seed 2 hit 1 id: " << seed2->recHits().first->geographicalId().rawId()
-    // 				       << " x: " << seed2->recHits().first->localPosition().x()
-    // 				       << " y: " << seed2->recHits().first->localPosition().y()
-    // 				       << " hit 2 id: " << (--(seed2->recHits().second))->geographicalId().rawId()
-    // 				       << " x: " << (--(seed2->recHits().second))->localPosition().x()
-    // 				       << " y: " << (--(seed2->recHits().second))->localPosition().y();
-    //       }
-    //     }
-    //   }
+  //     for ( TrajectorySeedCollection::const_iterator seed2 = seed1+1;
+  // 	  seed2 != rsSeedCollection->end();
+  // 	  ++seed2 ) {
+
+  //       unsigned int counter = 0;
+  //       for (TrajectorySeed::const_iterator hit1 = seed1->recHits().first;
+  // 	   hit1 != seed1->recHits().second;
+  // 	   ++hit1 ) {
+  // 	for (TrajectorySeed::const_iterator hit2 = seed2->recHits().first;
+  // 	     hit2 != seed2->recHits().second;
+  // 	     ++hit2 ) {
+  // 	  if (hit1->geographicalId() == hit2->geographicalId())
+  // 	    if (hit1->localPosition().x() == hit2->localPosition().x())
+  // 	      if (hit1->localPosition().y() == hit2->localPosition().y())
+  // 		++counter;
+  // 	}
+  //       }
+  //       if ( counter > 1 ) {
+  // 	edm::LogVerbatim("RoadSearch") << "two seeds with the same hits";
+  // 	edm::LogVerbatim("RoadSearch") << " Seed 1 hit 1 id: " << seed1->recHits().first->geographicalId().rawId()
+  // 				       << " x: " << seed1->recHits().first->localPosition().x()
+  // 				       << " y: " << seed1->recHits().first->localPosition().y()
+  // 				       << " hit 2 id: " << (--(seed1->recHits().second))->geographicalId().rawId()
+  // 				       << " x: " << (--(seed1->recHits().second))->localPosition().x()
+  // 				       << " y: " << (--(seed1->recHits().second))->localPosition().y();
+  // 	edm::LogVerbatim("RoadSearch") << " Seed 2 hit 1 id: " << seed2->recHits().first->geographicalId().rawId()
+  // 				       << " x: " << seed2->recHits().first->localPosition().x()
+  // 				       << " y: " << seed2->recHits().first->localPosition().y()
+  // 				       << " hit 2 id: " << (--(seed2->recHits().second))->geographicalId().rawId()
+  // 				       << " x: " << (--(seed2->recHits().second))->localPosition().x()
+  // 				       << " y: " << (--(seed2->recHits().second))->localPosition().y();
+  //       }
+  //     }
+  //   }
 
 
-    // RS raw clouds
-    histograms_.fill("rs_same_numRawClouds_1d",rsRawCloudCollection->size());
-    for ( RoadSearchCloudCollection::const_iterator cloud = rsRawCloudCollection->begin();
-	  cloud != rsRawCloudCollection->end();
-	  ++cloud ) {
+  // RS raw clouds
+  rs_same_numRawClouds->Fill(rsRawCloudCollection->size());
+  for ( RoadSearchCloudCollection::const_iterator cloud = rsRawCloudCollection->begin();
+	cloud != rsRawCloudCollection->end();
+	++cloud ) {
 
-      // loop over hits in tracks, count
-      unsigned int nHit      = 0;
-      unsigned int nStripHit = 0;
-      unsigned int nPixelHit = 0;
-      unsigned int nTIBHit   = 0;
-      unsigned int nTOBHit   = 0;
-      unsigned int nTIDHit   = 0;
-      unsigned int nTECHit   = 0;
-      unsigned int nPXBHit   = 0;
-      unsigned int nPXFHit   = 0;
+    // loop over hits in tracks, count
+    unsigned int nHit      = 0;
+    unsigned int nStripHit = 0;
+    unsigned int nPixelHit = 0;
+    unsigned int nTIBHit   = 0;
+    unsigned int nTOBHit   = 0;
+    unsigned int nTIDHit   = 0;
+    unsigned int nTECHit   = 0;
+    unsigned int nPXBHit   = 0;
+    unsigned int nPXFHit   = 0;
 
-      for ( RoadSearchCloud::RecHitOwnVector::const_iterator recHit = cloud->begin_hits();
-	    recHit != cloud->end_hits();
-	    ++recHit ) {
-	++nHit;
-	DetId id(recHit->geographicalId());
+    for ( RoadSearchCloud::RecHitOwnVector::const_iterator recHit = cloud->begin_hits();
+	  recHit != cloud->end_hits();
+	  ++recHit ) {
+      ++nHit;
+      DetId id(recHit->geographicalId());
       
-	if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
-	  ++nStripHit;
-	  ++nTIBHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
-	  ++nStripHit;
-	  ++nTOBHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
-	  ++nStripHit;
-	  ++nTIDHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
-	  ++nStripHit;
-	  ++nTECHit;
-	} else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
-	  ++nPixelHit;
-	  ++nPXBHit;
-	} else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
-	  ++nPixelHit;
-	  ++nPXFHit;
-	}
+      if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
+	++nStripHit;
+	++nTIBHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
+	++nStripHit;
+	++nTOBHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
+	++nStripHit;
+	++nTIDHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
+	++nStripHit;
+	++nTECHit;
+      } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
+	++nPixelHit;
+	++nPXBHit;
+      } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
+	++nPixelHit;
+	++nPXFHit;
       }
-    
-      histograms_.fill("rs_same_nHitPerRawCloudVsEta_2d",nHit,0.);
-      histograms_.fill("rs_same_nStripHitPerRawCloudVsEta_2d",nStripHit,0.);
-      histograms_.fill("rs_same_nPixelHitPerRawCloudVsEta_2d",nPixelHit,0.);
-      histograms_.fill("rs_same_nTIBHitPerRawCloudVsEta_2d",nTIBHit,0.);
-      histograms_.fill("rs_same_nTOBHitPerRawCloudVsEta_2d",nTOBHit,0.);
-      histograms_.fill("rs_same_nTIDHitPerRawCloudVsEta_2d",nTIDHit,0.);
-      histograms_.fill("rs_same_nTECHitPerRawCloudVsEta_2d",nTECHit,0.);
-      histograms_.fill("rs_same_nPXBHitPerRawCloudVsEta_2d",nPXBHit,0.);
-      histograms_.fill("rs_same_nPXFHitPerRawCloudVsEta_2d",nPXFHit,0.);
-
     }
+    
+    rs_same_nHitPerRawCloudVsEta->Fill(nHit,0.);
+    rs_same_nStripHitPerRawCloudVsEta->Fill(nStripHit,0.);
+    rs_same_nPixelHitPerRawCloudVsEta->Fill(nPixelHit,0.);
+    rs_same_nTIBHitPerRawCloudVsEta->Fill(nTIBHit,0.);
+    rs_same_nTOBHitPerRawCloudVsEta->Fill(nTOBHit,0.);
+    rs_same_nTIDHitPerRawCloudVsEta->Fill(nTIDHit,0.);
+    rs_same_nTECHitPerRawCloudVsEta->Fill(nTECHit,0.);
+    rs_same_nPXBHitPerRawCloudVsEta->Fill(nPXBHit,0.);
+    rs_same_nPXFHitPerRawCloudVsEta->Fill(nPXFHit,0.);
 
-    // RS clean clouds
-    histograms_.fill("rs_same_numCleanClouds_1d",rsCleanCloudCollection->size());
-    for ( RoadSearchCloudCollection::const_iterator cloud = rsCleanCloudCollection->begin();
-	  cloud != rsCleanCloudCollection->end();
-	  ++cloud ) {
+  }
 
-      // loop over hits in tracks, count
-      unsigned int nHit      = 0;
-      unsigned int nStripHit = 0;
-      unsigned int nPixelHit = 0;
-      unsigned int nTIBHit   = 0;
-      unsigned int nTOBHit   = 0;
-      unsigned int nTIDHit   = 0;
-      unsigned int nTECHit   = 0;
-      unsigned int nPXBHit   = 0;
-      unsigned int nPXFHit   = 0;
+  // RS clean clouds
+  rs_same_numCleanClouds->Fill(rsCleanCloudCollection->size());
+  for ( RoadSearchCloudCollection::const_iterator cloud = rsCleanCloudCollection->begin();
+	cloud != rsCleanCloudCollection->end();
+	++cloud ) {
 
-      for ( RoadSearchCloud::RecHitOwnVector::const_iterator recHit = cloud->begin_hits();
-	    recHit != cloud->end_hits();
-	    ++recHit ) {
-	++nHit;
-	DetId id(recHit->geographicalId());
+    // loop over hits in tracks, count
+    unsigned int nHit      = 0;
+    unsigned int nStripHit = 0;
+    unsigned int nPixelHit = 0;
+    unsigned int nTIBHit   = 0;
+    unsigned int nTOBHit   = 0;
+    unsigned int nTIDHit   = 0;
+    unsigned int nTECHit   = 0;
+    unsigned int nPXBHit   = 0;
+    unsigned int nPXFHit   = 0;
+
+    for ( RoadSearchCloud::RecHitOwnVector::const_iterator recHit = cloud->begin_hits();
+	  recHit != cloud->end_hits();
+	  ++recHit ) {
+      ++nHit;
+      DetId id(recHit->geographicalId());
       
-	if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
-	  ++nStripHit;
-	  ++nTIBHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
-	  ++nStripHit;
-	  ++nTOBHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
-	  ++nStripHit;
-	  ++nTIDHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
-	  ++nStripHit;
-	  ++nTECHit;
-	} else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
-	  ++nPixelHit;
-	  ++nPXBHit;
-	} else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
-	  ++nPixelHit;
-	  ++nPXFHit;
-	}
+      if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
+	++nStripHit;
+	++nTIBHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
+	++nStripHit;
+	++nTOBHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
+	++nStripHit;
+	++nTIDHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
+	++nStripHit;
+	++nTECHit;
+      } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
+	++nPixelHit;
+	++nPXBHit;
+      } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
+	++nPixelHit;
+	++nPXFHit;
       }
-    
-      histograms_.fill("rs_same_nHitPerCleanCloudVsEta_2d",nHit,0.);
-      histograms_.fill("rs_same_nStripHitPerCleanCloudVsEta_2d",nStripHit,0.);
-      histograms_.fill("rs_same_nPixelHitPerCleanCloudVsEta_2d",nPixelHit,0.);
-      histograms_.fill("rs_same_nTIBHitPerCleanCloudVsEta_2d",nTIBHit,0.);
-      histograms_.fill("rs_same_nTOBHitPerCleanCloudVsEta_2d",nTOBHit,0.);
-      histograms_.fill("rs_same_nTIDHitPerCleanCloudVsEta_2d",nTIDHit,0.);
-      histograms_.fill("rs_same_nTECHitPerCleanCloudVsEta_2d",nTECHit,0.);
-      histograms_.fill("rs_same_nPXBHitPerCleanCloudVsEta_2d",nPXBHit,0.);
-      histograms_.fill("rs_same_nPXFHitPerCleanCloudVsEta_2d",nPXFHit,0.);
-
     }
+    
+    rs_same_nHitPerCleanCloudVsEta->Fill(nHit,0.);
+    rs_same_nStripHitPerCleanCloudVsEta->Fill(nStripHit,0.);
+    rs_same_nPixelHitPerCleanCloudVsEta->Fill(nPixelHit,0.);
+    rs_same_nTIBHitPerCleanCloudVsEta->Fill(nTIBHit,0.);
+    rs_same_nTOBHitPerCleanCloudVsEta->Fill(nTOBHit,0.);
+    rs_same_nTIDHitPerCleanCloudVsEta->Fill(nTIDHit,0.);
+    rs_same_nTECHitPerCleanCloudVsEta->Fill(nTECHit,0.);
+    rs_same_nPXBHitPerCleanCloudVsEta->Fill(nPXBHit,0.);
+    rs_same_nPXFHitPerCleanCloudVsEta->Fill(nPXFHit,0.);
 
-    // RS track candidates
-    histograms_.fill("rs_same_numTrackCandidates_1d",rsTrackCandidateCollection->size());
-    for ( TrackCandidateCollection::const_iterator candidate = rsTrackCandidateCollection->begin();
-	  candidate != rsTrackCandidateCollection->end();
-	  ++candidate ) {
+  }
 
-      // loop over hits in tracks, count
-      unsigned int nHit      = 0;
-      unsigned int nStripHit = 0;
-      unsigned int nPixelHit = 0;
-      unsigned int nTIBHit   = 0;
-      unsigned int nTOBHit   = 0;
-      unsigned int nTIDHit   = 0;
-      unsigned int nTECHit   = 0;
-      unsigned int nPXBHit   = 0;
-      unsigned int nPXFHit   = 0;
+  // RS track candidates
+  rs_same_numTrackCandidates->Fill(rsTrackCandidateCollection->size());
+  for ( TrackCandidateCollection::const_iterator candidate = rsTrackCandidateCollection->begin();
+	candidate != rsTrackCandidateCollection->end();
+	++candidate ) {
 
-      for ( TrackCandidate::RecHitContainer::const_iterator recHit = candidate->recHits().first;
-	    recHit != candidate->recHits().second;
-	    ++recHit ) {
-	++nHit;
-	DetId id(recHit->geographicalId());
+    // loop over hits in tracks, count
+    unsigned int nHit      = 0;
+    unsigned int nStripHit = 0;
+    unsigned int nPixelHit = 0;
+    unsigned int nTIBHit   = 0;
+    unsigned int nTOBHit   = 0;
+    unsigned int nTIDHit   = 0;
+    unsigned int nTECHit   = 0;
+    unsigned int nPXBHit   = 0;
+    unsigned int nPXFHit   = 0;
+
+    for ( TrackCandidate::RecHitContainer::const_iterator recHit = candidate->recHits().first;
+	  recHit != candidate->recHits().second;
+	  ++recHit ) {
+      ++nHit;
+      DetId id(recHit->geographicalId());
       
-	if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
-	  ++nStripHit;
-	  ++nTIBHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
-	  ++nStripHit;
-	  ++nTOBHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
-	  ++nStripHit;
-	  ++nTIDHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
-	  ++nStripHit;
-	  ++nTECHit;
-	} else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
-	  ++nPixelHit;
-	  ++nPXBHit;
-	} else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
-	  ++nPixelHit;
-	  ++nPXFHit;
-	}
+      if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
+	++nStripHit;
+	++nTIBHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
+	++nStripHit;
+	++nTOBHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
+	++nStripHit;
+	++nTIDHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
+	++nStripHit;
+	++nTECHit;
+      } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
+	++nPixelHit;
+	++nPXBHit;
+      } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
+	++nPixelHit;
+	++nPXFHit;
       }
-    
-      histograms_.fill("rs_same_nHitPerTrackCandidateVsEta_2d",nHit,0.);
-      histograms_.fill("rs_same_nStripHitPerTrackCandidateVsEta_2d",nStripHit,0.);
-      histograms_.fill("rs_same_nPixelHitPerTrackCandidateVsEta_2d",nPixelHit,0.);
-      histograms_.fill("rs_same_nTIBHitPerTrackCandidateVsEta_2d",nTIBHit,0.);
-      histograms_.fill("rs_same_nTOBHitPerTrackCandidateVsEta_2d",nTOBHit,0.);
-      histograms_.fill("rs_same_nTIDHitPerTrackCandidateVsEta_2d",nTIDHit,0.);
-      histograms_.fill("rs_same_nTECHitPerTrackCandidateVsEta_2d",nTECHit,0.);
-      histograms_.fill("rs_same_nPXBHitPerTrackCandidateVsEta_2d",nPXBHit,0.);
-      histograms_.fill("rs_same_nPXFHitPerTrackCandidateVsEta_2d",nPXFHit,0.);
-
     }
+    
+    rs_same_nHitPerTrackCandidateVsEta->Fill(nHit,0.);
+    rs_same_nStripHitPerTrackCandidateVsEta->Fill(nStripHit,0.);
+    rs_same_nPixelHitPerTrackCandidateVsEta->Fill(nPixelHit,0.);
+    rs_same_nTIBHitPerTrackCandidateVsEta->Fill(nTIBHit,0.);
+    rs_same_nTOBHitPerTrackCandidateVsEta->Fill(nTOBHit,0.);
+    rs_same_nTIDHitPerTrackCandidateVsEta->Fill(nTIDHit,0.);
+    rs_same_nTECHitPerTrackCandidateVsEta->Fill(nTECHit,0.);
+    rs_same_nPXBHitPerTrackCandidateVsEta->Fill(nPXBHit,0.);
+    rs_same_nPXFHitPerTrackCandidateVsEta->Fill(nPXFHit,0.);
 
-    // Ckf tracks
-    histograms_.fill("ckf_same_numTracks_1d",ckfTrackCollection->size());
-    for ( reco::TrackCollection::const_iterator track = ckfTrackCollection->begin();
-	  track != ckfTrackCollection->end();
-	  ++track ) {
-      histograms_.fill("ckf_same_chi2_1d",track->normalizedChi2());
-      histograms_.fill("ckf_same_pt_1d",track->pt());
-      histograms_.fill("ckf_same_nhit_1d",track->found());
-      histograms_.fill("ckf_same_eta_1d",track->momentum().eta());
-      histograms_.fill("ckf_same_phi_1d",track->momentum().phi());
-      histograms_.fill("ckf_same_transCurv_1d",track->transverseCurvature());
-      histograms_.fill("ckf_same_phiZero_1d",track->phi0());
-      histograms_.fill("ckf_same_theta_1d",track->theta());
-      histograms_.fill("ckf_same_dZero_1d",track->d0());
-      histograms_.fill("ckf_same_dZ_1d",track->dz());
+  }
 
-      // loop over hits in tracks, count
-      unsigned int nHit      = 0;
-      unsigned int nStripHit = 0;
-      unsigned int nPixelHit = 0;
-      unsigned int nTIBHit   = 0;
-      unsigned int nTOBHit   = 0;
-      unsigned int nTIDHit   = 0;
-      unsigned int nTECHit   = 0;
-      unsigned int nPXBHit   = 0;
-      unsigned int nPXFHit   = 0;
+  // Ckf tracks
+  ckf_same_numTracks->Fill(ckfTrackCollection->size());
+  for ( reco::TrackCollection::const_iterator track = ckfTrackCollection->begin();
+	track != ckfTrackCollection->end();
+	++track ) {
+    ckf_same_chi2->Fill(track->normalizedChi2());
+    ckf_same_pt->Fill(track->pt());
+    ckf_same_nhit->Fill(track->found());
+    ckf_same_eta->Fill(track->momentum().eta());
+    ckf_same_phi->Fill(track->momentum().phi());
+    ckf_same_transCurv->Fill(track->transverseCurvature());
+    ckf_same_phiZero->Fill(track->phi0());
+    ckf_same_theta->Fill(track->theta());
+    ckf_same_dZero->Fill(track->d0());
+    ckf_same_dZ->Fill(track->dz());
 
-      for ( trackingRecHit_iterator recHit = track->recHitsBegin();
-	    recHit != track->recHitsEnd();
-	    ++ recHit ) {
-	if ( (*recHit)->isValid() ) {
-	  ++nHit;
-	  DetId id((*recHit)->geographicalId());
+    // loop over hits in tracks, count
+    unsigned int nHit      = 0;
+    unsigned int nStripHit = 0;
+    unsigned int nPixelHit = 0;
+    unsigned int nTIBHit   = 0;
+    unsigned int nTOBHit   = 0;
+    unsigned int nTIDHit   = 0;
+    unsigned int nTECHit   = 0;
+    unsigned int nPXBHit   = 0;
+    unsigned int nPXFHit   = 0;
 
-	  if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
-	    ++nStripHit;
-	    ++nTIBHit;
-	  } else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
-	    ++nStripHit;
-	    ++nTOBHit;
-	  } else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
-	    ++nStripHit;
-	    ++nTIDHit;
-	  } else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
-	    ++nStripHit;
-	    ++nTECHit;
-	  } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
-	    ++nPixelHit;
-	    ++nPXBHit;
-	  } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
-	    ++nPixelHit;
-	    ++nPXFHit;
-	  }
-	}
+    for ( trackingRecHit_iterator recHit = track->recHitsBegin();
+	  recHit != track->recHitsEnd();
+	  ++ recHit ) {
+      ++nHit;
+      DetId id((*recHit)->geographicalId());
+
+      if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
+	++nStripHit;
+	++nTIBHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
+	++nStripHit;
+	++nTOBHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
+	++nStripHit;
+	++nTIDHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
+	++nStripHit;
+	++nTECHit;
+      } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
+	++nPixelHit;
+	++nPXBHit;
+      } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
+	++nPixelHit;
+	++nPXFHit;
       }
-    
-      histograms_.fill("ckf_same_nHitPerTrackVsEta_2d",nHit,track->momentum().eta());
-      histograms_.fill("ckf_same_nStripHitPerTrackVsEta_2d",nStripHit,track->momentum().eta());
-      histograms_.fill("ckf_same_nPixelHitPerTrackVsEta_2d",nPixelHit,track->momentum().eta());
-      histograms_.fill("ckf_same_nTIBHitPerTrackVsEta_2d",nTIBHit,track->momentum().eta());
-      histograms_.fill("ckf_same_nTOBHitPerTrackVsEta_2d",nTOBHit,track->momentum().eta());
-      histograms_.fill("ckf_same_nTIDHitPerTrackVsEta_2d",nTIDHit,track->momentum().eta());
-      histograms_.fill("ckf_same_nTECHitPerTrackVsEta_2d",nTECHit,track->momentum().eta());
-      histograms_.fill("ckf_same_nPXBHitPerTrackVsEta_2d",nPXBHit,track->momentum().eta());
-      histograms_.fill("ckf_same_nPXFHitPerTrackVsEta_2d",nPXFHit,track->momentum().eta());
-
     }
+    
+    ckf_same_nHitPerTrackVsEta->Fill(nHit,track->momentum().eta());
+    ckf_same_nStripHitPerTrackVsEta->Fill(nStripHit,track->momentum().eta());
+    ckf_same_nPixelHitPerTrackVsEta->Fill(nPixelHit,track->momentum().eta());
+    ckf_same_nTIBHitPerTrackVsEta->Fill(nTIBHit,track->momentum().eta());
+    ckf_same_nTOBHitPerTrackVsEta->Fill(nTOBHit,track->momentum().eta());
+    ckf_same_nTIDHitPerTrackVsEta->Fill(nTIDHit,track->momentum().eta());
+    ckf_same_nTECHitPerTrackVsEta->Fill(nTECHit,track->momentum().eta());
+    ckf_same_nPXBHitPerTrackVsEta->Fill(nPXBHit,track->momentum().eta());
+    ckf_same_nPXFHitPerTrackVsEta->Fill(nPXFHit,track->momentum().eta());
 
-    histograms_.fill("ckf_same_numSeeds_1d",ckfSeedCollection->size());
+  }
 
-    // CKF track candidates
-    histograms_.fill("ckf_same_numTrackCandidates_1d",ckfTrackCandidateCollection->size());
-    for ( TrackCandidateCollection::const_iterator candidate = ckfTrackCandidateCollection->begin();
-	  candidate != ckfTrackCandidateCollection->end();
-	  ++candidate ) {
+  ckf_same_numSeeds->Fill(ckfSeedCollection->size());
 
-      // loop over hits in tracks, count
-      unsigned int nHit      = 0;
-      unsigned int nStripHit = 0;
-      unsigned int nPixelHit = 0;
-      unsigned int nTIBHit   = 0;
-      unsigned int nTOBHit   = 0;
-      unsigned int nTIDHit   = 0;
-      unsigned int nTECHit   = 0;
-      unsigned int nPXBHit   = 0;
-      unsigned int nPXFHit   = 0;
+  // CKF track candidates
+  ckf_same_numTrackCandidates->Fill(ckfTrackCandidateCollection->size());
+  for ( TrackCandidateCollection::const_iterator candidate = ckfTrackCandidateCollection->begin();
+	candidate != ckfTrackCandidateCollection->end();
+	++candidate ) {
 
-      for ( TrackCandidate::RecHitContainer::const_iterator recHit = candidate->recHits().first;
-	    recHit != candidate->recHits().second;
-	    ++recHit ) {
-	++nHit;
-	DetId id(recHit->geographicalId());
+    // loop over hits in tracks, count
+    unsigned int nHit      = 0;
+    unsigned int nStripHit = 0;
+    unsigned int nPixelHit = 0;
+    unsigned int nTIBHit   = 0;
+    unsigned int nTOBHit   = 0;
+    unsigned int nTIDHit   = 0;
+    unsigned int nTECHit   = 0;
+    unsigned int nPXBHit   = 0;
+    unsigned int nPXFHit   = 0;
+
+    for ( TrackCandidate::RecHitContainer::const_iterator recHit = candidate->recHits().first;
+	  recHit != candidate->recHits().second;
+	  ++recHit ) {
+      ++nHit;
+      DetId id(recHit->geographicalId());
       
-	if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
-	  ++nStripHit;
-	  ++nTIBHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
-	  ++nStripHit;
-	  ++nTOBHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
-	  ++nStripHit;
-	  ++nTIDHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
-	  ++nStripHit;
-	  ++nTECHit;
-	} else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
-	  ++nPixelHit;
-	  ++nPXBHit;
-	} else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
-	  ++nPixelHit;
-	  ++nPXFHit;
-	}
+      if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
+	++nStripHit;
+	++nTIBHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
+	++nStripHit;
+	++nTOBHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
+	++nStripHit;
+	++nTIDHit;
+      } else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
+	++nStripHit;
+	++nTECHit;
+      } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
+	++nPixelHit;
+	++nPXBHit;
+      } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
+	++nPixelHit;
+	++nPXFHit;
       }
-    
-      histograms_.fill("ckf_same_nHitPerTrackCandidateVsEta_2d",nHit,0.);
-      histograms_.fill("ckf_same_nStripHitPerTrackCandidateVsEta_2d",nStripHit,0.);
-      histograms_.fill("ckf_same_nPixelHitPerTrackCandidateVsEta_2d",nPixelHit,0.);
-      histograms_.fill("ckf_same_nTIBHitPerTrackCandidateVsEta_2d",nTIBHit,0.);
-      histograms_.fill("ckf_same_nTOBHitPerTrackCandidateVsEta_2d",nTOBHit,0.);
-      histograms_.fill("ckf_same_nTIDHitPerTrackCandidateVsEta_2d",nTIDHit,0.);
-      histograms_.fill("ckf_same_nTECHitPerTrackCandidateVsEta_2d",nTECHit,0.);
-      histograms_.fill("ckf_same_nPXBHitPerTrackCandidateVsEta_2d",nPXBHit,0.);
-      histograms_.fill("ckf_same_nPXFHitPerTrackCandidateVsEta_2d",nPXFHit,0.);
-
     }
+    
+    ckf_same_nHitPerTrackCandidateVsEta->Fill(nHit,0.);
+    ckf_same_nStripHitPerTrackCandidateVsEta->Fill(nStripHit,0.);
+    ckf_same_nPixelHitPerTrackCandidateVsEta->Fill(nPixelHit,0.);
+    ckf_same_nTIBHitPerTrackCandidateVsEta->Fill(nTIBHit,0.);
+    ckf_same_nTOBHitPerTrackCandidateVsEta->Fill(nTOBHit,0.);
+    ckf_same_nTIDHitPerTrackCandidateVsEta->Fill(nTIDHit,0.);
+    ckf_same_nTECHitPerTrackCandidateVsEta->Fill(nTECHit,0.);
+    ckf_same_nPXBHitPerTrackCandidateVsEta->Fill(nPXBHit,0.);
+    ckf_same_nPXFHitPerTrackCandidateVsEta->Fill(nPXFHit,0.);
+
+  }
 
   }
 

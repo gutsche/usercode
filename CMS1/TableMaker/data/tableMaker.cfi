@@ -1,0 +1,33 @@
+module tableMaker = TableMaker
+{
+  untracked InputTag GlobalMuonInputTag     = globalMuons
+  untracked InputTag GlobalElectronInputTag = siStripElectronToTrackAssociator
+  untracked InputTag GlobalJetInputTag      = midPointCone5CaloJets
+  untracked InputTag GlobalMETInputTag      = met
+
+  untracked double TightMuonPt          = 20
+  untracked double TightMuonMinEta      = -2.5
+  untracked double TightMuonMaxEta      =  2.5
+  untracked double LooseMuonPt          = 19
+  untracked double LooseMuonMinEta      = -2.5
+  untracked double LooseMuonMaxEta      =  2.5
+
+  untracked double TightElectronPt      = 20
+  untracked double TightElectronMinEta  = -2.4
+  untracked double TightElectronMaxEta  =  2.4
+  untracked double LooseElectronPt      = 19
+  untracked double LooseElectronMinEta  = -2.4
+  untracked double LooseElectronMaxEta  =  2.4
+
+  untracked double JetPt                = 20
+  untracked double JetMinEta            = -2.5
+  untracked double JetMaxEta            =  2.5
+
+  untracked double MET                  = 20
+
+  # increase MET cut around Z
+  untracked double METAroundZ           = 40
+  untracked double ZRangeMinMass        = 80
+  untracked double ZRangeMaxMass        = 100
+
+}

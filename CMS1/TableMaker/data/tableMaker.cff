@@ -1,0 +1,2 @@
+# include analyzer
+include "CMS1/TableMaker/data/tableMaker.cfi"

@@ -10,7 +10,6 @@
 <use name=DataFormats/SiPixelDetId>
 <use name=root>
 <use name=rootcore>
-<use name=GutSoftTools/HistogramFactory>
 <flags SEAL_PLUGIN_NAME="RoadSearchValidationRoadSearchTrackValidation">
 <export>
    <lib name=RoadSearchValidationRoadSearchTrackValidation>
@@ -26,5 +25,4 @@
    <use name=DataFormats/SiPixelDetId>
    <use name=root>
    <use name=rootcore>
-   <use name=GutSoftTools/HistogramFactory>
 </export>

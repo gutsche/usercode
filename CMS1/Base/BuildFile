@@ -1,0 +1,6 @@
+<use name=DataFormats/TrackReco>
+<export>
+   <lib name=CMS1Base>
+   <use name=DataFormats/TrackReco>
+</export>
+# <Flags CXXFLAGS=-g>
