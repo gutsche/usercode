@@ -31,7 +31,7 @@ include "GutSoftConfigurations/TrackObjects/trackObjects.cff"
 include "GutSoftConfigurations/TrackObjects/trackEfficiencyObjects.cff"
 
 # global muon analyzer
-include "GutSoftAnalyzers/GutSoftGlobalMuonAnalyzer/data/gutSoftGlobalMuonAnalyzer.cff"
+#include "GutSoftAnalyzers/GutSoftGlobalMuonAnalyzer/data/gutSoftGlobalMuonAnalyzer.cff"
 
 # timing analyzer
 include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/ckfGutSoftTimingAnalyzer.cff"

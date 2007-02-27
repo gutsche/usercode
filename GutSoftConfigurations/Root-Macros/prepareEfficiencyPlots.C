@@ -141,7 +141,7 @@ void prepareEfficiencyPlots(std::string filename) {
 		   "eff_eta_rs_true",
 		   "eff_eta_true",
 		   "trueSeedingEfficiencyEta",
-		   "RS Seeding Efficiency in #eta",
+		   "True Seeding Efficiency in #eta",
 		   "Efficiency");
 
 

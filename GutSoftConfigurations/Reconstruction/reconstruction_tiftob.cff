@@ -12,11 +12,20 @@ source = PoolSource
   untracked uint32 skipEvents = 0
 }
 
+# rechit conversion
+include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
+include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitConverter.cfi"
+
+# magnetic field
+#include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
+replace UniformMagneticFieldESProducer.ZFieldInTesla = 0.0
+#es_prefer = UniformMagneticFieldESProducer{}
+
 # object dumper
-include "GutSoftConfigurations/TrackObjects/dumpObjects.cff"
+include "GutSoftConfigurations/TrackObjects/dumpObjectsTIFTOB.cff"
 
 # include track reconstruction
-include "GutSoftConfigurations/Reconstruction/RecoTrackerTIFTOB.cff"
+include "RecoTracker/Configuration/data/RecoTrackerTIFTOB.cff"
 
 # output
 module out = PoolOutputModule 
@@ -26,8 +35,9 @@ module out = PoolOutputModule
 
 
 path pR = {
-  rstracks,
-  dumpObjects
+  siStripMatchedRecHits,
+  rstracksTIFTOB,
+  dumpObjectsTIFTOB
 }
 
 endpath e =

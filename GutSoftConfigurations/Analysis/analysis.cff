@@ -20,9 +20,6 @@ include "GutSoftConfigurations/TrackObjects/trackObjects.cff"
 # trackEfficiencyObjects
 include "GutSoftConfigurations/TrackObjects/trackEfficiencyObjects.cff"
 
-# same track filtered trackObjects
-#include "GutSoftConfigurations/SameTrackFilteredTrackObjects/sameTrackFilteredTrackObjects.cff"
-
 # global muon analyzer
 #include "GutSoftAnalyzers/GutSoftGlobalMuonAnalyzer/data/gutSoftGlobalMuonAnalyzer.cff"
 
