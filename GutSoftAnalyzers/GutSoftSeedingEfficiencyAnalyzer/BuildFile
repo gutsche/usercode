@@ -7,7 +7,10 @@
 <use name=DataFormats/TrajectorySeed>
 <use name=DataFormats/TrackingRecHit>
 <use name=DataFormats/TrackerRecHit2D>
+
 <use name=DataFormats/DetId>
+<use name=DataFormats/SiStripDetId>
+<use name=DataFormats/SiPixelDetId>
 
 <use name=GutSoftTools/GutSoftHistogramFactory>
 <use name=GutSoftTools/GutSoftHistogramFileService>
@@ -40,7 +43,10 @@
    <use name=DataFormats/TrajectorySeed>
    <use name=DataFormats/TrackingRecHit>
    <use name=DataFormats/TrackerRecHit2D>
+
    <use name=DataFormats/DetId>
+   <use name=DataFormats/SiStripDetId>
+   <use name=DataFormats/SiPixelDetId>
 
    <use name=GutSoftTools/GutSoftHistogramFactory>
    <use name=GutSoftTools/GutSoftHistogramFileService>

@@ -8,8 +8,8 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2007/01/09 02:35:09 $
-// $Revision: 1.1 $
+// $Date: 2007/01/30 01:38:33 $
+// $Revision: 1.2 $
 //
 
 #include <string>
@@ -93,15 +93,21 @@ GutSoftTrackingEfficiencyAnalyzer::analyze(const edm::Event& iEvent, const edm::
     }
   }
 
-  // association maps
-  reco::RecoToSimCollection recoToSimCollection = associator_->associateRecoToSim(trackCollectionHandle,
-										  trackingParticleCollectionHandle,
-										  &iEvent);
 
-  reco::SimToRecoCollection simToRecoCollection = associator_->associateSimToReco(trackCollectionHandle,
-										  trackingParticleCollectionHandle,
-										  &iEvent);
-
+  reco::RecoToSimCollection recoToSimCollection;
+  reco::SimToRecoCollection simToRecoCollection;
+  if ( trackCollection->size() > 0 ) {
+    
+    // association maps
+    recoToSimCollection = associator_->associateRecoToSim(trackCollectionHandle,
+										    trackingParticleCollectionHandle,
+										    &iEvent);
+    
+    simToRecoCollection = associator_->associateSimToReco(trackCollectionHandle,
+										    trackingParticleCollectionHandle,
+										    &iEvent);
+  }
+  
   // fill reconstructed histograms
   for ( reco::TrackCollection::size_type trackNumber = 0;
 	trackNumber < trackCollection->size();

@@ -5,6 +5,6 @@ include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileServi
 module rsGutSoftTimingAnalyzer = gutSoftTimingAnalyzer from "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/gutSoftTimingAnalyzer.cfi"
 replace rsGutSoftTimingAnalyzer.BaseDirectoryName      = "Timing_rs"
 replace rsGutSoftTimingAnalyzer.SeedInputTag           = roadSearchSeeds
-replace rsGutSoftTimingAnalyzer.CloudInputTag          = rawRoadSearchClouds
+replace rsGutSoftTimingAnalyzer.CloudInputTag          = roadSearchClouds
 replace rsGutSoftTimingAnalyzer.TrackCandidateInputTag = rsTrackCandidates
 replace rsGutSoftTimingAnalyzer.TrackInputTag          = rsWithMaterialTracks

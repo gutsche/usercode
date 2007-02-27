@@ -8,8 +8,8 @@
 // Created:         Thu Feb  8 19:03:24 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/01/22 01:35:10 $
-// $Revision: 1.4 $
+// $Date: 2007/02/16 00:46:13 $
+// $Revision: 1.1 $
 //
 
 #include <string>
@@ -36,6 +36,15 @@
 #include "RecoTracker/RoadMapRecord/interface/RoadMapRecord.h"
 
 #include "TrackingTools/RoadSearchHitAccess/interface/RoadSearchDetIdHelper.h"
+
+#include "DataFormats/SiStripDetId/interface/StripSubdetector.h"
+#include "DataFormats/SiPixelDetId/interface/PixelSubdetector.h"
+#include "DataFormats/SiStripDetId/interface/TIBDetId.h"
+#include "DataFormats/SiStripDetId/interface/TOBDetId.h"
+#include "DataFormats/SiStripDetId/interface/TIDDetId.h"
+#include "DataFormats/SiStripDetId/interface/TECDetId.h"
+#include "DataFormats/SiPixelDetId/interface/PXBDetId.h"
+#include "DataFormats/SiPixelDetId/interface/PXFDetId.h"
 
 GutSoftSeedingEfficiencyAnalyzer::GutSoftSeedingEfficiencyAnalyzer(const edm::ParameterSet& conf) : 
   conf_(conf),
@@ -86,6 +95,8 @@ GutSoftSeedingEfficiencyAnalyzer::GutSoftSeedingEfficiencyAnalyzer(const edm::Pa
   outerSeedHitVector_.setMode(outerSeedHitAccessMode_);
   outerSeedHitVector_.use_rphiRecHits(outerSeedHitAccessUseRPhi_);
   outerSeedHitVector_.use_stereoRecHits(outerSeedHitAccessUseStereo_);
+
+  roadsLabel_ = conf_.getUntrackedParameter<std::string>("RoadsLabel");
 
   // GutSoftHistogramFactory
   histograms_ = edm::Service<GutSoftHistogramFileService>()->getFactory();
@@ -192,10 +203,35 @@ GutSoftSeedingEfficiencyAnalyzer::analyze(const edm::Event& iEvent, const edm::E
       unsigned int hitsInOuterRings = hitsInRings(outerSeedRings_,&(*trackingParticle));
       if ( std::sqrt(trackingParticle->momentum().perp2()) >= trackingParticleMinimumPt_ ) {
 	histograms_->fill("eff_eta_true",trackingParticle->momentum().eta());
+	unsigned int nTP = 0;
+	std::vector<unsigned int> layers = ExtractLayers(&(*trackingParticle),nTP);
+	for ( std::vector<unsigned int>::iterator layer = layers.begin(),
+		layerEnd = layers.end();
+	      layer != layerEnd;
+	      ++layer ) {
+	  histograms_->fill("nHitPerLayerVsEta",trackingParticle->momentum().eta(),*layer);
+	}
+	histograms_->fill("firstLayerVsEta",trackingParticle->momentum().eta(),layers.front());
+	histograms_->fill("lastLayerVsEta",trackingParticle->momentum().eta(),layers.back());
+	histograms_->fill("tip",std::sqrt(trackingParticle->vertex().perp2()));
+	histograms_->fill("lip",std::fabs(trackingParticle->vertex().z()));
+	histograms_->fill("nHitPerTrackingParticleVsEta",trackingParticle->momentum().eta(),trackingParticle->trackPSimHit().size());
+
 	if ( hitsInInnerRings >= trackingParticleHitsInInnerSeedRings_ ) {
 	  if ( hitsInOuterRings >= trackingParticleHitsInOuterSeedRings_ ) {
 	    if ( (hitsInInnerRings+hitsInOuterRings) >= trackingParticleHitsInSeedRings_ ) {
 	      histograms_->fill("eff_eta_rs_true",trackingParticle->momentum().eta());
+	      for ( std::vector<unsigned int>::iterator layer = layers.begin(),
+		      layerEnd = layers.end();
+		    layer != layerEnd;
+		    ++layer ) {
+		histograms_->fill("nHitPerLayerVsEta_rs",trackingParticle->momentum().eta(),*layer);
+	      }
+	      histograms_->fill("firstLayerVsEta_rs",trackingParticle->momentum().eta(),layers.front());
+	      histograms_->fill("lastLayerVsEta_rs",trackingParticle->momentum().eta(),layers.back());
+	      histograms_->fill("tip_rs",std::sqrt(trackingParticle->vertex().perp2()));
+	      histograms_->fill("lip_rs",std::fabs(trackingParticle->vertex().z()));
+	      histograms_->fill("nHitPerTrackingParticleVsEta_rs",trackingParticle->momentum().eta(),trackingParticle->trackPSimHit().size());
 	      // denominator
 	      // loop over tracking particles
 	      // create list of reco hits corresponding to simhits
@@ -223,8 +259,8 @@ GutSoftSeedingEfficiencyAnalyzer::analyze(const edm::Event& iEvent, const edm::E
 			++hit ) {
 		    // compare two hits
 		    if ( seedHit->geographicalId() == (*hit)->geographicalId() ) {
-		      if ( std::abs(seedHit->localPosition().x()-(*hit)->localPosition().x()) < 1E9 ) {
-			if ( std::abs(seedHit->localPosition().y()-(*hit)->localPosition().y()) < 1E9 ) {
+		      if ( std::abs(seedHit->localPosition().x()-(*hit)->localPosition().x()) < 1E-9 ) {
+			if ( std::abs(seedHit->localPosition().y()-(*hit)->localPosition().y()) < 1E-9 ) {
 			  included = true;
 			}
 		      }
@@ -278,7 +314,7 @@ GutSoftSeedingEfficiencyAnalyzer::beginJob(const edm::EventSetup &es)
 
   // get roads
   edm::ESHandle<Roads> roads;
-  es.get<RoadMapRecord>().get(roads);
+  es.get<RoadMapRecord>().get(roadsLabel_, roads);
   roads_ = roads.product();
 
   // fill vectors of inner and outer seed rings from roads
@@ -304,6 +340,25 @@ GutSoftSeedingEfficiencyAnalyzer::beginJob(const edm::EventSetup &es)
   double       eta_low   = -3.;
   double       eta_high  =  3.;
 
+  unsigned int nhit_nbins = 31;
+  double       nhit_low   = -0.5;
+  double       nhit_high  = 30.5;
+
+  // layers: PXB: 1-3, PXF: 4-5, TIB: 6-9, TID: 10-12, TOB: 13-18, TEC: 19-27
+  unsigned int layer_nbins = 28;
+  double       layer_low   = -0.5;
+  double       layer_high  = 27.5;
+
+  // transversal impact parameter
+  unsigned int tip_nbins   = 2000;
+  double tip_low           = 0.0;
+  double tip_high          = 100.0;
+
+  // longitudinal impact parameter
+  unsigned int lip_nbins   = 2000;
+  double lip_low           = 0.0;
+  double lip_high          = 100.0;
+
   // book histogram
   histograms_->bookHistogram("eff_eta_true","TrackingParticle #eta",
 			     directory,eta_nbins,eta_low,eta_high,
@@ -320,6 +375,46 @@ GutSoftSeedingEfficiencyAnalyzer::beginJob(const edm::EventSetup &es)
   histograms_->bookHistogram("eta_multiplicity","Number of Seeds per TrackingParticle in #eta",
 			     directory,eta_nbins,eta_low,eta_high,
 			     "#eta","Seeds");
+
+  histograms_->bookHistogram("nHitPerTrackingParticleVsEta","Number of hits per tracking particle vs. #eta",
+			     directory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     "#eta","n_{Hits}","Events");
+  histograms_->bookHistogram("nHitPerLayerVsEta","Number of hits per layer vs. #eta",
+			     directory,eta_nbins,eta_low,eta_high,layer_nbins,layer_low,layer_high,
+			     "Layer","n_{Hits}","Events");
+  histograms_->bookHistogram("tip","transverse impact parameter",
+			     directory,tip_nbins,tip_low,tip_high,
+			     "tip [cm]","Events");
+  histograms_->bookHistogram("lip","longitudinal impact parameter",
+			     directory,lip_nbins,lip_low,lip_high,
+			     "lip [cm]","Events");
+  histograms_->bookHistogram("firstLayerVsEta","First layer vs. #eta",
+			     directory,eta_nbins,eta_low,eta_high,layer_nbins,layer_low,layer_high,
+			     "Layer","n_{Hits}","Events");
+  histograms_->bookHistogram("lastLayerVsEta","Last layer vs. #eta",
+			     directory,eta_nbins,eta_low,eta_high,layer_nbins,layer_low,layer_high,
+			     "Layer","n_{Hits}","Events");
+
+  histograms_->bookHistogram("nHitPerTrackingParticleVsEta_rs","Number of hits per tracking particle vs. #eta",
+			     directory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     "#eta","n_{Hits}","Events");
+  histograms_->bookHistogram("nHitPerLayerVsEta_rs","Number of hits per layer vs. #eta",
+			     directory,eta_nbins,eta_low,eta_high,layer_nbins,layer_low,layer_high,
+			     "Layer","n_{Hits}","Events");
+  histograms_->bookHistogram("tip_rs","transverse impact parameter",
+			     directory,tip_nbins,tip_low,tip_high,
+			     "tip [cm]","Events");
+  histograms_->bookHistogram("lip_rs","longitudinal impact parameter",
+			     directory,lip_nbins,lip_low,lip_high,
+			     "lip [cm]","Events");
+  histograms_->bookHistogram("firstLayerVsEta_rs","First layer vs. #eta",
+			     directory,eta_nbins,eta_low,eta_high,layer_nbins,layer_low,layer_high,
+			     "Layer","n_{Hits}","Events");
+  histograms_->bookHistogram("lastLayerVsEta_rs","Last layer vs. #eta",
+			     directory,eta_nbins,eta_low,eta_high,layer_nbins,layer_low,layer_high,
+			     "Layer","n_{Hits}","Events");
+  
+
 
 }
 
@@ -500,4 +595,57 @@ GutSoftSeedingEfficiencyAnalyzer::CreateMapTrueHitsToRecHits(TrackerHitAssociato
   }
 
   return result;
+}
+
+std::vector<unsigned int> 
+GutSoftSeedingEfficiencyAnalyzer::ExtractLayers(const TrackingParticle *particle, unsigned int &nTP) {
+  //
+  // extract layers of the simhits and return them in a sorted vector
+  //
+  // layers: PXB: 1-3, PXF: 4-5, TIB: 6-9, TID: 10-12, TOB: 13-18, TEC: 19-27
+  // 
+
+  // return value
+  std::vector<unsigned int> layers;
+  unsigned int offset = 0;
+
+  for ( std::vector<PSimHit>::const_iterator simHit = particle->pSimHit_begin(),
+	  simHitEnd = particle->pSimHit_end();
+	simHit != simHitEnd;
+	++simHit ) {
+
+    ++nTP;
+    
+    DetId id(simHit->detUnitId());
+    if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
+      offset = 5;
+      TIBDetId tibid(id.rawId()); 
+      layers.push_back(tibid.layer()+offset);
+    } else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
+      offset = 12;
+      TOBDetId tobid(id.rawId()); 
+      layers.push_back(tobid.layer()+offset); 
+    } else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
+      offset = 9;
+      TIDDetId tidid(id.rawId()); 
+      layers.push_back(tidid.wheel()+offset); 
+    } else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
+      offset = 18;
+      TECDetId tecid(id.rawId()); 
+      layers.push_back(tecid.wheel()+offset); 
+    } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
+      offset = 0;
+      PXBDetId pxbid(id.rawId()); 
+      layers.push_back(pxbid.layer()+offset); 
+    } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
+      offset = 3;
+      PXFDetId pxfid(id.rawId()); 
+      layers.push_back(pxfid.disk()+offset); 
+    }
+  }
+
+  std::sort(layers.begin(),layers.end());
+  
+  return layers;
+
 }

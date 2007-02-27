@@ -1,0 +1,8 @@
+# include GutSoftHistogramFileService
+include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
+
+#include analyzer
+module roadSearchCloudAnalyzer = gutSoftRoadSearchCloudAnalyzer from "GutSoftAnalyzers/GutSoftRoadSearchCloudAnalyzer/data/gutSoftRoadSearchCloudAnalyzer.cfi"
+replace roadSearchCloudAnalyzer.RoadSearchCloudInputTag = roadSearchClouds
+replace roadSearchCloudAnalyzer.BaseDirectoryName       = "Clouds"
+

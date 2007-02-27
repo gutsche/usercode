@@ -11,8 +11,8 @@
 // Created:         Thu Feb  8 19:03:24 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/01/22 01:35:09 $
-// $Revision: 1.3 $
+// $Date: 2007/02/16 00:46:12 $
+// $Revision: 1.1 $
 //
 
 #include <string>
@@ -73,6 +73,9 @@ class GutSoftSeedingEfficiencyAnalyzer : public edm::EDAnalyzer {
   std::vector<TrackingRecHit*> AllRecHitsOfTrackingParticle(SimHitMap &simHitMap, 
 							    const TrackingParticle *trackingParticle); 
 
+  std::vector<unsigned int> ExtractLayers(const TrackingParticle *particle,
+					  unsigned int &nTP);
+
  private:
   virtual void beginJob(const edm::EventSetup&) ;
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
@@ -112,7 +115,9 @@ class GutSoftSeedingEfficiencyAnalyzer : public edm::EDAnalyzer {
   bool                     outerSeedHitAccessUseRPhi_;
   bool                     outerSeedHitAccessUseStereo_;
 
-  TPEfficiencySelector    trackingParticleSelector_;
+  TPEfficiencySelector     trackingParticleSelector_;
+
+  std::string              roadsLabel_;
 
 };
 

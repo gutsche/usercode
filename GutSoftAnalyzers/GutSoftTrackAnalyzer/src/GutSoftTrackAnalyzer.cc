@@ -8,8 +8,8 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2007/01/22 01:35:07 $
-// $Revision: 1.5 $
+// $Date: 2007/02/05 19:54:42 $
+// $Revision: 1.6 $
 //
 
 #include <string>
@@ -28,7 +28,8 @@
 #include "DataFormats/SiStripDetId/interface/StripSubdetector.h"
 #include "DataFormats/SiPixelDetId/interface/PixelSubdetector.h"
 
-GutSoftTrackAnalyzer::GutSoftTrackAnalyzer(const edm::ParameterSet& iConfig)
+GutSoftTrackAnalyzer::GutSoftTrackAnalyzer(const edm::ParameterSet& iConfig) :
+  trackSelector_(iConfig.getUntrackedParameter<edm::ParameterSet>("TrackCuts"))
 {
 
   trackInputTag_ = iConfig.getUntrackedParameter<edm::InputTag>("TrackInputTag");
@@ -74,72 +75,72 @@ GutSoftTrackAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   for ( reco::TrackCollection::const_iterator track = trackCollection->begin();
 	track != trackCollection->end();
 	++track ) {
-    histograms_->fill("chi2",track->normalizedChi2());
-    histograms_->fill("pt",track->pt());
-    histograms_->fill("nhit",track->found());
-    histograms_->fill("eta",track->momentum().eta());
-    histograms_->fill("phi",track->momentum().phi());
-    histograms_->fill("qoverp",track->qoverp());
-    histograms_->fill("lambda",track->lambda());
-    histograms_->fill("theta",track->theta());
-    histograms_->fill("dZero",track->d0());
-    histograms_->fill("dZ",track->dz());
+    if ( trackSelector_(*track) ) {
+      histograms_->fill("chi2",track->normalizedChi2());
+      histograms_->fill("pt",track->pt());
+      histograms_->fill("nhit",track->found());
+      histograms_->fill("eta",track->momentum().eta());
+      histograms_->fill("phi",track->momentum().phi());
+      histograms_->fill("qoverp",track->qoverp());
+      histograms_->fill("lambda",track->lambda());
+      histograms_->fill("theta",track->theta());
+      histograms_->fill("dZero",track->d0());
+      histograms_->fill("dZ",track->dz());
 
-    // loop over hits in tracks, count
-    unsigned int nHit      = 0;
-    unsigned int nStripHit = 0;
-    unsigned int nPixelHit = 0;
-    unsigned int nTIBHit   = 0;
-    unsigned int nTOBHit   = 0;
-    unsigned int nTIDHit   = 0;
-    unsigned int nTECHit   = 0;
-    unsigned int nPXBHit   = 0;
-    unsigned int nPXFHit   = 0;
+      // loop over hits in tracks, count
+      unsigned int nHit      = 0;
+      unsigned int nStripHit = 0;
+      unsigned int nPixelHit = 0;
+      unsigned int nTIBHit   = 0;
+      unsigned int nTOBHit   = 0;
+      unsigned int nTIDHit   = 0;
+      unsigned int nTECHit   = 0;
+      unsigned int nPXBHit   = 0;
+      unsigned int nPXFHit   = 0;
 
-    for ( trackingRecHit_iterator recHit = track->recHitsBegin();
-	  recHit != track->recHitsEnd();
-	  ++recHit ) {
-      if ( (*recHit)->isValid() ) {
-	++nHit;
-	DetId id((*recHit)->geographicalId());
+      for ( trackingRecHit_iterator recHit = track->recHitsBegin();
+	    recHit != track->recHitsEnd();
+	    ++recHit ) {
+	if ( (*recHit)->isValid() ) {
+	  ++nHit;
+	  DetId id((*recHit)->geographicalId());
 
-	if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
-	  ++nStripHit;
-	  ++nTIBHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
-	  ++nStripHit;
-	  ++nTOBHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
-	  ++nStripHit;
-	  ++nTIDHit;
-	} else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
-	  ++nStripHit;
-	  ++nTECHit;
-	} else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
-	  ++nPixelHit;
-	  ++nPXBHit;
-	} else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
-	  ++nPixelHit;
-	  ++nPXFHit;
+	  if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
+	    ++nStripHit;
+	    ++nTIBHit;
+	  } else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
+	    ++nStripHit;
+	    ++nTOBHit;
+	  } else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
+	    ++nStripHit;
+	    ++nTIDHit;
+	  } else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
+	    ++nStripHit;
+	    ++nTECHit;
+	  } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
+	    ++nPixelHit;
+	    ++nPXBHit;
+	  } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
+	    ++nPixelHit;
+	    ++nPXFHit;
+	  }
 	}
       }
-    }
     
-    histograms_->fill("nHitPerTrackVsEta",track->momentum().eta(),nHit);
-    histograms_->fill("nStripHitPerTrackVsEta",track->momentum().eta(),nStripHit);
-    histograms_->fill("nPixelHitPerTrackVsEta",track->momentum().eta(),nPixelHit);
-    histograms_->fill("nTIBHitPerTrackVsEta",track->momentum().eta(),nTIBHit);
-    histograms_->fill("nTOBHitPerTrackVsEta",track->momentum().eta(),nTOBHit);
-    histograms_->fill("nTIDHitPerTrackVsEta",track->momentum().eta(),nTIDHit);
-    histograms_->fill("nTECHitPerTrackVsEta",track->momentum().eta(),nTECHit);
-    histograms_->fill("nPXBHitPerTrackVsEta",track->momentum().eta(),nPXBHit);
-    histograms_->fill("nPXFHitPerTrackVsEta",track->momentum().eta(),nPXFHit);
-    histograms_->fill("nHitPerTrackVsPhi",track->momentum().phi(),nHit);
+      histograms_->fill("nHitPerTrackVsEta",track->momentum().eta(),nHit);
+      histograms_->fill("nStripHitPerTrackVsEta",track->momentum().eta(),nStripHit);
+      histograms_->fill("nPixelHitPerTrackVsEta",track->momentum().eta(),nPixelHit);
+      histograms_->fill("nTIBHitPerTrackVsEta",track->momentum().eta(),nTIBHit);
+      histograms_->fill("nTOBHitPerTrackVsEta",track->momentum().eta(),nTOBHit);
+      histograms_->fill("nTIDHitPerTrackVsEta",track->momentum().eta(),nTIDHit);
+      histograms_->fill("nTECHitPerTrackVsEta",track->momentum().eta(),nTECHit);
+      histograms_->fill("nPXBHitPerTrackVsEta",track->momentum().eta(),nPXBHit);
+      histograms_->fill("nPXFHitPerTrackVsEta",track->momentum().eta(),nPXFHit);
+      histograms_->fill("nHitPerTrackVsPhi",track->momentum().phi(),nHit);
 
+    }
   }
-
 }
-
 
 void 
 GutSoftTrackAnalyzer::beginJob(const edm::EventSetup&)
@@ -230,38 +231,38 @@ GutSoftTrackAnalyzer::beginJob(const edm::EventSetup&)
 
   histograms_->bookHistogram("nHitPerTrackVsEta","Number of hits per track vs. #eta",
 			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hits}","Events");
   histograms_->bookHistogram("nHitPerTrackCandidateVsEta","Number of hits per track candidate vs. #eta",
 			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hits}","Events");
   histograms_->bookHistogram("nHitPerTrackVsPhi","Number of hits per track vs. #phi",
 			     nTrackDirectory,phi_nbins,phi_low,phi_high,nhit_nbins,nhit_low,nhit_high,
 			     "n_{Hit}","#phi","Events");
 
   histograms_->bookHistogram("nStripHitPerTrackVsEta","Number of strip hits per track vs. #eta",
 			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hits}","Events");
   histograms_->bookHistogram("nPixelHitPerTrackVsEta","Number of pixel hits per track vs. #eta",
 			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hits}","Events");
   histograms_->bookHistogram("nTIBHitPerTrackVsEta","Number of TIB hits per track vs. #eta",
 			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hits}","Events");
   histograms_->bookHistogram("nTOBHitPerTrackVsEta","Number of TOB hits per track vs. #eta",
 			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hits}","Events");
   histograms_->bookHistogram("nTIDHitPerTrackVsEta","Number of TID hits per track vs. #eta",
 			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hits}","Events");
   histograms_->bookHistogram("nTECHitPerTrackVsEta","Number of TEC hits per track vs. #eta",
 			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hits}","Events");
   histograms_->bookHistogram("nPXBHitPerTrackVsEta","Number of PXB hits per track vs. #eta",
 			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hits}","Events");
   histograms_->bookHistogram("nPXFHitPerTrackVsEta","Number of PXF hits per track vs. #eta",
 			     nTrackDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hits}","Events");
 }
 
 void 
