@@ -1,7 +1,9 @@
 <use name=DataFormats/METReco>
+<use name=DataFormats/MuonReco>
 <use name=CMS1/Base>
 <export>
    <lib name=CMS1MET>
-   <use name=DataFormats/METReco>
-</export>
+  <use name=DataFormats/METReco>
+  <use name=DataFormats/MuonReco>
+ </export>
 # <Flags CXXFLAGS=-g>
