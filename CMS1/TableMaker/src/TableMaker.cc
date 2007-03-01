@@ -9,8 +9,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/02/22 23:10:54 $
-// $Revision: 1.1 $
+// $Date: 2007/03/01 16:15:02 $
+// $Revision: 1.2 $
 //
 
 #include <vector>
@@ -19,6 +19,7 @@
 #include <iomanip>
 
 #include "CMS1/TableMaker/interface/TableMaker.h"
+#include "CMS1/Base/interface/Dump.h"
 
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
@@ -50,6 +51,11 @@ cms1::TableMaker::TableMaker(const edm::ParameterSet& iConfig)
   looseMuon_.pt_min       = iConfig.getUntrackedParameter<double>("LooseMuonPt");
   looseMuon_.eta_min      = iConfig.getUntrackedParameter<double>("LooseMuonMinEta");
   looseMuon_.eta_max      = iConfig.getUntrackedParameter<double>("LooseMuonMaxEta");
+
+  // all muon cuts
+  allMuon_.pt_min       = iConfig.getUntrackedParameter<double>("AllMuonPt");
+  allMuon_.eta_min      = iConfig.getUntrackedParameter<double>("AllMuonMinEta");
+  allMuon_.eta_max      = iConfig.getUntrackedParameter<double>("AllMuonMaxEta");
 
   // tight electron cuts
   tightElectron_.pt_min   = iConfig.getUntrackedParameter<double>("TightElectronPt");
@@ -136,6 +142,7 @@ cms1::TableMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   // get vector of muons
   std::vector<const reco::Muon*> tightMuons = muons_.getMuons(Muons::TightGlobalMuons,tightMuon_);
   std::vector<const reco::Muon*> looseMuons = muons_.getMuons(Muons::LooseGlobalMuons,looseMuon_);
+  std::vector<const reco::Muon*> allMuons = muons_.getMuons(Muons::AllGlobalMuons,allMuon_);
 
   // get vector of electrons
   std::vector<const reco::Electron*> tightElectrons = electrons_.getElectrons(Electrons::TightGlobalElectrons,tightElectron_);
@@ -153,6 +160,70 @@ cms1::TableMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   //    edm::LogVerbatim("CMS1TableMaker") << looseElectrons.size() << " loose global electron(s) found!";
   //    edm::LogVerbatim("CMS1TableMaker") << jets.size() << " global jet(s) found!";
   //    edm::LogVerbatim("CMS1TableMaker") << metVector.size() << " global MET found!";
+
+
+//	cms1::Dump::event();
+//	cms1::Dump::candidates("AllGlobalMuons", allMuons );
+//	cms1::Dump::candidates("LooseGlobalElectrons", looseElectrons );
+//	cms1::Dump::candidates("GlobalJets", jets );
+
+#ifndef NOTDEF
+
+	std::cout << "------------------------------------------------------------------------" << std::endl; 
+	std::cout << "Dump of Event, " 
+		<< " Ne = " << looseElectrons.size() 
+		<< " Nmu = " << allMuons.size() 
+		<< " Nj = " << jets.size()		 
+		<< " MET = " << metVector.size()		 
+	<< std::endl;	
+
+  for ( std::vector<const reco::Electron*>::iterator i = looseElectrons.begin(), ie = looseElectrons.end();
+		i != ie;
+		++i ) {
+			const reco::Candidate* cp = *i;
+			std::cout 
+				<< "Electron " 
+			<< "Pt = " << cp->pt() 
+			<< ", Eta = " << cp->eta() 
+			<< ", Phi = " << cp->phi() 
+			<< std::endl; 
+	}
+		
+	for ( std::vector<const reco::Muon*>::iterator i = allMuons.begin(), ie = allMuons.end();
+		i != ie;
+		++i ) {
+			const reco::Candidate* cp = *i;
+			std::cout 
+			<< "Muon "  
+			<< "Pt = " << cp->pt() 
+			<< ", Eta = " << cp->eta() 
+			<< ", Phi = " << cp->phi() 
+			<< std::endl; 
+	}
+	for ( std::vector<const reco::CaloJet*>::iterator i = jets.begin(), ie = jets.end();
+		i != ie;
+		++i ) {
+			const reco::Candidate* cp = *i;
+			std::cout 
+					<< "Jet " 
+					<< "Pt = " << cp->pt() 
+					<< ", Eta = " << cp->eta() 
+					<< ", Phi = " << cp->phi() 
+					<< std::endl; 
+	}
+	for ( std::vector<const reco::CaloMET*>::iterator i = metVector.begin(), ie = metVector.end();
+			i != ie;
+			++i ) {
+		const reco::Candidate* cp = *i;
+		std::cout 
+	   		<< "MET "  
+				<< "Pt = " << cp->pt() 
+				<< ", Eta = " << cp->eta() 
+				<< ", Phi = " << cp->phi() 
+				<< std::endl; 
+	}
+
+#endif
 
   // logic
   std::vector<std::pair<const reco::Electron*, const reco::Electron*> > takenEE;
@@ -334,6 +405,8 @@ cms1::TableMaker::beginJob(const edm::EventSetup& setup)
 
 void 
 cms1::TableMaker::endJob() {
+
+  std::cout << "Muons" << countedMuMu1Jets_ << ", "  << countedMuMu2Jets_ << ", "  << countedMuMu3Jets_ << ", "  << std::endl;
 
   ostringstream output;
 
