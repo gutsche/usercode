@@ -7,11 +7,12 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/02/16 11:53:33 $
-// $Revision: 1.2 $
+// $Author: gutsche $
+// $Date: 2007/02/22 23:10:52 $
+// $Revision: 1.1 $
 //
 
+#include <iostream>
 #include "CMS1/MET/interface/MET.h"
 
 std::vector<const reco::CaloMET*> cms1::MET::getMET(const METType METType,
@@ -29,9 +30,13 @@ std::vector<const reco::CaloMET*> cms1::MET::getMET(const METType METType,
 	std::cout << "ERROR: global MET collection is not set" << std::endl;
 	return output_list;
       }
-      const reco::CaloMET MET = data_.globalMETCollection->front();
 
-      if ( cuts.testCandidate(MET) ) output_list.push_back(&MET);
+      if ( data_.globalMETCollection->size() > 0 ) {
+
+	const reco::CaloMET *MET = &(*(data_.globalMETCollection->begin()));
+
+	if ( cuts.testCandidate(*MET) ) output_list.push_back(MET);
+      }
       
       // At this point the output_list has been filled with MET passing the simple cuts
       // In general, we will want to add more cuts.  This could go here.  It can be
