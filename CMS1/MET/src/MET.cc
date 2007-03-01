@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/02/22 23:10:52 $
-// $Revision: 1.1 $
+// $Date: 2007/03/01 16:04:22 $
+// $Revision: 1.2 $
 //
 
 #include <iostream>
@@ -54,3 +54,28 @@ std::vector<const reco::CaloMET*> cms1::MET::getMET(const METType METType,
   }
   return output_list;
 }
+
+// correct MET energies for Muons
+void cms1::MET::correctMuons(std::vector<const reco::Muon*> *allMuons) {
+//		std::cout << "We're correctiong METs for Muons here" << std::endl;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
