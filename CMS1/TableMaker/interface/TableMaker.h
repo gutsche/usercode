@@ -12,16 +12,9 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: latb $
-// $Date: 2007/03/01 19:12:26 $
-// $Revision: 1.2 $
+// $Date: 2007/03/01 21:09:56 $
+// $Revision: 1.3 $
 //
-
-#include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/Framework/interface/EDAnalyzer.h"
-#include "FWCore/Framework/interface/Event.h"
-#include "FWCore/Framework/interface/ESHandle.h"
-#include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "FWCore/ParameterSet/interface/InputTag.h"
 
 #include "CMS1/Muons/interface/Muons.h"
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -32,21 +25,13 @@
 
 namespace cms1 {
 
-  class TableMaker : public edm::EDAnalyzer {
+  class TableMaker {
   public:
-    explicit TableMaker(const edm::ParameterSet&);
-    ~TableMaker();
+    void analyze();
+    void beginJob();
+    void endJob();
 
-  private:
-    virtual void beginJob(const edm::EventSetup& setup) ;
-    virtual void analyze(const edm::Event&, const edm::EventSetup&);
-    virtual void endJob() ;
-    
-    edm::InputTag globalMuonInputTag_;
-    edm::InputTag globalElectronInputTag_;
-    edm::InputTag globalJetInputTag_;
-    edm::InputTag globalMETInputTag_;
-    
+  protected:
     Cuts          tightMuon_;
     Cuts          looseMuon_;
     Cuts          allMuon_;

@@ -9,8 +9,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: latb $
-// $Date: 2007/03/01 19:07:17 $
-// $Revision: 1.3 $
+// $Date: 2007/03/01 21:09:56 $
+// $Revision: 1.4 $
 //
 
 #include <vector>
@@ -22,8 +22,6 @@
 #include "CMS1/TableMaker/interface/TableMaker.h"
 #include "CMS1/Base/interface/Dump.h"
 
-#include "FWCore/MessageLogger/interface/MessageLogger.h"
-
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/EgammaCandidates/interface/Electron.h"
 #include "DataFormats/EgammaCandidates/interface/ElectronFwd.h"
@@ -33,7 +31,6 @@
 #include "DataFormats/METReco/interface/CaloMETCollection.h"
 
 #include "DataFormats/Math/interface/LorentzVector.h"
-
 
 // correct MET energies for Muons
 void correctMETmuons(std::vector<const reco::Muon*> *m, double& et, double& phi) {
@@ -55,116 +52,11 @@ void correctMETmuons(std::vector<const reco::Muon*> *m, double& et, double& phi)
 		phi = std::atan2(mety, metx);
 }
 
-cms1::TableMaker::TableMaker(const edm::ParameterSet& iConfig)
-{
-
-  // input tags
-  globalMuonInputTag_     = iConfig.getUntrackedParameter<edm::InputTag>("GlobalMuonInputTag");
-  globalElectronInputTag_ = iConfig.getUntrackedParameter<edm::InputTag>("GlobalElectronInputTag");
-  globalJetInputTag_      = iConfig.getUntrackedParameter<edm::InputTag>("GlobalJetInputTag");
-  globalMETInputTag_      = iConfig.getUntrackedParameter<edm::InputTag>("GlobalMETInputTag");
-
-  // tight muon cuts
-  tightMuon_.pt_min       = iConfig.getUntrackedParameter<double>("TightMuonPt");
-  tightMuon_.eta_min      = iConfig.getUntrackedParameter<double>("TightMuonMinEta");
-  tightMuon_.eta_max      = iConfig.getUntrackedParameter<double>("TightMuonMaxEta");
-
-  // loose muon cuts
-  looseMuon_.pt_min       = iConfig.getUntrackedParameter<double>("LooseMuonPt");
-  looseMuon_.eta_min      = iConfig.getUntrackedParameter<double>("LooseMuonMinEta");
-  looseMuon_.eta_max      = iConfig.getUntrackedParameter<double>("LooseMuonMaxEta");
-
-  // all muon cuts
-  allMuon_.pt_min       = iConfig.getUntrackedParameter<double>("AllMuonPt");
-  allMuon_.eta_min      = iConfig.getUntrackedParameter<double>("AllMuonMinEta");
-  allMuon_.eta_max      = iConfig.getUntrackedParameter<double>("AllMuonMaxEta");
-
-  // tight electron cuts
-  tightElectron_.pt_min   = iConfig.getUntrackedParameter<double>("TightElectronPt");
-  tightElectron_.eta_min  = iConfig.getUntrackedParameter<double>("TightElectronMinEta");
-  tightElectron_.eta_max  = iConfig.getUntrackedParameter<double>("TightElectronMaxEta");
-
-  // loose electron cuts
-  looseElectron_.pt_min   = iConfig.getUntrackedParameter<double>("LooseElectronPt");
-  looseElectron_.eta_min  = iConfig.getUntrackedParameter<double>("LooseElectronMinEta");
-  looseElectron_.eta_max  = iConfig.getUntrackedParameter<double>("LooseElectronMaxEta");
-
-  // jet cuts
-  jet_.pt_min             = iConfig.getUntrackedParameter<double>("JetPt");
-  jet_.eta_min            = iConfig.getUntrackedParameter<double>("JetMinEta");
-  jet_.eta_max            = iConfig.getUntrackedParameter<double>("JetMaxEta");
-
-  // MET cuts
-  metCut_.pt_min             = iConfig.getUntrackedParameter<double>("MET");
-
-  // MET cuts around Z
-  metCutAroundZ_.pt_min      = iConfig.getUntrackedParameter<double>("METAroundZ");
-  ZRangeMinMass_             = iConfig.getUntrackedParameter<double>("ZRangeMinMass");
-  ZRangeMaxMass_             = iConfig.getUntrackedParameter<double>("ZRangeMaxMass");
-
-  // cut object that does not cut
-  noCut_.pt_min = 0;
-	noCut_.eta_min = -10;
-	noCut_.eta_max = 10;
-
-}
-
-
-cms1::TableMaker::~TableMaker()
-{
- 
-}
-
-
 void
-cms1::TableMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+cms1::TableMaker::analyze()
 {
 
   ++events_;
-
-  // get muon collection from the event
-  const reco::MuonCollection *muonCollection = 0;
-  edm::Handle<reco::MuonCollection> muonCollectionHandle;
-  iEvent.getByLabel(globalMuonInputTag_,muonCollectionHandle);
-  muonCollection = muonCollectionHandle.product();
-
-  // get electron collection from the event
-  const reco::ElectronCollection *electronCollection = 0;
-  edm::Handle<reco::ElectronCollection> electronCollectionHandle;
-  iEvent.getByLabel(globalElectronInputTag_,electronCollectionHandle);
-  electronCollection = electronCollectionHandle.product();
-
-  // get jet collection from the event
-  const reco::CaloJetCollection *jetCollection = 0;
-  edm::Handle<reco::CaloJetCollection> jetCollectionHandle;
-  iEvent.getByLabel(globalJetInputTag_,jetCollectionHandle);
-  jetCollection = jetCollectionHandle.product();
-
-  // get MET collection from the event
-  const reco::CaloMETCollection *METCollection = 0;
-  edm::Handle<reco::CaloMETCollection> METCollectionHandle;
-  iEvent.getByLabel(globalMETInputTag_,METCollectionHandle);
-  METCollection = METCollectionHandle.product();
-   
-  // pass the collection pointer of the collection that we 
-  // want to use to the MuonData object.
-  // This needs to be done for EVERY EVENT
-  muons_.getData().globalMuonCollection = muonCollection;
-
-  // pass the collection pointer of the collection that we 
-  // want to use to the ElectronData object.
-  // This needs to be done for EVERY EVENT
-  electrons_.getData().globalElectronCollection = electronCollection;
-
-  // pass the collection pointer of the collection that we 
-  // want to use to the JetData object.
-  // This needs to be done for EVERY EVENT
-  jets_.getData().globalJetCollection = jetCollection;
-
-  // pass the collection pointer of the collection that we 
-  // want to use to the METData object.
-  // This needs to be done for EVERY EVENT
-  MET_.getData().globalMETCollection = METCollection;
    
   // get vector of muons
   std::vector<const reco::Muon*> tightMuons = muons_.getMuons(Muons::TightGlobalMuons,tightMuon_);
@@ -414,7 +306,7 @@ cms1::TableMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
 
 void 
-cms1::TableMaker::beginJob(const edm::EventSetup& setup)
+cms1::TableMaker::beginJob()
 {
 
   countedEE0Jets_ = 0;
@@ -479,6 +371,6 @@ cms1::TableMaker::endJob() {
 	 << std::setw(9) << countedMuMu4Jets_ << " |\n" ;
   output << "-------------------------------------------------------------------------\n";
 
-  edm::LogVerbatim("CMS1TableMaker") << output.str(); 
+   std::cout << output.str() << std::endl; 
 
 }

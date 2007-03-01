@@ -1,4 +1,4 @@
-module tableMaker = TableMaker
+module tableMaker = TableMakerFW
 {
   untracked InputTag GlobalMuonInputTag     = globalMuons
   untracked InputTag GlobalElectronInputTag = siStripElectronToTrackAssociator
