@@ -12,7 +12,7 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/01/29 18:15:27 $
+// $Date: 2007/02/22 23:10:54 $
 // $Revision: 1.1 $
 //
 
@@ -49,6 +49,7 @@ namespace cms1 {
     
     Cuts          tightMuon_;
     Cuts          looseMuon_;
+    Cuts          allMuon_;
 
     Cuts          tightElectron_;
     Cuts          looseElectron_;

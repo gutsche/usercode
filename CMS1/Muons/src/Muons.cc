@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/02/16 11:53:33 $
-// $Revision: 1.2 $
+// $Author: gutsche $
+// $Date: 2007/02/22 23:10:53 $
+// $Revision: 1.3 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
@@ -47,25 +47,41 @@ std::vector<const reco::Muon*> cms1::Muons::getMuons(const MuonType muonType,
 
 	}
       break;
-    case LooseGlobalMuons:
-	{
-	   if (! data_.globalMuonCollection) {
-	      std::cout << "ERROR: global muon collection is not set" << std::endl;
-	      return output_list;
-	   }
-	   for ( std::vector<reco::Muon>::const_iterator muon = data_.globalMuonCollection->begin();
-		 muon != data_.globalMuonCollection->end();
-		 ++muon ) 
-	     {
-		// Here we make simple cuts in a standard way
-		if ( cuts.testCandidate(*muon) ) output_list.push_back(&*muon);
-	     }
-      
-	}
-      break;
+	    case LooseGlobalMuons:
+		{
+		   if (! data_.globalMuonCollection) {
+		      std::cout << "ERROR: global muon collection is not set" << std::endl;
+		      return output_list;
+		   }
+		   for ( std::vector<reco::Muon>::const_iterator muon = data_.globalMuonCollection->begin();
+			 muon != data_.globalMuonCollection->end();
+			 ++muon ) 
+		     {
+			// Here we make simple cuts in a standard way
+			if ( cuts.testCandidate(*muon) ) output_list.push_back(&*muon);
+		     }
+
+		}
+	      break;
+		    case AllGlobalMuons:
+			{
+			   if (! data_.globalMuonCollection) {
+			      std::cout << "ERROR: global muon collection is not set" << std::endl;
+			      return output_list;
+			   }
+			   for ( std::vector<reco::Muon>::const_iterator muon = data_.globalMuonCollection->begin();
+				 muon != data_.globalMuonCollection->end();
+				 ++muon ) 
+			     {
+				// Here we make simple cuts in a standard way
+				if ( cuts.testCandidate(*muon) ) output_list.push_back(&*muon);
+			     }
+
+			}
+		      break;
       // You get here if you have requested a "muonType" that is not implemented
     default:
-      std::cout << "Unkown or not implemented type" << std::endl;
+      std::cout << "Muons::getMuons - Unkown or not implemented type" << std::endl;
    }
    return output_list;
 }

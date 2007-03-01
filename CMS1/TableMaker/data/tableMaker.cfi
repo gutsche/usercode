@@ -11,6 +11,9 @@ module tableMaker = TableMaker
   untracked double LooseMuonPt          = 19
   untracked double LooseMuonMinEta      = -2.5
   untracked double LooseMuonMaxEta      =  2.5
+  untracked double AllMuonPt          = 10
+  untracked double AllMuonMinEta      = -2.5
+  untracked double AllMuonMaxEta      =  2.5
 
   untracked double TightElectronPt      = 20
   untracked double TightElectronMinEta  = -2.4
