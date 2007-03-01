@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: gutsche $
-// $Date: 2007/02/22 23:10:52 $
-// $Revision: 1.1 $
+// $Author: latb $
+// $Date: 2007/03/01 19:09:22 $
+// $Revision: 1.2 $
 //
 
 #include "DataFormats/METReco/interface/CaloMETCollection.h"
@@ -42,9 +42,6 @@ namespace cms1 {
     const METData& getData() const { return data_; } // gets data_ back
     METData& getData() { return data_; }            // gaets data_ back
 
-// correct MET energies for Muons
-	void correctMuons(std::vector<const reco::Muon*> *allMuons);
-    
     // This is the function that does all the work
     std::vector<const reco::CaloMET*> getMET (const METType, 
 					      const Cuts&,

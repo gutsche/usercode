@@ -11,9 +11,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: gutsche $
-// $Date: 2007/02/22 23:10:54 $
-// $Revision: 1.1 $
+// $Author: latb $
+// $Date: 2007/03/01 19:12:26 $
+// $Revision: 1.2 $
 //
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -58,6 +58,8 @@ namespace cms1 {
 
     Cuts          metCut_;
     Cuts          metCutAroundZ_;
+
+    Cuts          noCut_;
 
     double        ZRangeMinMass_;
     double        ZRangeMaxMass_;

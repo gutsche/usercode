@@ -8,12 +8,13 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: gutsche $
-// $Date: 2007/03/01 16:15:02 $
-// $Revision: 1.2 $
+// $Author: latb $
+// $Date: 2007/03/01 19:07:17 $
+// $Revision: 1.3 $
 //
 
 #include <vector>
+#include <cmath>
 #include <utility>
 #include <sstream>
 #include <iomanip>
@@ -32,6 +33,27 @@
 #include "DataFormats/METReco/interface/CaloMETCollection.h"
 
 #include "DataFormats/Math/interface/LorentzVector.h"
+
+
+// correct MET energies for Muons
+void correctMETmuons(std::vector<const reco::Muon*> *m, double& et, double& phi) {
+//		std::cout << "We're correctiong METs for Muons here" << std::endl;
+// ACHTUNG: we should also correct for the energy MIP
+
+   	double metx =  et*std::cos(phi);
+		double mety =  et*std::sin(phi);
+		for ( std::vector<const reco::Muon*>::iterator i = m->begin(), ie = m->end();
+			i != ie;
+			++i ) {
+				const reco::Muon* cp = *i;
+				double pt0 = cp->pt(); 
+				double phi0 = cp->phi(); 
+				metx -= pt0*std::cos(phi0);
+				mety -= pt0*std::sin(phi0);
+		}
+		et = std::sqrt(metx*metx+mety*mety);
+		phi = std::atan2(mety, metx);
+}
 
 cms1::TableMaker::TableMaker(const edm::ParameterSet& iConfig)
 {
@@ -79,6 +101,11 @@ cms1::TableMaker::TableMaker(const edm::ParameterSet& iConfig)
   metCutAroundZ_.pt_min      = iConfig.getUntrackedParameter<double>("METAroundZ");
   ZRangeMinMass_             = iConfig.getUntrackedParameter<double>("ZRangeMinMass");
   ZRangeMaxMass_             = iConfig.getUntrackedParameter<double>("ZRangeMaxMass");
+
+  // cut object that does not cut
+  noCut_.pt_min = 0;
+	noCut_.eta_min = -10;
+	noCut_.eta_max = 10;
 
 }
 
@@ -169,12 +196,24 @@ cms1::TableMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
 #ifndef NOTDEF
 
+// Dump Event contents
 	std::cout << "------------------------------------------------------------------------" << std::endl; 
+
+  // get vector of MET without cut
+  std::vector<const reco::CaloMET*> metVector0 = MET_.getMET(MET::GlobalMET,noCut_);
+	double met = (*(metVector0.begin()))->pt();
+	double mephi = (*(metVector0.begin()))->phi();
+
+// ACHTUNG ACHTUNG, here we change met and mephi in situ!!
+	std::cout << "MET = " << met << ", ME Phi = " << mephi << std::endl; 
+	correctMETmuons(&allMuons, met, mephi);
+	std::cout << "MET = " << met << ", ME Phi = " << mephi << std::endl; 
+
 	std::cout << "Dump of Event, " 
 		<< " Ne = " << looseElectrons.size() 
 		<< " Nmu = " << allMuons.size() 
 		<< " Nj = " << jets.size()		 
-		<< " MET = " << metVector.size()		 
+		<< " MET = " << metVector0.size()		 
 	<< std::endl;	
 
   for ( std::vector<const reco::Electron*>::iterator i = looseElectrons.begin(), ie = looseElectrons.end();
@@ -211,7 +250,7 @@ cms1::TableMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 					<< ", Phi = " << cp->phi() 
 					<< std::endl; 
 	}
-	for ( std::vector<const reco::CaloMET*>::iterator i = metVector.begin(), ie = metVector.end();
+	for ( std::vector<const reco::CaloMET*>::iterator i = metVector0.begin(), ie = metVector0.end();
 			i != ie;
 			++i ) {
 		const reco::Candidate* cp = *i;

@@ -26,10 +26,10 @@ module tableMaker = TableMaker
   untracked double JetMinEta            = -2.5
   untracked double JetMaxEta            =  2.5
 
-  untracked double MET                  = 20
+  untracked double MET                  = 0
 
   # increase MET cut around Z
-  untracked double METAroundZ           = 40
+  untracked double METAroundZ           = 0
   untracked double ZRangeMinMass        = 80
   untracked double ZRangeMaxMass        = 100
 

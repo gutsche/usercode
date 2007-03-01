@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
-// $Author: gutsche $
-// $Date: 2007/03/01 16:04:22 $
-// $Revision: 1.2 $
+// $Author: latb $
+// $Date: 2007/03/01 19:06:59 $
+// $Revision: 1.3 $
 //
 
 #include <iostream>
@@ -55,11 +55,6 @@ std::vector<const reco::CaloMET*> cms1::MET::getMET(const METType METType,
   return output_list;
 }
 
-// correct MET energies for Muons
-void cms1::MET::correctMuons(std::vector<const reco::Muon*> *allMuons) {
-//		std::cout << "We're correctiong METs for Muons here" << std::endl;
-
-}
 
 
 
