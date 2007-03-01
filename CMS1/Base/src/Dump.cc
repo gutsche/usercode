@@ -19,7 +19,7 @@ namespace cms1 {
 		for ( std::vector<const reco::Candidate*>::iterator i = c.begin(), ie = c.end();
 			i != ie;
 			++i ) {
-				reco::Candidate* cp = *i;
+				const reco::Candidate* cp = *i;
   			std::cout << cp->pt() << cp->eta() << cp->phi() << std::endl; 
 			}
 		}
