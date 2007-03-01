@@ -9,7 +9,7 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/01/29 18:15:27 $
+// $Date: 2007/02/22 23:10:54 $
 // $Revision: 1.1 $
 //
 
@@ -160,6 +160,7 @@ cms1::TableMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   std::vector<std::pair<const reco::Muon*, const reco::Electron*> >     takenMuE;
   std::vector<std::pair<const reco::Muon*, const reco::Muon*> >         takenMuMu;
 
+
   // loop over tight electrons
   for ( std::vector<const reco::Electron*>::iterator tightElectron = tightElectrons.begin(),
 	  electronEnd = tightElectrons.end();
@@ -178,8 +179,8 @@ cms1::TableMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 		passedPairEnd = takenEE.end();
 	      passedPair != passedPairEnd;
 	      ++passedPair ) {
-	  if ( (passedPair->first == *tightElectron) &&
-	       (passedPair->second == *looseElectron) ) {
+	  if ( (passedPair->second == *tightElectron) &&
+	       (passedPair->first == *looseElectron) ) {
 	    passed = true;
 	    break;
 	  }
@@ -192,7 +193,7 @@ cms1::TableMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	    // take first MET cancicate
 	    math::XYZTLorentzVector inv = (*tightElectron)->p4() + (*looseElectron)->p4();
 	    if ( inv.mass() >= ZRangeMinMass_ && inv.mass() <= ZRangeMaxMass_ ) {
-	      if ( metCutAroundZ_.testCandidate(*(metVector.front())) ) {
+	      if ( metCutAroundZ_.testCandidate(**(metVector.begin())) ) {
 		// passed
 		takenEE.push_back(std::make_pair(*tightElectron,*looseElectron));
 	      }
@@ -208,24 +209,9 @@ cms1::TableMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	    MuonEnd = looseMuons.end();
 	  looseMuon != MuonEnd;
 	  ++looseMuon ) {
-      // check if pair already passed cuts
-      bool passed = false;
-      for ( std::vector<std::pair<const reco::Electron*, const reco::Muon*> >::iterator passedPair = takenEMu.begin(),
-	      passedPairEnd = takenEMu.end();
-	    passedPair != passedPairEnd;
-	    ++passedPair ) {
-	if ( (passedPair->first == *tightElectron) &&
-	     (passedPair->second == *looseMuon) ) {
-	  passed = true;
-	  break;
-	}
-      }
-      // continue if pair hasn't passed cuts yet
-      if ( !passed ) {
-	// check if candidate passes MET cut
-	if ( metVector.size() > 0 ) {
-	  takenEMu.push_back(std::make_pair(*tightElectron,*looseMuon));
-	}
+      // check if candidate passes MET cut
+      if ( metVector.size() > 0 ) {
+	takenEMu.push_back(std::make_pair(*tightElectron,*looseMuon));
       }
     }
   }
@@ -240,24 +226,9 @@ cms1::TableMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	    electronEnd = looseElectrons.end();
 	  looseElectron != electronEnd;
 	  ++looseElectron ) {
-      // check if pair already passed cuts
-      bool passed = false;
-      for ( std::vector<std::pair<const reco::Muon*, const reco::Electron*> >::iterator passedPair = takenMuE.begin(),
-	      passedPairEnd = takenMuE.end();
-	    passedPair != passedPairEnd;
-	    ++passedPair ) {
-	if ( (passedPair->first == *tightMuon) &&
-	     (passedPair->second == *looseElectron) ) {
-	  passed = true;
-	  break;
-	}
-      }
-      // continue if pair hasn't passed cuts yet
-      if ( !passed ) {
-	// check if candidate passes MET cut
-	if ( metVector.size() > 0 ) {
-	  takenMuE.push_back(std::make_pair(*tightMuon,*looseElectron));
-	}
+      // check if candidate passes MET cut
+      if ( metVector.size() > 0 ) {
+	takenMuE.push_back(std::make_pair(*tightMuon,*looseElectron));
       }
     }
     // loop over loose muons
@@ -274,8 +245,8 @@ cms1::TableMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 		passedPairEnd = takenMuMu.end();
 	      passedPair != passedPairEnd;
 	      ++passedPair ) {
-	  if ( (passedPair->first == *tightMuon) &&
-	       (passedPair->second == *looseMuon) ) {
+	  if ( (passedPair->second == *tightMuon) &&
+	       (passedPair->first == *looseMuon) ) {
 	    passed = true;
 	    break;
 	  }
@@ -288,7 +259,7 @@ cms1::TableMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	    // take first MET cancicate
 	    math::XYZTLorentzVector inv = (*tightMuon)->p4() + (*looseMuon)->p4();
 	    if ( inv.mass() >= ZRangeMinMass_ && inv.mass() <= ZRangeMaxMass_ ) {
-	      if ( metCutAroundZ_.testCandidate(*(metVector.front())) ) {
+	      if ( metCutAroundZ_.testCandidate(**(metVector.begin())) ) {
 		// passed
 		takenMuMu.push_back(std::make_pair(*tightMuon,*looseMuon));
 	      }
