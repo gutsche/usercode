@@ -1,0 +1,3 @@
+include "IOMC/GeneratorInterface/data/PythiaSourceMinBias.cfi"
+replace PythiaSource.pythiaHepMCVerbosity = false
+replace PythiaSource.pythiaPylistVerbosity = 0

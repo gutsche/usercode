@@ -21,6 +21,9 @@ include "GutSoftConfigurations/TrueInformation/trueInformation.cff"
 # object dumper
 #include "GutSoftConfigurations/TrackObjects/dumpObjects.cff"
 
+# include tracker local reconstruction
+include "RecoLocalTracker/Configuration/data/RecoLocalTracker.cff"
+
 # include track reconstruction
 include "RecoTracker/Configuration/data/RecoTracker.cff"
 replace roadSearchSeeds.MergeSeedsCompareLast = 25
@@ -50,6 +53,7 @@ path pTR = {
 }
 
 path pR = {
+  trackerlocalreco,
   ckftracks,
   rstracks
 #  dumpObjects

@@ -21,6 +21,9 @@ include "GutSoftConfigurations/TrueInformation/trueInformation.cff"
 # object dumper
 #include "GutSoftConfigurations/TrackObjects/dumpObjects.cff"
 
+# include tracker local reconstruction
+include "RecoLocalTracker/Configuration/data/RecoLocalTracker.cff"
+
 # include track reconstruction
 include "RecoTracker/Configuration/data/RecoTracker.cff"
 replace roadSearchSeeds.InnerSeedRecHitAccessMode = "RPHI"
@@ -37,7 +40,7 @@ include "GutSoftConfigurations/TrackObjects/trackObjects.cff"
 include "GutSoftConfigurations/TrackObjects/trackEfficiencyObjects.cff"
 
 # global muon analyzer
-include "GutSoftAnalyzers/GutSoftGlobalMuonAnalyzer/data/gutSoftGlobalMuonAnalyzer.cff"
+#include "GutSoftAnalyzers/GutSoftGlobalMuonAnalyzer/data/gutSoftGlobalMuonAnalyzer.cff"
 
 # timing analyzer
 include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/ckfGutSoftTimingAnalyzer.cff"
@@ -55,6 +58,7 @@ path pTR = {
 }
 
 path pR = {
+  trackerlocalreco,
   ckftracks,
   rstracks
 #  dumpObjects
