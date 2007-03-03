@@ -10,12 +10,13 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/02/16 11:53:32 $
-// $Revision: 1.2 $
+// $Author: gutsche $
+// $Date: 2007/02/22 23:10:50 $
+// $Revision: 1.1 $
 //
 
 #include "DataFormats/EgammaCandidates/interface/Electron.h"
+#include "DataFormats/EgammaCandidates/interface/SiStripElectron.h"
 
 #include "CMS1/Base/interface/Cuts.h"
 
@@ -27,7 +28,7 @@ namespace cms1 {
       ElectronData(): globalElectronCollection(0)
       {}
       
-      const std::vector<reco::Electron>*              globalElectronCollection;
+      const std::vector<reco::SiStripElectron>*              globalElectronCollection;
     };
      
     // These are "types of electrons" that we define.  We can add as amany as we want as
@@ -42,7 +43,7 @@ namespace cms1 {
     ElectronData& getData() { return data_; }            // gaets data_ back
     
     // This is the function that does all the work
-    std::vector<const reco::Electron*> getElectrons (const ElectronType, 
+    std::vector<const reco::SiStripElectron*> getElectrons (const ElectronType, 
 						     const Cuts&,
 						     bool isolated = true);
       

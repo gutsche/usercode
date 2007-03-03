@@ -1,7 +1,7 @@
 module tableMaker = TableMakerFW
 {
   untracked InputTag GlobalMuonInputTag     = globalMuons
-  untracked InputTag GlobalElectronInputTag = siStripElectronToTrackAssociator
+  untracked InputTag GlobalElectronInputTag = siStripElectrons
   untracked InputTag GlobalJetInputTag      = midPointCone5CaloJets
   untracked InputTag GlobalMETInputTag      = met
 

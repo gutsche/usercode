@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/03/01 21:09:56 $
-// $Revision: 1.4 $
+// $Author: dmytro $
+// $Date: 2007/03/01 21:25:08 $
+// $Revision: 1.5 $
 //
 
 #include <vector>
@@ -64,8 +64,8 @@ cms1::TableMaker::analyze()
   std::vector<const reco::Muon*> allMuons = muons_.getMuons(Muons::AllGlobalMuons,allMuon_);
 
   // get vector of electrons
-  std::vector<const reco::Electron*> tightElectrons = electrons_.getElectrons(Electrons::TightGlobalElectrons,tightElectron_);
-  std::vector<const reco::Electron*> looseElectrons = electrons_.getElectrons(Electrons::LooseGlobalElectrons,looseElectron_);
+  std::vector<const reco::SiStripElectron*> tightElectrons = electrons_.getElectrons(Electrons::TightGlobalElectrons,tightElectron_);
+  std::vector<const reco::SiStripElectron*> looseElectrons = electrons_.getElectrons(Electrons::LooseGlobalElectrons,looseElectron_);
 
   // get vector of jets
   std::vector<const reco::CaloJet*> jets = jets_.getJets(Jets::GlobalJets,jet_);
@@ -108,7 +108,7 @@ cms1::TableMaker::analyze()
 		<< " MET = " << metVector0.size()		 
 	<< std::endl;	
 
-  for ( std::vector<const reco::Electron*>::iterator i = looseElectrons.begin(), ie = looseElectrons.end();
+  for ( std::vector<const reco::SiStripElectron*>::iterator i = looseElectrons.begin(), ie = looseElectrons.end();
 		i != ie;
 		++i ) {
 			const reco::Candidate* cp = *i;
@@ -157,19 +157,19 @@ cms1::TableMaker::analyze()
 #endif
 
   // logic
-  std::vector<std::pair<const reco::Electron*, const reco::Electron*> > takenEE;
-  std::vector<std::pair<const reco::Electron*, const reco::Muon*> >     takenEMu;
-  std::vector<std::pair<const reco::Muon*, const reco::Electron*> >     takenMuE;
+  std::vector<std::pair<const reco::SiStripElectron*, const reco::SiStripElectron*> > takenEE;
+  std::vector<std::pair<const reco::SiStripElectron*, const reco::Muon*> >     takenEMu;
+  std::vector<std::pair<const reco::Muon*, const reco::SiStripElectron*> >     takenMuE;
   std::vector<std::pair<const reco::Muon*, const reco::Muon*> >         takenMuMu;
 
 
   // loop over tight electrons
-  for ( std::vector<const reco::Electron*>::iterator tightElectron = tightElectrons.begin(),
+  for ( std::vector<const reco::SiStripElectron*>::iterator tightElectron = tightElectrons.begin(),
 	  electronEnd = tightElectrons.end();
 	tightElectron != electronEnd;
 	++tightElectron ) {
     // loop over loose electrons
-    for ( std::vector<const reco::Electron*>::iterator looseElectron = looseElectrons.begin(),
+    for ( std::vector<const reco::SiStripElectron*>::iterator looseElectron = looseElectrons.begin(),
 	    electronEnd = looseElectrons.end();
 	  looseElectron != electronEnd;
 	  ++looseElectron ) {
@@ -177,7 +177,7 @@ cms1::TableMaker::analyze()
       if ( *tightElectron != *looseElectron ) {
 	// check if pair already passed cuts
 	bool passed = false;
-	for ( std::vector<std::pair<const reco::Electron*, const reco::Electron*> >::iterator passedPair = takenEE.begin(),
+	for ( std::vector<std::pair<const reco::SiStripElectron*, const reco::SiStripElectron*> >::iterator passedPair = takenEE.begin(),
 		passedPairEnd = takenEE.end();
 	      passedPair != passedPairEnd;
 	      ++passedPair ) {
@@ -224,7 +224,7 @@ cms1::TableMaker::analyze()
 	tightMuon != muonEnd;
 	++tightMuon ) {
     // loop over loose electrons
-    for ( std::vector<const reco::Electron*>::iterator looseElectron = looseElectrons.begin(),
+    for ( std::vector<const reco::SiStripElectron*>::iterator looseElectron = looseElectrons.begin(),
 	    electronEnd = looseElectrons.end();
 	  looseElectron != electronEnd;
 	  ++looseElectron ) {

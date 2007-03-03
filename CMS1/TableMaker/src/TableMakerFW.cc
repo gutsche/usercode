@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/03/01 19:07:17 $
-// $Revision: 1.3 $
+// $Author: dmytro $
+// $Date: 2007/03/01 21:26:03 $
+// $Revision: 1.1 $
 //
 
 #include <vector>
@@ -87,8 +87,8 @@ cms1::TableMakerFW::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
   muonCollection = muonCollectionHandle.product();
 
   // get electron collection from the event
-  const reco::ElectronCollection *electronCollection = 0;
-  edm::Handle<reco::ElectronCollection> electronCollectionHandle;
+  const reco::SiStripElectronCollection *electronCollection = 0;
+  edm::Handle<reco::SiStripElectronCollection> electronCollectionHandle;
   iEvent.getByLabel(globalElectronInputTag_,electronCollectionHandle);
   electronCollection = electronCollectionHandle.product();
 

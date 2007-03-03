@@ -7,19 +7,19 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/02/16 11:53:33 $
-// $Revision: 1.2 $
+// $Author: gutsche $
+// $Date: 2007/02/22 23:10:51 $
+// $Revision: 1.1 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
 
-std::vector<const reco::Electron*> cms1::Electrons::getElectrons(const ElectronType electronType,
+std::vector<const reco::SiStripElectron*> cms1::Electrons::getElectrons(const ElectronType electronType,
 								 const Cuts& cuts,
 								 const bool isolated )
 {
   // this is the output list
-  std::vector<const reco::Electron*> output_list;
+  std::vector<const reco::SiStripElectron*> output_list;
    
   // Only TightGlobalElectrons are implemented for now
   switch (electronType) {
@@ -29,7 +29,7 @@ std::vector<const reco::Electron*> cms1::Electrons::getElectrons(const ElectronT
 	std::cout << "ERROR: global electron collection is not set" << std::endl;
 	return output_list;
       }
-      for ( std::vector<reco::Electron>::const_iterator electron = data_.globalElectronCollection->begin();
+      for ( std::vector<reco::SiStripElectron>::const_iterator electron = data_.globalElectronCollection->begin();
 	    electron != data_.globalElectronCollection->end();
 	    ++electron ) 
 	{
@@ -53,7 +53,7 @@ std::vector<const reco::Electron*> cms1::Electrons::getElectrons(const ElectronT
 	std::cout << "ERROR: global electron collection is not set" << std::endl;
 	return output_list;
       }
-      for ( std::vector<reco::Electron>::const_iterator electron = data_.globalElectronCollection->begin();
+      for ( std::vector<reco::SiStripElectron>::const_iterator electron = data_.globalElectronCollection->begin();
 	    electron != data_.globalElectronCollection->end();
 	    ++electron ) 
 	{
