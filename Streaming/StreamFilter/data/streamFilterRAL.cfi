@@ -1,8 +1,0 @@
-module streamFilterRAL = StreamFilter 
-{
-  string DecisionMaker = "streamDecision"
-
-  # stream decision filter
-  # valid modes are  fnal, cnaf, ral, in2p3, asgc, fzk, pic
-  string Mode          = "ral"
-}

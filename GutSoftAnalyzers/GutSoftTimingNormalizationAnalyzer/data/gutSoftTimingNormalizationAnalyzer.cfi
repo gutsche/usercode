@@ -1,4 +1,0 @@
-module gutSoftTimingNormalizationAnalyzer = GutSoftTimingNormalizationAnalyzer 
-{
-  uint32 NormalizationCounter = 2000000000
-}
