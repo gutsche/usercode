@@ -24,7 +24,7 @@ module gutSoftSeedingEfficiencyAnalyzer = GutSoftSeedingEfficiencyAnalyzer
   # tracking hit associator
   bool associateStrip = true	
   bool associatePixel = true
-  bool associateRecoTracks = false
+  bool associateRecoTracks = true
   vstring ROUList = 
   {
     #For running only strip or pixel comment out the appropriate strings
