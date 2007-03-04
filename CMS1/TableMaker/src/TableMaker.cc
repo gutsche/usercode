@@ -76,7 +76,7 @@ unsigned int nJetsWithoutEl(std::vector<const reco::CaloJet*> jets, const SiStri
   }
 
   if (nJets > 4) 
-    nJets == 4;
+    nJets = 4;
 
   return nJets;
 } 
