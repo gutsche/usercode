@@ -9,12 +9,14 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: gutsche $
-// $Date: 2007/01/29 18:15:28 $
+// $Author: dmytro $
+// $Date: 2007/02/16 11:49:22 $
 // $Revision: 1.1 $
 //
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
+#include "CLHEP/HepMC/GenParticle.h"
+#include "DataFormats/JetReco/interface/GenJet.h"
 
 namespace cms1 {
    class Cuts
@@ -22,6 +24,8 @@ namespace cms1 {
       public:
 	bool testTrack(const reco::Track& ) const;
 	bool testCandidate(const reco::Candidate & ) const;
+	bool testGenParticle(const HepMC::GenParticle& ) const;
+	bool testGenJet(const reco::GenJet&) const;
 	
 	double pt_min;
 	double pt_max;
