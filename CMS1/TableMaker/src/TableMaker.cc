@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: burkett $
-// $Date: 2007/03/03 13:05:12 $
-// $Revision: 1.6 $
+// $Author: sani $
+// $Date: 2007/03/04 12:24:07 $
+// $Revision: 1.7 $
 //
 
 #include <vector>
@@ -74,6 +74,9 @@ unsigned int nJetsWithoutEl(std::vector<const reco::CaloJet*> jets, const SiStri
         nJets--;
     } 
   }
+
+  if (nJets > 4) 
+    nJets == 4;
 
   return nJets;
 } 
@@ -294,11 +297,11 @@ cms1::TableMaker::analyze()
 	      if ( metCutAroundZ_.testCandidate(**(metVector.begin())) ) {
 		// passed
 		takenMuMu.push_back(std::make_pair(*tightMuon,*looseMuon));
-    countedMuMuJets_[jets.size()]++;
+    countedMuMuJets_[nJetsWithoutEl(jets)]++;
 	      }
 	    } else {
 	      takenMuMu.push_back(std::make_pair(*tightMuon,*looseMuon));
-        countedMuMuJets_[jets.size()]++;
+        countedMuMuJets_[nJetsWithoutEl(jets)]++;
 	    }
 	  }
 	}
