@@ -11,9 +11,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/03/01 21:09:56 $
-// $Revision: 1.3 $
+// $Author: dmytro $
+// $Date: 2007/03/01 21:25:07 $
+// $Revision: 1.4 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
@@ -58,27 +58,10 @@ namespace cms1 {
     MET           MET_;
 
     unsigned int  events_;
-    unsigned int  countedEE0Jets_;
-    unsigned int  countedEMu0Jets_;
-    unsigned int  countedMuE0Jets_;
-    unsigned int  countedMuMu0Jets_;
-    unsigned int  countedEE1Jets_;
-    unsigned int  countedEMu1Jets_;
-    unsigned int  countedMuE1Jets_;
-    unsigned int  countedMuMu1Jets_;
-    unsigned int  countedEE2Jets_;
-    unsigned int  countedEMu2Jets_;
-    unsigned int  countedMuE2Jets_;
-    unsigned int  countedMuMu2Jets_;
-    unsigned int  countedEE3Jets_;
-    unsigned int  countedEMu3Jets_;
-    unsigned int  countedMuE3Jets_;
-    unsigned int  countedMuMu3Jets_;
-    unsigned int  countedEE4Jets_;
-    unsigned int  countedEMu4Jets_;
-    unsigned int  countedMuE4Jets_;
-    unsigned int  countedMuMu4Jets_;
-
+    unsigned int  countedEEJets_[5];
+    unsigned int  countedEMuJets_[5];
+    unsigned int  countedMuEJets_[5];
+    unsigned int  countedMuMuJets_[5];
   };
 }
 
