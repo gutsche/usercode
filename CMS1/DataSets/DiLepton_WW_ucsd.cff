@@ -1,0 +1,12 @@
+replace PoolSource.fileNames = {
+   "dcap://dcopy-1.local:22138//pnfs/sdsc.edu/data4/cms/userdata/hpi/DiLepton/samples/CMSSW_1_2_2/DiLepton_WW/store/unmerged/PreProd/2007/2/16/DiLepton_WW/FEVT/0000/08162644-5ABD-DB11-B14A-00304858A663.root",
+   "dcap://dcopy-1.local:22138//pnfs/sdsc.edu/data4/cms/userdata/hpi/DiLepton/samples/CMSSW_1_2_2/DiLepton_WW/store/unmerged/PreProd/2007/2/16/DiLepton_WW/FEVT/0000/08BCD638-5ABD-DB11-BC0C-00304858A6AB.root",
+   "dcap://dcopy-1.local:22138//pnfs/sdsc.edu/data4/cms/userdata/hpi/DiLepton/samples/CMSSW_1_2_2/DiLepton_WW/store/unmerged/PreProd/2007/2/16/DiLepton_WW/FEVT/0000/0EC65450-5ABD-DB11-94EC-00304858A679.root",
+   "dcap://dcopy-1.local:22138//pnfs/sdsc.edu/data4/cms/userdata/hpi/DiLepton/samples/CMSSW_1_2_2/DiLepton_WW/store/unmerged/PreProd/2007/2/16/DiLepton_WW/FEVT/0000/46DF664C-5ABD-DB11-BD44-00304858A671.root",
+   "dcap://dcopy-1.local:22138//pnfs/sdsc.edu/data4/cms/userdata/hpi/DiLepton/samples/CMSSW_1_2_2/DiLepton_WW/store/unmerged/PreProd/2007/2/16/DiLepton_WW/FEVT/0000/58362B33-5ABD-DB11-A733-00304858A6B3.root",
+   "dcap://dcopy-1.local:22138//pnfs/sdsc.edu/data4/cms/userdata/hpi/DiLepton/samples/CMSSW_1_2_2/DiLepton_WW/store/unmerged/PreProd/2007/2/16/DiLepton_WW/FEVT/0000/62D5F24E-5ABD-DB11-8443-00304858A521.root",
+   "dcap://dcopy-1.local:22138//pnfs/sdsc.edu/data4/cms/userdata/hpi/DiLepton/samples/CMSSW_1_2_2/DiLepton_WW/store/unmerged/PreProd/2007/2/16/DiLepton_WW/FEVT/0000/96D18B3F-5ABD-DB11-863A-00304858A6A1.root",
+   "dcap://dcopy-1.local:22138//pnfs/sdsc.edu/data4/cms/userdata/hpi/DiLepton/samples/CMSSW_1_2_2/DiLepton_WW/store/unmerged/PreProd/2007/2/16/DiLepton_WW/FEVT/0000/A8AF3852-5ABD-DB11-BD6F-00304858A663.root",
+   "dcap://dcopy-1.local:22138//pnfs/sdsc.edu/data4/cms/userdata/hpi/DiLepton/samples/CMSSW_1_2_2/DiLepton_WW/store/unmerged/PreProd/2007/2/16/DiLepton_WW/FEVT/0000/F4DBF44A-5ABD-DB11-A406-00304858A507.root",
+   "dcap://dcopy-1.local:22138//pnfs/sdsc.edu/data4/cms/userdata/hpi/DiLepton/samples/CMSSW_1_2_2/DiLepton_WW/store/unmerged/PreProd/2007/2/16/DiLepton_WW/FEVT/0000/FC98AD1D-5ABD-DB11-8117-00304858A701.root"
+}
