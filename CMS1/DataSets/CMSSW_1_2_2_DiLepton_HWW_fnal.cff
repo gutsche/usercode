@@ -1,0 +1,25 @@
+replace PoolSource.fileNames = {
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/022A1E75-A9C3-DB11-A1A2-001731AF6A85.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/08E48485-A9C3-DB11-A57A-0017312A21EB.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/0E31A0A3-A9C3-DB11-AB5D-001731AF68C3.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/0E72FB7F-A9C3-DB11-AEDC-003048752F45.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/1C6F1565-A9C3-DB11-8634-00304875AAF7.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/201E3EA2-A9C3-DB11-B737-001731AF65F5.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/229EFCB1-A9C3-DB11-954E-00304875AAE3.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/321EB9A1-A9C3-DB11-8357-001731A28FC9.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/4238E56E-A9C3-DB11-96F3-0017312B5BAD.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/4267839C-A9C3-DB11-873D-003048756275.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/7E7F4D8D-A9C3-DB11-B341-001731AF669F.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/A45BEEC1-A9C3-DB11-A796-001731AF6865.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/A8C3D28A-A9C3-DB11-9607-001731AF66B5.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/B8E08C99-A9C3-DB11-9697-003048754C51.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/C094B447-A9C3-DB11-A91F-003048754FB9.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/CC802EA3-A9C3-DB11-8046-001731A284C5.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/D07D6F70-A9C3-DB11-B47C-0017312B5651.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/D6B6DA70-A9C3-DB11-8770-001731AF68B1.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/E0674582-A9C3-DB11-95F9-0030487565A9.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/EC326FB3-A9C3-DB11-A19D-00304875A33D.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/ECCC5C86-A9C3-DB11-9F6D-0017319C97E0.root",
+  "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_2_2/DiLepton_HWW/store/unmerged/PreProd/2007/2/16/DiLepton_HWW/FEVT/0000/FE37818F-A9C3-DB11-B8D3-001731AF6997.root"
+}
+
