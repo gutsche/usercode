@@ -9,8 +9,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: sani $
-// $Date: 2007/03/04 12:24:07 $
-// $Revision: 1.7 $
+// $Date: 2007/03/04 13:09:32 $
+// $Revision: 1.9 $
 //
 
 #include <vector>
@@ -64,8 +64,10 @@ unsigned int nJetsWithoutEl(std::vector<const reco::CaloJet*> jets, const SiStri
 
     if (e1 != 0) {
       double dR = ROOT::Math::VectorUtil::DeltaR(e1->p4(), (*itJet)->p4());
-      if (dR < 0.4)
+      if (dR < 0.4) {
         nJets--;
+        continue;
+      }
     }
   
     if (e2 != 0) {
