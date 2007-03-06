@@ -1,10 +1,10 @@
 # include tracking truth
-#include "SimGeneral/TrackingAnalysis/data/trackingtruth.cfi"
+include "SimGeneral/TrackingAnalysis/data/trackingtruth.cfi"
 
 # include HepMC analyzer
 include "GutSoftAnalyzers/GutSoftHepMCAnalyzer/data/gutSoftHepMCAnalyzer.cff"
 
 sequence trueInformation = {
-#  trackingtruth,
+  trackingtruth,
   gutSoftHepMCAnalyzer
 }
