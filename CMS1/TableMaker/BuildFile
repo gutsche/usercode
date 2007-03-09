@@ -8,6 +8,7 @@
 <use name=CMS1/Jets>
 <use name=CMS1/MET>
 <use name=DataFormats/Math>
+<use name=root>
 <flags SEAL_PLUGIN_NAME="CMS1TableMaker">
 <export>
    <lib name=CMS1TableMaker>
@@ -21,5 +22,6 @@
    <use name=CMS1/Jets>
    <use name=CMS1/MET>
    <use name=DataFormats/Math>
+   <use name=root>
 </export>
 <Flags CXXFLAGS=-g>
