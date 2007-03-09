@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: burkett $
-// $Date: 2007/03/03 13:05:12 $
-// $Revision: 1.2 $
+// $Author: fisk $
+// $Date: 2007/03/09 18:23:36 $
+// $Revision: 1.3 $
 //
 
 #include <vector>
@@ -24,13 +24,13 @@
 
 
 cms1::TableMakerFW::~TableMakerFW()
-{
-}
+{}
 
 cms1::TableMakerFW::TableMakerFW(const edm::ParameterSet& iConfig)
 {
 
   // input tags
+  globalTrackInputTag_    = iConfig.getUntrackedParameter<edm::InputTag>("GlobalTrackInputTag");
   globalMuonInputTag_     = iConfig.getUntrackedParameter<edm::InputTag>("GlobalMuonInputTag");
   globalElectronInputTag_ = iConfig.getUntrackedParameter<edm::InputTag>("GlobalElectronInputTag");
   globalJetInputTag_      = iConfig.getUntrackedParameter<edm::InputTag>("GlobalJetInputTag");
@@ -82,7 +82,11 @@ cms1::TableMakerFW::TableMakerFW(const edm::ParameterSet& iConfig)
 void
 cms1::TableMakerFW::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-
+  // get muon collection from the event
+  edm::Handle<reco::TrackCollection> trackCollectionHandle;
+  iEvent.getByLabel(globalTrackInputTag_, trackCollectionHandle);
+  trackCollection_ = trackCollectionHandle.product();
+  
   // get muon collection from the event
   const reco::MuonCollection *muonCollection = 0;
   edm::Handle<reco::MuonCollection> muonCollectionHandle;
@@ -127,7 +131,7 @@ cms1::TableMakerFW::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
   // This needs to be done for EVERY EVENT
   MET_.getData().globalMETCollection = METCollection;
 
-   TableMaker::analyze();
+  TableMaker::analyze();
 }
 
 

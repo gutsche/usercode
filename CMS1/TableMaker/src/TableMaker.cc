@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: sani $
-// $Date: 2007/03/06 13:17:25 $
-// $Revision: 1.10 $
+// $Author: fisk $
+// $Date: 2007/03/09 18:23:36 $
+// $Revision: 1.11 $
 //
 
 #include <vector>
@@ -33,6 +33,10 @@
 
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include <Math/VectorUtil.h>
+
+#include "DataFormats/TrackReco/interface/TrackFwd.h"
+#include "CMS1/TableMaker/src/UtilFunctions_isolation.h"
+
 
 //Number of bins in histograms
 #define BINS 20
@@ -206,11 +210,15 @@ cms1::TableMaker::analyze()
 		i != ie;
 		++i ) {
 			const reco::Candidate* cp = *i;
+
+			double isoRel = trackRelIsolation(cp->momentum(), cp->vertex(), trackCollection_,
+							  0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
 			std::cout 
 				<< "Electron " 
 			<< "Pt = " << cp->pt() 
 			<< ", Eta = " << cp->eta() 
 			<< ", Phi = " << cp->phi() 
+				<< ", isol = " << isoRel
 			<< std::endl; 
 	}
 		
@@ -218,11 +226,14 @@ cms1::TableMaker::analyze()
 		i != ie;
 		++i ) {
 			const reco::Candidate* cp = *i;
+			double isoRel = trackRelIsolation(cp->momentum(), cp->vertex(), trackCollection_,
+							  0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
 			std::cout 
 			<< "Muon "  
 			<< "Pt = " << cp->pt() 
 			<< ", Eta = " << cp->eta() 
 			<< ", Phi = " << cp->phi() 
+			<< ", isol = " << isoRel 
 			<< std::endl; 
 	}
 	for ( std::vector<const reco::CaloJet*>::iterator i = jets.begin(), ie = jets.end();
@@ -262,11 +273,19 @@ cms1::TableMaker::analyze()
 	  electronEnd = tightElectrons.end();
 	tightElectron != electronEnd;
 	++tightElectron ) {
+    double isoRelTight = trackRelIsolation((*tightElectron)->momentum(), (*tightElectron)->vertex(), trackCollection_,
+				      0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
+    if (isoRelTight > 0.1) continue;
+
     // loop over loose electrons
     for ( std::vector<const reco::SiStripElectron*>::iterator looseElectron = looseElectrons.begin(),
 	    electronEnd = looseElectrons.end();
 	  looseElectron != electronEnd;
 	  ++looseElectron ) {
+      double isoRelLoose = trackRelIsolation((*looseElectron)->momentum(), (*looseElectron)->vertex(), trackCollection_,
+					0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
+      if (isoRelLoose > 0.1) continue;
+
       // check if the same electron has been selected
       if ( *tightElectron != *looseElectron ) {
 	// check if pair already passed cuts
@@ -309,6 +328,9 @@ cms1::TableMaker::analyze()
 	    MuonEnd = looseMuons.end();
 	  looseMuon != MuonEnd;
 	  ++looseMuon ) {
+      double isoRelLoose = trackRelIsolation((*looseMuon)->momentum(), (*looseMuon)->vertex(), trackCollection_,
+					0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
+      if (isoRelLoose > 0.1) continue;
       // check if candidate passes MET cut
       if ( metVector.size() > 0 ) {
         takenEMu.push_back(std::make_pair(*tightElectron,*looseMuon));
@@ -323,11 +345,17 @@ cms1::TableMaker::analyze()
 	  muonEnd = tightMuons.end();
 	tightMuon != muonEnd;
 	++tightMuon ) {
+      double isoRelTight = trackRelIsolation((*tightMuon)->momentum(), (*tightMuon)->vertex(), trackCollection_,
+					0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
+      if (isoRelTight > 0.1) continue;
     // loop over loose electrons
     for ( std::vector<const reco::SiStripElectron*>::iterator looseElectron = looseElectrons.begin(),
 	    electronEnd = looseElectrons.end();
 	  looseElectron != electronEnd;
 	  ++looseElectron ) {
+      double isoRelLoose = trackRelIsolation((*looseElectron)->momentum(), (*looseElectron)->vertex(), trackCollection_,
+					0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
+      if (isoRelLoose > 0.1) continue;
       // check if candidate passes MET cut
       if ( metVector.size() > 0 ) {
         takenMuE.push_back(std::make_pair(*tightMuon,*looseElectron));
@@ -341,6 +369,9 @@ cms1::TableMaker::analyze()
 	  looseMuon != MuonEnd;
 	  ++looseMuon ) {
 
+      double isoRelLoose = trackRelIsolation((*looseMuon)->momentum(), (*looseMuon)->vertex(), trackCollection_,
+					0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
+      if (isoRelLoose > 0.1) continue;
       // check if the same muon has been selected
       if ( *tightMuon != *looseMuon ) {
 	// check if pair already passed cuts

@@ -11,9 +11,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: sani $
-// $Date: 2007/03/04 12:24:19 $
-// $Revision: 1.5 $
+// $Author: fisk $
+// $Date: 2007/03/09 18:22:23 $
+// $Revision: 1.6 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
@@ -63,6 +63,8 @@ namespace cms1 {
     Jets          jets_;
 
     MET           MET_;
+
+    reco::TrackCollection* trackCollection_;
 
     unsigned int  events_;
     unsigned int  countedEEJets_[5];

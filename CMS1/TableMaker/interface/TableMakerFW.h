@@ -11,9 +11,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/03/01 21:26:03 $
-// $Revision: 1.1 $
+// $Author: fisk $
+// $Date: 2007/03/09 18:22:23 $
+// $Revision: 1.2 $
 //
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -37,6 +37,7 @@ namespace cms1 {
     virtual void beginJob(const edm::EventSetup& setup) ;
     virtual void analyze(const edm::Event&, const edm::EventSetup&);
     virtual void endJob() ;
+    edm::InputTag globalTrackInputTag_;
 
     edm::InputTag globalMuonInputTag_;
     edm::InputTag globalElectronInputTag_;
