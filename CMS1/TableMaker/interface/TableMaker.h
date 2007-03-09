@@ -11,9 +11,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: fisk $
-// $Date: 2007/03/09 18:22:23 $
-// $Revision: 1.6 $
+// $Author: slava77 $
+// $Date: 2007/03/09 20:56:39 $
+// $Revision: 1.7 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
@@ -86,7 +86,7 @@ namespace cms1 {
 	std::vector<TH1F *> hHT; //Events vs. temperature   x5
 	std::vector<TH1F *> hMET; //events per missing et  x5
 
-	void FillHistograms(std::vector<const reco::CaloJet*> jets, unsigned int,const RecoCandidate *,const RecoCandidate *,const RecoCandidate *);
+	void FillHistograms(std::vector<const reco::CaloJet*> jets, unsigned int,const RecoCandidate *,const RecoCandidate *, double);
 
 	
   };

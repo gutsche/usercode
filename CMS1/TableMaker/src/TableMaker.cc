@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: fisk $
-// $Date: 2007/03/09 18:23:36 $
-// $Revision: 1.11 $
+// $Author: slava77 $
+// $Date: 2007/03/09 20:56:39 $
+// $Revision: 1.12 $
 //
 
 #include <vector>
@@ -168,15 +168,11 @@ cms1::TableMaker::analyze()
   // get vector of jets
   std::vector<const reco::CaloJet*> jets = jets_.getJets(Jets::GlobalJets,jet_);
 
-  // get vector of MET
-  std::vector<const reco::CaloMET*> metVector = MET_.getMET(MET::GlobalMET,metCut_);
-
   //    edm::LogVerbatim("CMS1TableMaker") << tightMuons.size() << " tight global muon(s) found!";
   //    edm::LogVerbatim("CMS1TableMaker") << looseMuons.size() << " loose global muon(s) found!";
   //    edm::LogVerbatim("CMS1TableMaker") << tightElectrons.size() << " tight global electron(s) found!";
   //    edm::LogVerbatim("CMS1TableMaker") << looseElectrons.size() << " loose global electron(s) found!";
   //    edm::LogVerbatim("CMS1TableMaker") << jets.size() << " global jet(s) found!";
-  //    edm::LogVerbatim("CMS1TableMaker") << metVector.size() << " global MET found!";
 
 
 //	cms1::Dump::event();
@@ -303,21 +299,21 @@ cms1::TableMaker::analyze()
 	// continue if pair hasn't passed cuts yet
 	if ( !passed ) {
 	  // check if candidate passes MET cut
-	  if ( metVector.size() > 0 ) {
+	  if ( met > metCut_.pt_min) {
 	    // calculate invariant mass and check for special MET cut within Z window
 	    // take first MET cancicate
 	    math::XYZTLorentzVector inv = (*tightElectron)->p4() + (*looseElectron)->p4();
 	    if ( inv.mass() >= ZRangeMinMass_ && inv.mass() <= ZRangeMaxMass_ ) {
-	      if ( metCutAroundZ_.testCandidate(**(metVector.begin())) ) {
           // passed
-          takenEE.push_back(std::make_pair(*tightElectron,*looseElectron));
+	      if ( met > metCutAroundZ_.pt_min) {
+		  takenEE.push_back(std::make_pair(*tightElectron,*looseElectron));
           countedEEJets_[nJetsWithoutEl(jets, *tightElectron,*looseElectron)]++;
-		  FillHistograms(jets,nJetsWithoutEl(jets, *tightElectron,*looseElectron),*tightElectron,*looseElectron,*metVector.begin());
+		  FillHistograms(jets,nJetsWithoutEl(jets, *tightElectron,*looseElectron),*tightElectron,*looseElectron, met);
 	      }
 	    } else {
 	      takenEE.push_back(std::make_pair(*tightElectron,*looseElectron));
-        countedEEJets_[nJetsWithoutEl(jets, *tightElectron,*looseElectron)]++;
-		FillHistograms(jets,nJetsWithoutEl(jets, *tightElectron,*looseElectron),*tightElectron,*looseElectron,*metVector.begin());
+		countedEEJets_[nJetsWithoutEl(jets, *tightElectron,*looseElectron)]++;
+		FillHistograms(jets,nJetsWithoutEl(jets, *tightElectron,*looseElectron),*tightElectron,*looseElectron, met);
 	    }
 	  }
 	}
@@ -332,10 +328,10 @@ cms1::TableMaker::analyze()
 					0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
       if (isoRelLoose > 0.1) continue;
       // check if candidate passes MET cut
-      if ( metVector.size() > 0 ) {
+	  if ( met > metCut_.pt_min) {
         takenEMu.push_back(std::make_pair(*tightElectron,*looseMuon));
         countedEMuJets_[nJetsWithoutEl(jets, *tightElectron)]++;
-		FillHistograms(jets,nJetsWithoutEl(jets, *tightElectron),*tightElectron,*looseMuon,*metVector.begin());
+		FillHistograms(jets,nJetsWithoutEl(jets, *tightElectron),*tightElectron,*looseMuon,met);
       }
     }  //End loop over loose muons
   }  //End tight electrons loop
@@ -357,10 +353,10 @@ cms1::TableMaker::analyze()
 					0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
       if (isoRelLoose > 0.1) continue;
       // check if candidate passes MET cut
-      if ( metVector.size() > 0 ) {
+	  if ( met > metCut_.pt_min) {
         takenMuE.push_back(std::make_pair(*tightMuon,*looseElectron));
         countedMuEJets_[nJetsWithoutEl(jets, *looseElectron)]++;
-		FillHistograms(jets,nJetsWithoutEl(jets, *looseElectron),*tightMuon,*looseElectron,*metVector.begin());
+		FillHistograms(jets,nJetsWithoutEl(jets, *looseElectron),*tightMuon,*looseElectron, met);
       }
     }
     // loop over loose muons
@@ -389,21 +385,21 @@ cms1::TableMaker::analyze()
 	// continue if pair hasn't passed cuts yet
 	if ( !passed ) {
 	  // check if candidate passes MET cut
-	  if ( metVector.size() > 0 ) {
+	  if ( met > metCut_.pt_min) {
 	    // calculate invariant mass and check for special MET cut within Z window
 	    // take first MET cancicate
 	    math::XYZTLorentzVector inv = (*tightMuon)->p4() + (*looseMuon)->p4();
 	    if ( inv.mass() >= ZRangeMinMass_ && inv.mass() <= ZRangeMaxMass_ ) {
-	      if ( metCutAroundZ_.testCandidate(**(metVector.begin())) ) {
+	      if ( met > metCutAroundZ_.pt_min) {
 		// passed
 		takenMuMu.push_back(std::make_pair(*tightMuon,*looseMuon));
     countedMuMuJets_[nJetsWithoutEl(jets)]++;
-		FillHistograms(jets,nJetsWithoutEl(jets),*tightMuon,*looseMuon,*metVector.begin());
+		FillHistograms(jets,nJetsWithoutEl(jets),*tightMuon,*looseMuon, met);
 	      }
 	    } else {
 	      takenMuMu.push_back(std::make_pair(*tightMuon,*looseMuon));
         countedMuMuJets_[nJetsWithoutEl(jets)]++;
-		FillHistograms(jets,nJetsWithoutEl(jets),*tightMuon,*looseMuon,*metVector.begin());
+		FillHistograms(jets,nJetsWithoutEl(jets),*tightMuon,*looseMuon, met);
 	    }
 	  }
 	}
@@ -498,7 +494,7 @@ cms1::TableMaker::endJob() {
 
 //Function that will fill all of UCSD Grad Histograms
 void cms1::TableMaker::FillHistograms(std::vector<const reco::CaloJet*> jets, unsigned int numJets,const RecoCandidate *one,const RecoCandidate *two, 
-		const RecoCandidate *MET_)
+		double met)
 {
 	// Fill Number of Jets Hist
 	hNJets->Fill(numJets);
@@ -543,10 +539,10 @@ void cms1::TableMaker::FillHistograms(std::vector<const reco::CaloJet*> jets, un
 	hMll[numJets]->Fill((one->p4()+two->p4()).M());
 	
 	//missET[i]
-	hMET[numJets]->Fill(MET_->energy());
+	hMET[numJets]->Fill(met);
 	
 	//HT[i]
-	hHT[numJets]->Fill(energy + MET_->energy() + one->et() + two->et());
+	hHT[numJets]->Fill(energy + met + one->et() + two->et());
 }
 
 
