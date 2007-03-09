@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/03/01 21:26:03 $
-// $Revision: 1.1 $
+// $Author: burkett $
+// $Date: 2007/03/03 13:05:12 $
+// $Revision: 1.2 $
 //
 
 #include <vector>
@@ -21,6 +21,7 @@
 #include "CMS1/TableMaker/interface/TableMakerFW.h"
 
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
+
 
 cms1::TableMakerFW::~TableMakerFW()
 {
@@ -73,6 +74,8 @@ cms1::TableMakerFW::TableMakerFW(const edm::ParameterSet& iConfig)
   ZRangeMinMass_             = iConfig.getUntrackedParameter<double>("ZRangeMinMass");
   ZRangeMaxMass_             = iConfig.getUntrackedParameter<double>("ZRangeMaxMass");
 
+  fileTag 					= iConfig.getUntrackedParameter<std::string>("fileTag");
+
 }
 
 
@@ -123,7 +126,7 @@ cms1::TableMakerFW::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
   // want to use to the METData object.
   // This needs to be done for EVERY EVENT
   MET_.getData().globalMETCollection = METCollection;
-     
+
    TableMaker::analyze();
 }
 
@@ -136,5 +139,6 @@ cms1::TableMakerFW::beginJob(const edm::EventSetup& setup)
 
 void 
 cms1::TableMakerFW::endJob() {
+     
    TableMaker::endJob();
 }

@@ -9,11 +9,12 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: sani $
-// $Date: 2007/03/04 13:09:32 $
-// $Revision: 1.9 $
+// $Date: 2007/03/06 13:17:25 $
+// $Revision: 1.10 $
 //
 
 #include <vector>
+#include <algorithm> 
 #include <cmath>
 #include <utility>
 #include <sstream>
@@ -32,6 +33,9 @@
 
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include <Math/VectorUtil.h>
+
+//Number of bins in histograms
+#define BINS 20
 
 // correct MET energies for Muons
 void correctMETmuons(std::vector<const reco::Muon*> *m, double& et, double& phi) {
@@ -82,6 +86,65 @@ unsigned int nJetsWithoutEl(std::vector<const reco::CaloJet*> jets, const SiStri
 
   return nJets;
 } 
+
+cms1::TableMaker::TableMaker()
+{
+	ostringstream temp; 
+	hNJets = new TH1I("NJets","NJets;NJets;Events",5,0,5);
+	for(int i=0;i<4;++i)
+	{
+		temp << "PTJet_" << i;
+		hPTJet.push_back(new TH1F(temp.str().c_str(),"PTJet;PT(GeV);Events",BINS,0,500));
+		temp.clear(); temp.str("");
+	}
+	for(int i=0;i<5;++i)
+	{
+		temp << "Mll_J" << i; 
+		hMll.push_back(new TH1F(temp.str().c_str(),"Invariant Mass;Mll(GeV);Events",BINS,0,500));
+		temp.clear(); temp.str("");
+
+		temp << "PTTight_J" << i;
+		hPTTight.push_back(new TH1F(temp.str().c_str(),"PT Tight Lepton;PT(GeV);Events",BINS,0,500));
+		temp.clear(); temp.str("");
+
+		temp << "PTLoose_J" << i;
+		hPTLoose.push_back(new TH1F(temp.str().c_str(),"PT Loose Lepton;PT(GeV);Events",BINS,0,500));
+		temp.clear(); temp.str("");
+
+		temp << "PTLeading_J" << i;
+		hPTLeading.push_back(new TH1F(temp.str().c_str(),"PT Leading Lepton;PT(GeV);Events",BINS,0,500));
+		temp.clear(); temp.str("");
+
+		temp << "PTTrailing_J" << i;
+		hPTTrailing.push_back(new TH1F(temp.str().c_str(),"PT Second Leading Lepton;PT(GeV);Events",BINS,0,500));
+		temp.clear(); temp.str("");
+
+		temp << "HT_J" << i;
+		hHT.push_back(new TH1F(temp.str().c_str(),"Temperature;Temperature(GeV);Events",BINS,0,1000));
+		temp.clear(); temp.str("");
+
+		temp << "MET_J" << i;
+		hMET.push_back(new TH1F(temp.str().c_str(),"Missing ET;MET(GeV);Events",BINS,0,500));
+		temp.clear(); temp.str("");
+
+	}
+	
+}
+
+cms1::TableMaker::~TableMaker()
+{
+	//delete  NJets;
+	//delete  PTJetH;
+	//delete  PTJetL;
+	//for(int i=0;i<5;++i)
+	//{
+		//delete Mll[i];
+		//delete PTLeading[i];
+		//delete PTTrailing[i];
+		//delete HT[i];
+		//delete missET[i];
+	//}
+}
 
 void
 cms1::TableMaker::analyze()
@@ -230,10 +293,12 @@ cms1::TableMaker::analyze()
           // passed
           takenEE.push_back(std::make_pair(*tightElectron,*looseElectron));
           countedEEJets_[nJetsWithoutEl(jets, *tightElectron,*looseElectron)]++;
+		  FillHistograms(jets,nJetsWithoutEl(jets, *tightElectron,*looseElectron),*tightElectron,*looseElectron,*metVector.begin());
 	      }
 	    } else {
 	      takenEE.push_back(std::make_pair(*tightElectron,*looseElectron));
         countedEEJets_[nJetsWithoutEl(jets, *tightElectron,*looseElectron)]++;
+		FillHistograms(jets,nJetsWithoutEl(jets, *tightElectron,*looseElectron),*tightElectron,*looseElectron,*metVector.begin());
 	    }
 	  }
 	}
@@ -248,9 +313,10 @@ cms1::TableMaker::analyze()
       if ( metVector.size() > 0 ) {
         takenEMu.push_back(std::make_pair(*tightElectron,*looseMuon));
         countedEMuJets_[nJetsWithoutEl(jets, *tightElectron)]++;
+		FillHistograms(jets,nJetsWithoutEl(jets, *tightElectron),*tightElectron,*looseMuon,*metVector.begin());
       }
-    }
-  }
+    }  //End loop over loose muons
+  }  //End tight electrons loop
 
   // loop over tight muons
   for ( std::vector<const reco::Muon*>::iterator tightMuon = tightMuons.begin(),
@@ -266,6 +332,7 @@ cms1::TableMaker::analyze()
       if ( metVector.size() > 0 ) {
         takenMuE.push_back(std::make_pair(*tightMuon,*looseElectron));
         countedMuEJets_[nJetsWithoutEl(jets, *looseElectron)]++;
+		FillHistograms(jets,nJetsWithoutEl(jets, *looseElectron),*tightMuon,*looseElectron,*metVector.begin());
       }
     }
     // loop over loose muons
@@ -300,10 +367,12 @@ cms1::TableMaker::analyze()
 		// passed
 		takenMuMu.push_back(std::make_pair(*tightMuon,*looseMuon));
     countedMuMuJets_[nJetsWithoutEl(jets)]++;
+		FillHistograms(jets,nJetsWithoutEl(jets),*tightMuon,*looseMuon,*metVector.begin());
 	      }
 	    } else {
 	      takenMuMu.push_back(std::make_pair(*tightMuon,*looseMuon));
         countedMuMuJets_[nJetsWithoutEl(jets)]++;
+		FillHistograms(jets,nJetsWithoutEl(jets),*tightMuon,*looseMuon,*metVector.begin());
 	    }
 	  }
 	}
@@ -329,10 +398,37 @@ cms1::TableMaker::beginJob()
 
 void 
 cms1::TableMaker::endJob() {
+	
+  ostringstream output;
+  output << "pass0_" << fileTag << ".root";
+	
+	TFile file(output.str().c_str(),"RECREATE");
+	hNJets->Write();
+	//PTJetH->Write();
+	//PTJetL->Write();
+	for(int i=0;i<5;++i)
+	{
+		hMll[i]->Write();
+		hPTLoose[i]->Write();
+		hPTTight[i]->Write();
+		hPTLeading[i]->Write();
+		hPTTrailing[i]->Write();
+		hHT[i]->Write();
+		hMET[i]->Write();
+		if(i<4)
+		  {
+		   hPTJet[i]->Write();
+		  }
+	}
+
+	
+	file.Close();
+
+	output.clear();
+	output.str("");
 
   std::cout << "Muons" << countedMuMuJets_[1] << ", "  << countedMuMuJets_[2] << ", "  << countedMuMuJets_[3] << ", "  << std::endl;
 
-  ostringstream output;
 
   output << "\n-------------------------------------------------------------------------\n";
   output <<   "| Events: " << setw(9) << events_ << "                                                     |\n";
@@ -367,3 +463,59 @@ cms1::TableMaker::endJob() {
    std::cout << output.str() << std::endl; 
 
 }
+
+
+//Function that will fill all of UCSD Grad Histograms
+void cms1::TableMaker::FillHistograms(std::vector<const reco::CaloJet*> jets, unsigned int numJets,const RecoCandidate *one,const RecoCandidate *two, 
+		const RecoCandidate *MET_)
+{
+	// Fill Number of Jets Hist
+	hNJets->Fill(numJets);
+	std::vector<double> jetpt;
+	//PTJetH
+	//PTJetL
+	double energy=0;  // highest and second highest Jet PT
+	
+//	if(numJets>0) hPTJetH->Fill(high);
+//	if(numJets>1) hPTJetL->
+	for(int i = 0;i<jets.size();++i)
+	  {
+	    jetpt.push_back(jets[i]->pt());
+		energy+=jets[i]->et();
+	  }
+
+	std::sort(jetpt.begin(),jetpt.end());
+
+	for(int i = 0;i<numJets;++i)
+	  {
+	    hPTJet[i]->Fill(jetpt[i]);
+	  }
+
+	//Tight and loose
+	hPTTight[numJets]->Fill(one->pt());
+	hPTLoose[numJets]->Fill(two->pt());
+
+	//PTLeading[i]
+	//PTTrailing[i]
+	if(one->pt() > two->pt())
+	{
+		hPTLeading[numJets]->Fill(one->pt());
+		hPTTrailing[numJets]->Fill(two->pt());
+	}
+	else
+	{
+		hPTLeading[numJets]->Fill(two->pt());
+		hPTTrailing[numJets]->Fill(one->pt());
+	}
+	
+	//Mll[i]
+	hMll[numJets]->Fill((one->p4()+two->p4()).M());
+	
+	//missET[i]
+	hMET[numJets]->Fill(MET_->energy());
+	
+	//HT[i]
+	hHT[numJets]->Fill(energy + MET_->energy() + one->et() + two->et());
+}
+
+
