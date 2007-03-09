@@ -10,14 +10,17 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/02/16 11:53:32 $
-// $Revision: 1.2 $
+// $Author: gutsche $
+// $Date: 2007/02/22 23:10:51 $
+// $Revision: 1.1 $
 //
 
 #include "DataFormats/JetReco/interface/CaloJet.h"
-
+#include "DataFormats/EgammaCandidates/interface/SiStripElectron.h"
 #include "CMS1/Base/interface/Cuts.h"
+
+#include "DataFormats/Math/interface/LorentzVector.h"
+#include "Math/VectorUtil.h"
 
 namespace cms1 {
   class Jets  {
@@ -32,7 +35,7 @@ namespace cms1 {
      
     // These are "types of electrons" that we define.  We can add as amany as we want as
     // people invent new electron requirements
-    enum JetType { GlobalJets };
+    enum JetType { GlobalJets, JetsWithoutElectrons };
      
     // We need to have pointers from the event to the collections that we might want to use.
     // This is done by setting the data_ private member at the beginning of the analysis of 
@@ -51,7 +54,7 @@ namespace cms1 {
     int numberOfJets(const JetType type, const Cuts& cuts) {
       return getJets(type,cuts).size();
     }
-    
+      
   private:
     JetData data_;
   };
