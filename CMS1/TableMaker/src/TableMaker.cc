@@ -603,8 +603,10 @@ void cms1::TableMaker::FillHistograms(std::vector<const reco::CaloJet*> jets,con
 
 {
   std::cout<<"Jets size "<<jets.size()<<std::endl;
+  int jetnum = jets.size();
+  if (jetnum > 4) jetnum = 4;
 	// Fill Number of Jets Hist
-	hNJets->Fill(jets.size());
+	hNJets->Fill(jetnum);
 	std::vector<double> jetpt;
 	//PTJetH
 	//PTJetL
@@ -612,7 +614,7 @@ void cms1::TableMaker::FillHistograms(std::vector<const reco::CaloJet*> jets,con
 	
 //	if(numJets>0) hPTJetH->Fill(high);
 //	if(numJets>1) hPTJetL->
-	for(int i = 0;i<jets.size();++i)
+	for(unsigned int i = 0;i<jets.size();++i)
 	  {
 	    jetpt.push_back(jets[i]->pt());
 		energy+=jets[i]->et();
@@ -620,39 +622,39 @@ void cms1::TableMaker::FillHistograms(std::vector<const reco::CaloJet*> jets,con
 
 	std::sort(jetpt.begin(),jetpt.end());
 
-	for(int i = 0;i<jets.size();++i)
+	for(int i = 0;i<jetnum;++i)
 	  {
 	    hPTJet[i]->Fill(jetpt[i]);
 	  }
 
 	//Tight and loose
-	hPTTight[jets.size()]->Fill(one->pt());
-	hPTLoose[jets.size()]->Fill(two->pt());
+	hPTTight[jetnum]->Fill(one->pt());
+	hPTLoose[jetnum]->Fill(two->pt());
 
 	//PTLeading[i]
 	//PTTrailing[i]
 	if(one->pt() > two->pt())
 	{
-		hPTLeading[jets.size()]->Fill(one->pt());
-		hPTTrailing[jets.size()]->Fill(two->pt());
+		hPTLeading[jetnum]->Fill(one->pt());
+		hPTTrailing[jetnum]->Fill(two->pt());
 	}
 	else
 	{
-		hPTLeading[jets.size()]->Fill(two->pt());
-		hPTTrailing[jets.size()]->Fill(one->pt());
+		hPTLeading[jetnum]->Fill(two->pt());
+		hPTTrailing[jetnum]->Fill(one->pt());
 	}
 	
 	//Mll[i]
-	hMll[jets.size()]->Fill((one->p4()+two->p4()).M());
+	hMll[jetnum]->Fill((one->p4()+two->p4()).M());
 	
 	//missET[i]
 
-	hMET[jets.size()]->Fill(met);
+	hMET[jetnum]->Fill(met);
 
 	
 	//HT[i]
 
-	hHT[jets.size()]->Fill(energy + met + one->et() + two->et());
+	hHT[jetnum]->Fill(energy + met + one->et() + two->et());
 
 }
 
