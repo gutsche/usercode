@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: slava77 $
-// $Date: 2007/03/09 20:56:39 $
-// $Revision: 1.12 $
+// $Author: latb $
+// $Date: 2007/03/09 21:24:33 $
+// $Revision: 1.13 $
 //
 
 #include <vector>
@@ -94,41 +94,59 @@ unsigned int nJetsWithoutEl(std::vector<const reco::CaloJet*> jets, const SiStri
 cms1::TableMaker::TableMaker()
 {
 	ostringstream temp; 
+	hTable = new TH2I("Table","Table;NJets;DiLepton",5,0,5,4,0,4);
 	hNJets = new TH1I("NJets","NJets;NJets;Events",5,0,5);
+	hNJets->Sumw2();
 	for(int i=0;i<4;++i)
 	{
 		temp << "PTJet_" << i;
-		hPTJet.push_back(new TH1F(temp.str().c_str(),"PTJet;PT(GeV);Events",BINS,0,500));
+		TH1F* histo= new TH1F(temp.str().c_str(),"PTJet;PT(GeV);Events",BINS,0,500);
+		histo->Sumw2();
+		hPTJet.push_back(histo);
 		temp.clear(); temp.str("");
 	}
 	for(int i=0;i<5;++i)
 	{
-		temp << "Mll_J" << i; 
-		hMll.push_back(new TH1F(temp.str().c_str(),"Invariant Mass;Mll(GeV);Events",BINS,0,500));
+		temp << "Mll_J" << i;
+		TH1F* histo1=new TH1F(temp.str().c_str(),"Invariant Mass;Mll(GeV);Events",BINS,0,500);
+		histo1->Sumw2();
+		hMll.push_back(histo1);
 		temp.clear(); temp.str("");
 
 		temp << "PTTight_J" << i;
-		hPTTight.push_back(new TH1F(temp.str().c_str(),"PT Tight Lepton;PT(GeV);Events",BINS,0,500));
+		TH1F* histo2=new TH1F(temp.str().c_str(),"PT Tight Lepton;PT(GeV);Events",BINS,0,500);
+                histo2->Sumw2();
+		hPTTight.push_back(histo2);
 		temp.clear(); temp.str("");
 
 		temp << "PTLoose_J" << i;
-		hPTLoose.push_back(new TH1F(temp.str().c_str(),"PT Loose Lepton;PT(GeV);Events",BINS,0,500));
+		TH1F* histo3=new TH1F(temp.str().c_str(),"PT Loose Lepton;PT(GeV);Events",BINS,0,500);
+                histo3->Sumw2();
+		hPTLoose.push_back(histo3);
 		temp.clear(); temp.str("");
 
 		temp << "PTLeading_J" << i;
-		hPTLeading.push_back(new TH1F(temp.str().c_str(),"PT Leading Lepton;PT(GeV);Events",BINS,0,500));
+		TH1F* histo4=new TH1F(temp.str().c_str(),"PT Leading Lepton;PT(GeV);Events",BINS,0,500);
+                histo4->Sumw2();
+		hPTLeading.push_back(histo4);
 		temp.clear(); temp.str("");
 
 		temp << "PTTrailing_J" << i;
-		hPTTrailing.push_back(new TH1F(temp.str().c_str(),"PT Second Leading Lepton;PT(GeV);Events",BINS,0,500));
+		TH1F* histo5=new TH1F(temp.str().c_str(),"PT Second Leading Lepton;PT(GeV);Events",BINS,0,500);
+		histo5->Sumw2();
+		hPTTrailing.push_back(histo5);
 		temp.clear(); temp.str("");
 
 		temp << "HT_J" << i;
-		hHT.push_back(new TH1F(temp.str().c_str(),"Temperature;Temperature(GeV);Events",BINS,0,1000));
+		TH1F* histo6=new TH1F(temp.str().c_str(),"Temperature;Temperature(GeV);Events",BINS,0,1000);
+		histo6->Sumw2();
+		hHT.push_back(histo6);
 		temp.clear(); temp.str("");
 
 		temp << "MET_J" << i;
-		hMET.push_back(new TH1F(temp.str().c_str(),"Missing ET;MET(GeV);Events",BINS,0,500));
+		TH1F* histo7=new TH1F(temp.str().c_str(),"Missing ET;MET(GeV);Events",BINS,0,500); 
+		histo7->Sumw2();
+		hMET.push_back(histo7);
 		temp.clear(); temp.str("");
 
 	}
@@ -166,8 +184,8 @@ cms1::TableMaker::analyze()
   std::vector<const reco::SiStripElectron*> looseElectrons = electrons_.getElectrons(Electrons::LooseGlobalElectrons,looseElectron_);
 
   // get vector of jets
-  std::vector<const reco::CaloJet*> jets = jets_.getJets(Jets::GlobalJets,jet_);
 
+  std::vector<const reco::CaloJet*> jets = jets_.getJets(Jets::GlobalJets,jet_);
   //    edm::LogVerbatim("CMS1TableMaker") << tightMuons.size() << " tight global muon(s) found!";
   //    edm::LogVerbatim("CMS1TableMaker") << looseMuons.size() << " loose global muon(s) found!";
   //    edm::LogVerbatim("CMS1TableMaker") << tightElectrons.size() << " tight global electron(s) found!";
@@ -307,13 +325,40 @@ cms1::TableMaker::analyze()
           // passed
 	      if ( met > metCutAroundZ_.pt_min) {
 		  takenEE.push_back(std::make_pair(*tightElectron,*looseElectron));
-          countedEEJets_[nJetsWithoutEl(jets, *tightElectron,*looseElectron)]++;
-		  FillHistograms(jets,nJetsWithoutEl(jets, *tightElectron,*looseElectron),*tightElectron,*looseElectron, met);
+		  std::cout<<"Found EE"<<std::endl;
+		  std::vector<const reco::SiStripElectron*> el;
+		  el.push_back(*tightElectron);
+		  el.push_back(*looseElectron);
+		  jet_.eColl=&el;
+		  std::vector<const reco::CaloJet*> jetsnoel = jets_.getJets(Jets::JetsWithoutElectrons,jet_);          
+		  
+		  int njet = jetsnoel.size();
+		  if (njet > 4)
+		    {
+		      njet = 4;
+		    }
+		  countedEEJets_[njet]++;
+
+		  FillHistograms(jetsnoel,*tightElectron,*looseElectron,met);
 	      }
 	    } else {
 	      takenEE.push_back(std::make_pair(*tightElectron,*looseElectron));
-		countedEEJets_[nJetsWithoutEl(jets, *tightElectron,*looseElectron)]++;
-		FillHistograms(jets,nJetsWithoutEl(jets, *tightElectron,*looseElectron),*tightElectron,*looseElectron, met);
+
+	      std::vector<const reco::SiStripElectron*> el;
+	      el.push_back(*tightElectron);
+	      el.push_back(*looseElectron);
+	      jet_.eColl=&el;
+	      std::vector<const reco::CaloJet*> jetsnoel = jets_.getJets(Jets::JetsWithoutElectrons,jet_);          
+	      
+	      int njet = jetsnoel.size();
+	      if (njet > 4)
+		{
+		  njet = 4;
+		}
+	      countedEEJets_[njet]++;
+	      
+	      FillHistograms(jetsnoel,*tightElectron,*looseElectron,met);
+
 	    }
 	  }
 	}
@@ -329,10 +374,29 @@ cms1::TableMaker::analyze()
       if (isoRelLoose > 0.1) continue;
       // check if candidate passes MET cut
 	  if ( met > metCut_.pt_min) {
+	    std::cout<<"Found EMu"<<std::endl;
         takenEMu.push_back(std::make_pair(*tightElectron,*looseMuon));
-        countedEMuJets_[nJetsWithoutEl(jets, *tightElectron)]++;
-		FillHistograms(jets,nJetsWithoutEl(jets, *tightElectron),*tightElectron,*looseMuon,met);
-      }
+  std::vector<const reco::SiStripElectron*> el;
+	    std::cout<<"Found EMu"<<std::endl;
+	      el.push_back(*tightElectron);
+	    std::cout<<"Found EMu"<<std::endl;
+	      jet_.eColl=&el;
+	    std::cout<<"Found EMu"<<std::endl;
+	      std::vector<const reco::CaloJet*> jetsnoel = jets_.getJets(Jets::JetsWithoutElectrons,jet_);          
+	      	    std::cout<<"Found EMu"<<std::endl;
+		    std::cout << jets_.getJets(Jets::GlobalJets, jet_).size() << std::endl;
+	      int njet = jetsnoel.size();
+	      if (njet > 4)
+		{
+		  njet = 4;
+		}
+	    std::cout<<"Found EMu"<<std::endl;
+	      countedEMuJets_[njet]++;       
+	      std::cout<<"Found EMu"<<jetsnoel.size()<<std::endl;
+   
+	FillHistograms(jetsnoel,*tightElectron,*looseMuon,met);
+   std::cout<<"Found EMu"<<std::endl;      
+	  }
     }  //End loop over loose muons
   }  //End tight electrons loop
 
@@ -355,8 +419,20 @@ cms1::TableMaker::analyze()
       // check if candidate passes MET cut
 	  if ( met > metCut_.pt_min) {
         takenMuE.push_back(std::make_pair(*tightMuon,*looseElectron));
-        countedMuEJets_[nJetsWithoutEl(jets, *looseElectron)]++;
-		FillHistograms(jets,nJetsWithoutEl(jets, *looseElectron),*tightMuon,*looseElectron, met);
+	std::cout<<"Found MuE"<<std::endl;
+	 std::vector<const reco::SiStripElectron*> el;
+	      el.push_back(*looseElectron);
+	      jet_.eColl=&el;
+	      std::vector<const reco::CaloJet*> jetsnoel = jets_.getJets(Jets::JetsWithoutElectrons,jet_);          
+	      
+	      int njet = jetsnoel.size();
+	      if (njet > 4)
+		{
+		  njet = 4;
+		}
+	      countedMuEJets_[njet]++;       
+
+	      FillHistograms(jetsnoel,*tightMuon,*looseElectron,met);
       }
     }
     // loop over loose muons
@@ -392,14 +468,30 @@ cms1::TableMaker::analyze()
 	    if ( inv.mass() >= ZRangeMinMass_ && inv.mass() <= ZRangeMaxMass_ ) {
 	      if ( met > metCutAroundZ_.pt_min) {
 		// passed
+		std::cout<<"Found MuMu"<<std::endl;
 		takenMuMu.push_back(std::make_pair(*tightMuon,*looseMuon));
-    countedMuMuJets_[nJetsWithoutEl(jets)]++;
-		FillHistograms(jets,nJetsWithoutEl(jets),*tightMuon,*looseMuon, met);
+    
+
+
+	      jet_.eColl=0;
+	      std::vector<const reco::CaloJet*> jetsnoel = jets_.getJets(Jets::GlobalJets,jet_);          
+	      
+	      int njet = jetsnoel.size();
+	      if (njet > 4)
+		{
+		  njet = 4;
+		}
+	      countedMuMuJets_[njet]++;       
+
+		FillHistograms(jetsnoel,*tightMuon,*looseMuon,met);
+
 	      }
 	    } else {
 	      takenMuMu.push_back(std::make_pair(*tightMuon,*looseMuon));
         countedMuMuJets_[nJetsWithoutEl(jets)]++;
-		FillHistograms(jets,nJetsWithoutEl(jets),*tightMuon,*looseMuon, met);
+
+		FillHistograms(jets,*tightMuon,*looseMuon,met);
+
 	    }
 	  }
 	}
@@ -448,6 +540,18 @@ cms1::TableMaker::endJob() {
 		  }
 	}
 
+	for (int table_index = 1; table_index < 6; ++table_index)
+	  {
+
+	    hTable->SetBinContent(table_index,1,countedEEJets_[table_index-1]);
+	    hTable->SetBinContent(table_index,2,countedEMuJets_[table_index-1]);
+	    hTable->SetBinContent(table_index,3,countedMuEJets_[table_index-1]);
+	    hTable->SetBinContent(table_index,4,countedMuMuJets_[table_index-1]);
+	    
+	  }//END table index
+
+	hTable->Write();
+
 	
 	file.Close();
 
@@ -493,11 +597,14 @@ cms1::TableMaker::endJob() {
 
 
 //Function that will fill all of UCSD Grad Histograms
-void cms1::TableMaker::FillHistograms(std::vector<const reco::CaloJet*> jets, unsigned int numJets,const RecoCandidate *one,const RecoCandidate *two, 
-		double met)
+
+
+void cms1::TableMaker::FillHistograms(std::vector<const reco::CaloJet*> jets,const RecoCandidate *one,const RecoCandidate *two, double met)     
+
 {
+  std::cout<<"Jets size "<<jets.size()<<std::endl;
 	// Fill Number of Jets Hist
-	hNJets->Fill(numJets);
+	hNJets->Fill(jets.size());
 	std::vector<double> jetpt;
 	//PTJetH
 	//PTJetL
@@ -513,36 +620,40 @@ void cms1::TableMaker::FillHistograms(std::vector<const reco::CaloJet*> jets, un
 
 	std::sort(jetpt.begin(),jetpt.end());
 
-	for(int i = 0;i<numJets;++i)
+	for(int i = 0;i<jets.size();++i)
 	  {
 	    hPTJet[i]->Fill(jetpt[i]);
 	  }
 
 	//Tight and loose
-	hPTTight[numJets]->Fill(one->pt());
-	hPTLoose[numJets]->Fill(two->pt());
+	hPTTight[jets.size()]->Fill(one->pt());
+	hPTLoose[jets.size()]->Fill(two->pt());
 
 	//PTLeading[i]
 	//PTTrailing[i]
 	if(one->pt() > two->pt())
 	{
-		hPTLeading[numJets]->Fill(one->pt());
-		hPTTrailing[numJets]->Fill(two->pt());
+		hPTLeading[jets.size()]->Fill(one->pt());
+		hPTTrailing[jets.size()]->Fill(two->pt());
 	}
 	else
 	{
-		hPTLeading[numJets]->Fill(two->pt());
-		hPTTrailing[numJets]->Fill(one->pt());
+		hPTLeading[jets.size()]->Fill(two->pt());
+		hPTTrailing[jets.size()]->Fill(one->pt());
 	}
 	
 	//Mll[i]
-	hMll[numJets]->Fill((one->p4()+two->p4()).M());
+	hMll[jets.size()]->Fill((one->p4()+two->p4()).M());
 	
 	//missET[i]
-	hMET[numJets]->Fill(met);
+
+	hMET[jets.size()]->Fill(met);
+
 	
 	//HT[i]
-	hHT[numJets]->Fill(energy + met + one->et() + two->et());
+
+	hHT[jets.size()]->Fill(energy + met + one->et() + two->et());
+
 }
 
 

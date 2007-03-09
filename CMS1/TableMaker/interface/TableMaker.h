@@ -11,9 +11,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: slava77 $
-// $Date: 2007/03/09 20:56:39 $
-// $Revision: 1.7 $
+// $Author: latb $
+// $Date: 2007/03/09 21:24:33 $
+// $Revision: 1.8 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
@@ -24,6 +24,7 @@
 #include "CMS1/Base/interface/Cuts.h"
 
 #include <TH1.h>
+#include <TH2.h>
 #include <TFile.h>
 #include <vector>
 
@@ -77,6 +78,7 @@ namespace cms1 {
 	std::string fileTag;  //Help differentiate files, input in cfg
 	
 	TH1I *hNJets;  //Number of events per jet binning
+	TH2I *hTable;
 	std::vector<TH1F *> hPTJet;//Events vs first four highest PT Jet
 	std::vector<TH1F *> hMll; //Events vs inariant mass  x5
 	std::vector<TH1F *> hPTTight; //events per missing tight lepton  x5
@@ -86,8 +88,8 @@ namespace cms1 {
 	std::vector<TH1F *> hHT; //Events vs. temperature   x5
 	std::vector<TH1F *> hMET; //events per missing et  x5
 
-	void FillHistograms(std::vector<const reco::CaloJet*> jets, unsigned int,const RecoCandidate *,const RecoCandidate *, double);
 
+	void FillHistograms(std::vector<const reco::CaloJet*> jets, const RecoCandidate *,const RecoCandidate *, double);
 	
   };
 }
