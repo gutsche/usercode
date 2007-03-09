@@ -6,12 +6,15 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: gutsche $
-// $Date: 2007/02/22 23:10:50 $
-// $Revision: 1.2 $
+// $Author: sani $
+// $Date: 2007/03/04 12:30:09 $
+// $Revision: 1.3 $
 //
 
 #include "CMS1/Base/interface/Cuts.h"
+
+#include "DataFormats/Math/interface/LorentzVector.h"
+#include "Math/VectorUtil.h"
 
 bool cms1::Cuts::testTrack(const reco::Track& track) const
 {
@@ -50,3 +53,14 @@ bool cms1::Cuts::testGenJet(const reco::GenJet& jet) const {
    return true;
 }
 
+bool cms1::Cuts::testJetForElectrons(const reco::Candidate& candidate) const {
+
+  for(std::vector<const reco::SiStripElectron*>::const_iterator itEl = eColl->begin(); itEl != eColl->end(); ++itEl) {
+    
+    double dR = ROOT::Math::VectorUtil::DeltaR((*itEl)->p4(), candidate.p4());
+    if (dR < 0.4)
+      return false;
+  }
+
+  return true;
+}
