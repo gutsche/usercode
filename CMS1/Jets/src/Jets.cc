@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
-// $Author: gutsche $
-// $Date: 2007/02/22 23:10:51 $
-// $Revision: 1.1 $
+// $Author: sani $
+// $Date: 2007/03/09 18:34:48 $
+// $Revision: 1.2 $
 //
 
 #include "CMS1/Jets/interface/Jets.h"
@@ -53,10 +53,11 @@ std::vector<const reco::CaloJet*> cms1::Jets::getJets(const JetType jetType,
 	std::cout << "ERROR: global jet collection is not set" << std::endl;
 	return output_list;
       }
-
+      std::cout << "jet class" << data_.globalJetCollection->size() << std::endl;
       for (std::vector<reco::CaloJet>::const_iterator jet = data_.globalJetCollection->begin(); jet != data_.globalJetCollection->end(); ++jet) {
 	  // Here we make simple cuts in a standard way
-	if (cuts.testJetForElectrons(*jet)) 
+	if ((cuts.testJetForElectrons(*jet)) &&
+            (cuts.testCandidate(*jet)))
 	  output_list.push_back(&*jet);
       }
     }
