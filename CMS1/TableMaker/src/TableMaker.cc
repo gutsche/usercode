@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/03/09 21:24:33 $
-// $Revision: 1.13 $
+// $Author: edusinbe $
+// $Date: 2007/03/09 22:54:09 $
+// $Revision: 1.15 $
 //
 
 #include <vector>
@@ -408,6 +408,7 @@ cms1::TableMaker::analyze()
       double isoRelTight = trackRelIsolation((*tightMuon)->momentum(), (*tightMuon)->vertex(), trackCollection_,
 					0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
       if (isoRelTight > 0.1) continue;
+
     // loop over loose electrons
     for ( std::vector<const reco::SiStripElectron*>::iterator looseElectron = looseElectrons.begin(),
 	    electronEnd = looseElectrons.end();
@@ -416,6 +417,24 @@ cms1::TableMaker::analyze()
       double isoRelLoose = trackRelIsolation((*looseElectron)->momentum(), (*looseElectron)->vertex(), trackCollection_,
 					0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
       if (isoRelLoose > 0.1) continue;
+
+      // exclude combinations from both tight electron and muon which have already been counted in EMu
+      bool passed = false;
+      for ( std::vector<std::pair<const reco::SiStripElectron*, const reco::Muon*> >::iterator passedPair = takenEMu.begin(),
+	      passedPairEnd = takenEMu.end();
+	    passedPair != passedPairEnd;
+	    ++passedPair ) {
+	if ( (passedPair->second == *tightMuon) &&
+	     (passedPair->first == *looseElectron) ) {
+	  passed = true;
+	  break;
+	}
+      }
+      // continue if pair hasn't passed cuts yet
+      if ( !passed ) {
+
+
+
       // check if candidate passes MET cut
 	  if ( met > metCut_.pt_min) {
         takenMuE.push_back(std::make_pair(*tightMuon,*looseElectron));
@@ -433,6 +452,7 @@ cms1::TableMaker::analyze()
 	      countedMuEJets_[njet]++;       
 
 	      FillHistograms(jetsnoel,*tightMuon,*looseElectron,met);
+	  }
       }
     }
     // loop over loose muons
