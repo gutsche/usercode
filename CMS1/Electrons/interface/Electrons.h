@@ -10,13 +10,14 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: gutsche $
-// $Date: 2007/02/22 23:10:50 $
-// $Revision: 1.1 $
+// $Author: burkett $
+// $Date: 2007/03/03 13:05:11 $
+// $Revision: 1.2 $
 //
 
 #include "DataFormats/EgammaCandidates/interface/Electron.h"
 #include "DataFormats/EgammaCandidates/interface/SiStripElectron.h"
+#include "CLHEP/HepMC/GenParticle.h"
 
 #include "CMS1/Base/interface/Cuts.h"
 
@@ -29,6 +30,7 @@ namespace cms1 {
       {}
       
       const std::vector<reco::SiStripElectron>*              globalElectronCollection;
+      std::vector<HepMC::GenParticle>* mcInfo;
     };
      
     // These are "types of electrons" that we define.  We can add as amany as we want as

@@ -9,6 +9,8 @@
 <use name=CMS1/MET>
 <use name=DataFormats/Math>
 <use name=root>
+<use name=SimDataFormats/HepMCProduct>
+<use name=clhep>
 <flags SEAL_PLUGIN_NAME="CMS1TableMaker">
 <export>
    <lib name=CMS1TableMaker>
@@ -23,5 +25,7 @@
    <use name=CMS1/MET>
    <use name=DataFormats/Math>
    <use name=root>
+   <use name=SimDataFormats/HepMCProduct>
+   <use name=clhep>
 </export>
 <Flags CXXFLAGS=-g>

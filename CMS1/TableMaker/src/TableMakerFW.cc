@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: fisk $
-// $Date: 2007/03/09 18:23:36 $
-// $Revision: 1.3 $
+// $Author: slava77 $
+// $Date: 2007/03/09 20:56:39 $
+// $Revision: 1.4 $
 //
 
 #include <vector>
@@ -19,6 +19,7 @@
 #include <iomanip>
 
 #include "CMS1/TableMaker/interface/TableMakerFW.h"
+#include "SimDataFormats/HepMCProduct/interface/HepMCProduct.h"
 
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
@@ -82,6 +83,14 @@ cms1::TableMakerFW::TableMakerFW(const edm::ParameterSet& iConfig)
 void
 cms1::TableMakerFW::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
+  // get MC Event
+  edm::Handle<edm::HepMCProduct> mcCollectionHandle;
+  iEvent.getByLabel("VtxSmeared", mcCollectionHandle);
+  const HepMC::GenEvent* genEvent = mcCollectionHandle->GetEvent();
+  std::vector<HepMC::GenParticle> mcParticle;
+  for (HepMC::GenEvent::particle_const_iterator p = genEvent->particles_begin(); p != genEvent->particles_end(); ++p)
+    mcParticle.push_back(**p);
+ 
   // get muon collection from the event
   edm::Handle<reco::TrackCollection> trackCollectionHandle;
   iEvent.getByLabel(globalTrackInputTag_, trackCollectionHandle);
@@ -120,6 +129,7 @@ cms1::TableMakerFW::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
   // want to use to the ElectronData object.
   // This needs to be done for EVERY EVENT
   electrons_.getData().globalElectronCollection = electronCollection;
+  electrons_.getData().mcInfo = &mcParticle;
 
   // pass the collection pointer of the collection that we 
   // want to use to the JetData object.
