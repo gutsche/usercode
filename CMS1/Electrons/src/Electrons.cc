@@ -7,12 +7,15 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: gutsche $
-// $Date: 2007/02/22 23:10:51 $
-// $Revision: 1.1 $
+// $Author: burkett $
+// $Date: 2007/03/03 13:05:11 $
+// $Revision: 1.2 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
+#include "DataFormats/EgammaCandidates/interface/SiStripElectron.h"
+#include "DataFormats/EgammaReco/interface/SuperClusterFwd.h"
+#include "DataFormats/EgammaReco/interface/SuperCluster.h"
 
 std::vector<const reco::SiStripElectron*> cms1::Electrons::getElectrons(const ElectronType electronType,
 								 const Cuts& cuts,
@@ -34,7 +37,12 @@ std::vector<const reco::SiStripElectron*> cms1::Electrons::getElectrons(const El
 	    ++electron ) 
 	{
 	  // Here we make simple cuts in a standard way
-	  if ( cuts.testCandidate(*electron) ) output_list.push_back(&*electron);
+	  if ( ! cuts.testCandidate(*electron) ) continue;
+	  // get cluster energy
+	   double energy = electron->superCluster()->energy();
+	   std::cout << "Electron (p,E): " << electron->p() << ", " << energy <<std::endl;
+	   if (electron->p() < 1 || energy/electron->p() <0.5) continue;
+	   output_list.push_back(&*electron);
 	}
       
       // At this point the output_list has been filled with electrons passing the simple cuts
@@ -58,7 +66,12 @@ std::vector<const reco::SiStripElectron*> cms1::Electrons::getElectrons(const El
 	    ++electron ) 
 	{
 	  // Here we make simple cuts in a standard way
-	  if ( cuts.testCandidate(*electron) ) output_list.push_back(&*electron);
+	  if ( ! cuts.testCandidate(*electron) ) continue;
+	  // get cluster energy
+	   double energy = electron->superCluster()->energy();
+	   std::cout << "Electron (p,E): " << electron->p() << ", " << energy <<std::endl;
+	   if (electron->p() < 1 || energy/electron->p() <0.5) continue;
+	   output_list.push_back(&*electron);
 	}
       
     }
