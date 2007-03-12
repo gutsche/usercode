@@ -1,0 +1,8 @@
+replace PoolSource.fileNames = {
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070303_01/595_0.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070303_01/595_1.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070303_01/595_2.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070303_01/595_3.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070303_01/595_4.root"
+}
+
