@@ -15,6 +15,9 @@ source = PoolSource
 # timer
 include "GutSoftConfigurations/Timing/timing.cff"
 
+# include true information
+include "GutSoftConfigurations/TrueInformation/trueInformation.cff"
+
 # include tracker local reconstruction
 include "RecoLocalTracker/Configuration/data/RecoLocalTracker.cff"
 
@@ -33,6 +36,9 @@ include "GutSoftConfigurations/TrackObjects/trackObjects.cff"
 # trackEfficiencyObjects
 include "GutSoftConfigurations/TrackObjects/trackEfficiencyObjects.cff"
 
+# global muon analyzer
+include "GutSoftAnalyzers/GutSoftGlobalMuonAnalyzer/data/gutSoftGlobalMuonAnalyzer.cff"
+
 # timing analyzer
 include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/ckfGutSoftTimingAnalyzer.cff"
 include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/rsGutSoftTimingAnalyzer.cff"
@@ -43,6 +49,10 @@ module out = PoolOutputModule
   untracked string fileName = 'output.root'
 } 
 
+
+path pTR = {
+  trueInformation
+}
 
 path pR = {
   trackerlocalreco,
@@ -67,7 +77,7 @@ path p3 =
   rsGutSoftTimingAnalyzer
 }
 
-schedule = {pR,pT,p1,p3,e}
+schedule = {pTR,pR,pT,p1,p3,e}
 
 endpath e =
 {
