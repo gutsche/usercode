@@ -23,6 +23,12 @@ include "RecoLocalTracker/Configuration/data/RecoLocalTracker.cff"
 
 # include track reconstruction
 include "RecoTracker/Configuration/data/RecoTracker.cff"
+replace roadSearchSeeds.InnerSeedRecHitAccessMode = "STANDARD"
+replace roadSearchSeeds.InnerSeedRecHitAccessUseRPhi = true
+replace roadSearchSeeds.InnerSeedRecHitAccessUseStereo = true
+replace roadSearchSeeds.OuterSeedRecHitAccessMode = "STANDARD"
+replace roadSearchSeeds.OuterSeedRecHitAccessUseRPhi = true
+replace roadSearchSeeds.OuterSeedRecHitAccessUseStereo = true
 
 # trackObjects
 include "GutSoftConfigurations/TrackObjects/trackObjects.cff"
