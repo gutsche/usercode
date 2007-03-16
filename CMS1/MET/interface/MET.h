@@ -11,50 +11,29 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: latb $
-// $Date: 2007/03/01 19:09:22 $
-// $Revision: 1.2 $
+// $Date: 2007/03/01 21:09:55 $
+// $Revision: 1.3 $
 //
 
 #include "DataFormats/METReco/interface/CaloMETCollection.h"
 #include "DataFormats/MuonReco/interface/Muon.h"
 
 #include "CMS1/Base/interface/Cuts.h"
+#include "CMS1/Base/interface/BlackBox.h"
 
 namespace cms1 {
-  class MET  {
+   class MET: public BlackBox  {
   public:
-    struct METData
-    {
-      METData(): globalMETCollection(0)
-      {}
+      MET(): BlackBox()	{}
       
-      const std::vector<reco::CaloMET>*              globalMETCollection;
-    };
+      enum METType { DefaultMET };
      
-    // These are "types of electrons" that we define.  We can add as amany as we want as
-    // people invent new electron requirements
-    enum METType { GlobalMET };
-     
-    // We need to have pointers from the event to the collections that we might want to use.
-    // This is done by setting the data_ private member at the beginning of the analysis of 
-    // each event.  
-    void setData( METData& data ) { data_ = data; }  // sets data_
-    const METData& getData() const { return data_; } // gets data_ back
-    METData& getData() { return data_; }            // gaets data_ back
-
-    // This is the function that does all the work
-    std::vector<const reco::CaloMET*> getMET (const METType, 
-					      const Cuts&,
-					       bool isolated = true);
+      // This is the function that does all the work
+      const reco::CaloMET* getMET (const METType );
       
-    // a trivial function that uses getMET to return number of 
-    // electrons of a given type in the event
-    int numberOfMET(const METType type, const Cuts& cuts) {
-      return getMET(type,cuts).size();
-    }
-    
-  private:
-    METData data_;
+      // here should be all corrections
+      static void correctMETmuons(const std::vector<const reco::Muon*>* m,
+				  double& et, double& phi);
   };
 }
 

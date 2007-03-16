@@ -8,53 +8,57 @@
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
 // $Author: latb $
-// $Date: 2007/03/01 19:06:59 $
-// $Revision: 1.3 $
+// $Date: 2007/03/01 21:09:55 $
+// $Revision: 1.4 $
 //
 
 #include <iostream>
 #include "CMS1/MET/interface/MET.h"
 
-std::vector<const reco::CaloMET*> cms1::MET::getMET(const METType METType,
-						      const Cuts& cuts,
-						      const bool isolated )
+const reco::CaloMET* cms1::MET::getMET(const METType type)
 {
-  // this is the output list
-  std::vector<const reco::CaloMET*> output_list;
    
-  // Only TightGlobalMET are implemented for now
-  switch (METType) {
-  case GlobalMET:
+   switch (type) {
+    case DefaultMET:
     {
-      if (! data_.globalMETCollection) {
-	std::cout << "ERROR: global MET collection is not set" << std::endl;
-	return output_list;
+      if (! data_ || ! data_->metCollection) {
+	std::cout << "ERROR: MET collection is not set" << std::endl;
+	 return 0;
       }
 
-      if ( data_.globalMETCollection->size() > 0 ) {
-
-	const reco::CaloMET *MET = &(*(data_.globalMETCollection->begin()));
-
-	if ( cuts.testCandidate(*MET) ) output_list.push_back(MET);
-      }
-      
-      // At this point the output_list has been filled with MET passing the simple cuts
-      // In general, we will want to add more cuts.  This could go here.  It can be
-      // done several ways, for example:
-      //     Make another empty vector "final_output_list"
-      //     loop over the vector "output_list" that we just made and add to final_output_list
-      //     those MET that pass more complicated cuts
-      // For now, none of this is implemented    
-      
+      if ( ! data_->metCollection->empty() )
+	 return &(data_->metCollection->front());
+       else
+	 return 0;
     }
     break;
     // You get here if you have requested a "METType" that is not implemented
   default:
     std::cout << "Unkown or not implemented type" << std::endl;
   }
-  return output_list;
+   return 0;
 }
 
+// correct MET energies for Muons
+// (input parameters are corrected by the algorithm)
+void cms1::MET::correctMETmuons(const std::vector<const reco::Muon*>* m, double& et, double& phi) {
+//		std::cout << "We're correctiong METs for Muons here" << std::endl;
+// ACHTUNG: we should also correct for the energy MIP
+
+   	double metx =  et*std::cos(phi);
+		double mety =  et*std::sin(phi);
+		for ( std::vector<const reco::Muon*>::const_iterator i = m->begin(), ie = m->end();
+			i != ie;
+			++i ) {
+				const reco::Muon* cp = *i;
+				double pt0 = cp->pt(); 
+				double phi0 = cp->phi(); 
+				metx -= pt0*std::cos(phi0);
+				mety -= pt0*std::sin(phi0);
+		}
+		et = std::sqrt(metx*metx+mety*mety);
+		phi = std::atan2(mety, metx);
+}
 
 
 
