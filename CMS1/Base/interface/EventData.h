@@ -8,9 +8,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author:$
-// $Date: 2007/03/09 18:31:56 $
-// $Revision: 1.3 $
+// $Author: dmytro $
+// $Date: 2007/03/16 06:57:29 $
+// $Revision: 1.1 $
 //
 
 #include "DataFormats/JetReco/interface/CaloJet.h"
@@ -43,7 +43,6 @@ namespace cms1 {
 
 	// MET
 	const std::vector<reco::CaloMET>*              metCollection;
-	
 	
 	EventData():
 	   mcInfo(0)
