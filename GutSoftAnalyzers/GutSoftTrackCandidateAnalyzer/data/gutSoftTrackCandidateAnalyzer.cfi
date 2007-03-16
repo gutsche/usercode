@@ -1,5 +1,8 @@
 module gutSoftTrackCandidateAnalyzer = GutSoftTrackCandidateAnalyzer
 {
-  untracked InputTag TrackCandidateInputTag = rsTrackCandidates
-  untracked string   BaseDirectoryName      = "TrackCandidates"
+
+  untracked string OutputFileName              = "gutSoftTrackCandidateAnalyzer.root"  
+  untracked string TrackCandidateProducerLabel = "rsTrackCandidates"
+  untracked string BaseDirectoryName           = "TrackCandidates"
+
 }

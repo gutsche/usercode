@@ -8,8 +8,8 @@
 // Created:         Wed Oct 11 02:40:58 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/27 23:51:38 $
-// $Revision: 1.1 $
+// $Date: 2006/10/25 22:01:37 $
+// $Revision: 1.3 $
 //
 
 #include <iostream>
@@ -37,15 +37,24 @@ GutSoftHistogramFileMerger::GutSoftHistogramFileMerger(std::string outputFileNam
   //
 
   // open input files
+  std::vector<TFile*> inputFiles;
   for ( std::vector<std::string>::const_iterator inputFileName = inputFileNames_.begin();
 	inputFileName != inputFileNames_.end();
 	++inputFileName ) {
     TFile *file = new TFile(inputFileName->c_str());
     if ( !file->IsZombie() ) {
-      std::cout << "Reading in file: " << file->GetName() << std::endl;
-      readFile(outputFileContent_,file);
+      inputFiles.push_back(file);
     }
-    delete file;
+  }
+
+  // copy content of input files into FileContent structure
+  for ( std::vector<TFile*>::iterator inputFile = inputFiles.begin();
+	inputFile != inputFiles.end();
+	++inputFile ) {
+    
+    std::cout << "Reading in file: " << (*inputFile)->GetName() << std::endl;
+    readFile(outputFileContent_,*inputFile);
+    
   }
 
   // write FileContent structure into output file
@@ -56,6 +65,13 @@ GutSoftHistogramFileMerger::GutSoftHistogramFileMerger(std::string outputFileNam
   // write and close oututFile
   outputFile->Write();
   delete outputFile;
+
+  // close input files
+  for ( std::vector<TFile*>::iterator inputFile = inputFiles.begin();
+	inputFile != inputFiles.end();
+	++inputFile ) {
+    delete *inputFile;
+  }
 
 }
 
@@ -151,10 +167,7 @@ bool GutSoftHistogramFileMerger::readFile(FileContent &outputFileContent,
       DirectoryContent &content = outputFileContent[*directory_name];
       if ( content.find(obj->GetName()) == content.end() ) {
 	// add if not already existing
-	TObject *clone = obj->Clone();
-	TH1 *histogram = (TH1*)(clone);
-	histogram->SetDirectory(0);
-	content.insert(std::make_pair(clone->GetName(),clone));
+	content.insert(std::make_pair(obj->GetName(),obj));
       } else {
 	// merge if already existing
 	merge(content[obj->GetName()],obj);

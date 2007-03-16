@@ -1,5 +1,6 @@
 module gutSoftTrajectorySeedAnalyzer = GutSoftTrajectorySeedAnalyzer
 {
-  untracked InputTag TrajectorySeedInputTag = roadSearchSeeds
-  untracked string   BaseDirectoryName      = "TrajectorySeeds"
+  untracked string OutputFileName              = "gutSoftTrajectorySeedAnalyzer.root"  
+  untracked string TrajectorySeedProducerLabel = "roadSearchSeeds"
+  untracked string BaseDirectoryName           = "TrajectorySeeds"
 }

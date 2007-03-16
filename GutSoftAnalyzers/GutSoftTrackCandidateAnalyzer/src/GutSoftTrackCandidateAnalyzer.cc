@@ -8,17 +8,14 @@
 // Created:         Wed Oct 18 01:05:12 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/12/21 21:29:51 $
-// $Revision: 1.4 $
+// $Date: 2006/10/25 02:07:30 $
+// $Revision: 1.2 $
 //
 
 #include <string>
 
 #include "GutSoftAnalyzers/GutSoftTrackCandidateAnalyzer/interface/GutSoftTrackCandidateAnalyzer.h"
 
-#include "GutSoftTools/GutSoftHistogramFileService/interface/GutSoftHistogramFileService.h"
-
-#include "FWCore/ServiceRegistry/interface/Service.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include "DataFormats/TrackCandidate/interface/TrackCandidate.h"
@@ -30,11 +27,9 @@
 GutSoftTrackCandidateAnalyzer::GutSoftTrackCandidateAnalyzer(const edm::ParameterSet& iConfig)
 {
 
-  trackCandidateInputTag_  = iConfig.getUntrackedParameter<edm::InputTag>("TrackCandidateInputTag");
+  outputFileName_               = iConfig.getUntrackedParameter<std::string>("OutputFileName");
+  trackCandidateProducerLabel_  = iConfig.getUntrackedParameter<std::string>("TrackCandidateProducerLabel");
   baseDirectoryName_            = iConfig.getUntrackedParameter<std::string>("BaseDirectoryName");
-
-  // GutSoftHistogramFactory
-  histograms_ = edm::Service<GutSoftHistogramFileService>()->getFactory();
 
 }
 
@@ -49,21 +44,17 @@ void
 GutSoftTrackCandidateAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
 
-  // set baseDirectory in GutSoftHistogramFactory
-  histograms_->setBaseDirectory(baseDirectoryName_);
-
   const TrackCandidateCollection *trackCandidateCollection = 0;
   try {
     edm::Handle<TrackCandidateCollection> trackCandidateCollectionHandle;
-    iEvent.getByLabel(trackCandidateInputTag_,trackCandidateCollectionHandle);
+    iEvent.getByLabel(trackCandidateProducerLabel_,trackCandidateCollectionHandle);
     trackCandidateCollection = trackCandidateCollectionHandle.product();
   }
   catch (edm::Exception const& x) {
     if ( x.categoryCode() == edm::errors::ProductNotFound ) {
       if ( x.history().size() == 1 ) {
-	static const TrackCandidateCollection s_empty;
-	trackCandidateCollection = &s_empty;
-	edm::LogWarning("GutSoftTrackCandidateAnalyzer") << "Collection TrackCandidateCollection with label " << trackCandidateInputTag_ << " cannot be found, using empty collection of same type";
+	trackCandidateCollection = new TrackCandidateCollection();
+	edm::LogWarning("GutSoftTrackCandidateAnalyzer") << "Collection TrackCandidateCollection with label " << trackCandidateProducerLabel_ << " cannot be found, using empty collection of same type";
       }
     }
   }
@@ -112,15 +103,15 @@ GutSoftTrackCandidateAnalyzer::analyze(const edm::Event& iEvent, const edm::Even
       }
     }
     
-    histograms_->fill("nHitPerTrackCandidateVsEta",0.,nHit);
-    histograms_->fill("nStripHitPerTrackCandidateVsEta",0.,nStripHit);
-    histograms_->fill("nPixelHitPerTrackCandidateVsEta",0.,nPixelHit);
-    histograms_->fill("nTIBHitPerTrackCandidateVsEta",0.,nTIBHit);
-    histograms_->fill("nTOBHitPerTrackCandidateVsEta",0.,nTOBHit);
-    histograms_->fill("nTIDHitPerTrackCandidateVsEta",0.,nTIDHit);
-    histograms_->fill("nTECHitPerTrackCandidateVsEta",0.,nTECHit);
-    histograms_->fill("nPXBHitPerTrackCandidateVsEta",0.,nPXBHit);
-    histograms_->fill("nPXFHitPerTrackCandidateVsEta",0.,nPXFHit);
+    histograms_->fill("nHitPerTrackCandidateVsEta",nHit,0.);
+    histograms_->fill("nStripHitPerTrackCandidateVsEta",nStripHit,0.);
+    histograms_->fill("nPixelHitPerTrackCandidateVsEta",nPixelHit,0.);
+    histograms_->fill("nTIBHitPerTrackCandidateVsEta",nTIBHit,0.);
+    histograms_->fill("nTOBHitPerTrackCandidateVsEta",nTOBHit,0.);
+    histograms_->fill("nTIDHitPerTrackCandidateVsEta",nTIDHit,0.);
+    histograms_->fill("nTECHitPerTrackCandidateVsEta",nTECHit,0.);
+    histograms_->fill("nPXBHitPerTrackCandidateVsEta",nPXBHit,0.);
+    histograms_->fill("nPXFHitPerTrackCandidateVsEta",nPXFHit,0.);
 
   }
 
@@ -130,6 +121,8 @@ GutSoftTrackCandidateAnalyzer::analyze(const edm::Event& iEvent, const edm::Even
 void 
 GutSoftTrackCandidateAnalyzer::beginJob(const edm::EventSetup&)
 {
+  // GutSoftHistogramFactory
+  histograms_ = new GutSoftHistogramFactory(outputFileName_);
 
   // binning for histograms
   unsigned int nTrackCandidates_nbins    = 100000;
@@ -150,35 +143,41 @@ GutSoftTrackCandidateAnalyzer::beginJob(const edm::EventSetup&)
 			     nTrackCandidatesDirectory,nTrackCandidates_nbins,nTrackCandidates_low,nTrackCandidates_high,
 			     "n_{TrackCandidates}","Events");
   histograms_->bookHistogram("nHitPerTrackCandidateVsEta","Number of hits per track candidate vs. #eta",
-			     nTrackCandidatesDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nTrackCandidatesDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nStripHitPerTrackCandidateVsEta","Number of strip hits per track candidate vs. #eta",
-			     nTrackCandidatesDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nTrackCandidatesDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nPixelHitPerTrackCandidateVsEta","Number of pixel hits per track candidate vs. #eta",
-			     nTrackCandidatesDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nTrackCandidatesDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nTIBHitPerTrackCandidateVsEta","Number of TIB hits per track candidate vs. #eta",
-			     nTrackCandidatesDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nTrackCandidatesDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nTOBHitPerTrackCandidateVsEta","Number of TOB hits per track candidate vs. #eta",
-			     nTrackCandidatesDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nTrackCandidatesDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nTIDHitPerTrackCandidateVsEta","Number of TID hits per track candidate vs. #eta",
-			     nTrackCandidatesDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nTrackCandidatesDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nTECHitPerTrackCandidateVsEta","Number of TEC hits per track candidate vs. #eta",
-			     nTrackCandidatesDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nTrackCandidatesDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nPXBHitPerTrackCandidateVsEta","Number of PXB hits per track candidate vs. #eta",
-			     nTrackCandidatesDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nTrackCandidatesDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nPXFHitPerTrackCandidateVsEta","Number of PXF hits per track candidate vs. #eta",
-			     nTrackCandidatesDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nTrackCandidatesDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
 }
 
 void 
 GutSoftTrackCandidateAnalyzer::endJob() {
+
+  // delete GutSoftHistogramFactory, histogram file is written out and can be handled in module endJob functions of the following modules
+  if (histograms_) {
+    delete histograms_;
+    histograms_ = 0;
+  }
 
 }

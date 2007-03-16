@@ -1,7 +1,4 @@
-# include GutSoftHistogramFileService
-include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
-
-#include analyzer
 module ckfSeedAnalyzer = gutSoftTrajectorySeedAnalyzer from "GutSoftAnalyzers/GutSoftTrajectorySeedAnalyzer/data/gutSoftTrajectorySeedAnalyzer.cfi"
-replace ckfSeedAnalyzer.TrajectorySeedInputTag = globalMixedSeeds
-replace ckfSeedAnalyzer.BaseDirectoryName      = "ckfSeeds"
+replace ckfSeedAnalyzer.OutputFileName              = "ckfSeedAnalyzer.root"  
+replace ckfSeedAnalyzer.TrajectorySeedProducerLabel = "globalMixedSeeds"
+replace ckfSeedAnalyzer.BaseDirectoryName           = "ckfSeeds"

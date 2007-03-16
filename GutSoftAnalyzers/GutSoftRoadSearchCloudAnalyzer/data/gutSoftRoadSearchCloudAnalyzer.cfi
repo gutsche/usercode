@@ -1,5 +1,6 @@
 module gutSoftRoadSearchCloudAnalyzer = GutSoftRoadSearchCloudAnalyzer
 {
-  untracked InputTag RoadSearchCloudInputTag = roadSearchClouds
-  untracked string   BaseDirectoryName       = "RoadSearchClouds"
+  untracked string OutputFileName               = "gutSoftRoadSearchCloudAnalyzer.root"  
+  untracked string RoadSearchCloudProducerLabel = "rawRoadSearchClouds"
+  untracked string BaseDirectoryName            = "RoadSearchClouds"
 }

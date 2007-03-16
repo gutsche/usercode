@@ -11,8 +11,8 @@
 // Created:         Tue Oct 17 02:41:12 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/28 20:36:40 $
-// $Revision: 1.2 $
+// $Date: 2006/10/17 03:12:33 $
+// $Revision: 1.1 $
 //
 
 #include <string>
@@ -21,7 +21,6 @@
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "FWCore/ParameterSet/interface/InputTag.h"
 
 #include "GutSoftTools/GutSoftHistogramFactory/interface/GutSoftHistogramFactory.h"
 
@@ -37,8 +36,9 @@ class GutSoftRoadSearchCloudAnalyzer : public edm::EDAnalyzer {
 
   GutSoftHistogramFactory *histograms_;
 
-  edm::InputTag roadSearchCloudInputTag_;
-  std::string   baseDirectoryName_;
+  std::string outputFileName_;
+  std::string roadSearchCloudProducerLabel_;
+  std::string baseDirectoryName_;
 
 };
 

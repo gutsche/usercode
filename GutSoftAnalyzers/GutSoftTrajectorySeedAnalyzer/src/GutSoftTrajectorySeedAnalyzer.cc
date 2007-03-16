@@ -8,17 +8,14 @@
 // Created:         Tue Oct 17 02:07:51 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/29 01:44:39 $
-// $Revision: 1.3 $
+// $Date: 2006/10/25 02:07:31 $
+// $Revision: 1.2 $
 //
 
 #include <string>
 
 #include "GutSoftAnalyzers/GutSoftTrajectorySeedAnalyzer/interface/GutSoftTrajectorySeedAnalyzer.h"
 
-#include "GutSoftTools/GutSoftHistogramFileService/interface/GutSoftHistogramFileService.h"
-
-#include "FWCore/ServiceRegistry/interface/Service.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include "DataFormats/TrajectorySeed/interface/TrajectorySeed.h"
@@ -27,11 +24,9 @@
 GutSoftTrajectorySeedAnalyzer::GutSoftTrajectorySeedAnalyzer(const edm::ParameterSet& iConfig)
 {
 
-  trajectorySeedInputTag_ = iConfig.getUntrackedParameter<edm::InputTag>("TrajectorySeedInputTag");
-  baseDirectoryName_      = iConfig.getUntrackedParameter<std::string>("BaseDirectoryName");
-
-  // GutSoftHistogramFactory
-  histograms_ = edm::Service<GutSoftHistogramFileService>()->getFactory();
+  outputFileName_              = iConfig.getUntrackedParameter<std::string>("OutputFileName");
+  trajectorySeedProducerLabel_ = iConfig.getUntrackedParameter<std::string>("TrajectorySeedProducerLabel");
+  baseDirectoryName_           = iConfig.getUntrackedParameter<std::string>("BaseDirectoryName");
 
 }
 
@@ -46,22 +41,18 @@ void
 GutSoftTrajectorySeedAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
 
-  // set baseDirectory in GutSoftHistogramFactory
-  histograms_->setBaseDirectory(baseDirectoryName_);
-
   // get collection
   const TrajectorySeedCollection *seedCollection = 0;
   try {
     edm::Handle<TrajectorySeedCollection> seedCollectionHandle;
-    iEvent.getByLabel(trajectorySeedInputTag_,seedCollectionHandle);
+    iEvent.getByLabel(trajectorySeedProducerLabel_,seedCollectionHandle);
     seedCollection = seedCollectionHandle.product();
   }
   catch (edm::Exception const& x) {
     if ( x.categoryCode() == edm::errors::ProductNotFound ) {
       if ( x.history().size() == 1 ) {
-	static const TrajectorySeedCollection s_empty;
-	seedCollection = &s_empty;
-	edm::LogWarning("GutSoftTrajectorySeedAnalyzer") << "Collection TrajectorySeedCollection with label " << trajectorySeedInputTag_ << " cannot be found, using empty collection of same type";
+	seedCollection = new TrajectorySeedCollection();
+	edm::LogWarning("GutSoftTrajectorySeedAnalyzer") << "Collection TrajectorySeedCollection with label " << trajectorySeedProducerLabel_ << " cannot be found, using empty collection of same type";
       }
     }
   }
@@ -76,6 +67,9 @@ void
 GutSoftTrajectorySeedAnalyzer::beginJob(const edm::EventSetup&)
 {
 
+  // GutSoftHistogramFactory
+  histograms_ = new GutSoftHistogramFactory(outputFileName_);
+
   // binning for histograms
   unsigned int nSeed_nbins    = 100000;
   unsigned int nSeed_low      = 0;
@@ -89,5 +83,11 @@ GutSoftTrajectorySeedAnalyzer::beginJob(const edm::EventSetup&)
 
 void 
 GutSoftTrajectorySeedAnalyzer::endJob() {
+
+  // delete GutSoftHistogramFactory, histogram file is written out and can be handled in module endJob functions of the following modules
+  if (histograms_) {
+    delete histograms_;
+    histograms_ = 0;
+  }
 
 }

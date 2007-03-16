@@ -3,4 +3,4 @@
 #include "GutSoftAnalyzers/GutSoftTrajectorySeedAnalyzer/interface/GutSoftTrajectorySeedAnalyzer.h"
 
 DEFINE_SEAL_MODULE();
-DEFINE_ANOTHER_FWK_MODULE(GutSoftTrajectorySeedAnalyzer);
+DEFINE_ANOTHER_FWK_MODULE(GutSoftTrajectorySeedAnalyzer)

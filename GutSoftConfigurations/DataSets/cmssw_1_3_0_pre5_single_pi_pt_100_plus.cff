@@ -1,8 +1,0 @@
-replace PoolSource.fileNames = {
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070303_56/593_0.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070303_56/593_1.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070303_56/593_2.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070303_56/593_3.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070303_56/593_4.root"
-}
-

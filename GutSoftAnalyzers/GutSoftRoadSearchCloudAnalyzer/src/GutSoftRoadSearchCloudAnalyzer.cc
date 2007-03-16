@@ -8,17 +8,14 @@
 // Created:         Tue Oct 17 02:41:12 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2007/01/22 01:35:06 $
-// $Revision: 1.6 $
+// $Date: 2006/10/25 02:07:30 $
+// $Revision: 1.2 $
 //
 
 #include <string>
 
 #include "GutSoftAnalyzers/GutSoftRoadSearchCloudAnalyzer/interface/GutSoftRoadSearchCloudAnalyzer.h"
 
-#include "GutSoftTools/GutSoftHistogramFileService/interface/GutSoftHistogramFileService.h"
-
-#include "FWCore/ServiceRegistry/interface/Service.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include "DataFormats/RoadSearchCloud/interface/RoadSearchCloud.h"
@@ -30,11 +27,9 @@
 GutSoftRoadSearchCloudAnalyzer::GutSoftRoadSearchCloudAnalyzer(const edm::ParameterSet& iConfig)
 {
 
-  roadSearchCloudInputTag_      = iConfig.getUntrackedParameter<edm::InputTag>("RoadSearchCloudInputTag");
+  outputFileName_               = iConfig.getUntrackedParameter<std::string>("OutputFileName");
+  roadSearchCloudProducerLabel_ = iConfig.getUntrackedParameter<std::string>("RoadSearchCloudProducerLabel");
   baseDirectoryName_            = iConfig.getUntrackedParameter<std::string>("BaseDirectoryName");
-
-  // GutSoftHistogramFactory
-  histograms_ = edm::Service<GutSoftHistogramFileService>()->getFactory();
 
 }
 
@@ -49,21 +44,17 @@ void
 GutSoftRoadSearchCloudAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
 
-  // set baseDirectory in GutSoftHistogramFactory
-  histograms_->setBaseDirectory(baseDirectoryName_);
-
   const RoadSearchCloudCollection *roadSearchCloudCollection = 0;
   try {
     edm::Handle<RoadSearchCloudCollection> roadSearchCloudCollectionHandle;
-    iEvent.getByLabel(roadSearchCloudInputTag_,roadSearchCloudCollectionHandle);
+    iEvent.getByLabel(roadSearchCloudProducerLabel_,roadSearchCloudCollectionHandle);
     roadSearchCloudCollection = roadSearchCloudCollectionHandle.product();
   }
   catch (edm::Exception const& x) {
     if ( x.categoryCode() == edm::errors::ProductNotFound ) {
       if ( x.history().size() == 1 ) {
-	static const RoadSearchCloudCollection s_empty;
-	roadSearchCloudCollection = &s_empty;
-	edm::LogWarning("GutSoftRoadSearchCloudAnalyzer") << "Collection RoadSearchCloudCollection with label " << roadSearchCloudInputTag_ << " cannot be found, using empty collection of same type";
+	roadSearchCloudCollection = new RoadSearchCloudCollection();
+	edm::LogWarning("GutSoftRoadSearchCloudAnalyzer") << "Collection RoadSearchCloudCollection with label " << roadSearchCloudProducerLabel_ << " cannot be found, using empty collection of same type";
       }
     }
   }
@@ -112,17 +103,15 @@ GutSoftRoadSearchCloudAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
       }
     }
     
-    histograms_->fill("nHitPerCloudVsEta",0.,nHit);
-    histograms_->fill("nStripHitPerCloudVsEta",0.,nStripHit);
-    histograms_->fill("nPixelHitPerCloudVsEta",0.,nPixelHit);
-    histograms_->fill("nTIBHitPerCloudVsEta",0.,nTIBHit);
-    histograms_->fill("nTOBHitPerCloudVsEta",0.,nTOBHit);
-    histograms_->fill("nTIDHitPerCloudVsEta",0.,nTIDHit);
-    histograms_->fill("nTECHitPerCloudVsEta",0.,nTECHit);
-    histograms_->fill("nPXBHitPerCloudVsEta",0.,nPXBHit);
-    histograms_->fill("nPXFHitPerCloudVsEta",0.,nPXFHit);
-
-    histograms_->fill("nHits",cloud->size());
+    histograms_->fill("nHitPerCloudVsEta",nHit,0.);
+    histograms_->fill("nStripHitPerCloudVsEta",nStripHit,0.);
+    histograms_->fill("nPixelHitPerCloudVsEta",nPixelHit,0.);
+    histograms_->fill("nTIBHitPerCloudVsEta",nTIBHit,0.);
+    histograms_->fill("nTOBHitPerCloudVsEta",nTOBHit,0.);
+    histograms_->fill("nTIDHitPerCloudVsEta",nTIDHit,0.);
+    histograms_->fill("nTECHitPerCloudVsEta",nTECHit,0.);
+    histograms_->fill("nPXBHitPerCloudVsEta",nPXBHit,0.);
+    histograms_->fill("nPXFHitPerCloudVsEta",nPXFHit,0.);
 
   }
 
@@ -133,12 +122,14 @@ void
 GutSoftRoadSearchCloudAnalyzer::beginJob(const edm::EventSetup&)
 {
 
-  std::string  nCloudDirectory = baseDirectoryName_;
+  // GutSoftHistogramFactory
+  histograms_ = new GutSoftHistogramFactory(outputFileName_);
 
   // binning for histograms
   unsigned int nCloud_nbins    = 100000;
   unsigned int nCloud_low      = 0;
   unsigned int nCloud_high     = 100000;
+  std::string  nCloudDirectory = baseDirectoryName_;
 
   unsigned int nhit_nbins      = 31;
   double       nhit_low        = -0.5;
@@ -148,48 +139,47 @@ GutSoftRoadSearchCloudAnalyzer::beginJob(const edm::EventSetup&)
   double       eta_low         = -3.;
   double       eta_high        =  3.;
 
-  unsigned int nHits_nbins     = 1000;
-  double       nHits_low       = 0.;
-  double       nHits_high      = 1000.;
-
-
   // book histogram
   histograms_->bookHistogram("nCloud","Number of cloud per event",
 			     nCloudDirectory,nCloud_nbins,nCloud_low,nCloud_high,
 			     "n_{Cloud}","Events");
   histograms_->bookHistogram("nHitPerCloudVsEta","Number of hits per cloud vs. #eta",
-			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nStripHitPerCloudVsEta","Number of strip hits per cloud vs. #eta",
-			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nPixelHitPerCloudVsEta","Number of pixel hits per cloud vs. #eta",
-			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nTIBHitPerCloudVsEta","Number of TIB hits per cloud vs. #eta",
-			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nTOBHitPerCloudVsEta","Number of TOB hits per cloud vs. #eta",
-			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nTIDHitPerCloudVsEta","Number of TID hits per cloud vs. #eta",
-			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nTECHitPerCloudVsEta","Number of TEC hits per cloud vs. #eta",
-			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nPXBHitPerCloudVsEta","Number of PXB hits per cloud vs. #eta",
-			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
   histograms_->bookHistogram("nPXFHitPerCloudVsEta","Number of PXF hits per cloud vs. #eta",
-			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
+			     nCloudDirectory,nhit_nbins,nhit_low,nhit_high,eta_nbins,eta_low,eta_high,
 			     "n_{Hit}","#eta","Events");
-  histograms_->bookHistogram("nHits","Number of hits per cloud",
-			     nCloudDirectory,nHits_nbins,nHits_low,nHits_high,
-			     "n_{Hits}","Events");
+
 }
 
 void 
 GutSoftRoadSearchCloudAnalyzer::endJob() {
+
+  // delete GutSoftHistogramFactory, histogram file is written out and can be handled in module endJob functions of the following modules
+  if ( histograms_ ) {
+    delete histograms_;
+    histograms_ = 0;
+  }
 
 }

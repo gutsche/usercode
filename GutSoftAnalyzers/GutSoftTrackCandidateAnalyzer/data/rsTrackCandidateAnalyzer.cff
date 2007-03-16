@@ -1,7 +1,4 @@
-# include GutSoftHistogramFileService
-include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
-
-#include analyzer
 module rsTrackCandidateAnalyzer = gutSoftTrackCandidateAnalyzer from "GutSoftAnalyzers/GutSoftTrackCandidateAnalyzer/data/gutSoftTrackCandidateAnalyzer.cfi"
-replace rsTrackCandidateAnalyzer.TrackCandidateInputTag      = rsTrackCandidates
+replace rsTrackCandidateAnalyzer.OutputFileName              = "rsTrackCandidateAnalyzer.root"  
+replace rsTrackCandidateAnalyzer.TrackCandidateProducerLabel = "rsTrackCandidates"
 replace rsTrackCandidateAnalyzer.BaseDirectoryName           = "rsTrackCandidates"
