@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: burkett $
-// $Date: 2007/03/03 13:05:11 $
-// $Revision: 1.2 $
+// $Author: dmytro $
+// $Date: 2007/03/10 02:25:39 $
+// $Revision: 1.3 $
 //
 
 #include "DataFormats/EgammaCandidates/interface/Electron.h"
@@ -20,43 +20,21 @@
 #include "CLHEP/HepMC/GenParticle.h"
 
 #include "CMS1/Base/interface/Cuts.h"
+#include "CMS1/Base/interface/BlackBox.h"
 
 namespace cms1 {
-  class Electrons  {
+   class Electrons: public BlackBox  {
   public:
-    struct ElectronData
-    {
-      ElectronData(): globalElectronCollection(0)
-      {}
+     Electrons(): BlackBox(){}
       
-      const std::vector<reco::SiStripElectron>*              globalElectronCollection;
-      std::vector<HepMC::GenParticle>* mcInfo;
-    };
-     
-    // These are "types of electrons" that we define.  We can add as amany as we want as
+    // These are "types of electrons" that we define.  We can add as many as we want as
     // people invent new electron requirements
-    enum ElectronType { AllGlobalElectrons, TightGlobalElectrons, LooseGlobalElectrons };
+    enum ElectronType { TightElectrons, LooseElectrons, TruthMatchedElectrons };
      
-    // We need to have pointers from the event to the collections that we might want to use.
-    // This is done by setting the data_ private member at the beginning of the analysis of 
-    // each event.  
-    void setData( ElectronData& data ) { data_ = data; }  // sets data_
-    const ElectronData& getData() const { return data_; } // gets data_ back
-    ElectronData& getData() { return data_; }            // gaets data_ back
-    
-    // This is the function that does all the work
+    // FIXME: return type corresponds to a single algoritm
     std::vector<const reco::SiStripElectron*> getElectrons (const ElectronType, 
-						     const Cuts&,
-						     bool isolated = true);
-      
-    // a trivial function that uses getElectrons to return number of 
-    // electrons of a given type in the event
-    int numberOfElectrons(const ElectronType type, const Cuts& cuts) {
-      return getElectrons(type,cuts).size();
-    }
-    
-  private:
-    ElectronData data_;
+							    const Cuts&,
+							    Cuts::IsolationType isolated = Cuts::NotIsolated);
   };
 }
 
