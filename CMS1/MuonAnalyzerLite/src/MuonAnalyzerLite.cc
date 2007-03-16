@@ -24,6 +24,9 @@ void cms1::MuonTestAnalyzer(TFile& file)
 
    // instanciate cms1 muons object
    cms1::Muons muons;
+   cms1::EventData eventData;
+   muons.setEventData(&eventData);
+   eventData.globalMuonCollection = &muonCollection;
    cms1::Cuts cuts;
    cuts.pt_min = 2;
    
@@ -33,9 +36,6 @@ void cms1::MuonTestAnalyzer(TFile& file)
       tree->SetBranchAddress("recoMuons_globalMuons__RECO.obj",&muonCollection);
       
       std::cout << "Number of global muons: " << muonCollection.size() << std::endl;
-      cms1::Muons::MuonData data;
-      data.globalMuonCollection = &muonCollection;
-      muons.setData(data);
       std::vector<const reco::Muon*> output(muons.getMuons(cms1::Muons::TightGlobalMuons,cuts));
       
       // print if 2 or more muons are found with pT > 2 GeV
@@ -61,6 +61,9 @@ void cms1::MuonTestAnalyzerSimplified(TFile& file)
 
    // instanciate cms1 muons object
    cms1::Muons muons;
+   cms1::EventData eventData;
+   muons.setEventData(&eventData);
+   eventData.globalMuonCollection = &muonCollection;
    cms1::Cuts cuts;
    cuts.pt_min = 2;
    
@@ -70,9 +73,6 @@ void cms1::MuonTestAnalyzerSimplified(TFile& file)
       tree->SetBranchAddress("recoMuons_globalMuons__RECO.obj",&muonCollection);
       
       std::cout << "Number of global muons: " << muonCollection.size() << std::endl;
-      cms1::Muons::MuonData data;
-      data.globalMuonCollection = &muonCollection;
-      muons.setData(data);
       
       // print if 2 or more muons are found with pT > 2 GeV
       if ( muons.numberOfMuons(cms1::Muons::TightGlobalMuons,cuts) >= 2 ) {

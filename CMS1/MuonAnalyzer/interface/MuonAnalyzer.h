@@ -12,8 +12,8 @@
 // Created:         Mon Jan 29 17:42:34 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/01/22 01:35:05 $
-// $Revision: 1.2 $
+// $Date: 2007/01/29 18:15:27 $
+// $Revision: 1.1 $
 //
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -43,7 +43,7 @@ namespace cms1 {
     double        pt_;
 
     Muons   muons_;
-
+    EventData data_;
   };
 }
 

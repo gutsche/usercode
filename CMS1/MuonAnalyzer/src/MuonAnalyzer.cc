@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Mon Jan 29 17:42:34 UTC 2007
 //
-// $Author: gutsche $
-// $Date: 2007/01/29 18:15:27 $
-// $Revision: 1.1 $
+// $Author: dmytro $
+// $Date: 2007/02/16 11:57:37 $
+// $Revision: 1.2 $
 //
 
 #include "CMS1/MuonAnalyzer/interface/MuonAnalyzer.h"
@@ -22,7 +22,9 @@
 
 cms1::MuonAnalyzer::MuonAnalyzer(const edm::ParameterSet& iConfig)
 {
-
+  // let the muon selector know where to look for EventData
+  muons_.setEventData(&data_);
+   
   // input tags
   globalMuonInputTag_ = iConfig.getUntrackedParameter<edm::InputTag>("GlobalMuonInputTag");
 
@@ -35,9 +37,7 @@ cms1::MuonAnalyzer::MuonAnalyzer(const edm::ParameterSet& iConfig)
 
 cms1::MuonAnalyzer::~MuonAnalyzer()
 {
- 
 }
-
 
 void
 cms1::MuonAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
@@ -49,11 +49,9 @@ cms1::MuonAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
    iEvent.getByLabel(globalMuonInputTag_,muonCollectionHandle);
    muonCollection = muonCollectionHandle.product();
    
-   // pass the collection pointer of the collection that we 
-   // want to use to the MuonData object.
+   // pass the collection pointer to the EventData object
    // This needs to be done for EVERY EVENT
-   Muons::MuonData& data = muons_.getData();
-   data.globalMuonCollection = muonCollection;
+   data_.globalMuonCollection = muonCollection;
    
    // define external cuts
    // Initialized to have all cuts turned off 
