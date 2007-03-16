@@ -11,9 +11,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/03/09 21:24:33 $
-// $Revision: 1.8 $
+// $Author: edusinbe $
+// $Date: 2007/03/09 22:36:32 $
+// $Revision: 1.9 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
@@ -33,11 +33,11 @@ namespace cms1 {
 
   class TableMaker {
   public:
-    void analyze();
-    void beginJob();
-    void endJob();
-  	TableMaker();
-  	~TableMaker();
+     virtual void analyze();
+     virtual void beginJob();
+     virtual void endJob();
+     TableMaker();
+     virtual ~TableMaker();
 
   protected:
     Cuts          tightMuon_;
@@ -57,15 +57,14 @@ namespace cms1 {
     double        ZRangeMinMass_;
     double        ZRangeMaxMass_;
 
+    // Black boxes
     Muons         muons_;
-
     Electrons     electrons_;
-
     Jets          jets_;
-
     MET           MET_;
-
-    reco::TrackCollection* trackCollection_;
+    
+    // Event data container
+    EventData     data_;
 
     unsigned int  events_;
     unsigned int  countedEEJets_[5];
