@@ -60,8 +60,7 @@ path p3 =
   rsGutSoftTimingAnalyzer
 }
 
-schedule = {pR}
-#,pT,p1,p3,e}
+schedule = {pR,pT,p1,p3,e}
 
 endpath e =
 {
