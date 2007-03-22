@@ -11,8 +11,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/03/10 02:25:39 $
-// $Revision: 1.3 $
+// $Date: 2007/03/16 07:15:17 $
+// $Revision: 1.4 $
 //
 
 #include "DataFormats/EgammaCandidates/interface/Electron.h"
@@ -32,9 +32,10 @@ namespace cms1 {
     enum ElectronType { TightElectrons, LooseElectrons, TruthMatchedElectrons };
      
     // FIXME: return type corresponds to a single algoritm
-    std::vector<const reco::SiStripElectron*> getElectrons (const ElectronType, 
+    std::vector<const reco::Candidate*> getElectrons (const ElectronType, 
 							    const Cuts&,
 							    Cuts::IsolationType isolated = Cuts::NotIsolated);
+	void dump(ostream& o, std::vector<const reco::Candidate*>);
   };
 }
 

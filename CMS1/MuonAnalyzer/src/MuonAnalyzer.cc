@@ -9,8 +9,8 @@
 // Created:         Mon Jan 29 17:42:34 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/02/16 11:57:37 $
-// $Revision: 1.2 $
+// $Date: 2007/03/16 07:18:40 $
+// $Revision: 1.3 $
 //
 
 #include "CMS1/MuonAnalyzer/interface/MuonAnalyzer.h"
@@ -61,7 +61,7 @@ cms1::MuonAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
    // Get a vector of pointers to muons passing "thisCuts" and 
    // passing the "TightGlobalMuons" cuts
    // These will be the muons that we work with
-   std::vector<const reco::Muon*> selectedMuons = muons_.getMuons(Muons::TightGlobalMuons,thisCuts);
+   std::vector<const reco::Candidate*> selectedMuons = muons_.getMuons(Muons::TightGlobalMuons,thisCuts);
 
    // How many muons did we select
    if ( selectedMuons.size() >= number_ ) {
@@ -72,8 +72,8 @@ cms1::MuonAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
    // muon we will print out its pt.  We will also find the highest
    // pt one
    double ptmax = 0;
-   const reco::Muon* stiffestMuon=0;
-   for (std::vector<const reco::Muon*>::const_iterator muon = selectedMuons.begin();
+   const reco::Candidate* stiffestMuon=0;
+   for (std::vector<const reco::Candidate*>::const_iterator muon = selectedMuons.begin();
 	muon != selectedMuons.end(); ++muon)
      {
 	if ((*muon)->pt() > ptmax)

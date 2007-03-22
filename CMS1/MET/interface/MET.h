@@ -10,10 +10,11 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/03/01 21:09:55 $
-// $Revision: 1.3 $
+// $Author: dmytro $
+// $Date: 2007/03/16 07:17:44 $
+// $Revision: 1.4 $
 //
+#include <iostream>
 
 #include "DataFormats/METReco/interface/CaloMETCollection.h"
 #include "DataFormats/MuonReco/interface/Muon.h"
@@ -32,8 +33,9 @@ namespace cms1 {
       const reco::CaloMET* getMET (const METType );
       
       // here should be all corrections
-      static void correctMETmuons(const std::vector<const reco::Muon*>* m,
+      static void correctMETmuons(const std::vector<const reco::Candidate*>* m,
 				  double& et, double& phi);
+	  void dump(ostream&, const reco::Candidate*);
   };
 }
 

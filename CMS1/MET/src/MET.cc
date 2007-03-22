@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/03/01 21:09:55 $
-// $Revision: 1.4 $
+// $Author: dmytro $
+// $Date: 2007/03/16 07:17:45 $
+// $Revision: 1.5 $
 //
 
 #include <iostream>
@@ -41,16 +41,16 @@ const reco::CaloMET* cms1::MET::getMET(const METType type)
 
 // correct MET energies for Muons
 // (input parameters are corrected by the algorithm)
-void cms1::MET::correctMETmuons(const std::vector<const reco::Muon*>* m, double& et, double& phi) {
+void cms1::MET::correctMETmuons(const std::vector<const reco::Candidate*>* m, double& et, double& phi) {
 //		std::cout << "We're correctiong METs for Muons here" << std::endl;
 // ACHTUNG: we should also correct for the energy MIP
 
    	double metx =  et*std::cos(phi);
 		double mety =  et*std::sin(phi);
-		for ( std::vector<const reco::Muon*>::const_iterator i = m->begin(), ie = m->end();
+		for ( std::vector<const reco::Candidate*>::const_iterator i = m->begin(), ie = m->end();
 			i != ie;
 			++i ) {
-				const reco::Muon* cp = *i;
+				const reco::Candidate* cp = *i;
 				double pt0 = cp->pt(); 
 				double phi0 = cp->phi(); 
 				metx -= pt0*std::cos(phi0);
@@ -63,8 +63,14 @@ void cms1::MET::correctMETmuons(const std::vector<const reco::Muon*>* m, double&
 
 
 
+void cms1::MET::dump(ostream& o, const reco::Candidate* mo) {
 
-
+	o << "MET      "; 
+	o << "Pt = " << mo->pt(); 
+	o << ", Eta = " << mo->eta(); 
+	o << ", Phi = " << mo->phi(); 
+	o << std::endl; 
+}
 
 
 

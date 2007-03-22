@@ -6,9 +6,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: sani $
-// $Date: 2007/03/09 18:32:07 $
-// $Revision: 1.4 $
+// $Author: dmytro $
+// $Date: 2007/03/16 07:03:58 $
+// $Revision: 1.5 $
 //
 
 #include "CMS1/Base/interface/Cuts.h"
@@ -78,7 +78,7 @@ double cms1::Cuts::trackRelIsolation(const math::XYZVector momentum,
 				     double vtxDiffDMax, double vtxDiffZMax, double ptMin, bool debug)
 {
     double isoResult = -10.;
-    if ( tracks ) {
+    if ( tracks == 0 ) {
        std::cout << "Configuration Error: track collection is not set!" <<std::endl;
        return isoResult;
     }

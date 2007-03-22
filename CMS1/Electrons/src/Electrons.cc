@@ -8,21 +8,22 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/03/10 02:25:40 $
-// $Revision: 1.4 $
+// $Date: 2007/03/16 07:15:17 $
+// $Revision: 1.5 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
+#include "CMS1/Base/interface/Cuts.h"
 #include "DataFormats/EgammaCandidates/interface/SiStripElectron.h"
 #include "DataFormats/EgammaReco/interface/SuperClusterFwd.h"
 #include "DataFormats/EgammaReco/interface/SuperCluster.h"
 
-std::vector<const reco::SiStripElectron*> cms1::Electrons::getElectrons(const ElectronType electronType,
+std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const ElectronType electronType,
 									const Cuts& userCuts,
 									Cuts::IsolationType isolated)
 {
    // define output collection
-   std::vector<const reco::SiStripElectron*> output_list;
+   std::vector<const reco::Candidate*> output_list;
    
    switch (electronType) {
     case LooseElectrons:
@@ -97,4 +98,19 @@ std::vector<const reco::SiStripElectron*> cms1::Electrons::getElectrons(const El
       std::cout << "Unkown or not implemented type" << std::endl;
    }
    return output_list;
+}
+
+void cms1::Electrons::dump(ostream& o, std::vector<const reco::Candidate*> el) {
+	for ( std::vector<const reco::Candidate*>::iterator i = el.begin(), ie = el.end(); i != ie; ++i ) {
+		const reco::Candidate* cp = *i;
+		o << "Electron "; 
+		o << "Pt = " << cp->pt(); 
+		o << ", Eta = " << cp->eta(); 
+		o << ", Phi = " << cp->phi(); 
+		if ( data_->tracks != 0 ) {
+			double isoRel = cms1::Cuts::trackRelIsolation(cp->momentum(), cp->vertex(), data_->tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
+			o << ", isol = " << isoRel;
+		}
+		o << std::endl; 
+	}
 }

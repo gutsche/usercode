@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
-// $Author: edusinbe $
-// $Date: 2007/03/09 22:54:37 $
-// $Revision: 1.3 $
+// $Author: dmytro $
+// $Date: 2007/03/16 07:16:01 $
+// $Revision: 1.4 $
 //
 
 #include "CMS1/Jets/interface/Jets.h"
@@ -17,11 +17,11 @@
 #include "DataFormats/EgammaReco/interface/SuperClusterFwd.h"
 #include "DataFormats/EgammaReco/interface/SuperCluster.h"
 
-std::vector<const reco::CaloJet*> cms1::Jets::getJets( const JetType jetType,
+std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
 						       const Cuts& userCuts )
 {
   // this is the output list
-  std::vector<const reco::CaloJet*> output_list;
+  std::vector<const reco::Candidate*> output_list;
    
    switch (jetType) {
     case DefaultJets:
@@ -49,7 +49,7 @@ std::vector<const reco::CaloJet*> cms1::Jets::getJets( const JetType jetType,
     case JetsWithoutElectrons:
 	{
 	   // get a set of preselected jets
-	   std::vector<const reco::CaloJet*> jets = getJets(DefaultJets,Cuts());
+	   std::vector<const reco::Candidate*> jets = getJets(DefaultJets,Cuts());
 	   
 	   // get a set of veto electrons (they should be clean so that the jet 
 	   // selection efficiency is not too low )
@@ -99,7 +99,7 @@ std::vector<const reco::CaloJet*> cms1::Jets::getJets( const JetType jetType,
 	     }
 	   
 	   // finally we have veto electron, so let's clean up jets
-	   for ( std::vector<const reco::CaloJet*>::const_iterator jet = jets.begin();
+	   for ( std::vector<const reco::Candidate*>::const_iterator jet = jets.begin();
 		 jet != jets.end(); ++ jet )
 	     {
 		if ( ! cuts.testCandidate(**jet) ) continue;
@@ -113,4 +113,15 @@ std::vector<const reco::CaloJet*> cms1::Jets::getJets( const JetType jetType,
     std::cout << "Unkown or not implemented jet type" << std::endl;
   }
   return output_list;
+}
+
+void cms1::Jets::dump(ostream& o, std::vector<const reco::Candidate*> ml) {
+	for ( std::vector<const reco::Candidate*>::iterator i = ml.begin(), ie = ml.end(); i != ie; ++i ) {
+		const reco::Candidate* cp = *i;
+		o << "Jet      "; 
+		o << "Pt = " << cp->pt(); 
+		o << ", Eta = " << cp->eta(); 
+		o << ", Phi = " << cp->phi(); 
+		o << std::endl; 
+	}
 }

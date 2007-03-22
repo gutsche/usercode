@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: gutsche $
-// $Date: 2007/03/10 00:53:31 $
-// $Revision: 1.16 $
+// $Author: dmytro $
+// $Date: 2007/03/16 07:27:07 $
+// $Revision: 1.17 $
 //
 
 #include <vector>
@@ -44,11 +44,11 @@
 // correct the number of Jets according to electron selection
 // this is a very simple algorithm which will be improved, 
 // by the way the cone threshold can be passed as parameter to TableMaker.
-unsigned int nJetsWithoutEl(std::vector<const reco::CaloJet*> jets, const SiStripElectron* e1=0, const SiStripElectron* e2=0) {
+unsigned int nJetsWithoutEl(std::vector<const reco::Candidate*> jets, const Candidate* e1=0, const Candidate* e2=0) {
 
   unsigned int nJets = jets.size();
 
-  for(std::vector<const reco::CaloJet*>::const_iterator itJet = jets.begin(); itJet != jets.end(); ++itJet) {
+  for(std::vector<const reco::Candidate*>::const_iterator itJet = jets.begin(); itJet != jets.end(); ++itJet) {
 
     if (e1 != 0) {
       double dR = ROOT::Math::VectorUtil::DeltaR(e1->p4(), (*itJet)->p4());
@@ -162,120 +162,59 @@ cms1::TableMaker::analyze()
   ++events_;
    
   // get vector of muons
-  std::vector<const reco::Muon*> tightMuons = muons_.getMuons(Muons::TightGlobalMuons,tightMuon_);
-  std::vector<const reco::Muon*> looseMuons = muons_.getMuons(Muons::LooseGlobalMuons,looseMuon_);
-  std::vector<const reco::Muon*> allMuons = muons_.getMuons(Muons::AllGlobalMuons,allMuon_);
+  std::vector<const reco::Candidate*> tightMuons = muons_.getMuons(Muons::TightGlobalMuons,tightMuon_);
+  std::vector<const reco::Candidate*> looseMuons = muons_.getMuons(Muons::LooseGlobalMuons,looseMuon_);
+  std::vector<const reco::Candidate*> allMuons = muons_.getMuons(Muons::AllGlobalMuons,allMuon_);
 
   // get vector of electrons
    tightElectron_.truthMatchingType = Cuts::Electron ; // require truth matching
    tightElectron_.setEventData(&data_);                // let the Cuts know where to get event info (mcInfo in this case)
    looseElectron_.truthMatchingType = Cuts::Electron;  // require truth matching
    looseElectron_.setEventData(&data_);                // let the Cuts know where to get event info (mcInfo in this case)
-  std::vector<const reco::SiStripElectron*> tightElectrons = electrons_.getElectrons(Electrons::TightElectrons,tightElectron_);
-  std::vector<const reco::SiStripElectron*> looseElectrons = electrons_.getElectrons(Electrons::LooseElectrons,looseElectron_);
+  std::vector<const reco::Candidate*> tightElectrons = electrons_.getElectrons(Electrons::TightElectrons,tightElectron_);
+  std::vector<const reco::Candidate*> looseElectrons = electrons_.getElectrons(Electrons::LooseElectrons,looseElectron_);
 
   // get vector of jets
 
-  std::vector<const reco::CaloJet*> jets = jets_.getJets(Jets::DefaultJets,jet_);
-  //    edm::LogVerbatim("CMS1TableMaker") << tightMuons.size() << " tight global muon(s) found!";
-  //    edm::LogVerbatim("CMS1TableMaker") << looseMuons.size() << " loose global muon(s) found!";
-  //    edm::LogVerbatim("CMS1TableMaker") << tightElectrons.size() << " tight global electron(s) found!";
-  //    edm::LogVerbatim("CMS1TableMaker") << looseElectrons.size() << " loose global electron(s) found!";
-  //    edm::LogVerbatim("CMS1TableMaker") << jets.size() << " global jet(s) found!";
+  std::vector<const reco::Candidate*> jets = jets_.getJets(Jets::DefaultJets,jet_);
 
+// get MET without cut and correct
+   const reco::Candidate* metObj = MET_.getMET(MET::DefaultMET);
+   double met = metObj->pt();
+   double mephi = metObj->phi();
+// ACHTUNG, Baby -- here we change met and mephi in situ!!
+// but metObj is not changed 
+   MET::correctMETmuons(&allMuons, met, mephi);
 
-//	cms1::Dump::event();
-//	cms1::Dump::candidates("AllGlobalMuons", allMuons );
-//	cms1::Dump::candidates("LooseGlobalElectrons", looseElectrons );
-//	cms1::Dump::candidates("GlobalJets", jets );
 
 #ifndef NOTDEF
 
 // Dump Event contents
+
 	std::cout << "------------------------------------------------------------------------" << std::endl; 
-
-  // get MET without cut
-   const reco::CaloMET* metObj = MET_.getMET(MET::DefaultMET);
-   double met = metObj->pt();
-   double mephi = metObj->phi();
-
-// ACHTUNG ACHTUNG, here we change met and mephi in situ!!
-   std::cout << "MET = " << met << ", ME Phi = " << mephi << std::endl; 
-   MET::correctMETmuons(&allMuons, met, mephi);
-   std::cout << "MET = " << met << ", ME Phi = " << mephi << std::endl; 
-
 	std::cout << "Dump of Event, " 
 		<< " Ne = " << looseElectrons.size() 
 		<< " Nmu = " << allMuons.size() 
 		<< " Nj = " << jets.size()		 
+		<< " Nj (def.Jets) = " << ( jets_.getEventData()->defaultJets == 0 ? -1 :  int( jets_.getEventData()->defaultJets->size() ) )
 	<< std::endl;	
-
-   	std::cout << "Dump of Event (debug), " 
-		<< " Ne = " << looseElectrons.size() 
-		<< " Nmu = " << allMuons.size() 
-	        << " Nj = " << ( jets_.getEventData()->defaultJets == 0 ? -1 :  int( jets_.getEventData()->defaultJets->size() ) )
-	<< std::endl;	
-
-  for ( std::vector<const reco::SiStripElectron*>::iterator i = looseElectrons.begin(), ie = looseElectrons.end();
-		i != ie;
-		++i ) {
-			const reco::Candidate* cp = *i;
-
-			double isoRel = trackRelIsolation(cp->momentum(), cp->vertex(), data_.tracks,
-							  0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-			std::cout 
-				<< "Electron " 
-			<< "Pt = " << cp->pt() 
-			<< ", Eta = " << cp->eta() 
-			<< ", Phi = " << cp->phi() 
-				<< ", isol = " << isoRel
-			<< std::endl; 
-	}
-		
-	for ( std::vector<const reco::Muon*>::iterator i = allMuons.begin(), ie = allMuons.end();
-		i != ie;
-		++i ) {
-			const reco::Candidate* cp = *i;
-			double isoRel = trackRelIsolation(cp->momentum(), cp->vertex(), data_.tracks,
-							  0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-			std::cout 
-			<< "Muon "  
-			<< "Pt = " << cp->pt() 
-			<< ", Eta = " << cp->eta() 
-			<< ", Phi = " << cp->phi() 
-			<< ", isol = " << isoRel 
-			<< std::endl; 
-	}
-	for ( std::vector<const reco::CaloJet*>::iterator i = jets.begin(), ie = jets.end();
-		i != ie;
-		++i ) {
-			const reco::Candidate* cp = *i;
-			std::cout 
-					<< "Jet " 
-					<< "Pt = " << cp->pt() 
-					<< ", Eta = " << cp->eta() 
-					<< ", Phi = " << cp->phi() 
-					<< std::endl; 
-	}
-		std::cout 
-	   		<< "MET "  
-				<< "Pt = " << metObj->pt() 
-				<< ", Eta = " << metObj->eta() 
-				<< ", Phi = " << metObj->phi() 
-				<< std::endl; 
-
+	electrons_.dump(std::cout, looseElectrons);
+ 	muons_.dump(std::cout, allMuons);
+ 	jets_.dump(std::cout, jets);
+ 	MET_.dump(std::cout, metObj);
+	std::cout << "------------------------------------------------------------------------" << std::endl; 
 
 #endif
 
   // logic
-  std::vector<std::pair<const reco::SiStripElectron*, const reco::SiStripElectron*> > takenEE;
-  std::vector<std::pair<const reco::SiStripElectron*, const reco::Muon*> >     takenEMu;
-  std::vector<std::pair<const reco::Muon*, const reco::SiStripElectron*> >     takenMuE;
-  std::vector<std::pair<const reco::Muon*, const reco::Muon*> >         takenMuMu;
+  std::vector<std::pair<const reco::Candidate*, const reco::Candidate*> > takenEE;
+  std::vector<std::pair<const reco::Candidate*, const reco::Candidate*> >     takenEMu;
+  std::vector<std::pair<const reco::Candidate*, const reco::Candidate*> >     takenMuE;
+  std::vector<std::pair<const reco::Candidate*, const reco::Candidate*> >         takenMuMu;
 
 
   // loop over tight electrons
-  for ( std::vector<const reco::SiStripElectron*>::iterator tightElectron = tightElectrons.begin(),
+  for ( std::vector<const reco::Candidate*>::iterator tightElectron = tightElectrons.begin(),
 	  electronEnd = tightElectrons.end();
 	tightElectron != electronEnd;
 	++tightElectron ) {
@@ -284,7 +223,7 @@ cms1::TableMaker::analyze()
     if (isoRelTight > 0.1) continue;
 
     // loop over loose electrons
-    for ( std::vector<const reco::SiStripElectron*>::iterator looseElectron = looseElectrons.begin(),
+    for ( std::vector<const reco::Candidate*>::iterator looseElectron = looseElectrons.begin(),
 	    electronEnd = looseElectrons.end();
 	  looseElectron != electronEnd;
 	  ++looseElectron ) {
@@ -296,7 +235,7 @@ cms1::TableMaker::analyze()
       if ( *tightElectron != *looseElectron ) {
 	// check if pair already passed cuts
 	bool passed = false;
-	for ( std::vector<std::pair<const reco::SiStripElectron*, const reco::SiStripElectron*> >::iterator passedPair = takenEE.begin(),
+	for ( std::vector<std::pair<const reco::Candidate*, const reco::Candidate*> >::iterator passedPair = takenEE.begin(),
 		passedPairEnd = takenEE.end();
 	      passedPair != passedPairEnd;
 	      ++passedPair ) {
@@ -321,9 +260,9 @@ cms1::TableMaker::analyze()
 		  std::vector<const reco::Candidate*> el;
 		  el.push_back(*tightElectron);
 		  el.push_back(*looseElectron);
-		  std::vector<const reco::CaloJet*> jets = jets_.getJets(Jets::DefaultJets,jet_);
-		  std::vector<const reco::CaloJet*> jetsnoel;
-		 for ( std::vector<const reco::CaloJet*>::const_iterator jet = jets.begin(); jet != jets.end(); ++ jet )
+		  std::vector<const reco::Candidate*> jets = jets_.getJets(Jets::DefaultJets,jet_);
+		  std::vector<const reco::Candidate*> jetsnoel;
+		 for ( std::vector<const reco::Candidate*>::const_iterator jet = jets.begin(); jet != jets.end(); ++ jet )
 		   if ( Cuts::testJetForElectrons(**jet, el ) ) jetsnoel.push_back(*jet);
 		  
 		  int njet = jetsnoel.size();
@@ -341,9 +280,9 @@ cms1::TableMaker::analyze()
 	       std::vector<const reco::Candidate*> el;
 	       el.push_back(*tightElectron);
 	       el.push_back(*looseElectron);
-	       std::vector<const reco::CaloJet*> jets = jets_.getJets(Jets::DefaultJets,jet_);
-	       std::vector<const reco::CaloJet*> jetsnoel;
-	       for ( std::vector<const reco::CaloJet*>::const_iterator jet = jets.begin(); jet != jets.end(); ++ jet )
+	       std::vector<const reco::Candidate*> jets = jets_.getJets(Jets::DefaultJets,jet_);
+	       std::vector<const reco::Candidate*> jetsnoel;
+	       for ( std::vector<const reco::Candidate*>::const_iterator jet = jets.begin(); jet != jets.end(); ++ jet )
 		 if ( Cuts::testJetForElectrons(**jet, el ) ) jetsnoel.push_back(*jet);
 	      
 	      int njet = jetsnoel.size();
@@ -361,7 +300,7 @@ cms1::TableMaker::analyze()
       }
     }
     // loop over loose muons
-    for ( std::vector<const reco::Muon*>::iterator looseMuon = looseMuons.begin(),
+    for ( std::vector<const reco::Candidate*>::iterator looseMuon = looseMuons.begin(),
 	    MuonEnd = looseMuons.end();
 	  looseMuon != MuonEnd;
 	  ++looseMuon ) {
@@ -375,9 +314,9 @@ cms1::TableMaker::analyze()
 	     
 	     std::vector<const reco::Candidate*> el;
 	     el.push_back(*tightElectron);
-	     std::vector<const reco::CaloJet*> jets = jets_.getJets(Jets::DefaultJets,jet_);
-	     std::vector<const reco::CaloJet*> jetsnoel;
-	     for ( std::vector<const reco::CaloJet*>::const_iterator jet = jets.begin(); jet != jets.end(); ++ jet )
+	     std::vector<const reco::Candidate*> jets = jets_.getJets(Jets::DefaultJets,jet_);
+	     std::vector<const reco::Candidate*> jetsnoel;
+	     for ( std::vector<const reco::Candidate*>::const_iterator jet = jets.begin(); jet != jets.end(); ++ jet )
 	       if ( Cuts::testJetForElectrons(**jet, el ) ) jetsnoel.push_back(*jet);
 	     
 	      int njet = jetsnoel.size();
@@ -396,7 +335,7 @@ cms1::TableMaker::analyze()
   }  //End tight electrons loop
 
   // loop over tight muons
-  for ( std::vector<const reco::Muon*>::iterator tightMuon = tightMuons.begin(),
+  for ( std::vector<const reco::Candidate*>::iterator tightMuon = tightMuons.begin(),
 	  muonEnd = tightMuons.end();
 	tightMuon != muonEnd;
 	++tightMuon ) {
@@ -405,7 +344,7 @@ cms1::TableMaker::analyze()
       if (isoRelTight > 0.1) continue;
 
     // loop over loose electrons
-    for ( std::vector<const reco::SiStripElectron*>::iterator looseElectron = looseElectrons.begin(),
+    for ( std::vector<const reco::Candidate*>::iterator looseElectron = looseElectrons.begin(),
 	    electronEnd = looseElectrons.end();
 	  looseElectron != electronEnd;
 	  ++looseElectron ) {
@@ -415,7 +354,7 @@ cms1::TableMaker::analyze()
 
       // exclude combinations from both tight electron and muon which have already been counted in EMu
       bool passed = false;
-      for ( std::vector<std::pair<const reco::SiStripElectron*, const reco::Muon*> >::iterator passedPair = takenEMu.begin(),
+      for ( std::vector<std::pair<const reco::Candidate*, const reco::Candidate*> >::iterator passedPair = takenEMu.begin(),
 	      passedPairEnd = takenEMu.end();
 	    passedPair != passedPairEnd;
 	    ++passedPair ) {
@@ -436,9 +375,9 @@ cms1::TableMaker::analyze()
 	     std::cout<<"Found MuE"<<std::endl;
 	     std::vector<const reco::Candidate*> el;
 	     el.push_back(*looseElectron);
-	     std::vector<const reco::CaloJet*> jets = jets_.getJets(Jets::DefaultJets,jet_);
-	     std::vector<const reco::CaloJet*> jetsnoel;
-	     for ( std::vector<const reco::CaloJet*>::const_iterator jet = jets.begin(); jet != jets.end(); ++ jet )
+	     std::vector<const reco::Candidate*> jets = jets_.getJets(Jets::DefaultJets,jet_);
+	     std::vector<const reco::Candidate*> jetsnoel;
+	     for ( std::vector<const reco::Candidate*>::const_iterator jet = jets.begin(); jet != jets.end(); ++ jet )
 	       if ( Cuts::testJetForElectrons(**jet, el ) ) jetsnoel.push_back(*jet);
 	      
 	      int njet = jetsnoel.size();
@@ -453,7 +392,7 @@ cms1::TableMaker::analyze()
       }
     }
     // loop over loose muons
-    for ( std::vector<const reco::Muon*>::iterator looseMuon = looseMuons.begin(),
+    for ( std::vector<const reco::Candidate*>::iterator looseMuon = looseMuons.begin(),
 	    MuonEnd = looseMuons.end();
 	  looseMuon != MuonEnd;
 	  ++looseMuon ) {
@@ -465,7 +404,7 @@ cms1::TableMaker::analyze()
       if ( *tightMuon != *looseMuon ) {
 	// check if pair already passed cuts
 	bool passed = false;
-	for ( std::vector<std::pair<const reco::Muon*, const reco::Muon*> >::iterator passedPair = takenMuMu.begin(),
+	for ( std::vector<std::pair<const reco::Candidate*, const reco::Candidate*> >::iterator passedPair = takenMuMu.begin(),
 		passedPairEnd = takenMuMu.end();
 	      passedPair != passedPairEnd;
 	      ++passedPair ) {
@@ -490,7 +429,7 @@ cms1::TableMaker::analyze()
     
 
 
-	      std::vector<const reco::CaloJet*> jetsnoel = jets_.getJets(Jets::DefaultJets,jet_);          
+	      std::vector<const reco::Candidate*> jetsnoel = jets_.getJets(Jets::DefaultJets,jet_);          
 	      
 	      int njet = jetsnoel.size();
 	      if (njet > 4)
@@ -615,7 +554,7 @@ cms1::TableMaker::endJob() {
 //Function that will fill all of UCSD Grad Histograms
 
 
-void cms1::TableMaker::FillHistograms(std::vector<const reco::CaloJet*> jets,const RecoCandidate *one,const RecoCandidate *two, double met)     
+void cms1::TableMaker::FillHistograms(std::vector<const reco::Candidate*> jets,const reco::Candidate *one,const reco::Candidate *two, double met)     
 
 {
   std::cout<<"Jets size "<<jets.size()<<std::endl;

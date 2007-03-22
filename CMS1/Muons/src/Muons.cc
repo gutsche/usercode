@@ -7,19 +7,20 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/03/01 19:08:02 $
-// $Revision: 1.4 $
+// $Author: dmytro $
+// $Date: 2007/03/16 07:22:01 $
+// $Revision: 1.5 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
+#include <iostream>
 
-std::vector<const reco::Muon*> cms1::Muons::getMuons(const MuonType muonType,
+std::vector<const reco::Candidate*> cms1::Muons::getMuons(const MuonType muonType,
 						     const Cuts& userCuts,
 						     Cuts::IsolationType isolated )
 {
    // this is the output list
-   std::vector<const reco::Muon*> output_list;
+   std::vector<const reco::Candidate*> output_list;
    
    // Only TightGlobalMuons are implemented for now
    switch (muonType) {
@@ -75,5 +76,23 @@ std::vector<const reco::Muon*> cms1::Muons::getMuons(const MuonType muonType,
     default:
       std::cout << "Muons::getMuons: Unkown or not implemented type" << std::endl;
    }
+   
    return output_list;
 }
+
+void cms1::Muons::dump(ostream& o, std::vector<const reco::Candidate*> ml) {
+	for ( std::vector<const reco::Candidate*>::iterator i = ml.begin(), ie = ml.end(); i != ie; ++i ) {
+		const reco::Candidate* cp = *i;
+		o << "Muon     "; 
+		o << "Pt = " << cp->pt(); 
+		o << ", Eta = " << cp->eta(); 
+		o << ", Phi = " << cp->phi(); 
+		if ( data_->tracks != 0 ) {
+			double isoRel = cms1::Cuts::trackRelIsolation(cp->momentum(), cp->vertex(), data_->tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
+			o << ", isol = " << isoRel;
+		}
+		o << std::endl; 
+	}
+}
+
+

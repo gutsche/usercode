@@ -36,7 +36,7 @@ void cms1::MuonTestAnalyzer(TFile& file)
       tree->SetBranchAddress("recoMuons_globalMuons__RECO.obj",&muonCollection);
       
       std::cout << "Number of global muons: " << muonCollection.size() << std::endl;
-      std::vector<const reco::Muon*> output(muons.getMuons(cms1::Muons::TightGlobalMuons,cuts));
+      std::vector<const reco::Candidate*> output(muons.getMuons(cms1::Muons::TightGlobalMuons,cuts));
       
       // print if 2 or more muons are found with pT > 2 GeV
       if ( output.size() >= 2 ) {

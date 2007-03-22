@@ -10,10 +10,11 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
-// $Author: gutsche $
-// $Date: 2007/02/22 23:10:53 $
-// $Revision: 1.3 $
+// $Author: dmytro $
+// $Date: 2007/03/16 07:22:01 $
+// $Revision: 1.4 $
 //
+#include <iostream>
 
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/MuonReco/interface/MuIsoDeposit.h"
@@ -32,7 +33,7 @@ namespace cms1 {
       enum MuonType { AllTracks, AllGlobalMuons, TightGlobalMuons, LooseGlobalMuons, AllMuonWithDetectorInfos };
      
       // This is the function that does all the work
-      std::vector<const reco::Muon*> getMuons (const MuonType, 
+      std::vector<const reco::Candidate*> getMuons (const MuonType, 
 					       const Cuts&,
 					       Cuts::IsolationType isolated = Cuts::NotIsolated);
       // a trivial function that uses getMuons to return number of 
@@ -40,6 +41,7 @@ namespace cms1 {
       int numberOfMuons(const MuonType type, const Cuts& cuts) {
 	 return getMuons(type,cuts).size();
       }
+      void dump(ostream& o, std::vector<const reco::Candidate*>);
   };
 }
 
