@@ -3,34 +3,31 @@
 #include <sstream>
   
   // read in file
-  ifstream in("log.1");
-  
-  vector<double> rss;
-  vector<double> size;
+  ifstream in("test_6.memory");
   
   double dummy, temp_rss, temp_size;
   string dummy_string;
   
-  while ( in >> dummy >> dummy_string 
-          >> temp_rss >> temp_size ) {
-    rss.push_back(temp_rss);
-    size.push_back(temp_size);
-  }
-  
-  const unsigned int nBins = rss.size();
+  const unsigned int nBins = 100000;
   double timeArray[nBins];
   double rssArray[nBins];
   double sizeArray[nBins];
-  
-  for ( unsigned int i = 0;
-        i < nBins;
-        ++i ) {
-    timeArray[i] = i*10;
-    rssArray[i] = rss[i]/1024;
-    sizeArray[i] = size[i]/1024;
+  unsigned int counter = 0;
+
+  while ( in >> dummy >> dummy_string 
+          >> temp_rss >> temp_size ) {
+    cout << "counter: " << counter
+    << " rss: " << temp_rss/1024
+    << " size: " << temp_size/1024
+    << endl;
+    timeArray[counter] = counter*10;
+    rssArray[counter] = temp_rss/1024;
+		sizeArray[counter] = temp_size/1024;
+    ++counter;
   }
   
-  TGraph *graph = new TGraph(nBins,timeArray,rssArray);
+  
+  TGraph *graph = new TGraph(counter,timeArray,rssArray);
   
   graph->Draw("ACP");
   
