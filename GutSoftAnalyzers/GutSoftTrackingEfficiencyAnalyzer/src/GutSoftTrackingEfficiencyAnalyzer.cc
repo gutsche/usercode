@@ -8,8 +8,8 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2007/01/30 01:38:33 $
-// $Revision: 1.2 $
+// $Date: 2007/02/27 08:35:45 $
+// $Revision: 1.3 $
 //
 
 #include <string>
@@ -129,8 +129,10 @@ GutSoftTrackingEfficiencyAnalyzer::analyze(const edm::Event& iEvent, const edm::
 	  // ATTENTION: take only first match
 	  TrackingParticleRef trackingParticleRef = associatedTrackingParticles.begin()->first;
 	  if ( trackingParticleSelectorForEfficiencies_( *trackingParticleRef ) ) {
-	    histograms_->fill("eff_eta_recNtrue",trackingParticleRef->momentum().eta());
-	    histograms_->fill("eff_pt_recNtrue",std::sqrt(trackingParticleRef->momentum().perp2()));
+	    if ( trackingParticleRef->charge() != 0 ) {
+	      histograms_->fill("eff_eta_recNtrue",trackingParticleRef->momentum().eta());
+	      histograms_->fill("eff_pt_recNtrue",std::sqrt(trackingParticleRef->momentum().perp2()));
+	    }
 	  }
 	}
       }
@@ -148,8 +150,10 @@ GutSoftTrackingEfficiencyAnalyzer::analyze(const edm::Event& iEvent, const edm::
 	  // ATTENTION: take only first match
 	  TrackingParticleRef trackingParticleRef = associatedTrackingParticles.begin()->first;
 	  if ( trackingParticleSelectorForPurity_( *trackingParticleRef ) ) {
-	    histograms_->fill("pur_eta_recNtrue",trackingParticleRef->momentum().eta());
-	    histograms_->fill("pur_pt_recNtrue",std::sqrt(trackingParticleRef->momentum().perp2()));
+	    if ( trackingParticleRef->charge() != 0 ) {
+	      histograms_->fill("pur_eta_recNtrue",trackingParticleRef->momentum().eta());
+	      histograms_->fill("pur_pt_recNtrue",std::sqrt(trackingParticleRef->momentum().perp2()));
+	    }
 	  }
 	}
       }
@@ -165,39 +169,44 @@ GutSoftTrackingEfficiencyAnalyzer::analyze(const edm::Event& iEvent, const edm::
       std::vector<std::pair<reco::TrackRef, double> > associatedTracks;
 
       if ( trackingParticleSelectorForEfficiencies_(*trackingParticleRef) ) {
-	histograms_->fill("eff_eta_true",trackingParticleRef->momentum().eta());
-	histograms_->fill("eff_pt_true",std::sqrt(trackingParticleRef->momentum().perp2()));
+	if ( trackingParticleRef->charge() != 0 ) {
 
-	try {
-	  associatedTracks = simToRecoCollection[trackingParticleRef];
-	} catch (cms::Exception e) {
-	}
+	  histograms_->fill("eff_eta_true",trackingParticleRef->momentum().eta());
+	  histograms_->fill("eff_pt_true",std::sqrt(trackingParticleRef->momentum().perp2()));
 
-	if (associatedTracks.size()!=0) {
-	  // ATTENTION: take only first match
-	  reco::TrackRef trackRef = associatedTracks.begin()->first;
-	  if ( trackSelectorForEfficiencies_( *trackRef ) ) {
-	    histograms_->fill("eff_eta_trueNrec",trackRef->momentum().eta());
-	    histograms_->fill("eff_pt_trueNrec",trackRef->pt());
+	  try {
+	    associatedTracks = simToRecoCollection[trackingParticleRef];
+	  } catch (cms::Exception e) {
+	  }
+
+	  if (associatedTracks.size()!=0) {
+	    // ATTENTION: take only first match
+	    reco::TrackRef trackRef = associatedTracks.begin()->first;
+	    if ( trackSelectorForEfficiencies_( *trackRef ) ) {
+	      histograms_->fill("eff_eta_trueNrec",trackRef->momentum().eta());
+	      histograms_->fill("eff_pt_trueNrec",trackRef->pt());
+	    }
 	  }
 	}
       }
-
+	
       if ( trackingParticleSelectorForPurity_(*trackingParticleRef) ) {
-	histograms_->fill("pur_eta_true",trackingParticleRef->momentum().eta());
-	histograms_->fill("pur_pt_true",std::sqrt(trackingParticleRef->momentum().perp2()));
-
-	try {
-	  associatedTracks = simToRecoCollection[trackingParticleRef];
-	} catch (cms::Exception e) {
-	}
-
-	if (associatedTracks.size()!=0) {
-	  // ATTENTION: take only first match
-	  reco::TrackRef trackRef = associatedTracks.begin()->first;
-	  if ( trackSelectorForPurity_( *trackRef ) ) {
-	    histograms_->fill("pur_eta_trueNrec",trackRef->momentum().eta());
-	    histograms_->fill("pur_pt_trueNrec",trackRef->pt());
+	if ( trackingParticleRef->charge() != 0 ) {
+	  histograms_->fill("pur_eta_true",trackingParticleRef->momentum().eta());
+	  histograms_->fill("pur_pt_true",std::sqrt(trackingParticleRef->momentum().perp2()));
+	  
+	  try {
+	    associatedTracks = simToRecoCollection[trackingParticleRef];
+	  } catch (cms::Exception e) {
+	  }
+	  
+	  if (associatedTracks.size()!=0) {
+	    // ATTENTION: take only first match
+	    reco::TrackRef trackRef = associatedTracks.begin()->first;
+	    if ( trackSelectorForPurity_( *trackRef ) ) {
+	      histograms_->fill("pur_eta_trueNrec",trackRef->momentum().eta());
+	      histograms_->fill("pur_pt_trueNrec",trackRef->pt());
+	    }
 	  }
 	}
       }
