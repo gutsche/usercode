@@ -1,5 +1,0 @@
-<lcgdict>
-  <class name="RecHitGlobalPosition"/>
-  <class name="std::vector<RecHitGlobalPosition>"/>
-  <class name="edm::Wrapper<std::vector<RecHitGlobalPosition> >"/>
-</lcgdict>
