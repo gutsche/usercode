@@ -11,7 +11,11 @@ include "GutSoftAnalyzers/GutSoftTrackCandidateAnalyzer/data/ckfTrackCandidateAn
 
 # track analyzers
 include "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/rsTrackAnalyzer.cff" 
+include "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/rsTrackAnalyzerForward.cff" 
+include "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/rsTrackAnalyzerBarrel.cff" 
 include "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/ckfTrackAnalyzer.cff" 
+include "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/ckfTrackAnalyzerForward.cff" 
+include "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/ckfTrackAnalyzerBarrel.cff" 
 
 sequence trackObjects = {
   rsSeedAnalyzer,
@@ -20,5 +24,9 @@ sequence trackObjects = {
   rsTrackCandidateAnalyzer, 
   ckfTrackCandidateAnalyzer, 
   rsTrackAnalyzer, 
+  rsTrackAnalyzerForward, 
+  rsTrackAnalyzerBarrel, 
+  ckfTrackAnalyzerForward,
+  ckfTrackAnalyzerBarrel,
   ckfTrackAnalyzer
 }
