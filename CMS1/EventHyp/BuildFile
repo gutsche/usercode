@@ -1,0 +1,8 @@
+<use name=DataFormats/MuonReco>
+<use name=CMS1/Base>
+<export>
+   <lib name=CMS1EventHyp>
+   <use name=CMS1/Base>
+   <use name=DataFormats/MuonReco>
+</export>
+# <Flags CXXFLAGS=-g>

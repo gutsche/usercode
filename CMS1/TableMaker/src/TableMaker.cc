@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/03/16 07:27:07 $
-// $Revision: 1.17 $
+// $Author: latb $
+// $Date: 2007/03/22 15:32:00 $
+// $Revision: 1.18 $
 //
 
 #include <vector>
@@ -22,6 +22,7 @@
 
 #include "CMS1/TableMaker/interface/TableMaker.h"
 #include "CMS1/Base/interface/Dump.h"
+#include "CMS1/EventHyp/interface/EventHyp.h"
 
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/EgammaCandidates/interface/Electron.h"
@@ -171,12 +172,12 @@ cms1::TableMaker::analyze()
    tightElectron_.setEventData(&data_);                // let the Cuts know where to get event info (mcInfo in this case)
    looseElectron_.truthMatchingType = Cuts::Electron;  // require truth matching
    looseElectron_.setEventData(&data_);                // let the Cuts know where to get event info (mcInfo in this case)
+
   std::vector<const reco::Candidate*> tightElectrons = electrons_.getElectrons(Electrons::TightElectrons,tightElectron_);
   std::vector<const reco::Candidate*> looseElectrons = electrons_.getElectrons(Electrons::LooseElectrons,looseElectron_);
 
-  // get vector of jets
-
-  std::vector<const reco::Candidate*> jets = jets_.getJets(Jets::DefaultJets,jet_);
+// get vector of Jets
+  std::vector<const reco::Candidate*> jets = jets_.getJets(Jets::DefaultJets,jetCut_);
 
 // get MET without cut and correct
    const reco::Candidate* metObj = MET_.getMET(MET::DefaultMET);
@@ -187,272 +188,48 @@ cms1::TableMaker::analyze()
    MET::correctMETmuons(&allMuons, met, mephi);
 
 
-#ifndef NOTDEF
-
 // Dump Event contents
-
-	std::cout << "------------------------------------------------------------------------" << std::endl; 
-	std::cout << "Dump of Event, " 
+	if (events_ < MaxEventDebug_) {
+		std::cout << "------------------------------------------------------------------------" << std::endl; 
+		std::cout << "Dump of Event, " 
 		<< " Ne = " << looseElectrons.size() 
 		<< " Nmu = " << allMuons.size() 
 		<< " Nj = " << jets.size()		 
 		<< " Nj (def.Jets) = " << ( jets_.getEventData()->defaultJets == 0 ? -1 :  int( jets_.getEventData()->defaultJets->size() ) )
-	<< std::endl;	
-	electrons_.dump(std::cout, looseElectrons);
- 	muons_.dump(std::cout, allMuons);
- 	jets_.dump(std::cout, jets);
- 	MET_.dump(std::cout, metObj);
-	std::cout << "------------------------------------------------------------------------" << std::endl; 
-
-#endif
-
-  // logic
-  std::vector<std::pair<const reco::Candidate*, const reco::Candidate*> > takenEE;
-  std::vector<std::pair<const reco::Candidate*, const reco::Candidate*> >     takenEMu;
-  std::vector<std::pair<const reco::Candidate*, const reco::Candidate*> >     takenMuE;
-  std::vector<std::pair<const reco::Candidate*, const reco::Candidate*> >         takenMuMu;
-
-
-  // loop over tight electrons
-  for ( std::vector<const reco::Candidate*>::iterator tightElectron = tightElectrons.begin(),
-	  electronEnd = tightElectrons.end();
-	tightElectron != electronEnd;
-	++tightElectron ) {
-    double isoRelTight = trackRelIsolation((*tightElectron)->momentum(), (*tightElectron)->vertex(), data_.tracks,
-				      0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-    if (isoRelTight > 0.1) continue;
-
-    // loop over loose electrons
-    for ( std::vector<const reco::Candidate*>::iterator looseElectron = looseElectrons.begin(),
-	    electronEnd = looseElectrons.end();
-	  looseElectron != electronEnd;
-	  ++looseElectron ) {
-      double isoRelLoose = trackRelIsolation((*looseElectron)->momentum(), (*looseElectron)->vertex(), data_.tracks,
-					0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-      if (isoRelLoose > 0.1) continue;
-
-      // check if the same electron has been selected
-      if ( *tightElectron != *looseElectron ) {
-	// check if pair already passed cuts
-	bool passed = false;
-	for ( std::vector<std::pair<const reco::Candidate*, const reco::Candidate*> >::iterator passedPair = takenEE.begin(),
-		passedPairEnd = takenEE.end();
-	      passedPair != passedPairEnd;
-	      ++passedPair ) {
-	  if ( (passedPair->second == *tightElectron) &&
-	       (passedPair->first == *looseElectron) ) {
-	    passed = true;
-	    break;
-	  }
+		<< std::endl;	
+		electrons_.dump(std::cout, looseElectrons);
+ 		muons_.dump(std::cout, allMuons);
+ 		jets_.dump(std::cout, jets);
+ 		MET_.dump(std::cout, metObj);
+		std::cout << "------------------------------------------------------------------------" << std::endl; 
 	}
-	// continue if pair hasn't passed cuts yet
-	if ( !passed ) {
-	  // check if candidate passes MET cut
-	  if ( met > metCut_.pt_min) {
-	    // calculate invariant mass and check for special MET cut within Z window
-	    // take first MET cancicate
-	    math::XYZTLorentzVector inv = (*tightElectron)->p4() + (*looseElectron)->p4();
-	    if ( inv.mass() >= ZRangeMinMass_ && inv.mass() <= ZRangeMaxMass_ ) {
-          // passed
-	      if ( met > metCutAroundZ_.pt_min) {
-		  takenEE.push_back(std::make_pair(*tightElectron,*looseElectron));
-		  std::cout<<"Found EE"<<std::endl;
-		  std::vector<const reco::Candidate*> el;
-		  el.push_back(*tightElectron);
-		  el.push_back(*looseElectron);
-		  std::vector<const reco::Candidate*> jets = jets_.getJets(Jets::DefaultJets,jet_);
-		  std::vector<const reco::Candidate*> jetsnoel;
-		 for ( std::vector<const reco::Candidate*>::const_iterator jet = jets.begin(); jet != jets.end(); ++ jet )
-		   if ( Cuts::testJetForElectrons(**jet, el ) ) jetsnoel.push_back(*jet);
-		  
-		  int njet = jetsnoel.size();
-		  if (njet > 4)
-		    {
-		      njet = 4;
-		    }
-		  countedEEJets_[njet]++;
+	
+	EventHyp eventHyp_; 
+	eventHyp_.setEventData(&data_);
+	std::vector<const cms1::DiLeptonCandidate*> dlCandidates = eventHyp_.getEventHyp(
+		tightElectrons, looseElectrons, tightMuons, looseMuons, jets, met,
+		metCut_, metCutAroundZ_);
+	if (events_ < MaxEventDebug_) {
+		eventHyp_.dump(std::cout, dlCandidates);
+	}
 
-		  FillHistograms(jetsnoel,*tightElectron,*looseElectron,met);
-	      }
-	    } else {
-	      takenEE.push_back(std::make_pair(*tightElectron,*looseElectron));
-	       
-	       std::vector<const reco::Candidate*> el;
-	       el.push_back(*tightElectron);
-	       el.push_back(*looseElectron);
-	       std::vector<const reco::Candidate*> jets = jets_.getJets(Jets::DefaultJets,jet_);
-	       std::vector<const reco::Candidate*> jetsnoel;
-	       for ( std::vector<const reco::Candidate*>::const_iterator jet = jets.begin(); jet != jets.end(); ++ jet )
-		 if ( Cuts::testJetForElectrons(**jet, el ) ) jetsnoel.push_back(*jet);
-	      
-	      int njet = jetsnoel.size();
-	      if (njet > 4)
-		{
-		  njet = 4;
+	for ( std::vector<const cms1::DiLeptonCandidate*>::iterator dli = dlCandidates.begin(), dle = dlCandidates.end(); dli != dle; ++dli ) {
+		const cms1::DiLeptonCandidate* dl = *dli;
+		FillHistograms(dl->jets, dl->lTight, dl->lLoose, dl->MET);
+		int njet = dl->nJets(); if (njet > 4)  njet = 4;
+		switch (dl->candidateType) {
+			case cms1::DiLeptonCandidate::MuMu: countedMuMuJets_[njet]++; 
+				break;
+			case cms1::DiLeptonCandidate::MuEl: countedMuEJets_[njet]++;       
+				break;
+			case cms1::DiLeptonCandidate::ElMu: countedEMuJets_[njet]++;       
+				break;
+			case cms1::DiLeptonCandidate::ElEl: countedEEJets_[njet]++;
+				break;
+			default: std::cout << "ERROR: DiLeptonCandidate not MuMu, MuEl, ElMu or ElEl -- This can never happen!!" << std::endl;
 		}
-	      countedEEJets_[njet]++;
-	      
-	      FillHistograms(jetsnoel,*tightElectron,*looseElectron,met);
-
-	    }
-	  }
 	}
-      }
-    }
-    // loop over loose muons
-    for ( std::vector<const reco::Candidate*>::iterator looseMuon = looseMuons.begin(),
-	    MuonEnd = looseMuons.end();
-	  looseMuon != MuonEnd;
-	  ++looseMuon ) {
-      double isoRelLoose = trackRelIsolation((*looseMuon)->momentum(), (*looseMuon)->vertex(), data_.tracks,
-					0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-      if (isoRelLoose > 0.1) continue;
-      // check if candidate passes MET cut
-	  if ( met > metCut_.pt_min) {
-	    std::cout<<"Found EMu"<<std::endl;
-        takenEMu.push_back(std::make_pair(*tightElectron,*looseMuon));
-	     
-	     std::vector<const reco::Candidate*> el;
-	     el.push_back(*tightElectron);
-	     std::vector<const reco::Candidate*> jets = jets_.getJets(Jets::DefaultJets,jet_);
-	     std::vector<const reco::Candidate*> jetsnoel;
-	     for ( std::vector<const reco::Candidate*>::const_iterator jet = jets.begin(); jet != jets.end(); ++ jet )
-	       if ( Cuts::testJetForElectrons(**jet, el ) ) jetsnoel.push_back(*jet);
-	     
-	      int njet = jetsnoel.size();
-	      if (njet > 4)
-		{
-		  njet = 4;
-		}
-	    std::cout<<"Found EMu"<<std::endl;
-	      countedEMuJets_[njet]++;       
-	      std::cout<<"Found EMu"<<jetsnoel.size()<<std::endl;
-   
-	FillHistograms(jetsnoel,*tightElectron,*looseMuon,met);
-   std::cout<<"Found EMu"<<std::endl;      
-	  }
-    }  //End loop over loose muons
-  }  //End tight electrons loop
-
-  // loop over tight muons
-  for ( std::vector<const reco::Candidate*>::iterator tightMuon = tightMuons.begin(),
-	  muonEnd = tightMuons.end();
-	tightMuon != muonEnd;
-	++tightMuon ) {
-      double isoRelTight = trackRelIsolation((*tightMuon)->momentum(), (*tightMuon)->vertex(), data_.tracks,
-					0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-      if (isoRelTight > 0.1) continue;
-
-    // loop over loose electrons
-    for ( std::vector<const reco::Candidate*>::iterator looseElectron = looseElectrons.begin(),
-	    electronEnd = looseElectrons.end();
-	  looseElectron != electronEnd;
-	  ++looseElectron ) {
-      double isoRelLoose = trackRelIsolation((*looseElectron)->momentum(), (*looseElectron)->vertex(), data_.tracks,
-					0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-      if (isoRelLoose > 0.1) continue;
-
-      // exclude combinations from both tight electron and muon which have already been counted in EMu
-      bool passed = false;
-      for ( std::vector<std::pair<const reco::Candidate*, const reco::Candidate*> >::iterator passedPair = takenEMu.begin(),
-	      passedPairEnd = takenEMu.end();
-	    passedPair != passedPairEnd;
-	    ++passedPair ) {
-	if ( (passedPair->second == *tightMuon) &&
-	     (passedPair->first == *looseElectron) ) {
-	  passed = true;
-	  break;
-	}
-      }
-      // continue if pair hasn't passed cuts yet
-      if ( !passed ) {
-
-
-
-      // check if candidate passes MET cut
-	  if ( met > metCut_.pt_min) {
-        takenMuE.push_back(std::make_pair(*tightMuon,*looseElectron));
-	     std::cout<<"Found MuE"<<std::endl;
-	     std::vector<const reco::Candidate*> el;
-	     el.push_back(*looseElectron);
-	     std::vector<const reco::Candidate*> jets = jets_.getJets(Jets::DefaultJets,jet_);
-	     std::vector<const reco::Candidate*> jetsnoel;
-	     for ( std::vector<const reco::Candidate*>::const_iterator jet = jets.begin(); jet != jets.end(); ++ jet )
-	       if ( Cuts::testJetForElectrons(**jet, el ) ) jetsnoel.push_back(*jet);
-	      
-	      int njet = jetsnoel.size();
-	      if (njet > 4)
-		{
-		  njet = 4;
-		}
-	      countedMuEJets_[njet]++;       
-
-	      FillHistograms(jetsnoel,*tightMuon,*looseElectron,met);
-	  }
-      }
-    }
-    // loop over loose muons
-    for ( std::vector<const reco::Candidate*>::iterator looseMuon = looseMuons.begin(),
-	    MuonEnd = looseMuons.end();
-	  looseMuon != MuonEnd;
-	  ++looseMuon ) {
-
-      double isoRelLoose = trackRelIsolation((*looseMuon)->momentum(), (*looseMuon)->vertex(), data_.tracks,
-					0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-      if (isoRelLoose > 0.1) continue;
-      // check if the same muon has been selected
-      if ( *tightMuon != *looseMuon ) {
-	// check if pair already passed cuts
-	bool passed = false;
-	for ( std::vector<std::pair<const reco::Candidate*, const reco::Candidate*> >::iterator passedPair = takenMuMu.begin(),
-		passedPairEnd = takenMuMu.end();
-	      passedPair != passedPairEnd;
-	      ++passedPair ) {
-	  if ( (passedPair->second == *tightMuon) &&
-	       (passedPair->first == *looseMuon) ) {
-	    passed = true;
-	    break;
-	  }
-	}
-	// continue if pair hasn't passed cuts yet
-	if ( !passed ) {
-	  // check if candidate passes MET cut
-	  if ( met > metCut_.pt_min) {
-	    // calculate invariant mass and check for special MET cut within Z window
-	    // take first MET cancicate
-	    math::XYZTLorentzVector inv = (*tightMuon)->p4() + (*looseMuon)->p4();
-	    if ( inv.mass() >= ZRangeMinMass_ && inv.mass() <= ZRangeMaxMass_ ) {
-	      if ( met > metCutAroundZ_.pt_min) {
-		// passed
-		std::cout<<"Found MuMu"<<std::endl;
-		takenMuMu.push_back(std::make_pair(*tightMuon,*looseMuon));
-    
-
-
-	      std::vector<const reco::Candidate*> jetsnoel = jets_.getJets(Jets::DefaultJets,jet_);          
-	      
-	      int njet = jetsnoel.size();
-	      if (njet > 4)
-		{
-		  njet = 4;
-		}
-	      countedMuMuJets_[njet]++;       
-
-		FillHistograms(jetsnoel,*tightMuon,*looseMuon,met);
-
-	      }
-	    } else {
-	      takenMuMu.push_back(std::make_pair(*tightMuon,*looseMuon));
-        countedMuMuJets_[nJetsWithoutEl(jets)]++;
-
-		FillHistograms(jets,*tightMuon,*looseMuon,met);
-
-	    }
-	  }
-	}
-      }
-    }
-  }
+	return; 
 }
 
 

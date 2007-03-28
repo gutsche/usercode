@@ -9,8 +9,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/03/10 02:25:40 $
-// $Revision: 1.5 $
+// $Date: 2007/03/16 07:27:08 $
+// $Revision: 1.6 $
 //
 
 #include <vector>
@@ -63,9 +63,9 @@ cms1::TableMakerFW::TableMakerFW(const edm::ParameterSet& iConfig)
   looseElectron_.eta_max  = iConfig.getUntrackedParameter<double>("LooseElectronMaxEta");
 
   // jet cuts
-  jet_.pt_min             = iConfig.getUntrackedParameter<double>("JetPt");
-  jet_.eta_min            = iConfig.getUntrackedParameter<double>("JetMinEta");
-  jet_.eta_max            = iConfig.getUntrackedParameter<double>("JetMaxEta");
+  jetCut_.pt_min             = iConfig.getUntrackedParameter<double>("JetPt");
+  jetCut_.eta_min            = iConfig.getUntrackedParameter<double>("JetMinEta");
+  jetCut_.eta_max            = iConfig.getUntrackedParameter<double>("JetMaxEta");
 
   // MET cuts
   metCut_.pt_min             = iConfig.getUntrackedParameter<double>("MET");
@@ -76,6 +76,8 @@ cms1::TableMakerFW::TableMakerFW(const edm::ParameterSet& iConfig)
   ZRangeMaxMass_             = iConfig.getUntrackedParameter<double>("ZRangeMaxMass");
 
   fileTag 					= iConfig.getUntrackedParameter<std::string>("fileTag");
+
+  MaxEventDebug_             = (unsigned int) iConfig.getUntrackedParameter<int>("MaxEventDebug");
 
 }
 

@@ -35,5 +35,6 @@ module tableMaker = TableMakerFW
   untracked double ZRangeMaxMass        = 100
 
   untracked string fileTag = "default"
+  untracked int32 MaxEventDebug  = 0
 
 }

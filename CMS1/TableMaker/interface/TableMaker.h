@@ -11,9 +11,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/03/16 07:27:07 $
-// $Revision: 1.10 $
+// $Author: latb $
+// $Date: 2007/03/22 15:32:00 $
+// $Revision: 1.11 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
@@ -47,7 +47,7 @@ namespace cms1 {
     Cuts          tightElectron_;
     Cuts          looseElectron_;
 
-    Cuts          jet_;
+    Cuts          jetCut_;
 
     Cuts          metCut_;
     Cuts          metCutAroundZ_;
@@ -56,6 +56,8 @@ namespace cms1 {
 
     double        ZRangeMinMass_;
     double        ZRangeMaxMass_;
+
+		unsigned int  MaxEventDebug_;
 
     // Black boxes
     Muons         muons_;

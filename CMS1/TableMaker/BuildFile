@@ -7,6 +7,7 @@
 <use name=CMS1/Electrons>
 <use name=CMS1/Jets>
 <use name=CMS1/MET>
+<use name=CMS1/EventHyp>
 <use name=DataFormats/Math>
 <use name=root>
 <use name=SimDataFormats/HepMCProduct>
@@ -23,6 +24,7 @@
    <use name=CMS1/Electrons>
    <use name=CMS1/Jets>
    <use name=CMS1/MET>
+   <use name=CMS1/EventHyp>
    <use name=DataFormats/Math>
    <use name=root>
    <use name=SimDataFormats/HepMCProduct>
