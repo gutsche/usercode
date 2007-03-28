@@ -11,8 +11,8 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/28 20:36:41 $
-// $Revision: 1.2 $
+// $Date: 2007/01/10 21:46:07 $
+// $Revision: 1.1 $
 //
 
 #include <string>
@@ -21,9 +21,6 @@
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "FWCore/ParameterSet/interface/InputTag.h"
-
-#include "GutSoftTools/GutSoftHistogramFactory/interface/GutSoftHistogramFactory.h"
 
 class GutSoftFileCheckAnalyzer : public edm::EDAnalyzer {
  public:

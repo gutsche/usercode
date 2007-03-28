@@ -8,19 +8,15 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/12/21 21:29:50 $
-// $Revision: 1.4 $
+// $Date: 2007/01/10 21:46:07 $
+// $Revision: 1.1 $
 //
 
 #include <string>
 
 #include "GutSoftAnalyzers/GutSoftFileCheckAnalyzer/interface/GutSoftFileCheckAnalyzer.h"
 
-#include "GutSoftTools/GutSoftHistogramFileService/interface/GutSoftHistogramFileService.h"
-
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
-
-#include "DataFormats/Common/interface/EventAux.h"
 
 GutSoftFileCheckAnalyzer::GutSoftFileCheckAnalyzer(const edm::ParameterSet& iConfig)
 {
