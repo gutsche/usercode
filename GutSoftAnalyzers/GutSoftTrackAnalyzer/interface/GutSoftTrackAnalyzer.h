@@ -11,8 +11,8 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2007/01/22 01:35:07 $
-// $Revision: 1.3 $
+// $Date: 2007/02/27 08:35:44 $
+// $Revision: 1.4 $
 //
 
 #include <string>
@@ -41,6 +41,9 @@ class GutSoftTrackAnalyzer : public edm::EDAnalyzer {
 
   edm::InputTag trackInputTag_;
   std::string   baseDirectoryName_;
+
+  double minimalAbsoluteEta_;
+  double maximalAbsoluteEta_;
 
   TrackEfficiencySelector trackSelector_;
 

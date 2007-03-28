@@ -1,0 +1,9 @@
+# include GutSoftHistogramFileService
+include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
+
+#include analyzer
+module  rsTrackAnalyzerForward                    = gutSoftTrackAnalyzer from "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/gutSoftTrackAnalyzer.cfi"
+replace rsTrackAnalyzerForward.TrackInputTag      = rsWithMaterialTracks
+replace rsTrackAnalyzerForward.BaseDirectoryName  = "rsTracksForward"
+replace rsTrackAnalyzerForward.MinimalAbsoluteEta = 1.1
+replace rsTrackAnalyzerForward.MaximalAbsoluteEta = 2.5

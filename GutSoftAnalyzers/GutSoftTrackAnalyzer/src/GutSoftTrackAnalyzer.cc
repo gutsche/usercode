@@ -8,8 +8,8 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2007/02/05 19:54:42 $
-// $Revision: 1.6 $
+// $Date: 2007/02/27 08:35:44 $
+// $Revision: 1.7 $
 //
 
 #include <string>
@@ -34,6 +34,10 @@ GutSoftTrackAnalyzer::GutSoftTrackAnalyzer(const edm::ParameterSet& iConfig) :
 
   trackInputTag_ = iConfig.getUntrackedParameter<edm::InputTag>("TrackInputTag");
   baseDirectoryName_  = iConfig.getUntrackedParameter<std::string>("BaseDirectoryName");
+
+  // eta cuts
+  minimalAbsoluteEta_ = iConfig.getUntrackedParameter<double>("MinimalAbsoluteEta");
+  maximalAbsoluteEta_ = iConfig.getUntrackedParameter<double>("MaximalAbsoluteEta");
 
   // GutSoftHistogramFactory
   histograms_ = edm::Service<GutSoftHistogramFileService>()->getFactory();
@@ -76,68 +80,71 @@ GutSoftTrackAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 	track != trackCollection->end();
 	++track ) {
     if ( trackSelector_(*track) ) {
-      histograms_->fill("chi2",track->normalizedChi2());
-      histograms_->fill("pt",track->pt());
-      histograms_->fill("nhit",track->found());
-      histograms_->fill("eta",track->momentum().eta());
-      histograms_->fill("phi",track->momentum().phi());
-      histograms_->fill("qoverp",track->qoverp());
-      histograms_->fill("lambda",track->lambda());
-      histograms_->fill("theta",track->theta());
-      histograms_->fill("dZero",track->d0());
-      histograms_->fill("dZ",track->dz());
+      if ( (std::abs(track->momentum().eta()) >= minimalAbsoluteEta_) && (std::abs(track->momentum().eta()) <= maximalAbsoluteEta_) ) {
+      
+	histograms_->fill("chi2",track->normalizedChi2());
+	histograms_->fill("pt",track->pt());
+	histograms_->fill("nhit",track->found());
+	histograms_->fill("eta",track->momentum().eta());
+	histograms_->fill("phi",track->momentum().phi());
+	histograms_->fill("qoverp",track->qoverp());
+	histograms_->fill("lambda",track->lambda());
+	histograms_->fill("theta",track->theta());
+	histograms_->fill("dZero",track->d0());
+	histograms_->fill("dZ",track->dz());
 
-      // loop over hits in tracks, count
-      unsigned int nHit      = 0;
-      unsigned int nStripHit = 0;
-      unsigned int nPixelHit = 0;
-      unsigned int nTIBHit   = 0;
-      unsigned int nTOBHit   = 0;
-      unsigned int nTIDHit   = 0;
-      unsigned int nTECHit   = 0;
-      unsigned int nPXBHit   = 0;
-      unsigned int nPXFHit   = 0;
+	// loop over hits in tracks, count
+	unsigned int nHit      = 0;
+	unsigned int nStripHit = 0;
+	unsigned int nPixelHit = 0;
+	unsigned int nTIBHit   = 0;
+	unsigned int nTOBHit   = 0;
+	unsigned int nTIDHit   = 0;
+	unsigned int nTECHit   = 0;
+	unsigned int nPXBHit   = 0;
+	unsigned int nPXFHit   = 0;
 
-      for ( trackingRecHit_iterator recHit = track->recHitsBegin();
-	    recHit != track->recHitsEnd();
-	    ++recHit ) {
-	if ( (*recHit)->isValid() ) {
-	  ++nHit;
-	  DetId id((*recHit)->geographicalId());
+	for ( trackingRecHit_iterator recHit = track->recHitsBegin();
+	      recHit != track->recHitsEnd();
+	      ++recHit ) {
+	  if ( (*recHit)->isValid() ) {
+	    ++nHit;
+	    DetId id((*recHit)->geographicalId());
 
-	  if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
-	    ++nStripHit;
-	    ++nTIBHit;
-	  } else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
-	    ++nStripHit;
-	    ++nTOBHit;
-	  } else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
-	    ++nStripHit;
-	    ++nTIDHit;
-	  } else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
-	    ++nStripHit;
-	    ++nTECHit;
-	  } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
-	    ++nPixelHit;
-	    ++nPXBHit;
-	  } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
-	    ++nPixelHit;
-	    ++nPXFHit;
+	    if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
+	      ++nStripHit;
+	      ++nTIBHit;
+	    } else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
+	      ++nStripHit;
+	      ++nTOBHit;
+	    } else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
+	      ++nStripHit;
+	      ++nTIDHit;
+	    } else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
+	      ++nStripHit;
+	      ++nTECHit;
+	    } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
+	      ++nPixelHit;
+	      ++nPXBHit;
+	    } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
+	      ++nPixelHit;
+	      ++nPXFHit;
+	    }
 	  }
 	}
-      }
     
-      histograms_->fill("nHitPerTrackVsEta",track->momentum().eta(),nHit);
-      histograms_->fill("nStripHitPerTrackVsEta",track->momentum().eta(),nStripHit);
-      histograms_->fill("nPixelHitPerTrackVsEta",track->momentum().eta(),nPixelHit);
-      histograms_->fill("nTIBHitPerTrackVsEta",track->momentum().eta(),nTIBHit);
-      histograms_->fill("nTOBHitPerTrackVsEta",track->momentum().eta(),nTOBHit);
-      histograms_->fill("nTIDHitPerTrackVsEta",track->momentum().eta(),nTIDHit);
-      histograms_->fill("nTECHitPerTrackVsEta",track->momentum().eta(),nTECHit);
-      histograms_->fill("nPXBHitPerTrackVsEta",track->momentum().eta(),nPXBHit);
-      histograms_->fill("nPXFHitPerTrackVsEta",track->momentum().eta(),nPXFHit);
-      histograms_->fill("nHitPerTrackVsPhi",track->momentum().phi(),nHit);
+	histograms_->fill("nHitPerTrackVsEta",track->momentum().eta(),nHit);
+	histograms_->fill("nStripHitPerTrackVsEta",track->momentum().eta(),nStripHit);
+	histograms_->fill("nPixelHitPerTrackVsEta",track->momentum().eta(),nPixelHit);
+	histograms_->fill("nTIBHitPerTrackVsEta",track->momentum().eta(),nTIBHit);
+	histograms_->fill("nTOBHitPerTrackVsEta",track->momentum().eta(),nTOBHit);
+	histograms_->fill("nTIDHitPerTrackVsEta",track->momentum().eta(),nTIDHit);
+	histograms_->fill("nTECHitPerTrackVsEta",track->momentum().eta(),nTECHit);
+	histograms_->fill("nPXBHitPerTrackVsEta",track->momentum().eta(),nPXBHit);
+	histograms_->fill("nPXFHitPerTrackVsEta",track->momentum().eta(),nPXFHit);
+	histograms_->fill("nHitPerTrackVsPhi",track->momentum().phi(),nHit);
 
+      }
     }
   }
 }
@@ -157,7 +164,7 @@ GutSoftTrackAnalyzer::beginJob(const edm::EventSetup&)
   double       pt_low   = 0.;
   double       pt_high  = 20.;
 
-  unsigned int eta_nbins = 30;
+  unsigned int eta_nbins = 60;
   double       eta_low   = -3.;
   double       eta_high  =  3.;
 
