@@ -11,8 +11,8 @@
 // Created:         Wed Oct 18 01:05:12 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/28 20:36:42 $
-// $Revision: 1.2 $
+// $Date: 2007/01/22 01:35:08 $
+// $Revision: 1.3 $
 //
 
 #include <string>
@@ -24,6 +24,8 @@
 #include "FWCore/ParameterSet/interface/InputTag.h"
 
 #include "GutSoftTools/GutSoftHistogramFactory/interface/GutSoftHistogramFactory.h"
+
+#include "Geometry/TrackerGeometryBuilder/interface/TrackerGeometry.h"
 
 class GutSoftTrackCandidateAnalyzer : public edm::EDAnalyzer {
  public:
@@ -40,6 +42,7 @@ class GutSoftTrackCandidateAnalyzer : public edm::EDAnalyzer {
   edm::InputTag trackCandidateInputTag_;
   std::string   baseDirectoryName_;
 
+  const TrackerGeometry *trackerGeometry_;
 };
 
 #endif

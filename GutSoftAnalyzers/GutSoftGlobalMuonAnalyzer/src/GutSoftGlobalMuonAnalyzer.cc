@@ -8,8 +8,8 @@
 // Created:         Thu Jan 11 01:09:09 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/01/09 21:10:59 $
-// $Revision: 1.2 $
+// $Date: 2007/01/11 01:51:04 $
+// $Revision: 1.1 $
 //
 
 #include <string>
@@ -91,7 +91,7 @@ GutSoftGlobalMuonAnalyzer::beginJob(const edm::EventSetup& setup)
   double       pt_low   = 0.;
   double       pt_high  = 200.;
 
-  unsigned int eta_nbins = 30;
+  unsigned int eta_nbins = 60;
   double       eta_low   = -3.;
   double       eta_high  =  3.;
 

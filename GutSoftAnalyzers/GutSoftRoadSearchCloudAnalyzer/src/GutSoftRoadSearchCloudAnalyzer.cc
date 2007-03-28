@@ -8,8 +8,8 @@
 // Created:         Tue Oct 17 02:41:12 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2007/01/22 01:35:06 $
-// $Revision: 1.6 $
+// $Date: 2007/01/23 15:20:27 $
+// $Revision: 1.7 $
 //
 
 #include <string>
@@ -19,6 +19,7 @@
 #include "GutSoftTools/GutSoftHistogramFileService/interface/GutSoftHistogramFileService.h"
 
 #include "FWCore/ServiceRegistry/interface/Service.h"
+#include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include "DataFormats/RoadSearchCloud/interface/RoadSearchCloud.h"
@@ -26,6 +27,13 @@
 #include "DataFormats/DetId/interface/DetId.h"
 #include "DataFormats/SiStripDetId/interface/StripSubdetector.h"
 #include "DataFormats/SiPixelDetId/interface/PixelSubdetector.h"
+
+#include "Geometry/CommonDetUnit/interface/GeomDetUnit.h"
+#include "Geometry/Records/interface/TrackerDigiGeometryRecord.h"
+
+#include "DataFormats/TrackingRecHit/interface/TrackingRecHit.h"
+
+#include "Geometry/TrackerGeometryBuilder/interface/TrackerGeometry.h"
 
 GutSoftRoadSearchCloudAnalyzer::GutSoftRoadSearchCloudAnalyzer(const edm::ParameterSet& iConfig)
 {
@@ -112,15 +120,19 @@ GutSoftRoadSearchCloudAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
       }
     }
     
-    histograms_->fill("nHitPerCloudVsEta",0.,nHit);
-    histograms_->fill("nStripHitPerCloudVsEta",0.,nStripHit);
-    histograms_->fill("nPixelHitPerCloudVsEta",0.,nPixelHit);
-    histograms_->fill("nTIBHitPerCloudVsEta",0.,nTIBHit);
-    histograms_->fill("nTOBHitPerCloudVsEta",0.,nTOBHit);
-    histograms_->fill("nTIDHitPerCloudVsEta",0.,nTIDHit);
-    histograms_->fill("nTECHitPerCloudVsEta",0.,nTECHit);
-    histograms_->fill("nPXBHitPerCloudVsEta",0.,nPXBHit);
-    histograms_->fill("nPXFHitPerCloudVsEta",0.,nPXFHit);
+    // take eta of last seed hit
+    const TrackingRecHit *outerSeedHit = &(*(--((*cloud->begin_seeds())->recHits().second)));
+    double eta = trackerGeometry_->idToDet(outerSeedHit->geographicalId())->surface().toGlobal(outerSeedHit->localPosition()).eta();
+
+    histograms_->fill("nHitPerCloudVsEta",eta,nHit);
+    histograms_->fill("nStripHitPerCloudVsEta",eta,nStripHit);
+    histograms_->fill("nPixelHitPerCloudVsEta",eta,nPixelHit);
+    histograms_->fill("nTIBHitPerCloudVsEta",eta,nTIBHit);
+    histograms_->fill("nTOBHitPerCloudVsEta",eta,nTOBHit);
+    histograms_->fill("nTIDHitPerCloudVsEta",eta,nTIDHit);
+    histograms_->fill("nTECHitPerCloudVsEta",eta,nTECHit);
+    histograms_->fill("nPXBHitPerCloudVsEta",eta,nPXBHit);
+    histograms_->fill("nPXFHitPerCloudVsEta",eta,nPXFHit);
 
     histograms_->fill("nHits",cloud->size());
 
@@ -130,8 +142,13 @@ GutSoftRoadSearchCloudAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
 
 
 void 
-GutSoftRoadSearchCloudAnalyzer::beginJob(const edm::EventSetup&)
+GutSoftRoadSearchCloudAnalyzer::beginJob(const edm::EventSetup& es)
 {
+
+  // get tracker geometry
+  edm::ESHandle<TrackerGeometry> trackerHandle;
+  es.get<TrackerDigiGeometryRecord>().get(trackerHandle);
+  trackerGeometry_ = trackerHandle.product();
 
   std::string  nCloudDirectory = baseDirectoryName_;
 
@@ -159,31 +176,31 @@ GutSoftRoadSearchCloudAnalyzer::beginJob(const edm::EventSetup&)
 			     "n_{Cloud}","Events");
   histograms_->bookHistogram("nHitPerCloudVsEta","Number of hits per cloud vs. #eta",
 			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hit}","Events");
   histograms_->bookHistogram("nStripHitPerCloudVsEta","Number of strip hits per cloud vs. #eta",
 			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hit}","Events");
   histograms_->bookHistogram("nPixelHitPerCloudVsEta","Number of pixel hits per cloud vs. #eta",
 			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hit}","Events");
   histograms_->bookHistogram("nTIBHitPerCloudVsEta","Number of TIB hits per cloud vs. #eta",
 			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hit}","Events");
   histograms_->bookHistogram("nTOBHitPerCloudVsEta","Number of TOB hits per cloud vs. #eta",
 			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hit}","Events");
   histograms_->bookHistogram("nTIDHitPerCloudVsEta","Number of TID hits per cloud vs. #eta",
 			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hit}","Events");
   histograms_->bookHistogram("nTECHitPerCloudVsEta","Number of TEC hits per cloud vs. #eta",
 			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hit}","Events");
   histograms_->bookHistogram("nPXBHitPerCloudVsEta","Number of PXB hits per cloud vs. #eta",
 			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hit}","Events");
   histograms_->bookHistogram("nPXFHitPerCloudVsEta","Number of PXF hits per cloud vs. #eta",
 			     nCloudDirectory,eta_nbins,eta_low,eta_high,nhit_nbins,nhit_low,nhit_high,
-			     "n_{Hit}","#eta","Events");
+			     "#eta","n_{Hit}","Events");
   histograms_->bookHistogram("nHits","Number of hits per cloud",
 			     nCloudDirectory,nHits_nbins,nHits_low,nHits_high,
 			     "n_{Hits}","Events");

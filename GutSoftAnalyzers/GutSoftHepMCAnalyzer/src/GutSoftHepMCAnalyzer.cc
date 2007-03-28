@@ -8,7 +8,7 @@
 // Created:         Thu Feb 15 21:09:04 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/01/11 01:51:04 $
+// $Date: 2007/02/16 00:46:11 $
 // $Revision: 1.1 $
 //
 
@@ -93,7 +93,7 @@ GutSoftHepMCAnalyzer::beginJob(const edm::EventSetup& setup)
   // binning for histograms
   std::string  directory = baseDirectoryName_;
 
-  unsigned int eta_nbins = 30;
+  unsigned int eta_nbins = 60;
   double       eta_low   = -3.;
   double       eta_high  =  3.;
 

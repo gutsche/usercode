@@ -8,8 +8,8 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2007/02/27 08:35:45 $
-// $Revision: 1.3 $
+// $Date: 2007/03/27 23:40:44 $
+// $Revision: 1.4 $
 //
 
 #include <string>
@@ -226,7 +226,7 @@ GutSoftTrackingEfficiencyAnalyzer::beginJob(const edm::EventSetup& setup)
   double       pt_low   = 0.;
   double       pt_high  = 20.;
 
-  unsigned int eta_nbins = 30;
+  unsigned int eta_nbins = 60;
   double       eta_low   = -3.;
   double       eta_high  =  3.;
 

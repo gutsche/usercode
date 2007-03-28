@@ -8,8 +8,8 @@
 // Created:         Thu Feb  8 19:03:24 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/02/27 08:35:43 $
-// $Revision: 1.2 $
+// $Date: 2007/03/27 23:40:43 $
+// $Revision: 1.3 $
 //
 
 #include <string>
@@ -337,7 +337,7 @@ GutSoftSeedingEfficiencyAnalyzer::beginJob(const edm::EventSetup &es)
   std::string  directory = baseDirectoryName_;
   
   // binning for histograms
-  unsigned int eta_nbins = 30;
+  unsigned int eta_nbins = 60;
   double       eta_low   = -3.;
   double       eta_high  =  3.;
   

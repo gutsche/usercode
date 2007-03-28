@@ -8,8 +8,8 @@
 // Created:         Wed Oct 18 01:05:12 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/12/21 21:29:51 $
-// $Revision: 1.4 $
+// $Date: 2007/01/22 01:35:09 $
+// $Revision: 1.5 $
 //
 
 #include <string>
@@ -19,6 +19,7 @@
 #include "GutSoftTools/GutSoftHistogramFileService/interface/GutSoftHistogramFileService.h"
 
 #include "FWCore/ServiceRegistry/interface/Service.h"
+#include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include "DataFormats/TrackCandidate/interface/TrackCandidate.h"
@@ -26,6 +27,13 @@
 #include "DataFormats/DetId/interface/DetId.h"
 #include "DataFormats/SiStripDetId/interface/StripSubdetector.h"
 #include "DataFormats/SiPixelDetId/interface/PixelSubdetector.h"
+
+#include "Geometry/CommonDetUnit/interface/GeomDetUnit.h"
+#include "Geometry/Records/interface/TrackerDigiGeometryRecord.h"
+
+#include "DataFormats/TrackingRecHit/interface/TrackingRecHit.h"
+
+#include "Geometry/TrackerGeometryBuilder/interface/TrackerGeometry.h"
 
 GutSoftTrackCandidateAnalyzer::GutSoftTrackCandidateAnalyzer(const edm::ParameterSet& iConfig)
 {
@@ -85,10 +93,12 @@ GutSoftTrackCandidateAnalyzer::analyze(const edm::Event& iEvent, const edm::Even
     unsigned int nPXBHit   = 0;
     unsigned int nPXFHit   = 0;
 
+    const TrackingRecHit *outerHit = 0;
     for ( TrackCandidate::RecHitContainer::const_iterator recHit = candidate->recHits().first;
 	  recHit != candidate->recHits().second;
 	  ++recHit ) {
       ++nHit;
+      outerHit = &(*recHit);
       DetId id(recHit->geographicalId());
       
       if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
@@ -112,15 +122,18 @@ GutSoftTrackCandidateAnalyzer::analyze(const edm::Event& iEvent, const edm::Even
       }
     }
     
-    histograms_->fill("nHitPerTrackCandidateVsEta",0.,nHit);
-    histograms_->fill("nStripHitPerTrackCandidateVsEta",0.,nStripHit);
-    histograms_->fill("nPixelHitPerTrackCandidateVsEta",0.,nPixelHit);
-    histograms_->fill("nTIBHitPerTrackCandidateVsEta",0.,nTIBHit);
-    histograms_->fill("nTOBHitPerTrackCandidateVsEta",0.,nTOBHit);
-    histograms_->fill("nTIDHitPerTrackCandidateVsEta",0.,nTIDHit);
-    histograms_->fill("nTECHitPerTrackCandidateVsEta",0.,nTECHit);
-    histograms_->fill("nPXBHitPerTrackCandidateVsEta",0.,nPXBHit);
-    histograms_->fill("nPXFHitPerTrackCandidateVsEta",0.,nPXFHit);
+    // take eta of last seed hit
+    double eta  = trackerGeometry_->idToDet(outerHit->geographicalId())->surface().toGlobal(outerHit->localPosition()).eta();
+
+    histograms_->fill("nHitPerTrackCandidateVsEta",eta,nHit);
+    histograms_->fill("nStripHitPerTrackCandidateVsEta",eta,nStripHit);
+    histograms_->fill("nPixelHitPerTrackCandidateVsEta",eta,nPixelHit);
+    histograms_->fill("nTIBHitPerTrackCandidateVsEta",eta,nTIBHit);
+    histograms_->fill("nTOBHitPerTrackCandidateVsEta",eta,nTOBHit);
+    histograms_->fill("nTIDHitPerTrackCandidateVsEta",eta,nTIDHit);
+    histograms_->fill("nTECHitPerTrackCandidateVsEta",eta,nTECHit);
+    histograms_->fill("nPXBHitPerTrackCandidateVsEta",eta,nPXBHit);
+    histograms_->fill("nPXFHitPerTrackCandidateVsEta",eta,nPXFHit);
 
   }
 
@@ -128,8 +141,13 @@ GutSoftTrackCandidateAnalyzer::analyze(const edm::Event& iEvent, const edm::Even
 
 
 void 
-GutSoftTrackCandidateAnalyzer::beginJob(const edm::EventSetup&)
+GutSoftTrackCandidateAnalyzer::beginJob(const edm::EventSetup& es)
 {
+
+  // get tracker geometry
+  edm::ESHandle<TrackerGeometry> trackerHandle;
+  es.get<TrackerDigiGeometryRecord>().get(trackerHandle);
+  trackerGeometry_ = trackerHandle.product();
 
   // binning for histograms
   unsigned int nTrackCandidates_nbins    = 100000;
@@ -137,7 +155,7 @@ GutSoftTrackCandidateAnalyzer::beginJob(const edm::EventSetup&)
   unsigned int nTrackCandidates_high     = 100000;
   std::string  nTrackCandidatesDirectory = baseDirectoryName_;
 
-  unsigned int eta_nbins = 30;
+  unsigned int eta_nbins = 60;
   double       eta_low   = -3.;
   double       eta_high  =  3.;
 

@@ -7,6 +7,9 @@
 <use name=DataFormats/SiStripDetId>
 <use name=DataFormats/SiPixelDetId>
 <use name=GutSoftTools/GutSoftHistogramFactory>
+<use name=Geometry/Records>
+<use name=Geometry/CommonDetUnit>
+<use name=Geometry/TrackerGeometryBuilder>
 <flags SEAL_PLUGIN_NAME="GutSoftAnalyzersGutSoftTrackCandidateAnalyzer">
 <export>
    <lib name=GutSoftAnalyzersGutSoftTrackCandidateAnalyzer>
@@ -19,4 +22,7 @@
    <use name=DataFormats/SiStripDetId>
    <use name=DataFormats/SiPixelDetId>
    <use name=GutSoftTools/GutSoftHistogramFactory>
+   <use name=Geometry/Records>
+   <use name=Geometry/CommonDetUnit>
+   <use name=Geometry/TrackerGeometryBuilder>
 </export>
