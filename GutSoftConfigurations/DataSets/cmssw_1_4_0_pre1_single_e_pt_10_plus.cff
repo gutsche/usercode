@@ -1,0 +1,17 @@
+#
+# 5 file(s) containing 0 events
+#
+# list of files (format: file events):
+#
+#
+# list of corrupt files (format: file events):
+#
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_34/6143_2.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_34/6143_4.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_34/6143_1.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_34/6143_0.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_34/6143_3.root -1
+#
+replace PoolSource.fileNames = 
+}
+

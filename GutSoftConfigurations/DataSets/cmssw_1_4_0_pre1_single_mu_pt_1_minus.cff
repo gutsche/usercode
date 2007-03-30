@@ -1,0 +1,21 @@
+#
+# 5 file(s) containing 4000 events
+#
+# list of files (format: file events):
+#
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_01/6122_2.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_01/6122_0.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_01/6122_1.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_01/6122_4.root 1000
+#
+# list of corrupt files (format: file events):
+#
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_01/6122_3.root -1
+#
+replace PoolSource.fileNames = {
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_01/6122_2.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_01/6122_0.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_01/6122_1.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_01/6122_4.root"
+}
+

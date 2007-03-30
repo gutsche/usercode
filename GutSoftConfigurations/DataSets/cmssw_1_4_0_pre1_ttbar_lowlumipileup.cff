@@ -1,0 +1,42 @@
+#
+# 30 file(s) containing 0 events
+#
+# list of files (format: file events):
+#
+#
+# list of corrupt files (format: file events):
+#
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_5.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_13.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_21.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_19.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_22.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_29.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_11.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_16.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_14.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_1.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_18.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_27.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_17.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_9.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_10.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_26.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_2.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_15.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_23.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_6.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_24.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_0.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_3.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_8.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_7.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_20.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_4.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_25.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_12.root -1
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_72/6160_28.root -1
+#
+replace PoolSource.fileNames = 
+}
+
