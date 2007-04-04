@@ -1,0 +1,14 @@
+# RoadMapESSource
+include "RecoTracker/RoadMapMakerESProducer/data/RoadMapMakerESProducer.cff"
+
+# cms geometry
+include "Geometry/CMSCommonData/data/cmsIdealGeometryXML.cfi"
+
+# tracker geometry
+include "Geometry/TrackerGeometryBuilder/data/trackerGeometry.cfi"
+
+# tracker numbering
+include "Geometry/TrackerNumberingBuilder/data/trackerNumberingGeometry.cfi"
+
+# include analyzer
+include "GutSoftAnalyzers/GutSoftTrackingEventDisplay/data/gutSoftTrackingEventDisplay.cfi"
