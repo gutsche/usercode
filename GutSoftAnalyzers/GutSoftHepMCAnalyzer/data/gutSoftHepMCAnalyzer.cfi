@@ -1,6 +1,8 @@
 module gutSoftHepMCAnalyzer = GutSoftHepMCAnalyzer 
 {
-  untracked InputTag HepMCInputTag    = VtxSmeared
+  untracked InputTag HepMCInputTag          = source
+  untracked InputTag TrackingTruthInputTag  = trackingtruth
+
   untracked string BaseDirectoryName = "HepMC"
 
   untracked double MinPt     = 0.
@@ -11,5 +13,7 @@ module gutSoftHepMCAnalyzer = GutSoftHepMCAnalyzer
   untracked double MaxPhi    = 3.5
   untracked int32  Status    = 1
   untracked int32  ProcessID = 0
+
+  string RingsLabel                = ""
 
 }

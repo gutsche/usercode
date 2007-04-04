@@ -8,7 +8,7 @@ include "Geometry/TrackerGeometryBuilder/data/trackerGeometry.cfi"
 include "Geometry/TrackerNumberingBuilder/data/trackerNumberingGeometry.cfi"
 
 # roads
-include "RecoTracker/RoadMapESSource/data/RoadMapESSource.cff"
+include "RecoTracker/RoadMapMakerESProducer/data/RoadMapMakerESProducer.cff"
 
 # include GutSoftHistogramFileService
 include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"

@@ -5,7 +5,13 @@
 <use name=SimDataFormats/HepMCProduct>
 <use name=GutSoftTools/GutSoftHistogramFactory>
 <use name=GutSoftTools/GutSoftHistogramFileService>
+<use name=SimDataFormats/TrackingAnalysis>
 <use name=clhep>
+<use name=Geometry/TrackerGeometryBuilder>
+<use name=Geometry/Records>
+<use name=DataFormats/DetId>
+<use name=RecoTracker/RingRecord>
+<use name=TrackingTools/RoadSearchHitAccess>
 <flags SEAL_PLUGIN_NAME="GutSoftAnalyzersGutSoftHepMCAnalyzer">
 <export>
    <lib name=GutSoftAnalyzersGutSoftHepMCAnalyzer>
@@ -16,5 +22,11 @@
    <use name=SimDataFormats/HepMCProduct>
    <use name=GutSoftTools/GutSoftHistogramFactory>
    <use name=GutSoftTools/GutSoftHistogramFileService>
+   <use name=SimDataFormats/TrackingAnalysis>
    <use name=clhep>
+   <use name=Geometry/TrackerGeometryBuilder>
+   <use name=Geometry/Records>
+   <use name=DataFormats/DetId>
+   <use name=RecoTracker/RingRecord>
+   <use name=TrackingTools/RoadSearchHitAccess>
 </export>

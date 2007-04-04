@@ -1,11 +1,11 @@
 module gutSoftSeedingEfficiencyAnalyzer = GutSoftSeedingEfficiencyAnalyzer
 {
   untracked InputTag TrajectorySeedInputTag = roadSearchSeeds
-  untracked InputTag TrackingTruthInputTag  = trackingtruth:TrackTruth
-  untracked InputTag matchedStripRecHits = siStripMatchedRecHits:matchedRecHit
-  untracked InputTag rphiStripRecHits    = siStripMatchedRecHits:rphiRecHit
-  untracked InputTag stereoStripRecHits  = siStripMatchedRecHits:stereoRecHit
-  untracked InputTag pixelRecHits        = siPixelRecHits
+  untracked InputTag TrackingTruthInputTag  = trackingtruth
+  untracked InputTag matchedStripRecHits    = siStripMatchedRecHits:matchedRecHit
+  untracked InputTag rphiStripRecHits       = siStripMatchedRecHits:rphiRecHit
+  untracked InputTag stereoStripRecHits     = siStripMatchedRecHits:stereoRecHit
+  untracked InputTag pixelRecHits           = siPixelRecHits
 
   untracked string   BaseDirectoryName      = "SeedEfficiency"
 

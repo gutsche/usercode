@@ -11,7 +11,7 @@
 // Created:         Thu Feb 15 21:09:04 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/01/11 01:51:04 $
+// $Date: 2007/02/16 00:46:11 $
 // $Revision: 1.1 $
 //
 
@@ -26,11 +26,17 @@
 
 #include "GutSoftTools/GutSoftHistogramFactory/interface/GutSoftHistogramFactory.h"
 
+#include "SimDataFormats/TrackingAnalysis/interface/TrackingParticleFwd.h"
+
+#include "RecoTracker/RingRecord/interface/Rings.h"
+#include "Geometry/TrackerGeometryBuilder/interface/TrackerGeometry.h"
 
 class GutSoftHepMCAnalyzer : public edm::EDAnalyzer {
  public:
   explicit GutSoftHepMCAnalyzer(const edm::ParameterSet&);
   ~GutSoftHepMCAnalyzer();
+
+  std::string dumpTrackingParticles(const TrackingParticleCollection *trackingParticleCollection);
 
  private:
   virtual void beginJob(const edm::EventSetup& setup) ;
@@ -40,6 +46,7 @@ class GutSoftHepMCAnalyzer : public edm::EDAnalyzer {
   GutSoftHistogramFactory *histograms_;
 
   edm::InputTag hepMCInputTag_;
+  edm::InputTag trackingTruthInputTag_;
 
   std::string baseDirectoryName_;
 
@@ -51,6 +58,11 @@ class GutSoftHepMCAnalyzer : public edm::EDAnalyzer {
   double maxphi_;
   int status_; 
   int processID_;    
+
+  std::string ringsLabel_;
+
+  const TrackerGeometry *tracker_;
+  const Rings *rings_;
 
 };
 
