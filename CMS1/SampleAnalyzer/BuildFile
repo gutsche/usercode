@@ -1,0 +1,10 @@
+<use name=FWCore/Framework>
+<use name=Foundation/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=FWCore/ServiceRegistry>>
+<use name=CMS1/BaseAnalyzer>
+<flags SEAL_PLUGIN_NAME="CMS1SampleAnalyzer">
+<export>
+   <lib name=CMS1SampleAnalyzer>
+</export>
+# <Flags CXXFLAGS=-g>
