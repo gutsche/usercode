@@ -1,5 +1,0 @@
-module gutSoftGlobalMuonAnalyzer = GutSoftGlobalMuonAnalyzer 
-{
-  untracked InputTag MuonInputTag    = globalMuons	
-  untracked string BaseDirectoryName = "GlobalMuons"
-}

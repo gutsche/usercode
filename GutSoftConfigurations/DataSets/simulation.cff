@@ -1,3 +1,0 @@
-replace PoolSource.fileNames = {
-  "file:simulation.root"
-}
