@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/03/16 07:22:01 $
-// $Revision: 1.5 $
+// $Author: latb $
+// $Date: 2007/03/22 15:31:58 $
+// $Revision: 1.6 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
@@ -26,8 +26,13 @@ std::vector<const reco::Candidate*> cms1::Muons::getMuons(const MuonType muonTyp
    switch (muonType) {
     case AllGlobalMuons:
 	{
-	   if (! data_ || ! data_->globalMuonCollection) {
-	      std::cout << "ERROR: global muon collection is not set" << std::endl;
+	   if (! data_ ) {
+	      std::cout << "ERROR: muon black box doesn't know where to find EvenData." << std::endl;
+	      return output_list;
+	   }
+	   const std::vector<reco::Muon>* collection = data_->container_reco_Muon.getCollection(edm::InputTag("globalMuons",""));
+	   if ( ! collection ) {
+	      std::cout << "ERROR: global muon collection is not found in the event. Return nothing." << std::endl;
 	      return output_list;
 	   }
 	   	   
@@ -37,9 +42,8 @@ std::vector<const reco::Candidate*> cms1::Muons::getMuons(const MuonType muonTyp
 	   cuts.setEventData( data_ );
 	   cuts.AND(userCuts);
 	   
-	   for ( std::vector<reco::Muon>::const_iterator muon = data_->globalMuonCollection->begin();
-		 muon != data_->globalMuonCollection->end();
-		 ++muon ) 
+	   for ( std::vector<reco::Muon>::const_iterator muon = collection->begin();
+		 muon != collection->end(); ++muon ) 
 	     {
 		// Here we make simple cuts in a standard way
 		if ( cuts.testCandidate(*muon) ) output_list.push_back(&*muon);
