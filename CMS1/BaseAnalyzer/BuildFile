@@ -1,0 +1,31 @@
+# -*-sh-*-
+<use name=root>
+<use name=clhep>
+
+# framework
+<use name=FWCore/Framework>
+<use name=Foundation/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=FWCore/ServiceRegistry>>
+
+# TnS stuff
+<use name=CMS1/Base>
+<use name=CMS1/Muons>
+<use name=CMS1/Electrons>
+<use name=CMS1/Jets>
+<use name=CMS1/MET>
+
+# data formats
+<use name=DataFormats/MuonReco>
+<use name=DataFormats/Math>
+<use name=DataFormats/JetReco>
+<use name=DataFormats/TrackReco>
+<use name=SimDataFormats/HepMCProduct>
+
+<export>
+   <lib name=CMS1BaseAnalyzer>
+   <use name=DataFormats/TrackReco>
+   <use name=DataFormats/JetReco>
+   <use name=clhep>
+</export>
+# <Flags CXXFLAGS=-g>
