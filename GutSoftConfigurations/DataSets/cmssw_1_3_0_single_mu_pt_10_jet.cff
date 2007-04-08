@@ -1,0 +1,11 @@
+#
+# 1 file(s) containing 100 events
+#
+# list of files (format: file events):
+#
+# file:/uscms_data/d1/gutsche/data/cmssw_1_3_0/single_mu_pt_10_jet.root 100
+#
+replace PoolSource.fileNames = {
+  "file:/uscms_data/d1/gutsche/data/cmssw_1_3_0/single_mu_pt_10_jet.root"
+}
+
