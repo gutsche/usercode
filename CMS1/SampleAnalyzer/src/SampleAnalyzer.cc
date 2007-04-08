@@ -7,7 +7,7 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/03/16 07:00:21 $
+// $Date: 2007/04/07 17:57:45 $
 // $Revision: 1.1 $
 //
 #include "CMS1/SampleAnalyzer/interface/SampleAnalyzer.h"
@@ -39,10 +39,10 @@ void cms1::SampleAnalyzer::processEvent()
    // Get a vector of pointers to muons passing "thisCuts" and 
    // passing the "TightGlobalMuons" cuts
    // These will be the muons that we work with
-   std::vector<const reco::Candidate*> selectedMuons = theMuons.getMuons(Muons::TightGlobalMuons,thisCuts);
+   std::vector<const reco::Candidate*> selectedMuons = theMuons.getMuons(Muons::AllGlobalMuons,thisCuts);
 
    // number of muons in the event
-   std::cout << "Number of muons found: " << selectedMuons.size() << std::endl;
+   std::cout << "Number of AllGlobalMuons: " << selectedMuons.size() << std::endl;
    
    // How many muons did we select
    if ( selectedMuons.size() >= number_ ) {

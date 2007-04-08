@@ -8,7 +8,7 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/02/16 11:42:00 $
+// $Date: 2007/04/07 17:54:23 $
 // $Revision: 1.1 $
 //
 
@@ -83,7 +83,12 @@ void cms1::AbsAnalyzerFWLite::processData(TString configFile)
    if ( skipEvents >= maxEvents ) std::cout << 
      "Number of skipped events is bigger than the number of avialable ones. Nothing to do." << std::endl;
    for ( unsigned int index = skipEvents; index < (unsigned int)maxEvents; ++index ) {
-      std::cout << "Processing event: " << index << std::endl;
+      std::cout << "Processing event: " << index+1 << std::endl;
+      if (index == (unsigned int)skipEvents) {
+	 theChain->GetEntry(index); // let's try to read it twice
+	 analyze(true);
+      }
+      
       theChain->GetEntry(index);
       // analyze event
       analyze();
