@@ -7,8 +7,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/04/07 17:57:45 $
-// $Revision: 1.1 $
+// $Date: 2007/04/08 06:39:30 $
+// $Revision: 1.2 $
 //
 #include "CMS1/SampleAnalyzer/interface/SampleAnalyzer.h"
 #include <iostream>
@@ -18,66 +18,67 @@ void cms1::SampleAnalyzer::configure(const edm::ParameterSet& iConfig)
    // load standard configuration (black boxes)
    BaseAnalyzer::configure( iConfig );
    
-   // get parameters from config file specific for your analysis
-   pt_ = 2; //GeV
-   number_ = 2;
-   
-   // let's try to read in something absolutely arbitrary, which has
-   // supported C++ type. For example reco::Track collection rsWithMaterialTracks
-   // register this collection in the EventData
-   theData.container_reco_Track.registerCollection(edm::InputTag("rsWithMaterialTracks",""),
-						   "recoTracks_rsWithMaterialTracks__RECO");
+   // get parameters from config file specific for your analysis                                   //usercode
+   pt_ = 2; //GeV                                                                                  //usercode
+   number_ = 2;                                                                                    //usercode
+                                                                                                   //usercode
+   // let's try to read in something absolutely arbitrary, which has                               //usercode
+   // supported C++ type. For example reco::Track collection rsWithMaterialTracks                  //usercode
+   // register this collection in the EventData                                                    //usercode
+   theData.container_reco_Track.registerCollection(edm::InputTag("rsWithMaterialTracks",""),       //usercode
+						   "recoTracks_rsWithMaterialTracks__RECO");       //usercode
 }
 
 void cms1::SampleAnalyzer::processEvent()
 {
-   // define external cuts
-   // Initialized to have all cuts turned off 
-   Cuts thisCuts;  
-   thisCuts.pt_min = pt_;  // turn on the pt_min cut
-   
-   // Get a vector of pointers to muons passing "thisCuts" and 
-   // passing the "TightGlobalMuons" cuts
-   // These will be the muons that we work with
-   std::vector<const reco::Candidate*> selectedMuons = theMuons.getMuons(Muons::AllGlobalMuons,thisCuts);
-
-   // number of muons in the event
-   std::cout << "Number of AllGlobalMuons: " << selectedMuons.size() << std::endl;
-   
-   // How many muons did we select
-   if ( selectedMuons.size() >= number_ ) {
-      std::cout << number_ << " or more muons found with pT > " << pt_ << " GeV" << std::endl;
-   }
-
-   // This is a sample loop over selected muons. For each selected
-   // muon we will print out its pt.  We will also find the highest
-   // pt one
-   double ptmax = 0;
-   const reco::Candidate* stiffestMuon=0;
-   for (std::vector<const reco::Candidate*>::const_iterator muon = selectedMuons.begin();
-	muon != selectedMuons.end(); ++muon)
-     {
-	if ((*muon)->pt() > ptmax)
-	  {
-	     ptmax = (*muon)->pt();
-	     stiffestMuon = *muon;
-	  }
-	std::cout << "muon pt: " <<  (*muon)->pt() << std::endl; 
-     }
-   
-   // As a sanity check, print the highest pt
-   if (stiffestMuon)
-     std::cout << "The pt of the stiffest muon is " << stiffestMuon->pt() << std::endl;
-   
-   // lets check how many rsWithMaterialTracks tracks are found in the event and dump them
-   // The EventData automatically loads registered collections, so we can simply use it
-   const std::vector<reco::Track>* tracks = 
-     theData.container_reco_Track.getCollection(edm::InputTag("rsWithMaterialTracks",""));
-   if ( tracks ) {
-      std::cout << "Number of rsWithMaterialTracks tracks found: " << tracks->size() << std::endl;
-      for(std::vector<reco::Track>::const_iterator track = tracks->begin(); 
-	  track != tracks->end(); ++track)
-	std::cout << "\tPt: " << track->pt() << std::endl;
-   }
+   // define external cuts                                                                         //usercode
+   // Initialized to have all cuts turned off                                                      //usercode
+   Cuts thisCuts;                                                                                  //usercode
+   thisCuts.pt_min = pt_;  // turn on the pt_min cut                                               //usercode
+                                                                                                   //usercode
+   // Get a vector of pointers to muons passing "thisCuts" and                                     //usercode
+   // passing the "TightGlobalMuons" cuts                                                          //usercode
+   // These will be the muons that we work with                                                    //usercode
+   std::vector<const reco::Candidate*> selectedMuons =                                             //usercode
+     theMuons.getMuons(Muons::AllGlobalMuons,thisCuts);                                            //usercode
+                                                                                                   //usercode
+   // number of muons in the event                                                                 //usercode
+   std::cout << "Number of AllGlobalMuons: " << selectedMuons.size() << std::endl;                 //usercode
+                                                                                                   //usercode
+   // How many muons did we select                                                                 //usercode
+   if ( selectedMuons.size() >= number_ ) {                                                        //usercode
+      std::cout << number_ << " or more muons found with pT > " << pt_ << " GeV" << std::endl;     //usercode
+   }                                                                                               //usercode
+                                                                                                   //usercode
+   // This is a sample loop over selected muons. For each selected                                 //usercode
+   // muon we will print out its pt.  We will also find the highest                                //usercode
+   // pt one                                                                                       //usercode
+   double ptmax = 0;                                                                               //usercode
+   const reco::Candidate* stiffestMuon=0;                                                          //usercode
+   for (std::vector<const reco::Candidate*>::const_iterator muon = selectedMuons.begin();          //usercode
+	muon != selectedMuons.end(); ++muon)                                                       //usercode
+     {                                                                                             //usercode
+	if ((*muon)->pt() > ptmax)                                                                 //usercode
+	  {                                                                                        //usercode
+	     ptmax = (*muon)->pt();                                                                //usercode
+	     stiffestMuon = *muon;                                                                 //usercode
+	  }                                                                                        //usercode
+	std::cout << "muon pt: " <<  (*muon)->pt() << std::endl;                                   //usercode
+     }                                                                                             //usercode
+                                                                                                   //usercode
+   // As a sanity check, print the highest pt                                                      //usercode
+   if (stiffestMuon)                                                                               //usercode
+     std::cout << "The pt of the stiffest muon is " << stiffestMuon->pt() << std::endl;            //usercode
+                                                                                                   //usercode
+   // lets check how many rsWithMaterialTracks tracks are found in the event and dump them         //usercode
+   // The EventData automatically loads registered collections, so we can simply use it            //usercode
+   const std::vector<reco::Track>* tracks =                                                        //usercode
+     theData.container_reco_Track.getCollection(edm::InputTag("rsWithMaterialTracks",""));         //usercode
+   if ( tracks ) {                                                                                 //usercode
+      std::cout << "Number of rsWithMaterialTracks tracks found: " << tracks->size() << std::endl; //usercode
+      for(std::vector<reco::Track>::const_iterator track = tracks->begin();                        //usercode
+	  track != tracks->end(); ++track)                                                         //usercode
+	std::cout << "\tPt: " << track->pt() << std::endl;                                         //usercode
+   }                                                                                               //usercode
 }
 
