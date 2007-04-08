@@ -11,11 +11,12 @@
 // Created:         Thu Feb 15 21:09:04 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/02/16 00:46:11 $
-// $Revision: 1.1 $
+// $Date: 2007/04/04 01:21:57 $
+// $Revision: 1.2 $
 //
 
 #include <string>
+#include <vector>
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
@@ -29,6 +30,7 @@
 #include "SimDataFormats/TrackingAnalysis/interface/TrackingParticleFwd.h"
 
 #include "RecoTracker/RingRecord/interface/Rings.h"
+#include "RecoTracker/RoadMapRecord/interface/Roads.h"
 #include "Geometry/TrackerGeometryBuilder/interface/TrackerGeometry.h"
 
 class GutSoftHepMCAnalyzer : public edm::EDAnalyzer {
@@ -60,9 +62,14 @@ class GutSoftHepMCAnalyzer : public edm::EDAnalyzer {
   int processID_;    
 
   std::string ringsLabel_;
+  std::string roadsLabel_;
 
   const TrackerGeometry *tracker_;
   const Rings *rings_;
+  const Roads *roads_;
+
+  std::vector<const Ring*> innerSeedRings_;
+  std::vector<const Ring*> outerSeedRings_;
 
 };
 

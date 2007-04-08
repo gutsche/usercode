@@ -15,5 +15,6 @@ module gutSoftHepMCAnalyzer = GutSoftHepMCAnalyzer
   untracked int32  ProcessID = 0
 
   string RingsLabel                = ""
+  string RoadsLabel                = ""
 
 }

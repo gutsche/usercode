@@ -8,13 +8,14 @@
 // Created:         Thu Feb 15 21:09:04 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/03/28 20:16:13 $
-// $Revision: 1.2 $
+// $Date: 2007/04/04 01:21:57 $
+// $Revision: 1.3 $
 //
 
 #include <string>
 #include <cmath>
 #include <sstream>
+#include <algorithm>
 
 #include "GutSoftAnalyzers/GutSoftHepMCAnalyzer/interface/GutSoftHepMCAnalyzer.h"
 
@@ -36,6 +37,7 @@
 #include "DataFormats/GeometryVector/interface/GlobalPoint.h"
 
 #include "RecoTracker/RingRecord/interface/RingRecord.h"
+#include "RecoTracker/RoadMapRecord/interface/RoadMapRecord.h"
 
 #include "DataFormats/DetId/interface/DetId.h"
 
@@ -64,6 +66,9 @@ GutSoftHepMCAnalyzer::GutSoftHepMCAnalyzer(const edm::ParameterSet& iConfig)
   // ring label
   ringsLabel_ = iConfig.getParameter<std::string>("RingsLabel");
 
+  // road label
+  roadsLabel_ = iConfig.getParameter<std::string>("RoadsLabel");
+
 }
 
 
@@ -90,16 +95,6 @@ GutSoftHepMCAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   iEvent.getByLabel(trackingTruthInputTag_,trackingParticleCollectionHandle);
   const TrackingParticleCollection *trackingParticleCollection = trackingParticleCollectionHandle.product();
     
-  // get tracker geometry
-  edm::ESHandle<TrackerGeometry> trackerHandle;
-  iSetup.get<TrackerDigiGeometryRecord>().get(trackerHandle);
-  tracker_ = trackerHandle.product();
-
-   // get rings
-  edm::ESHandle<Rings> ringsHandle;
-  iSetup.get<RingRecord>().get(ringsLabel_, ringsHandle);
-  rings_ = ringsHandle.product();
-
   if(processID_ == 0 || processID_ == genEvent->signal_process_id()) {
     
     for ( HepMC::GenEvent::particle_const_iterator p = genEvent->particles_begin(),
@@ -126,9 +121,39 @@ GutSoftHepMCAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 }
 
 void 
-GutSoftHepMCAnalyzer::beginJob(const edm::EventSetup& setup)
+GutSoftHepMCAnalyzer::beginJob(const edm::EventSetup& es)
 {
 
+  // get tracker geometry
+  edm::ESHandle<TrackerGeometry> trackerHandle;
+  es.get<TrackerDigiGeometryRecord>().get(trackerHandle);
+  tracker_ = trackerHandle.product();
+
+   // get rings
+  edm::ESHandle<Rings> ringsHandle;
+  es.get<RingRecord>().get(ringsLabel_, ringsHandle);
+  rings_ = ringsHandle.product();
+
+  // get roads
+  edm::ESHandle<Roads> roads;
+  es.get<RoadMapRecord>().get(roadsLabel_, roads);
+  roads_ = roads.product();
+  
+  // fill vectors of inner and outer seed rings from roads
+  for ( Roads::const_iterator road = roads_->begin(); road != roads_->end(); ++road ) {
+    Roads::RoadSeed seed = (*road).first;
+    for ( std::vector<const Ring*>::const_iterator innerSeedRing = seed.first.begin();
+          innerSeedRing != seed.first.end();
+          ++innerSeedRing) {
+      innerSeedRings_.push_back(*innerSeedRing);
+    }
+    for ( std::vector<const Ring*>::const_iterator outerSeedRing = seed.second.begin();
+          outerSeedRing != seed.second.end();
+          ++outerSeedRing) {
+      outerSeedRings_.push_back(*outerSeedRing);
+    }
+  }
+  
   // binning for histograms
   std::string  directory = baseDirectoryName_;
 
@@ -162,20 +187,34 @@ GutSoftHepMCAnalyzer::dumpTrackingParticles(const TrackingParticleCollection *tr
     result << "----------" << std::endl
 	   << "TrackingParticle PDG ID: " << trackingParticle->pdgId() << std::endl
 	   << "pt: " << std::sqrt(trackingParticle->momentum().perp2()) << " eta: " << trackingParticle->momentum().eta() << " number of hits: " << trackingParticle->trackPSimHit().size() << std::endl;
+    TrackingParticle::GenParticleRefVector genParticles = trackingParticle->genParticle();
+    for ( TrackingParticle::GenParticleRefVector::const_iterator hepMCParticle = genParticles.begin(),
+	    hepMCParticleEnd = genParticles.end();
+	  hepMCParticle != hepMCParticleEnd;
+	  ++hepMCParticle ) {
+      result << "barcode: " << (*hepMCParticle)->barcode() << std::endl;
+    }
 
     for ( std::vector<PSimHit>::const_iterator simHit = trackingParticle->pSimHit_begin(),
 	    simHitEnd = trackingParticle->pSimHit_end();
 	  simHit != simHitEnd;
 	  ++simHit ) {
       const Ring *ring = rings_->getRing(RoadSearchDetIdHelper::ReturnRPhiId(DetId(simHit->detUnitId())));
-      GlobalPoint globalPosition = tracker_->idToDet(DetId(simHit->detUnitId()))->surface().toGlobal(simHit->localPosition());
+      std::vector<const Ring*>::iterator innerSeedRingIterator = std::find(innerSeedRings_.begin(),innerSeedRings_.end(),ring);
+      std::vector<const Ring*>::iterator outerSeedRingIterator = std::find(outerSeedRings_.begin(),outerSeedRings_.end(),ring);
 
-      if ( ring != 0 ) {
-	result << "Hit DetId: " << simHit->detUnitId() << " ring: " << ring->getindex() << " " << globalPosition.perp() << " " << globalPosition.phi() 
-	    << " " << globalPosition.x() << " " << globalPosition.y() << " " << globalPosition.z() << std::endl;
-      } else {
-	result << "Hit DetId: " << simHit->detUnitId() << " ring: NAN " << globalPosition.perp() << " " << globalPosition.phi() 
-	    << " " << globalPosition.x() << " " << globalPosition.y() << " " << globalPosition.z() << std::endl;
+      if ( innerSeedRingIterator != innerSeedRings_.end() ||
+	   outerSeedRingIterator != outerSeedRings_.end() ) {
+
+	GlobalPoint globalPosition = tracker_->idToDet(DetId(simHit->detUnitId()))->surface().toGlobal(simHit->localPosition());
+
+	if ( ring != 0 ) {
+	  result << "Hit DetId: " << simHit->detUnitId() << " ring: " << ring->getindex() << " " << globalPosition.perp() << " " << globalPosition.phi() 
+		 << " " << globalPosition.x() << " " << globalPosition.y() << " " << globalPosition.z() << std::endl;
+	} else {
+	  result << "Hit DetId: " << simHit->detUnitId() << " ring: NAN " << globalPosition.perp() << " " << globalPosition.phi() 
+		 << " " << globalPosition.x() << " " << globalPosition.y() << " " << globalPosition.z() << std::endl;
+	}
       }
       
     } // loop over sim hits
