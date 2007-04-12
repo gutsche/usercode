@@ -9,8 +9,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: latb $
-// $Date: 2007/03/22 15:32:00 $
-// $Revision: 1.18 $
+// $Date: 2007/03/28 22:45:07 $
+// $Revision: 1.19 $
 //
 
 #include <vector>
@@ -72,75 +72,6 @@ unsigned int nJetsWithoutEl(std::vector<const reco::Candidate*> jets, const Cand
   return nJets;
 } 
 
-cms1::TableMaker::TableMaker()
-{
-   // associate black boxes with the EventData
-   muons_.setEventData(&data_);
-   electrons_.setEventData(&data_);
-   jets_.setEventData(&data_);
-   MET_.setEventData(&data_);
-
-   
-	ostringstream temp; 
-	hTable = new TH2I("Table","Table;NJets;DiLepton",5,0,5,4,0,4);
-	hNJets = new TH1I("NJets","NJets;NJets;Events",5,0,5);
-	hNJets->Sumw2();
-	for(int i=0;i<4;++i)
-	{
-		temp << "PTJet_" << i;
-		TH1F* histo= new TH1F(temp.str().c_str(),"PTJet;PT(GeV);Events",BINS,0,500);
-		histo->Sumw2();
-		hPTJet.push_back(histo);
-		temp.clear(); temp.str("");
-	}
-	for(int i=0;i<5;++i)
-	{
-		temp << "Mll_J" << i;
-		TH1F* histo1=new TH1F(temp.str().c_str(),"Invariant Mass;Mll(GeV);Events",BINS,0,500);
-		histo1->Sumw2();
-		hMll.push_back(histo1);
-		temp.clear(); temp.str("");
-
-		temp << "PTTight_J" << i;
-		TH1F* histo2=new TH1F(temp.str().c_str(),"PT Tight Lepton;PT(GeV);Events",BINS,0,500);
-                histo2->Sumw2();
-		hPTTight.push_back(histo2);
-		temp.clear(); temp.str("");
-
-		temp << "PTLoose_J" << i;
-		TH1F* histo3=new TH1F(temp.str().c_str(),"PT Loose Lepton;PT(GeV);Events",BINS,0,500);
-                histo3->Sumw2();
-		hPTLoose.push_back(histo3);
-		temp.clear(); temp.str("");
-
-		temp << "PTLeading_J" << i;
-		TH1F* histo4=new TH1F(temp.str().c_str(),"PT Leading Lepton;PT(GeV);Events",BINS,0,500);
-                histo4->Sumw2();
-		hPTLeading.push_back(histo4);
-		temp.clear(); temp.str("");
-
-		temp << "PTTrailing_J" << i;
-		TH1F* histo5=new TH1F(temp.str().c_str(),"PT Second Leading Lepton;PT(GeV);Events",BINS,0,500);
-		histo5->Sumw2();
-		hPTTrailing.push_back(histo5);
-		temp.clear(); temp.str("");
-
-		temp << "HT_J" << i;
-		TH1F* histo6=new TH1F(temp.str().c_str(),"Temperature;Temperature(GeV);Events",BINS,0,1000);
-		histo6->Sumw2();
-		hHT.push_back(histo6);
-		temp.clear(); temp.str("");
-
-		temp << "MET_J" << i;
-		TH1F* histo7=new TH1F(temp.str().c_str(),"Missing ET;MET(GeV);Events",BINS,0,500); 
-		histo7->Sumw2();
-		hMET.push_back(histo7);
-		temp.clear(); temp.str("");
-
-	}
-	
-}
-
 cms1::TableMaker::~TableMaker()
 {
 	//delete  NJets;
@@ -154,105 +85,8 @@ cms1::TableMaker::~TableMaker()
 		//delete HT[i];
 		//delete missET[i];
 	//}
-}
-
-void
-cms1::TableMaker::analyze()
-{
-
-  ++events_;
-   
-  // get vector of muons
-  std::vector<const reco::Candidate*> tightMuons = muons_.getMuons(Muons::TightGlobalMuons,tightMuon_);
-  std::vector<const reco::Candidate*> looseMuons = muons_.getMuons(Muons::LooseGlobalMuons,looseMuon_);
-  std::vector<const reco::Candidate*> allMuons = muons_.getMuons(Muons::AllGlobalMuons,allMuon_);
-
-  // get vector of electrons
-   tightElectron_.truthMatchingType = Cuts::Electron ; // require truth matching
-   tightElectron_.setEventData(&data_);                // let the Cuts know where to get event info (mcInfo in this case)
-   looseElectron_.truthMatchingType = Cuts::Electron;  // require truth matching
-   looseElectron_.setEventData(&data_);                // let the Cuts know where to get event info (mcInfo in this case)
-
-  std::vector<const reco::Candidate*> tightElectrons = electrons_.getElectrons(Electrons::TightElectrons,tightElectron_);
-  std::vector<const reco::Candidate*> looseElectrons = electrons_.getElectrons(Electrons::LooseElectrons,looseElectron_);
-
-// get vector of Jets
-  std::vector<const reco::Candidate*> jets = jets_.getJets(Jets::DefaultJets,jetCut_);
-
-// get MET without cut and correct
-   const reco::Candidate* metObj = MET_.getMET(MET::DefaultMET);
-   double met = metObj->pt();
-   double mephi = metObj->phi();
-// ACHTUNG, Baby -- here we change met and mephi in situ!!
-// but metObj is not changed 
-   MET::correctMETmuons(&allMuons, met, mephi);
-
-
-// Dump Event contents
-	if (events_ < MaxEventDebug_) {
-		std::cout << "------------------------------------------------------------------------" << std::endl; 
-		std::cout << "Dump of Event, " 
-		<< " Ne = " << looseElectrons.size() 
-		<< " Nmu = " << allMuons.size() 
-		<< " Nj = " << jets.size()		 
-		<< " Nj (def.Jets) = " << ( jets_.getEventData()->defaultJets == 0 ? -1 :  int( jets_.getEventData()->defaultJets->size() ) )
-		<< std::endl;	
-		electrons_.dump(std::cout, looseElectrons);
- 		muons_.dump(std::cout, allMuons);
- 		jets_.dump(std::cout, jets);
- 		MET_.dump(std::cout, metObj);
-		std::cout << "------------------------------------------------------------------------" << std::endl; 
-	}
-	
-	EventHyp eventHyp_; 
-	eventHyp_.setEventData(&data_);
-	std::vector<const cms1::DiLeptonCandidate*> dlCandidates = eventHyp_.getEventHyp(
-		tightElectrons, looseElectrons, tightMuons, looseMuons, jets, met,
-		metCut_, metCutAroundZ_);
-	if (events_ < MaxEventDebug_) {
-		eventHyp_.dump(std::cout, dlCandidates);
-	}
-
-	for ( std::vector<const cms1::DiLeptonCandidate*>::iterator dli = dlCandidates.begin(), dle = dlCandidates.end(); dli != dle; ++dli ) {
-		const cms1::DiLeptonCandidate* dl = *dli;
-		FillHistograms(dl->jets, dl->lTight, dl->lLoose, dl->MET);
-		int njet = dl->nJets(); if (njet > 4)  njet = 4;
-		switch (dl->candidateType) {
-			case cms1::DiLeptonCandidate::MuMu: countedMuMuJets_[njet]++; 
-				break;
-			case cms1::DiLeptonCandidate::MuEl: countedMuEJets_[njet]++;       
-				break;
-			case cms1::DiLeptonCandidate::ElMu: countedEMuJets_[njet]++;       
-				break;
-			case cms1::DiLeptonCandidate::ElEl: countedEEJets_[njet]++;
-				break;
-			default: std::cout << "ERROR: DiLeptonCandidate not MuMu, MuEl, ElMu or ElEl -- This can never happen!!" << std::endl;
-		}
-	}
-	return; 
-}
-
-
-void 
-cms1::TableMaker::beginJob()
-{
-  for(int i=0; i<5; ++i) {
-    countedEEJets_[i] = 0;
-    countedEMuJets_[i] = 0;
-    countedMuEJets_[i] = 0;
-    countedMuMuJets_[i] = 0;
-  }
-
-  events_ = 0;
-
-}
-
-void 
-cms1::TableMaker::endJob() {
-	
   ostringstream output;
-  output << "pass0_" << fileTag << ".root";
-	
+/*  output << "pass0_" << fileTag << ".root";
 	TFile file(output.str().c_str(),"RECREATE");
 	hNJets->Write();
 	//PTJetH->Write();
@@ -289,7 +123,7 @@ cms1::TableMaker::endJob() {
 
 	output.clear();
 	output.str("");
-
+*/
   std::cout << "Muons" << countedMuMuJets_[1] << ", "  << countedMuMuJets_[2] << ", "  << countedMuMuJets_[3] << ", "  << std::endl;
 
 
@@ -327,6 +161,84 @@ cms1::TableMaker::endJob() {
 
 }
 
+void
+cms1::TableMaker::processEvent()
+{
+
+  ++events_;
+   
+  // get vector of muons
+  std::vector<const reco::Candidate*> tightMuons = theMuons.getMuons(Muons::TightGlobalMuons,tightMuon_);
+  std::vector<const reco::Candidate*> looseMuons = theMuons.getMuons(Muons::LooseGlobalMuons,looseMuon_);
+  std::vector<const reco::Candidate*> allMuons = theMuons.getMuons(Muons::AllGlobalMuons,allMuon_);
+
+  // get vector of electrons
+   tightElectron_.truthMatchingType = Cuts::Electron ; // require truth matching
+   tightElectron_.setEventData(&theData);                // let the Cuts know where to get event info (mcInfo in this case)
+   looseElectron_.truthMatchingType = Cuts::Electron;  // require truth matching
+   looseElectron_.setEventData(&theData);                // let the Cuts know where to get event info (mcInfo in this case)
+
+  std::vector<const reco::Candidate*> tightElectrons = theElectrons.getElectrons(Electrons::TightElectrons,tightElectron_);
+  std::vector<const reco::Candidate*> looseElectrons = theElectrons.getElectrons(Electrons::LooseElectrons,looseElectron_);
+
+// get vector of Jets
+  std::vector<const reco::Candidate*> jets = theJets.getJets(Jets::DefaultJets,jetCut_);
+
+// get MET without cut and correct
+   const reco::Candidate* metObj = theMET.getMET(MET::DefaultMET);
+   double met = metObj->pt();
+   double mephi = metObj->phi();
+// ACHTUNG, Baby -- here we change met and mephi in situ!!
+// but metObj is not changed 
+   MET::correctMETmuons(&allMuons, met, mephi);
+
+
+// Dump Event contents
+	if (events_ < MaxEventDebug_) {
+	   const std::vector<reco::CaloJet>* jetColl =
+	     theData.container_reco_CaloJet.getCollection(edm::InputTag("midPointCone5CaloJets",""));
+
+		std::cout << "------------------------------------------------------------------------" << std::endl; 
+		std::cout << "Dump of Event, " 
+		<< " Ne = " << looseElectrons.size() 
+		<< " Nmu = " << allMuons.size() 
+		<< " Nj = " << jets.size()		 
+		<< " Nj (def.Jets) = " << ( jetColl == 0 ? -1 : int(jetColl->size()) )
+		<< std::endl;	
+		theElectrons.dump(std::cout, looseElectrons);
+ 		theMuons.dump(std::cout, allMuons);
+ 		theJets.dump(std::cout, jets);
+ 		theMET.dump(std::cout, metObj);
+		std::cout << "------------------------------------------------------------------------" << std::endl; 
+	}
+	
+	EventHyp eventHyp_; 
+	eventHyp_.setEventData(&theData);
+	std::vector<const cms1::DiLeptonCandidate*> dlCandidates = eventHyp_.getEventHyp(
+		tightElectrons, looseElectrons, tightMuons, looseMuons, jets, met,
+		metCut_, metCutAroundZ_);
+	if (events_ < MaxEventDebug_) {
+		eventHyp_.dump(std::cout, dlCandidates);
+	}
+
+	for ( std::vector<const cms1::DiLeptonCandidate*>::iterator dli = dlCandidates.begin(), dle = dlCandidates.end(); dli != dle; ++dli ) {
+		const cms1::DiLeptonCandidate* dl = *dli;
+		FillHistograms(dl->jets, dl->lTight, dl->lLoose, dl->MET);
+		int njet = dl->nJets(); if (njet > 4)  njet = 4;
+		switch (dl->candidateType) {
+			case cms1::DiLeptonCandidate::MuMu: countedMuMuJets_[njet]++; 
+				break;
+			case cms1::DiLeptonCandidate::MuEl: countedMuEJets_[njet]++;       
+				break;
+			case cms1::DiLeptonCandidate::ElMu: countedEMuJets_[njet]++;       
+				break;
+			case cms1::DiLeptonCandidate::ElEl: countedEEJets_[njet]++;
+				break;
+			default: std::cout << "ERROR: DiLeptonCandidate not MuMu, MuEl, ElMu or ElEl -- This can never happen!!" << std::endl;
+		}
+	}
+	return; 
+}
 
 //Function that will fill all of UCSD Grad Histograms
 
@@ -387,6 +299,122 @@ void cms1::TableMaker::FillHistograms(std::vector<const reco::Candidate*> jets,c
 	//HT[i]
 
 	hHT[jetnum]->Fill(energy + met + one->et() + two->et());
+
+}
+
+void cms1::TableMaker::configure(const edm::ParameterSet& iConfig)
+{
+   // load standard configuration (black boxes)
+   BaseAnalyzer::configure( iConfig );
+
+  // tight muon cuts
+  tightMuon_.pt_min       = iConfig.getUntrackedParameter<double>("TightMuonPt");
+  tightMuon_.eta_min      = iConfig.getUntrackedParameter<double>("TightMuonMinEta");
+  tightMuon_.eta_max      = iConfig.getUntrackedParameter<double>("TightMuonMaxEta");
+
+  // loose muon cuts
+  looseMuon_.pt_min       = iConfig.getUntrackedParameter<double>("LooseMuonPt");
+  looseMuon_.eta_min      = iConfig.getUntrackedParameter<double>("LooseMuonMinEta");
+  looseMuon_.eta_max      = iConfig.getUntrackedParameter<double>("LooseMuonMaxEta");
+
+  // all muon cuts
+  allMuon_.pt_min       = iConfig.getUntrackedParameter<double>("AllMuonPt");
+  allMuon_.eta_min      = iConfig.getUntrackedParameter<double>("AllMuonMinEta");
+  allMuon_.eta_max      = iConfig.getUntrackedParameter<double>("AllMuonMaxEta");
+
+  // tight electron cuts
+  tightElectron_.pt_min   = iConfig.getUntrackedParameter<double>("TightElectronPt");
+  tightElectron_.eta_min  = iConfig.getUntrackedParameter<double>("TightElectronMinEta");
+  tightElectron_.eta_max  = iConfig.getUntrackedParameter<double>("TightElectronMaxEta");
+
+  // loose electron cuts
+  looseElectron_.pt_min   = iConfig.getUntrackedParameter<double>("LooseElectronPt");
+  looseElectron_.eta_min  = iConfig.getUntrackedParameter<double>("LooseElectronMinEta");
+  looseElectron_.eta_max  = iConfig.getUntrackedParameter<double>("LooseElectronMaxEta");
+
+  // jet cuts
+  jetCut_.pt_min             = iConfig.getUntrackedParameter<double>("JetPt");
+  jetCut_.eta_min            = iConfig.getUntrackedParameter<double>("JetMinEta");
+  jetCut_.eta_max            = iConfig.getUntrackedParameter<double>("JetMaxEta");
+
+  // MET cuts
+  metCut_.pt_min             = iConfig.getUntrackedParameter<double>("MET");
+
+  // MET cuts around Z
+  metCutAroundZ_.pt_min      = iConfig.getUntrackedParameter<double>("METAroundZ");
+  ZRangeMinMass_             = iConfig.getUntrackedParameter<double>("ZRangeMinMass");
+  ZRangeMaxMass_             = iConfig.getUntrackedParameter<double>("ZRangeMaxMass");
+
+  fileTag 					= iConfig.getUntrackedParameter<std::string>("fileTag");
+
+  MaxEventDebug_             = (unsigned int) iConfig.getUntrackedParameter<int>("MaxEventDebug");
+
+	ostringstream temp; 
+	hTable = new TH2I("Table","Table;NJets;DiLepton",5,0,5,4,0,4);
+	hNJets = new TH1I("NJets","NJets;NJets;Events",5,0,5);
+	hNJets->Sumw2();
+	for(int i=0;i<4;++i)
+	{
+		temp << "PTJet_" << i;
+		TH1F* histo= new TH1F(temp.str().c_str(),"PTJet;PT(GeV);Events",BINS,0,500);
+		histo->Sumw2();
+		hPTJet.push_back(histo);
+		temp.clear(); temp.str("");
+	}
+	for(int i=0;i<5;++i)
+	{
+		temp << "Mll_J" << i;
+		TH1F* histo1=new TH1F(temp.str().c_str(),"Invariant Mass;Mll(GeV);Events",BINS,0,500);
+		histo1->Sumw2();
+		hMll.push_back(histo1);
+		temp.clear(); temp.str("");
+
+		temp << "PTTight_J" << i;
+		TH1F* histo2=new TH1F(temp.str().c_str(),"PT Tight Lepton;PT(GeV);Events",BINS,0,500);
+                histo2->Sumw2();
+		hPTTight.push_back(histo2);
+		temp.clear(); temp.str("");
+
+		temp << "PTLoose_J" << i;
+		TH1F* histo3=new TH1F(temp.str().c_str(),"PT Loose Lepton;PT(GeV);Events",BINS,0,500);
+                histo3->Sumw2();
+		hPTLoose.push_back(histo3);
+		temp.clear(); temp.str("");
+
+		temp << "PTLeading_J" << i;
+		TH1F* histo4=new TH1F(temp.str().c_str(),"PT Leading Lepton;PT(GeV);Events",BINS,0,500);
+                histo4->Sumw2();
+		hPTLeading.push_back(histo4);
+		temp.clear(); temp.str("");
+
+		temp << "PTTrailing_J" << i;
+		TH1F* histo5=new TH1F(temp.str().c_str(),"PT Second Leading Lepton;PT(GeV);Events",BINS,0,500);
+		histo5->Sumw2();
+		hPTTrailing.push_back(histo5);
+		temp.clear(); temp.str("");
+
+		temp << "HT_J" << i;
+		TH1F* histo6=new TH1F(temp.str().c_str(),"Temperature;Temperature(GeV);Events",BINS,0,1000);
+		histo6->Sumw2();
+		hHT.push_back(histo6);
+		temp.clear(); temp.str("");
+
+		temp << "MET_J" << i;
+		TH1F* histo7=new TH1F(temp.str().c_str(),"Missing ET;MET(GeV);Events",BINS,0,500); 
+		histo7->Sumw2();
+		hMET.push_back(histo7);
+		temp.clear(); temp.str("");
+
+	}
+	
+  for(int i=0; i<5; ++i) {
+    countedEEJets_[i] = 0;
+    countedEMuJets_[i] = 0;
+    countedMuEJets_[i] = 0;
+    countedMuMuJets_[i] = 0;
+  }
+
+  events_ = 0;
 
 }
 
