@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/03/16 07:17:45 $
-// $Revision: 1.5 $
+// $Author: latb $
+// $Date: 2007/03/22 15:31:56 $
+// $Revision: 1.6 $
 //
 
 #include <iostream>
@@ -21,13 +21,19 @@ const reco::CaloMET* cms1::MET::getMET(const METType type)
    switch (type) {
     case DefaultMET:
     {
-      if (! data_ || ! data_->metCollection) {
-	std::cout << "ERROR: MET collection is not set" << std::endl;
-	 return 0;
-      }
+       if (! data_ ) {
+	  std::cout << "ERROR: MET black box doesn't know where to find EvenData." << std::endl;
+	  return 0;
+       }
+       const std::vector<reco::CaloMET>* collection = 
+	 data_->container_reco_CaloMET.getCollection(edm::InputTag("met",""));
+       if ( ! collection ) {
+	  std::cout << "ERROR: MET is not found in the event. Return nothing." << std::endl;
+	  return 0;
+       }
 
-      if ( ! data_->metCollection->empty() )
-	 return &(data_->metCollection->front());
+       if ( ! collection->empty() )
+	 return &(collection->front());
        else
 	 return 0;
     }
