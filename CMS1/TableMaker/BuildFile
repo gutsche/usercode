@@ -3,6 +3,7 @@
 <use name=FWCore/ParameterSet>
 <use name=FWCore/ServiceRegistry>>
 <use name=DataFormats/MuonReco>
+<use name=CMS1/BaseAnalyzer>
 <use name=CMS1/Muons>
 <use name=CMS1/Electrons>
 <use name=CMS1/Jets>
