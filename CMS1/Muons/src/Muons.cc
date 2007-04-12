@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/03/22 15:31:58 $
-// $Revision: 1.6 $
+// $Author: dmytro $
+// $Date: 2007/04/07 18:00:22 $
+// $Revision: 1.7 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
@@ -91,11 +91,12 @@ void cms1::Muons::dump(ostream& o, std::vector<const reco::Candidate*> ml) {
 		o << "Pt = " << cp->pt(); 
 		o << ", Eta = " << cp->eta(); 
 		o << ", Phi = " << cp->phi(); 
-		if ( data_->tracks != 0 ) {
-			double isoRel = cms1::Cuts::trackRelIsolation(cp->momentum(), cp->vertex(), data_->tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-			o << ", isol = " << isoRel;
-		}
-		o << std::endl; 
+	   const  std::vector<reco::Track>* tracks = data_->container_reco_Track.getCollection(edm::InputTag("ctfWithMaterialTracks",""));
+	   if ( tracks) {
+	      double isoRel = cms1::Cuts::trackRelIsolation(cp->momentum(), cp->vertex(), tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
+	      o << ", isol = " << isoRel;
+	   }
+	   o << std::endl; 
 	}
 }
 
