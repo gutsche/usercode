@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/03/16 07:15:17 $
-// $Revision: 1.5 $
+// $Author: latb $
+// $Date: 2007/03/22 15:31:54 $
+// $Revision: 1.6 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -29,11 +29,18 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
     case LooseElectrons:
 	{
 	   // check inputs
-	   if (! data_ || ! data_->siStripElectrons) {
-	      std::cout << "ERROR: electron collection is not set" << std::endl;
+	   if (! data_ ) {
+	      std::cout << "ERROR: electron black box doesn't know where to find EvenData." << std::endl;
 	      return output_list;
 	   }
-	   if (isolated && ! data_->tracks) {
+	   const std::vector<reco::SiStripElectron>* collection = 
+	     data_->container_reco_SiStripElectron.getCollection(edm::InputTag("siStripElectrons",""));
+	   if ( ! collection ) {
+	      std::cout << "ERROR: electron muon collection is not found in the event. Return nothing." << std::endl;
+	      return output_list;
+	   }
+
+	   if (isolated && ! data_->container_reco_Track.getCollection(edm::InputTag("ctfWithMaterialTracks","")) ) {
 	      std::cout << "ERROR: track collection for electron isolation is not set" << std::endl;
 	      return output_list;
 	   }
@@ -46,8 +53,8 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
 	   defaultCuts.isolated = isolated;
 	   defaultCuts.setEventData( data_ );
 	   
-	   for ( std::vector<reco::SiStripElectron>::const_iterator electron = data_->siStripElectrons->begin();
-		 electron != data_->siStripElectrons->end();
+	   for ( std::vector<reco::SiStripElectron>::const_iterator electron = collection->begin();
+		 electron != collection->end();
 		 ++electron ) 
 	     {
 		if ( ! defaultCuts.testCandidate(*electron) ) continue;
@@ -106,11 +113,12 @@ void cms1::Electrons::dump(ostream& o, std::vector<const reco::Candidate*> el) {
 		o << "Electron "; 
 		o << "Pt = " << cp->pt(); 
 		o << ", Eta = " << cp->eta(); 
-		o << ", Phi = " << cp->phi(); 
-		if ( data_->tracks != 0 ) {
-			double isoRel = cms1::Cuts::trackRelIsolation(cp->momentum(), cp->vertex(), data_->tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-			o << ", isol = " << isoRel;
-		}
-		o << std::endl; 
+		o << ", Phi = " << cp->phi();
+	   const  std::vector<reco::Track>* tracks = data_->container_reco_Track.getCollection(edm::InputTag("ctfWithMaterialTracks",""));
+	   if ( tracks) {
+	      double isoRel = cms1::Cuts::trackRelIsolation(cp->momentum(), cp->vertex(), tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
+	      o << ", isol = " << isoRel;
+	   }
+	   o << std::endl; 
 	}
 }
