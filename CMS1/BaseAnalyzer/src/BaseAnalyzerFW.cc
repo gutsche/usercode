@@ -7,7 +7,7 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/03/16 07:00:21 $
+// $Date: 2007/04/07 17:54:23 $
 // $Revision: 1.1 $
 //
 #include "CMS1/BaseAnalyzer/interface/BaseAnalyzerFW.h"
@@ -15,7 +15,7 @@ void cms1::BaseAnalyzerFW::analyze(const edm::Event& iEvent, const edm::EventSet
 {
    // fill EvenData 
    // each call correspods to one C++ type of collection
-   // loadData( iEvent, theDataFW->container_HepMC_GenParticle );
+   loadData( iEvent, theDataFW->container_HepMC_GenParticle );
    loadData( iEvent, theDataFW->container_reco_Track );
    loadData( iEvent, theDataFW->container_reco_SiStripElectron );
    loadData( iEvent, theDataFW->container_reco_CaloJet );
