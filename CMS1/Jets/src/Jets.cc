@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/03/16 07:16:01 $
-// $Revision: 1.4 $
+// $Author: latb $
+// $Date: 2007/03/22 15:31:55 $
+// $Revision: 1.5 $
 //
 
 #include "CMS1/Jets/interface/Jets.h"
@@ -26,8 +26,14 @@ std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
    switch (jetType) {
     case DefaultJets:
 	{
-	   if (! data_ || ! data_->defaultJets) {
-	      std::cout << "ERROR: default jet collection is not set" << std::endl;
+	   if (! data_ ) {
+	      std::cout << "ERROR: jet black box doesn't know where to find EvenData." << std::endl;
+	      return output_list;
+	   }
+	   const std::vector<reco::CaloJet>* collection = 
+	     data_->container_reco_CaloJet.getCollection(edm::InputTag("midPointCone5CaloJets",""));
+	   if ( ! collection ) {
+	      std::cout << "ERROR: jet collection is not found in the event. Return nothing." << std::endl;
 	      return output_list;
 	   }
        
@@ -38,8 +44,8 @@ std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
 	   cuts.eta_max = +2.5;
 	   cuts.AND(userCuts);
        
-	   for ( std::vector<reco::CaloJet>::const_iterator jet = data_->defaultJets->begin();
-		 jet != data_->defaultJets->end();
+	   for ( std::vector<reco::CaloJet>::const_iterator jet = collection->begin();
+		 jet != collection->end();
 		 ++jet ) 
 	     {
 		if ( cuts.testCandidate(*jet) ) output_list.push_back(&*jet);
@@ -64,16 +70,18 @@ std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
 	   // it's not clear whether it's a good practice, so let's just clean up electrons ourself
 	   // for this type of Jets 
 
-	   std::vector<const reco::Candidate*> electrons;
-	   // check inputs
-	   if (! data_ || ! data_->siStripElectrons) {
-	      std::cout << "ERROR: electron collection is not set" << std::endl;
+	   if (! data_ ) {
+	      std::cout << "ERROR: electron black box doesn't know where to find EvenData." << std::endl;
 	      return output_list;
 	   }
-	   if (! data_ || ! data_->tracks) {
-	      std::cout << "ERROR: track collection for Jet veto electron isolation is not set" << std::endl;
+	   const std::vector<reco::SiStripElectron>* electronCollection = 
+	     data_->container_reco_SiStripElectron.getCollection(edm::InputTag("siStripElectrons",""));
+	   if ( ! electronCollection ) {
+	      std::cout << "ERROR: electron muon collection is not found in the event. Return nothing." << std::endl;
 	      return output_list;
 	   }
+
+	   std::vector<const reco::Candidate*> vetoElectrons;
 	   
 	   // set the default cuts for this type
 	   Cuts cuts;
@@ -83,8 +91,8 @@ std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
 	   cuts.isolated = Cuts::Isolated;
 	   cuts.setEventData( data_ );
 	   
-	   for ( std::vector<reco::SiStripElectron>::const_iterator electron = data_->siStripElectrons->begin();
-		 electron != data_->siStripElectrons->end();
+	   for ( std::vector<reco::SiStripElectron>::const_iterator electron = electronCollection->begin();
+		 electron != electronCollection->end();
 		 ++electron ) 
 	     {
 		if ( ! cuts.testCandidate(*electron) ) continue;
@@ -95,7 +103,7 @@ std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
 		std::cout << "Electron (p,E): " << electron->p() << ", " << energy <<std::endl;
 		if (electron->p() < 1 || energy/electron->p() <0.5) continue;
 		
-		electrons.push_back(&*electron);
+		vetoElectrons.push_back(&*electron);
 	     }
 	   
 	   // finally we have veto electron, so let's clean up jets
@@ -103,7 +111,7 @@ std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
 		 jet != jets.end(); ++ jet )
 	     {
 		if ( ! cuts.testCandidate(**jet) ) continue;
-		if ( ! cuts.testJetForElectrons(**jet, electrons ) ) continue;
+		if ( ! cuts.testJetForElectrons(**jet, vetoElectrons ) ) continue;
 		output_list.push_back(*jet);
 	     }
 	}
