@@ -10,7 +10,7 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/03/16 07:00:21 $
+// $Date: 2007/04/07 18:05:54 $
 // $Revision: 1.1 $
 //
 #include <vector>
@@ -50,7 +50,7 @@ namespace cms1 {
 	  }
 	
 	// various accessors to the collection
-	const std::vector<T>* getCollection( const edm::InputTag& tag )
+	const std::vector<T>* getCollection( const edm::InputTag& tag ) const
 	  {
 	     for ( typename std::vector<Collection<T> >::const_iterator collection = theContainer.begin();
 		   collection != theContainer.end(); ++collection )
@@ -58,14 +58,14 @@ namespace cms1 {
 		 return collection->theData;
 	     return 0;
 	  }
-	const std::vector<T>* getCollection( std::string branch )
+	const std::vector<T>* getCollection( std::string branch ) const
 	  {
 	     for( typename std::vector<Collection<T> >::const_iterator collection = theContainer.begin();
 		  collection != theContainer.end(); ++ collection )
 	       if ( theContainer->theBranch == branch ) return theContainer->theData;
 	     return 0;
 	  }
-	const std::vector<T>* getCollection( unsigned int id )
+	const std::vector<T>* getCollection( unsigned int id ) const
 	  {
 	     for( typename std::vector<Collection<T> >::const_iterator collection = theContainer.begin();
 		  collection != theContainer.end(); ++ collection )
