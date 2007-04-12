@@ -6,9 +6,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/03/16 07:03:58 $
-// $Revision: 1.5 $
+// $Author: latb $
+// $Date: 2007/03/22 15:31:54 $
+// $Revision: 1.6 $
 //
 
 #include "CMS1/Base/interface/Cuts.h"
@@ -28,7 +28,12 @@ bool cms1::Cuts::testTrack(const reco::Track& track) const
 	 std::cout << "Configuration Error: isolation requested, but event data is not provided" << std::endl;
 	 return false;
       }
-      if ( trackRelIsolation(track.momentum(),track.vertex(),data_->tracks ) > 0.1 ) return false;
+      const  std::vector<reco::Track>* tracks = data_->container_reco_Track.getCollection(edm::InputTag("ctfWithMaterialTracks",""));
+      if (! tracks) {
+	 std::cout << "Configuration Error: isolation requested, but tracks not found in the event" << std::endl;
+	 return false;
+      }
+      if ( trackRelIsolation(track.momentum(),track.vertex(), tracks ) > 0.1 ) return false;
    }
    
    return true;
@@ -45,7 +50,12 @@ bool cms1::Cuts::testCandidate(const reco::Candidate& candidate) const
 	 std::cout << "Configuration Error: isolation requested, but event data is not provided" << std::endl;
 	 return false;
       }
-      if ( trackRelIsolation(candidate.momentum(),candidate.vertex(),data_->tracks ) > 0.1 ) return false;
+      const  std::vector<reco::Track>* tracks = data_->container_reco_Track.getCollection(edm::InputTag("ctfWithMaterialTracks",""));
+      if (! tracks) {
+	 std::cout << "Configuration Error: isolation requested, but tracks not found in the event" << std::endl;
+	 return false;
+      }
+      if ( trackRelIsolation(candidate.momentum(),candidate.vertex(), tracks ) > 0.1 ) return false;
    }
    
    return true;
