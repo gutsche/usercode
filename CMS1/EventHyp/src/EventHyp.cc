@@ -36,7 +36,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 
 	std::vector<const cms1::DiLeptonCandidate*> output_list;
 
-	const std::vector<reco::Track>*  tracks = data_->tracks;
+        const  std::vector<reco::Track>* tracks = data_->container_reco_Track.getCollection(edm::InputTag("ctfWithMaterialTracks",""));
 	
 // logic
 	std::vector<std::pair<const reco::Candidate*, const reco::Candidate*> > takenEE;
@@ -252,7 +252,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 }
 
 void cms1::EventHyp::dump(ostream& o, std::vector<const cms1::DiLeptonCandidate*> cl) {
-
+        const  std::vector<reco::Track>* tracks = data_->container_reco_Track.getCollection(edm::InputTag("ctfWithMaterialTracks",""));
 	for ( std::vector<const cms1::DiLeptonCandidate*>::iterator i = cl.begin(), ie = cl.end(); i != ie; ++i ) {
 		const cms1::DiLeptonCandidate* dl = *i;
 		const reco::Candidate* cp = dl->lTight; 
@@ -266,8 +266,8 @@ void cms1::EventHyp::dump(ostream& o, std::vector<const cms1::DiLeptonCandidate*
 		o << "Pt = " << cp->pt(); 
 		o << ", Eta = " << cp->eta(); 
 		o << ", Phi = " << cp->phi(); 
-		if ( data_->tracks != 0 ) {
-			double isoRel = cms1::Cuts::trackRelIsolation(cp->momentum(), cp->vertex(), data_->tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
+		if ( tracks != 0 ) {
+			double isoRel = cms1::Cuts::trackRelIsolation(cp->momentum(), cp->vertex(), tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
 			o << ", isol = " << isoRel;
 		}
 		o << std::endl; 
@@ -278,8 +278,8 @@ void cms1::EventHyp::dump(ostream& o, std::vector<const cms1::DiLeptonCandidate*
 		o << "Pt = " << cp->pt(); 
 		o << ", Eta = " << cp->eta(); 
 		o << ", Phi = " << cp->phi(); 
-		if ( data_->tracks != 0 ) {
-			double isoRel = cms1::Cuts::trackRelIsolation(cp->momentum(), cp->vertex(), data_->tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
+		if ( tracks != 0 ) {
+			double isoRel = cms1::Cuts::trackRelIsolation(cp->momentum(), cp->vertex(), tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
 			o << ", isol = " << isoRel;
 		}
 		o << std::endl; 
