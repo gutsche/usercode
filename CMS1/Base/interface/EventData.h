@@ -9,8 +9,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/03/16 06:59:25 $
-// $Revision: 1.2 $
+// $Date: 2007/04/07 18:05:54 $
+// $Revision: 1.3 $
 //
 
 #include "CLHEP/HepMC/GenParticle.h"
@@ -27,20 +27,22 @@
 namespace cms1 {
    struct EventData 
      {
-	// CollectionContainer<HepMC::GenParticle>     container_HepMC_GenParticle;
+	CollectionContainer<HepMC::GenParticle>     container_HepMC_GenParticle;
 	CollectionContainer<reco::Track>            container_reco_Track;
 	CollectionContainer<reco::SiStripElectron>  container_reco_SiStripElectron;
 	CollectionContainer<reco::CaloJet>          container_reco_CaloJet;
 	CollectionContainer<reco::Muon>             container_reco_Muon;
 	CollectionContainer<reco::CaloMET>          container_reco_CaloMET;
 	
+	EventData():mcInfo(0){};
+	
 	
 	/////////////////////////////////////////////////////////////////
 	// DEPRECIATED OLD STUFF - WILL BE DROPPED
-	
+
 	// generator info 
 	const std::vector<HepMC::GenParticle>*         mcInfo;
-   
+/*   
 	// track collection
 	const std::vector<reco::Track>*                tracks;
 	
@@ -68,6 +70,7 @@ namespace cms1 {
 	 , muonIsolationCollection(0)
 	 , metCollection(0)
 	{}
+ */
      };
    
 }
