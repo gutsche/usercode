@@ -12,9 +12,13 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: latb $
-// $Date: 2007/03/22 15:32:00 $
-// $Revision: 1.11 $
+// $Date: 2007/03/28 22:45:07 $
+// $Revision: 1.12 $
 //
+
+#include <vector>
+#include "CMS1/BaseAnalyzer/interface/BaseAnalyzer.h"
+#include "CMS1/BaseAnalyzer/interface/BaseAnalyzerFW.h"
 
 #include "CMS1/Muons/interface/Muons.h"
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -31,15 +35,21 @@
 
 namespace cms1 {
 
-  class TableMaker {
+   class TableMaker: public BaseAnalyzer {
   public:
-     virtual void analyze();
-     virtual void beginJob();
-     virtual void endJob();
-     TableMaker();
+     // virtual void analyze();
+     // virtual void beginJob();
+     // virtual void endJob();
+     TableMaker(){}
      virtual ~TableMaker();
 
   protected:
+      // analyzer configuration code
+      virtual void configure(const edm::ParameterSet& iConfig);
+	
+      // process event using EventData
+      virtual void processEvent();
+
     Cuts          tightMuon_;
     Cuts          looseMuon_;
     Cuts          allMuon_;
@@ -59,14 +69,14 @@ namespace cms1 {
 
 		unsigned int  MaxEventDebug_;
 
-    // Black boxes
-    Muons         muons_;
-    Electrons     electrons_;
-    Jets          jets_;
-    MET           MET_;
+      // Black boxes
+      // Muons         muons_;
+      // Electrons     electrons_;
+      // Jets          jets_;
+      // MET           MET_;
     
-    // Event data container
-    EventData     data_;
+      // Event data container
+      // EventData     data_;
 
     unsigned int  events_;
     unsigned int  countedEEJets_[5];
