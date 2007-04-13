@@ -1,6 +1,0 @@
-module muonAnalyzer = MuonAnalyzer
-{
-  untracked InputTag GlobalMuonInputTag = globalMuons
-  untracked uint32 number               = 2
-  untracked double pt                   = 2.
-}
