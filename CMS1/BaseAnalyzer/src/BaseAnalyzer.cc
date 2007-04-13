@@ -7,8 +7,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/04/07 17:54:23 $
-// $Revision: 1.1 $
+// $Date: 2007/04/12 19:37:15 $
+// $Revision: 1.2 $
 //
 #include "CMS1/BaseAnalyzer/interface/BaseAnalyzer.h"
 
@@ -20,10 +20,9 @@ void cms1::BaseAnalyzer::configure(const edm::ParameterSet& iConfig)
    theJets.setEventData(      &theData );
    theMET.setEventData(       &theData );
    
-   // register standart collections
    theData.container_reco_Track.registerCollection(            edm::InputTag("ctfWithMaterialTracks",""),"recoTracks_ctfWithMaterialTracks__RECO");
    theData.container_reco_Muon.registerCollection(             edm::InputTag("globalMuons",""),"recoMuons_globalMuons__RECO");
-   theData.container_reco_SiStripElectron.registerCollection(  edm::InputTag("siStripElectrons",""),"");
-   theData.container_reco_CaloJet.registerCollection(          edm::InputTag("midPointCone5CaloJets",""),"");
-   theData.container_reco_CaloMET.registerCollection(          edm::InputTag("met",""),"");
+   theData.container_reco_SiStripElectron.registerCollection(  edm::InputTag("siStripElectrons",""),"recoSiStripElectrons_siStripElectrons__SIM");
+   theData.container_reco_CaloJet.registerCollection(          edm::InputTag("midPointCone5CaloJets",""),"recoCaloJets_midPointCone5CaloJets__SIM");
+   theData.container_reco_CaloMET.registerCollection(          edm::InputTag("met",""),"recoCaloMETs_met__SIM");
 }
