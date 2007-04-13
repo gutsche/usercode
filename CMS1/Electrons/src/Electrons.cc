@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/03/22 15:31:54 $
-// $Revision: 1.6 $
+// $Author: dmytro $
+// $Date: 2007/04/12 19:40:37 $
+// $Revision: 1.7 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -62,7 +62,6 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
 		
 		// cut on E/p
 		double energy = electron->superCluster()->energy();
-		std::cout << "Electron (p,E): " << electron->p() << ", " << energy <<std::endl;
 		if (electron->p() < 1 || energy/electron->p() <0.5) continue;
 		
 		output_list.push_back(&*electron);

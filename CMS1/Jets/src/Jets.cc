@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/03/22 15:31:55 $
-// $Revision: 1.5 $
+// $Author: dmytro $
+// $Date: 2007/04/12 19:43:39 $
+// $Revision: 1.6 $
 //
 
 #include "CMS1/Jets/interface/Jets.h"
@@ -100,7 +100,6 @@ std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
 		
 		// cut on E/p
 		double energy = electron->superCluster()->energy();
-		std::cout << "Electron (p,E): " << electron->p() << ", " << energy <<std::endl;
 		if (electron->p() < 1 || energy/electron->p() <0.5) continue;
 		
 		vetoElectrons.push_back(&*electron);

@@ -8,8 +8,8 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/04/07 18:00:22 $
-// $Revision: 1.7 $
+// $Date: 2007/04/12 20:42:31 $
+// $Revision: 1.8 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
@@ -26,6 +26,7 @@ std::vector<const reco::Candidate*> cms1::Muons::getMuons(const MuonType muonTyp
    switch (muonType) {
     case AllGlobalMuons:
 	{
+
 	   if (! data_ ) {
 	      std::cout << "ERROR: muon black box doesn't know where to find EvenData." << std::endl;
 	      return output_list;
