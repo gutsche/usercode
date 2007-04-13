@@ -11,9 +11,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/03/28 22:45:07 $
-// $Revision: 1.12 $
+// $Author: dmytro $
+// $Date: 2007/04/12 20:51:00 $
+// $Revision: 1.13 $
 //
 
 #include <vector>
@@ -35,20 +35,20 @@
 
 namespace cms1 {
 
-   class TableMaker: public BaseAnalyzer {
+  class TableMaker: public BaseAnalyzer {
   public:
-     // virtual void analyze();
-     // virtual void beginJob();
-     // virtual void endJob();
-     TableMaker(){}
-     virtual ~TableMaker();
+    // virtual void analyze();
+    // virtual void beginJob();
+    // virtual void endJob();
+    TableMaker(){}
+    virtual ~TableMaker();
 
   protected:
-      // analyzer configuration code
-      virtual void configure(const edm::ParameterSet& iConfig);
+    // analyzer configuration code
+    virtual void configure(const edm::ParameterSet& iConfig);
 	
-      // process event using EventData
-      virtual void processEvent();
+    // process event using EventData
+    virtual void processEvent();
 
     Cuts          tightMuon_;
     Cuts          looseMuon_;
@@ -67,16 +67,16 @@ namespace cms1 {
     double        ZRangeMinMass_;
     double        ZRangeMaxMass_;
 
-		unsigned int  MaxEventDebug_;
+    unsigned int  MaxEventDebug_;
 
-      // Black boxes
-      // Muons         muons_;
-      // Electrons     electrons_;
-      // Jets          jets_;
-      // MET           MET_;
+    // Black boxes
+    // Muons         muons_;
+    // Electrons     electrons_;
+    // Jets          jets_;
+    // MET           MET_;
     
-      // Event data container
-      // EventData     data_;
+    // Event data container
+    // EventData     data_;
 
     unsigned int  events_;
     unsigned int  countedEEJets_[5];
@@ -84,23 +84,23 @@ namespace cms1 {
     unsigned int  countedMuEJets_[5];
     unsigned int  countedMuMuJets_[5];
 
+    //UCSD Grads
+    std::string fileTag;  //Help differentiate files, input in cfg
 	
-	//UCSD Grads
-	std::string fileTag;  //Help differentiate files, input in cfg
-	
-	TH1I *hNJets;  //Number of events per jet binning
-	TH2I *hTable;
-	std::vector<TH1F *> hPTJet;//Events vs first four highest PT Jet
-	std::vector<TH1F *> hMll; //Events vs inariant mass  x5
-	std::vector<TH1F *> hPTTight; //events per missing tight lepton  x5
-	std::vector<TH1F *> hPTLoose; //events per missing loose electron  x5
-	std::vector<TH1F *> hPTLeading; //Events vs. highest PT lepton  x5
-	std::vector<TH1F *> hPTTrailing; //Events vs. highest PT lepton  x5
-	std::vector<TH1F *> hHT; //Events vs. temperature   x5
-	std::vector<TH1F *> hMET; //events per missing et  x5
+    TFile *histogramFile;
+    TH1I *hNJets;  //Number of events per jet binning
+    TH2I *hTable;
+    std::vector<TH1F *> hPTJet;//Events vs first four highest PT Jet
+    std::vector<TH1F *> hMll; //Events vs inariant mass  x5
+    std::vector<TH1F *> hPTTight; //events per missing tight lepton  x5
+    std::vector<TH1F *> hPTLoose; //events per missing loose electron  x5
+    std::vector<TH1F *> hPTLeading; //Events vs. highest PT lepton  x5
+    std::vector<TH1F *> hPTTrailing; //Events vs. highest PT lepton  x5
+    std::vector<TH1F *> hHT; //Events vs. temperature   x5
+    std::vector<TH1F *> hMET; //events per missing et  x5
 
 
-	void FillHistograms(std::vector<const reco::Candidate*> jets, const reco::Candidate *,const reco::Candidate *, double);
+    void FillHistograms(std::vector<const reco::Candidate*> jets, const reco::Candidate *,const reco::Candidate *, double);
 	
   };
 }
