@@ -36,7 +36,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 
 	std::vector<const cms1::DiLeptonCandidate*> output_list;
 
-        const  std::vector<reco::Track>* tracks = data_->container_reco_Track.getCollection(edm::InputTag("ctfWithMaterialTracks",""));
+   const  std::vector<reco::Track>* tracks = data_->getData< std::vector<reco::Track> >("ctfWithMaterialTracks");
 	
 // logic
 	std::vector<std::pair<const reco::Candidate*, const reco::Candidate*> > takenEE;
@@ -251,8 +251,8 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 	return output_list;
 }
 
-void cms1::EventHyp::dump(ostream& o, std::vector<const cms1::DiLeptonCandidate*> cl) {
-        const  std::vector<reco::Track>* tracks = data_->container_reco_Track.getCollection(edm::InputTag("ctfWithMaterialTracks",""));
+void cms1::EventHyp::dump(std::ostream& o, std::vector<const cms1::DiLeptonCandidate*> cl) {
+   const  std::vector<reco::Track>* tracks = data_->getData< std::vector<reco::Track> >("ctfWithMaterialTracks");
 	for ( std::vector<const cms1::DiLeptonCandidate*>::iterator i = cl.begin(), ie = cl.end(); i != ie; ++i ) {
 		const cms1::DiLeptonCandidate* dl = *i;
 		const reco::Candidate* cp = dl->lTight; 

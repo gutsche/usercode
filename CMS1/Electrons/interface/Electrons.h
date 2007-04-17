@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/03/16 07:15:17 $
-// $Revision: 1.4 $
+// $Author: latb $
+// $Date: 2007/03/22 15:31:54 $
+// $Revision: 1.5 $
 //
 
 #include "DataFormats/EgammaCandidates/interface/Electron.h"
@@ -21,6 +21,7 @@
 
 #include "CMS1/Base/interface/Cuts.h"
 #include "CMS1/Base/interface/BlackBox.h"
+#include <iostream>
 
 namespace cms1 {
    class Electrons: public BlackBox  {
@@ -35,7 +36,7 @@ namespace cms1 {
     std::vector<const reco::Candidate*> getElectrons (const ElectronType, 
 							    const Cuts&,
 							    Cuts::IsolationType isolated = Cuts::NotIsolated);
-	void dump(ostream& o, std::vector<const reco::Candidate*>);
+      void dump(std::ostream& o, std::vector<const reco::Candidate*>);
   };
 }
 

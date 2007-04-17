@@ -6,7 +6,8 @@
 <use name=FWCore/Framework>
 <use name=Foundation/PluginManager>
 <use name=FWCore/ParameterSet>
-<use name=FWCore/ServiceRegistry>>
+<use name=FWCore/ServiceRegistry>
+<use name=FWCore/TFWLiteSelector>
 
 # TnS stuff
 <use name=CMS1/Base>
@@ -24,6 +25,7 @@
 
 <export>
    <lib name=CMS1BaseAnalyzer>
+   <use name=FWCore/TFWLiteSelector>
    <use name=DataFormats/TrackReco>
    <use name=DataFormats/JetReco>
    <use name=clhep>

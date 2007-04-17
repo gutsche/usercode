@@ -10,7 +10,7 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/03/16 07:00:21 $
+// $Date: 2007/04/07 17:54:23 $
 // $Revision: 1.1 $
 //
 #include <vector>
@@ -30,11 +30,16 @@ namespace cms1 {
 	BaseAnalyzer(){}
 	virtual ~BaseAnalyzer(){}
       protected:
-	// analyzer configuration code
+	// User configuration code 
+	// In this class basic stuff is setup (black boxes)
 	virtual void configure(const edm::ParameterSet& );
 	
-	// process event using EventData
-	virtual void processEvent() = 0;
+	// User code to process event 
+	// In this class basic stuff is done (black boxes)
+	virtual void processEvent(const edm::Event& );
+
+	// User code to finilize data processing
+	virtual void finishProcessing(){}
 	
 	// event data container
 	EventData theData;

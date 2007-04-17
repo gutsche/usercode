@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/03/16 07:17:44 $
-// $Revision: 1.4 $
+// $Author: latb $
+// $Date: 2007/03/22 15:31:55 $
+// $Revision: 1.5 $
 //
 #include <iostream>
 
@@ -35,7 +35,7 @@ namespace cms1 {
       // here should be all corrections
       static void correctMETmuons(const std::vector<const reco::Candidate*>* m,
 				  double& et, double& phi);
-	  void dump(ostream&, const reco::Candidate*);
+      void dump(std::ostream&, const reco::Candidate*);
   };
 }
 

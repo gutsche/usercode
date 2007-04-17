@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/03/22 15:31:56 $
-// $Revision: 1.6 $
+// $Author: dmytro $
+// $Date: 2007/04/12 20:39:22 $
+// $Revision: 1.7 $
 //
 
 #include <iostream>
@@ -25,8 +25,7 @@ const reco::CaloMET* cms1::MET::getMET(const METType type)
 	  std::cout << "ERROR: MET black box doesn't know where to find EvenData." << std::endl;
 	  return 0;
        }
-       const std::vector<reco::CaloMET>* collection = 
-	 data_->container_reco_CaloMET.getCollection(edm::InputTag("met",""));
+       const std::vector<reco::CaloMET>* collection = data_->getData<std::vector<reco::CaloMET> >("met");
        if ( ! collection ) {
 	  std::cout << "ERROR: MET is not found in the event. Return nothing." << std::endl;
 	  return 0;
@@ -69,7 +68,7 @@ void cms1::MET::correctMETmuons(const std::vector<const reco::Candidate*>* m, do
 
 
 
-void cms1::MET::dump(ostream& o, const reco::Candidate* mo) {
+void cms1::MET::dump(std::ostream& o, const reco::Candidate* mo) {
 
 	o << "MET      "; 
 	o << "Pt = " << mo->pt(); 

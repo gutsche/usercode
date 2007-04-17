@@ -23,7 +23,7 @@ namespace cms1 {
       // This is the function that does all the work
 		std::vector<const cms1::DiLeptonCandidate*> getEventHyp (const EventHypType);
 	
-		void dump(ostream&, std::vector<const cms1::DiLeptonCandidate*>);
+	   void dump(std::ostream&, std::vector<const cms1::DiLeptonCandidate*>);
 		
 		std::vector<const cms1::DiLeptonCandidate*> getEventHyp (
 			std::vector<const reco::Candidate*> tightElectrons,

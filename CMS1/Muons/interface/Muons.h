@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/03/16 07:22:01 $
-// $Revision: 1.4 $
+// $Author: latb $
+// $Date: 2007/03/22 15:31:58 $
+// $Revision: 1.5 $
 //
 #include <iostream>
 
@@ -41,7 +41,7 @@ namespace cms1 {
       int numberOfMuons(const MuonType type, const Cuts& cuts) {
 	 return getMuons(type,cuts).size();
       }
-      void dump(ostream& o, std::vector<const reco::Candidate*>);
+      void dump(std::ostream& o, std::vector<const reco::Candidate*>);
   };
 }
 

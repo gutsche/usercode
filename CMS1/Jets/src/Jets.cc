@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/04/12 19:43:39 $
-// $Revision: 1.6 $
+// $Author: gutsche $
+// $Date: 2007/04/13 23:08:43 $
+// $Revision: 1.7 $
 //
 
 #include "CMS1/Jets/interface/Jets.h"
@@ -30,8 +30,7 @@ std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
 	      std::cout << "ERROR: jet black box doesn't know where to find EvenData." << std::endl;
 	      return output_list;
 	   }
-	   const std::vector<reco::CaloJet>* collection = 
-	     data_->container_reco_CaloJet.getCollection(edm::InputTag("midPointCone5CaloJets",""));
+	   const std::vector<reco::CaloJet>* collection = data_->getData<std::vector<reco::CaloJet> >("midPointCone5CaloJets");
 	   if ( ! collection ) {
 	      std::cout << "ERROR: jet collection is not found in the event. Return nothing." << std::endl;
 	      return output_list;
@@ -75,7 +74,7 @@ std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
 	      return output_list;
 	   }
 	   const std::vector<reco::SiStripElectron>* electronCollection = 
-	     data_->container_reco_SiStripElectron.getCollection(edm::InputTag("siStripElectrons",""));
+	     data_->getData<std::vector<reco::SiStripElectron> >("siStripElectrons");
 	   if ( ! electronCollection ) {
 	      std::cout << "ERROR: electron muon collection is not found in the event. Return nothing." << std::endl;
 	      return output_list;
@@ -122,7 +121,7 @@ std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
   return output_list;
 }
 
-void cms1::Jets::dump(ostream& o, std::vector<const reco::Candidate*> ml) {
+void cms1::Jets::dump(std::ostream& o, std::vector<const reco::Candidate*> ml) {
 	for ( std::vector<const reco::Candidate*>::iterator i = ml.begin(), ie = ml.end(); i != ie; ++i ) {
 		const reco::Candidate* cp = *i;
 		o << "Jet      "; 

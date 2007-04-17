@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/04/12 19:40:37 $
-// $Revision: 1.7 $
+// $Author: gutsche $
+// $Date: 2007/04/13 23:08:42 $
+// $Revision: 1.8 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -34,13 +34,13 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
 	      return output_list;
 	   }
 	   const std::vector<reco::SiStripElectron>* collection = 
-	     data_->container_reco_SiStripElectron.getCollection(edm::InputTag("siStripElectrons",""));
+	     data_->getData<std::vector<reco::SiStripElectron> >("siStripElectrons");
 	   if ( ! collection ) {
 	      std::cout << "ERROR: electron muon collection is not found in the event. Return nothing." << std::endl;
 	      return output_list;
 	   }
 
-	   if (isolated && ! data_->container_reco_Track.getCollection(edm::InputTag("ctfWithMaterialTracks","")) ) {
+	   if (isolated && ! data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks") ) {
 	      std::cout << "ERROR: track collection for electron isolation is not set" << std::endl;
 	      return output_list;
 	   }
@@ -86,8 +86,8 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
 	   // This type is based on LooseElectrons
 
 	   // test that all inputs are set correctly
-	   if (! data_ || ! data_->mcInfo) {
-	      std::cout << "ERROR: truth match info is not provided to the electron black box" << std::endl;
+	   if (! data_ ) {
+	      std::cout << "ERROR: event data is not provided to the electron black box" << std::endl;
 	      return output_list;
 	   }
 	   
@@ -106,14 +106,14 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
    return output_list;
 }
 
-void cms1::Electrons::dump(ostream& o, std::vector<const reco::Candidate*> el) {
+void cms1::Electrons::dump(std::ostream& o, std::vector<const reco::Candidate*> el) {
 	for ( std::vector<const reco::Candidate*>::iterator i = el.begin(), ie = el.end(); i != ie; ++i ) {
 		const reco::Candidate* cp = *i;
 		o << "Electron "; 
 		o << "Pt = " << cp->pt(); 
 		o << ", Eta = " << cp->eta(); 
 		o << ", Phi = " << cp->phi();
-	   const  std::vector<reco::Track>* tracks = data_->container_reco_Track.getCollection(edm::InputTag("ctfWithMaterialTracks",""));
+	   const  std::vector<reco::Track>* tracks = data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks");
 	   if ( tracks) {
 	      double isoRel = cms1::Cuts::trackRelIsolation(cp->momentum(), cp->vertex(), tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
 	      o << ", isol = " << isoRel;

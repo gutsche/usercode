@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/04/12 20:42:31 $
-// $Revision: 1.8 $
+// $Author: gutsche $
+// $Date: 2007/04/13 23:08:43 $
+// $Revision: 1.9 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
@@ -31,7 +31,7 @@ std::vector<const reco::Candidate*> cms1::Muons::getMuons(const MuonType muonTyp
 	      std::cout << "ERROR: muon black box doesn't know where to find EvenData." << std::endl;
 	      return output_list;
 	   }
-	   const std::vector<reco::Muon>* collection = data_->container_reco_Muon.getCollection(edm::InputTag("globalMuons",""));
+	   const std::vector<reco::Muon>* collection = data_->getData<std::vector<reco::Muon> >("globalMuons");
 	   if ( ! collection ) {
 	      std::cout << "ERROR: global muon collection is not found in the event. Return nothing." << std::endl;
 	      return output_list;
@@ -85,14 +85,14 @@ std::vector<const reco::Candidate*> cms1::Muons::getMuons(const MuonType muonTyp
    return output_list;
 }
 
-void cms1::Muons::dump(ostream& o, std::vector<const reco::Candidate*> ml) {
+void cms1::Muons::dump(std::ostream& o, std::vector<const reco::Candidate*> ml) {
 	for ( std::vector<const reco::Candidate*>::iterator i = ml.begin(), ie = ml.end(); i != ie; ++i ) {
 		const reco::Candidate* cp = *i;
 		o << "Muon     "; 
 		o << "Pt = " << cp->pt(); 
 		o << ", Eta = " << cp->eta(); 
 		o << ", Phi = " << cp->phi(); 
-	   const  std::vector<reco::Track>* tracks = data_->container_reco_Track.getCollection(edm::InputTag("ctfWithMaterialTracks",""));
+	   const  std::vector<reco::Track>* tracks = data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks");
 	   if ( tracks) {
 	      double isoRel = cms1::Cuts::trackRelIsolation(cp->momentum(), cp->vertex(), tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
 	      o << ", isol = " << isoRel;
