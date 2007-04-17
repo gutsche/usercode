@@ -1,9 +1,9 @@
-#ifndef CMS1_SampleAnalyzerFWLite_h
-#define CMS1_SampleAnalyzerFWLite_h
+#ifndef CMS1_TableMakerFWLite_h
+#define CMS1_TableMakerFWLite_h
 
 //
-// Package:         CMS1/Base
-// Class:           SampleAnalyzerFWLite
+// Package:         CMS1/TableMaker
+// Class:           TableMakerFWLite
 // 
 // Description:     FWLite code, hardly anything should be done here
 //
@@ -14,15 +14,15 @@
 // $Revision: 1.1 $
 //
 #include <vector>
-#include "CMS1/SampleAnalyzer/interface/SampleAnalyzer.h"
+#include "CMS1/TableMaker/interface/TableMaker.h"
 #include "CMS1/BaseAnalyzer/interface/BaseAnalyzerFWLite.h"
 
 namespace cms1 {
-   class SampleAnalyzerFWLite: public SampleAnalyzer, public BaseAnalyzerFWLite
+   class TableMakerFWLite: public TableMaker, public BaseAnalyzerFWLite
      {
       public:
-	SampleAnalyzerFWLite(){}
-       	virtual ~SampleAnalyzerFWLite(){}
+	TableMakerFWLite(){}
+       	virtual ~TableMakerFWLite(){}
       protected:
 	// BaseAnalyzerFWLite stuff
 	virtual void process(const edm::Event& iEvent){
@@ -40,7 +40,6 @@ namespace cms1 {
 	   configure( iConfig ); 
 	}
 	virtual void terminate( TList& ){ finishProcessing(); }
-	
      };
 }
    

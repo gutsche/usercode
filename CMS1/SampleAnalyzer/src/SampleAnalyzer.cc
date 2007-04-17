@@ -7,29 +7,20 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/04/08 06:39:30 $
-// $Revision: 1.2 $
+// $Date: 2007/04/08 22:55:38 $
+// $Revision: 1.3 $
 //
 #include "CMS1/SampleAnalyzer/interface/SampleAnalyzer.h"
 #include <iostream>
 
 void cms1::SampleAnalyzer::configure(const edm::ParameterSet& iConfig)
 {
-   // load standard configuration (black boxes)
-   BaseAnalyzer::configure( iConfig );
-   
    // get parameters from config file specific for your analysis                                   //usercode
    pt_ = 2; //GeV                                                                                  //usercode
    number_ = 2;                                                                                    //usercode
-                                                                                                   //usercode
-   // let's try to read in something absolutely arbitrary, which has                               //usercode
-   // supported C++ type. For example reco::Track collection rsWithMaterialTracks                  //usercode
-   // register this collection in the EventData                                                    //usercode
-   theData.container_reco_Track.registerCollection(edm::InputTag("rsWithMaterialTracks",""),       //usercode
-						   "recoTracks_rsWithMaterialTracks__RECO");       //usercode
 }
 
-void cms1::SampleAnalyzer::processEvent()
+void cms1::SampleAnalyzer::processEvent( const edm::Event& iEvent )
 {
    // define external cuts                                                                         //usercode
    // Initialized to have all cuts turned off                                                      //usercode
@@ -70,10 +61,13 @@ void cms1::SampleAnalyzer::processEvent()
    if (stiffestMuon)                                                                               //usercode
      std::cout << "The pt of the stiffest muon is " << stiffestMuon->pt() << std::endl;            //usercode
                                                                                                    //usercode
+   // let's try to read in something absolutely arbitrary, which has                               //usercode
+   // supported C++ type. For example reco::Track collection rsWithMaterialTracks                  //usercode
+   // register this collection in the EventData                                                    //usercode
    // lets check how many rsWithMaterialTracks tracks are found in the event and dump them         //usercode
    // The EventData automatically loads registered collections, so we can simply use it            //usercode
    const std::vector<reco::Track>* tracks =                                                        //usercode
-     theData.container_reco_Track.getCollection(edm::InputTag("rsWithMaterialTracks",""));         //usercode
+     theData.getData<std::vector<reco::Track> >("rsWithMaterialTracks");                           //usercode
    if ( tracks ) {                                                                                 //usercode
       std::cout << "Number of rsWithMaterialTracks tracks found: " << tracks->size() << std::endl; //usercode
       for(std::vector<reco::Track>::const_iterator track = tracks->begin();                        //usercode

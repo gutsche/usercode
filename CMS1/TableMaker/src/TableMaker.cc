@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/04/12 20:55:26 $
-// $Revision: 1.20 $
+// $Author: gutsche $
+// $Date: 2007/04/13 23:10:01 $
+// $Revision: 1.21 $
 //
 
 #include <vector>
@@ -72,7 +72,7 @@ unsigned int nJetsWithoutEl(std::vector<const reco::Candidate*> jets, const Cand
   return nJets;
 } 
 
-cms1::TableMaker::~TableMaker()
+void cms1::TableMaker::finishProcessing()
 {
 //   hNJets->Write();
 //   for(int i=0;i<5;++i)
@@ -150,7 +150,7 @@ cms1::TableMaker::~TableMaker()
 }
 
 void
-cms1::TableMaker::processEvent()
+  cms1::TableMaker::processEvent( const edm::Event& iEvent )
 {
 
   ++events_;
@@ -184,7 +184,7 @@ cms1::TableMaker::processEvent()
   // Dump Event contents
   if (events_ < MaxEventDebug_) {
     const std::vector<reco::CaloJet>* jetColl =
-      theData.container_reco_CaloJet.getCollection(edm::InputTag("midPointCone5CaloJets",""));
+       theData.getData<std::vector<reco::CaloJet> >("midPointCone5CaloJets");
 
     std::cout << "------------------------------------------------------------------------" << std::endl; 
     std::cout << "Dump of Event, " 
@@ -288,9 +288,6 @@ void cms1::TableMaker::FillHistograms(std::vector<const reco::Candidate*> jets,c
 
 void cms1::TableMaker::configure(const edm::ParameterSet& iConfig)
 {
-  // load standard configuration (black boxes)
-  BaseAnalyzer::configure( iConfig );
-
   // tight muon cuts
   tightMuon_.pt_min       = iConfig.getUntrackedParameter<double>("TightMuonPt");
   tightMuon_.eta_min      = iConfig.getUntrackedParameter<double>("TightMuonMinEta");

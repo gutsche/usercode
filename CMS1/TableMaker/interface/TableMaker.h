@@ -11,14 +11,13 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/04/12 20:51:00 $
-// $Revision: 1.13 $
+// $Author: gutsche $
+// $Date: 2007/04/13 23:10:00 $
+// $Revision: 1.14 $
 //
 
 #include <vector>
 #include "CMS1/BaseAnalyzer/interface/BaseAnalyzer.h"
-#include "CMS1/BaseAnalyzer/interface/BaseAnalyzerFW.h"
 
 #include "CMS1/Muons/interface/Muons.h"
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -37,18 +36,19 @@ namespace cms1 {
 
   class TableMaker: public BaseAnalyzer {
   public:
-    // virtual void analyze();
-    // virtual void beginJob();
-    // virtual void endJob();
     TableMaker(){}
-    virtual ~TableMaker();
+    virtual ~TableMaker(){}
+     
 
   protected:
     // analyzer configuration code
     virtual void configure(const edm::ParameterSet& iConfig);
 	
     // process event using EventData
-    virtual void processEvent();
+    virtual void processEvent(const edm::Event&);
+     
+    // finish process
+    virtual void finishProcessing();
 
     Cuts          tightMuon_;
     Cuts          looseMuon_;

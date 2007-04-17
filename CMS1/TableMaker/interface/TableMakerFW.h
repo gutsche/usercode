@@ -1,42 +1,48 @@
-#ifndef TableMakerFW_h
-#define TableMakerFW_h
+#ifndef CMS1_TableMakerFW_h
+#define CMS1_TableMakerFW_h
 
 //
-// Package:         CMS1/TableMaker
-// Class:           TableMaker
-
+// Package:         CMS1/Base
+// Class:           TableMakerFW
 // 
-// Description:     EDAnalyzer filling table for di-lepton analysis dependent on number of jets
+// Description:     frame work modue, hardly anything should be done here
 //
-// Original Author: Oliver Gutsche, gutsche@fnal.gov
-// Created:         Tue Feb 20 23:00:01 UTC 2007
+// Original Author: Dmytro Kovalskyi
 //
-// $Author: slava77 $
-// $Date: 2007/03/09 20:56:39 $
-// $Revision: 1.3 $
+// $Author: dmytro $
+// $Date: 2007/04/07 17:57:45 $
+// $Revision: 1.1 $
 //
-
-#include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/Framework/interface/EDAnalyzer.h"
-#include "FWCore/Framework/interface/Event.h"
-#include "FWCore/Framework/interface/ESHandle.h"
-#include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "FWCore/ParameterSet/interface/InputTag.h"
-
+#include <vector>
 #include "CMS1/TableMaker/interface/TableMaker.h"
-#include "CMS1/BaseAnalyzer/interface/BaseAnalyzerFW.h"
+#include "FWCore/Framework/interface/EDAnalyzer.h"
 
 namespace cms1 {
-
-  class TableMakerFW : public TableMaker, public BaseAnalyzerFW
+   class TableMakerFW: public TableMaker, public edm::EDAnalyzer
      {
       public:
-	explicit TableMakerFW(const edm::ParameterSet&);
-	virtual ~TableMakerFW();
-
-      private:
-	virtual void analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup);
+	explicit TableMakerFW( const edm::ParameterSet& iConfig )
+	  { 
+	     // configure default stuff (black boxes)
+	     BaseAnalyzer::configure( iConfig );
+	     
+	     // user configuration
+	     configure( iConfig ); 
+	  }
+       	virtual ~TableMakerFW(){}
+      protected:
+	// EDAnalyzer stuff
+	virtual void analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+	  {
+	     // process default stuff (load data in the EventData)
+	     BaseAnalyzer::processEvent( iEvent );
+	     
+	     // run user code
+	     processEvent( iEvent );
+	  }
+	virtual void endJob(){ finishProcessing(); }
      };
 }
+   
 
 #endif

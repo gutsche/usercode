@@ -10,32 +10,37 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/03/16 07:00:21 $
+// $Date: 2007/04/07 17:57:45 $
 // $Revision: 1.1 $
 //
 #include <vector>
 #include "CMS1/SampleAnalyzer/interface/SampleAnalyzer.h"
-#include "CMS1/BaseAnalyzer/interface/BaseAnalyzerFW.h"
+#include "FWCore/Framework/interface/EDAnalyzer.h"
 
 namespace cms1 {
-   class SampleAnalyzerFW: public SampleAnalyzer, public BaseAnalyzerFW
+   class SampleAnalyzerFW: public SampleAnalyzer, public edm::EDAnalyzer
      {
       public:
 	explicit SampleAnalyzerFW( const edm::ParameterSet& iConfig )
 	  { 
-	     theDataFW = &theData;
-	     configure(iConfig); 
+	     // configure default stuff (black boxes)
+	     BaseAnalyzer::configure( iConfig );
+	     
+	     // user configuration
+	     configure( iConfig ); 
 	  }
        	virtual ~SampleAnalyzerFW(){}
       protected:
+	// EDAnalyzer stuff
 	virtual void analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	  {
 	     // process default stuff (load data in the EventData)
-	     BaseAnalyzerFW::analyze( iEvent, iSetup );
+	     BaseAnalyzer::processEvent( iEvent );
 	     
 	     // run user code
-	     processEvent();
+	     processEvent( iEvent );
 	  }
+	virtual void endJob(){ finishProcessing(); }
      };
 }
    

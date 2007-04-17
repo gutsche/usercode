@@ -2,5 +2,6 @@
 <!--
   <class name="cms1::SampleAnalyzer"/>
   <class name="cms1::SampleAnalyzerFWLite"/>
+  <class name="TFWLiteSelectorBasic"/>
 -->
 </lcgdict>

@@ -10,12 +10,11 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/04/07 17:57:45 $
-// $Revision: 1.1 $
+// $Date: 2007/04/08 22:55:37 $
+// $Revision: 1.2 $
 //
 #include <vector>
 #include "CMS1/BaseAnalyzer/interface/BaseAnalyzer.h"
-#include "CMS1/BaseAnalyzer/interface/BaseAnalyzerFW.h"
 
 namespace cms1 {
    
@@ -28,11 +27,15 @@ namespace cms1 {
 	}
 	virtual ~SampleAnalyzer(){}
       protected:
-	// analyzer configuration code
-	virtual void configure(const edm::ParameterSet& iConfig);
+	// User configuration code lives here
+	// Base class is called first externally to get
+	// black boxes setup
+	virtual void configure(const edm::ParameterSet&);
 	
-	// process event using EventData
-	virtual void processEvent();
+	// User code to process event lives here
+	// Base class is called first externally to get
+	// black boxes running
+	virtual void processEvent(const edm::Event&);
       
       private:
 	// analysis variables
