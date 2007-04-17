@@ -6,16 +6,18 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: latb $
-// $Date: 2007/03/22 15:31:54 $
-// $Revision: 1.6 $
+// $Author: dmytro $
+// $Date: 2007/04/12 19:32:27 $
+// $Revision: 1.7 $
 //
 
 #include "CMS1/Base/interface/Cuts.h"
+#include "CMS1/Base/interface/EventData.h"
 
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include "Math/VectorUtil.h"
 #include <algorithm>
+#include <string>
 
 bool cms1::Cuts::testTrack(const reco::Track& track) const
 {
@@ -28,7 +30,7 @@ bool cms1::Cuts::testTrack(const reco::Track& track) const
 	 std::cout << "Configuration Error: isolation requested, but event data is not provided" << std::endl;
 	 return false;
       }
-      const  std::vector<reco::Track>* tracks = data_->container_reco_Track.getCollection(edm::InputTag("ctfWithMaterialTracks",""));
+      const  std::vector<reco::Track>* tracks = data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks");
       if (! tracks) {
 	 std::cout << "Configuration Error: isolation requested, but tracks not found in the event" << std::endl;
 	 return false;
@@ -50,7 +52,7 @@ bool cms1::Cuts::testCandidate(const reco::Candidate& candidate) const
 	 std::cout << "Configuration Error: isolation requested, but event data is not provided" << std::endl;
 	 return false;
       }
-      const  std::vector<reco::Track>* tracks = data_->container_reco_Track.getCollection(edm::InputTag("ctfWithMaterialTracks",""));
+      const  std::vector<reco::Track>* tracks = data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks");
       if (! tracks) {
 	 std::cout << "Configuration Error: isolation requested, but tracks not found in the event" << std::endl;
 	 return false;
@@ -127,12 +129,16 @@ bool cms1::Cuts::truthMatch( const math::XYZVector& testParticleP3 ) const
 {
    if (truthMatchingType == NoMatching) return true;
    bool matched = false;
-   if ( ! data_ || ! data_->mcInfo ) {
+   if ( ! data_ ) {
       std::cout << "Configuration Error: generator info is not available for truth matching" <<std::endl;
       return matched;
    }
-   for(std::vector<HepMC::GenParticle>::const_iterator genParticle = data_->mcInfo->begin(); 
-       genParticle != data_->mcInfo->end(); ++genParticle)
+   if ( data_->mcInfo.empty() ) {
+      std::cout << "Warning: generator particle list is empty. Not filled?" <<std::endl;
+      return matched;
+   }
+   for(std::vector<HepMC::GenParticle>::const_iterator genParticle = data_->mcInfo.begin(); 
+       genParticle != data_->mcInfo.end(); ++genParticle)
      {
 	math::XYZVector genP3(genParticle->momentum().x(),genParticle->momentum().y(),genParticle->momentum().z());
 	//  && fabs((electron->pt()-genParticle->momentum().perp())/genParticle->momentum().perp()-1)<0.2)

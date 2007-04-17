@@ -1,4 +1,5 @@
 <use name=FWCore/ParameterSet>
+<use name=FWCore/Framework>
 <use name=DataFormats/JetReco>
 <use name=DataFormats/TrackReco>
 <use name=clhep>
@@ -7,5 +8,7 @@
    <use name=DataFormats/TrackReco>
    <use name=DataFormats/JetReco>
    <use name=clhep>
+   <use name=FWCore/ParameterSet>
+   <use name=FWCore/Framework>
 </export>
 # <Flags CXXFLAGS=-g>
