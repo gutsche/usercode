@@ -1,2 +1,0 @@
-# include analyzer
-include "GutSoftAnalyzers/GutSoftFileCheckAnalyzer/data/gutSoftFileCheckAnalyzer.cfi"
