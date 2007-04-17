@@ -25,22 +25,16 @@ std::vector<const reco::Track*> cms1::Tracks::getTracks(const TrackType trackTyp
    switch (trackType) {
     case AllTracks:
 	{
-	   if (! data_ ) {
-	      std::cout << "ERROR: muon track box doesn't know where to find EvenData." << std::endl;
+	   if (! data_ || ! data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks") ) {
+	      std::cout << "ERROR: track collection is not set" << std::endl;
 	      return output_list;
 	   }
-	   const std::vector<reco::Track>* collection = data_->container_reco_Track.getCollection(edm::InputTag("ctfWithMaterialTracks",""));
-	   if ( ! collection ) {
-	     std::cout << "ERROR: track collection is not found in the event. Return nothing." << std::endl;
-	     return output_list;
-	   }
-
 	   // set the default cuts for this type
 	   Cuts cuts;
 	   cuts.isolated = isolated;
 	   cuts.setEventData( data_ );
 	   cuts.AND(userCuts);
-	   
+	   const std::vector<reco::Track>* collection = data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks");
 	   for ( std::vector<reco::Track>::const_iterator track = collection->begin();
 		 track != collection->end();
 		 ++track ) 
