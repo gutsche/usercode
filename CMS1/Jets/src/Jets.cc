@@ -7,13 +7,13 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
-// $Author: gutsche $
-// $Date: 2007/04/13 23:08:43 $
-// $Revision: 1.7 $
+// $Author: dmytro $
+// $Date: 2007/04/17 04:56:32 $
+// $Revision: 1.8 $
 //
 
 #include "CMS1/Jets/interface/Jets.h"
-#include "DataFormats/EgammaCandidates/interface/SiStripElectron.h"
+#include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
 #include "DataFormats/EgammaReco/interface/SuperClusterFwd.h"
 #include "DataFormats/EgammaReco/interface/SuperCluster.h"
 
@@ -73,8 +73,8 @@ std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
 	      std::cout << "ERROR: electron black box doesn't know where to find EvenData." << std::endl;
 	      return output_list;
 	   }
-	   const std::vector<reco::SiStripElectron>* electronCollection = 
-	     data_->getData<std::vector<reco::SiStripElectron> >("siStripElectrons");
+	   const std::vector<reco::PixelMatchGsfElectron>* electronCollection = 
+	     data_->getData<std::vector<reco::PixelMatchGsfElectron> >("pixelMatchGsfElectron");
 	   if ( ! electronCollection ) {
 	      std::cout << "ERROR: electron muon collection is not found in the event. Return nothing." << std::endl;
 	      return output_list;
@@ -90,7 +90,7 @@ std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
 	   cuts.isolated = Cuts::Isolated;
 	   cuts.setEventData( data_ );
 	   
-	   for ( std::vector<reco::SiStripElectron>::const_iterator electron = electronCollection->begin();
+	   for ( std::vector<reco::PixelMatchGsfElectron>::const_iterator electron = electronCollection->begin();
 		 electron != electronCollection->end();
 		 ++electron ) 
 	     {

@@ -10,33 +10,50 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/03/22 15:31:54 $
-// $Revision: 1.5 $
+// $Author: dmytro $
+// $Date: 2007/03/16 07:15:17 $
+// $Revision: 1.4 $
 //
 
-#include "DataFormats/EgammaCandidates/interface/Electron.h"
-#include "DataFormats/EgammaCandidates/interface/SiStripElectron.h"
+//#include "DataFormats/EgammaCandidates/interface/Electron.h"
+#include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
 #include "CLHEP/HepMC/GenParticle.h"
 
 #include "CMS1/Base/interface/Cuts.h"
 #include "CMS1/Base/interface/BlackBox.h"
-#include <iostream>
 
 namespace cms1 {
+  struct ElectronDef {
+    ElectronDef(int a=0, double b=0.1, double c=0.15, double d=0.2, double e=100., double f=100.) {
+      numberOfSCSeed = a;
+      eOverP = b;
+      deltaPhi = c;
+      fBrem = d;
+      hOverE = e;
+      R9 = f;
+    }
+    int numberOfSCSeed;
+    double eOverP;
+    double deltaPhi;
+    double fBrem;
+    double hOverE;
+    double R9;
+  };
+  
    class Electrons: public BlackBox  {
   public:
-     Electrons(): BlackBox(){}
+     Electrons(): BlackBox() {}
       
-    // These are "types of electrons" that we define.  We can add as many as we want as
+    // These are "types of electrons" that we define. We can add as many as we want as
     // people invent new electron requirements
-    enum ElectronType { TightElectrons, LooseElectrons, TruthMatchedElectrons };
+    enum ElectronType {TightElectrons, LooseElectrons, TruthMatchedElectrons, Golden, BigBrem, Narrow, Showering, Custom};
      
     // FIXME: return type corresponds to a single algoritm
-    std::vector<const reco::Candidate*> getElectrons (const ElectronType, 
-							    const Cuts&,
-							    Cuts::IsolationType isolated = Cuts::NotIsolated);
-      void dump(std::ostream& o, std::vector<const reco::Candidate*>);
+    std::vector<const reco::PixelMatchGsfElectron*> getElectrons (const ElectronType, const Cuts&,
+                                                      Cuts::IsolationType isolated = Cuts::NotIsolated,
+                                                                  ElectronDef def = ElectronDef());
+    bool classify(ElectronDef def, const reco::PixelMatchGsfElectron* electron);
+    void dump(std::ostream& o, std::vector<const reco::Candidate*> el);
   };
 }
 
