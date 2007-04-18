@@ -1,0 +1,17 @@
+<use name=FWCore/Framework>
+<use name=Foundation/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=FWCore/ServiceRegistry>>
+<use name=CMS1/Electrons>
+<use name=root>
+<flags SEAL_PLUGIN_NAME="CMS1ElectronAnalyzer">
+<export>
+   <lib name=CMS1MuonAnalyzer>
+   <use name=FWCore/Framework>
+   <use name=Foundation/PluginManager>
+   <use name=FWCore/ParameterSet>
+   <use name=FWCore/ServiceRegistry>>
+   <use name=CMS1/Electrons>
+   <use name=root>	
+</export>
+<Flags CXXFLAGS=-g>
