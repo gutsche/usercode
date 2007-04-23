@@ -8,6 +8,7 @@
 
 #include "CMS1/Base/interface/EventData.h"
 #include "CMS1/Electrons/interface/Electrons.h"
+#include "CMS1/MCInfo/interface/MCInfo.h"
 #include "CLHEP/HepMC/GenParticle.h"
 #include "SimDataFormats/HepMCProduct/interface/HepMCProduct.h"
 
@@ -117,7 +118,7 @@ void ElectronAnalyzer::endJob() {
   }
   file->Close();
 }
-
+/*
 HepMC::GenParticle ElectronAnalyzer::match(reco::PixelMatchGsfElectron e, vector<HepMC::GenParticle> genParticles) {
 
   HepMC::GenParticle output;
@@ -138,13 +139,12 @@ HepMC::GenParticle ElectronAnalyzer::match(reco::PixelMatchGsfElectron e, vector
   }
   
   if (dRmin < 0.1) {
-    hGenDeltaR->Fill(dRmin);
-    double ratio = (double)e.charge() / (double)output.pdg_id();
-    hCharge->Fill(ratio); 
+
   }
 
   return output;
 }
+*/
 
 void ElectronAnalyzer::analyze(const Event & event, const EventSetup& eventSetup) {
 
@@ -161,17 +161,19 @@ void ElectronAnalyzer::analyze(const Event & event, const EventSetup& eventSetup
   vector<HepMC::GenParticle> mcElectron;
 
   const HepMC::GenEvent *myEvent = evt->GetEvent();
-
+  //eventData.mcInfo.insert(myEvent->particles_begin(), myEvent->particles_end()); 
+  
   for(HepMC::GenEvent::particle_const_iterator p = myEvent->particles_begin(); p != myEvent->particles_end(); ++p) {
-    if (abs((*p)->pdg_id()) == 11) {
-      mcElectron.push_back(**p);
-    }
+      eventData.mcInfo.push_back(**p);
   }
   //eventData.pixelElectrons = electronHandle.product();
+  
 
+  MCInfo mcTruth;
+  mcTruth.setEventData(&eventData);
   Electrons electrons;
   electrons.setEventData(&eventData);
-
+  
   Cuts cuts;
   vector<const reco::PixelMatchGsfElectron*>::const_iterator it;
   vector<const reco::PixelMatchGsfElectron*> el[4];
@@ -232,29 +234,33 @@ void ElectronAnalyzer::analyze(const Event & event, const EventSetup& eventSetup
 
       hClassEta[j]->Fill(fabs((*it)->eta())); 
 
-      HepMC::GenParticle temp = match(**it, mcElectron);
+      // uses new MC Black Box to match pixelelectrons to MCelectrons only.
+      const HepMC::GenParticle* temp = mcTruth.match(**it, MCInfo::Electrons);
+      //hGenDeltaR->Fill(dRmin);
+      ratio = (double)(**it).charge() / (double)temp->pdg_id();
+      hCharge->Fill(ratio); 
 
-      double r = sqrt(temp.momentum().px()*temp.momentum().px() + temp.momentum().py()*temp.momentum().py() + 
-                      temp.momentum().pz()*temp.momentum().pz());
+      double r = sqrt(temp->momentum().px()*temp->momentum().px() + temp->momentum().py()*temp->momentum().py() + 
+                      temp->momentum().pz()*temp->momentum().pz());
 
-      if (fabs(temp.momentum().eta()) < 2.5 && abs(temp.pdg_id()) == 11) {
-        hEpE->Fill((*it)->eSuperClusterOverP(), (*it)->energy()/ temp.momentum().e());
+      if (fabs(temp->momentum().eta()) < 2.5 && abs(temp->pdg_id()) == 11) {
+        hEpE->Fill((*it)->eSuperClusterOverP(), (*it)->energy()/ temp->momentum().e());
         hEpP->Fill((*it)->eSuperClusterOverP(), (*it)->trackMomentumAtVtx().R()/r);
       }
 
-      hEEgen[j]->Fill((*it)->energy()/ temp.momentum().e());
-      double reso = fabs((*it)->energy() - temp.momentum().e()) / temp.momentum().e();
-      pReso[j]->Fill(temp.momentum().e(), reso); 
+      hEEgen[j]->Fill((*it)->energy()/ temp->momentum().e());
+      double reso = fabs((*it)->energy() - temp->momentum().e()) / temp->momentum().e();
+      pReso[j]->Fill(temp->momentum().e(), reso); 
 
-      reso = fabs((*it)->caloEnergy() - temp.momentum().e()) / temp.momentum().e();
-      pEcal->Fill(temp.momentum().e(), reso); 
+      reso = fabs((*it)->caloEnergy() - temp->momentum().e()) / temp->momentum().e();
+      pEcal->Fill(temp->momentum().e(), reso); 
 
       double tkE = sqrt((*it)->p() * (*it)->p() + 0.0005*0.0005); 
-      reso = fabs(tkE - temp.momentum().e()) / temp.momentum().e();
-      pTk->Fill(temp.momentum().e(), reso); 
+      reso = fabs(tkE - temp->momentum().e()) / temp->momentum().e();
+      pTk->Fill(temp->momentum().e(), reso); 
 
-      reso = fabs((*it)->energy() - temp.momentum().e()) / temp.momentum().e();
-      pComb->Fill(temp.momentum().e(), reso); 
+      reso = fabs((*it)->energy() - temp->momentum().e()) / temp->momentum().e();
+      pComb->Fill(temp->momentum().e(), reso); 
 
     }
   } 

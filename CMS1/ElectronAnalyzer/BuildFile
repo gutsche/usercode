@@ -3,6 +3,7 @@
 <use name=FWCore/ParameterSet>
 <use name=FWCore/ServiceRegistry>>
 <use name=CMS1/Electrons>
+<use name=CMS1/MCInfo>
 <use name=root>
 <flags SEAL_PLUGIN_NAME="CMS1ElectronAnalyzer">
 <export>
@@ -12,6 +13,7 @@
    <use name=FWCore/ParameterSet>
    <use name=FWCore/ServiceRegistry>>
    <use name=CMS1/Electrons>
+   <use name=CMS1/MCInfo>
    <use name=root>	
 </export>
 <Flags CXXFLAGS=-g>
