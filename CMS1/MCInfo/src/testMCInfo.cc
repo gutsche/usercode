@@ -32,25 +32,24 @@ cms1::testMCInfo::~testMCInfo()
 void
 cms1::testMCInfo::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
+  EventData eventData;
+  eventData.iEvent = &iEvent;
+
   // get MC Event
   edm::Handle<edm::HepMCProduct> mcCollectionHandle;
   iEvent.getByLabel(hepMC_, mcCollectionHandle);
   const HepMC::GenEvent* genEvent = mcCollectionHandle->GetEvent();
   std::vector<HepMC::GenParticle> mcParticle;
   for (HepMC::GenEvent::particle_const_iterator p = genEvent->particles_begin(); p != genEvent->particles_end(); ++p)
-    mcParticle.push_back(**p);
+    eventData.mcInfo.push_back(**p);
  
   // get gen jet 
-  const reco::GenJetCollection *jetCollection = 0;
   edm::Handle<reco::GenJetCollection> jetCollectionHandle;
   iEvent.getByLabel(genJetInputTag_,jetCollectionHandle);
-  jetCollection = jetCollectionHandle.product();
-   
-  // pass the collection pointer of the collection that we 
-  // want to use.
-  mcInfo_.getData().mcInfo = &mcParticle;
-  mcInfo_.getData().jetInfo = jetCollection;
-  
+  eventData.jetInfo = *(jetCollectionHandle.product());
+
+  mcInfo_.setEventData(&eventData);
+
   // dump the MC information of the event without cut
   mcInfo_.dumpLeptons();
   mcInfo_.dumpJets();
