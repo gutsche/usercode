@@ -5,7 +5,6 @@
 <use name=CMS1/Base>
 <use name=SimDataFormats/HepMCProduct>
 <use name=clhep>
-#<flags SEAL_PLUGIN_NAME="CMS1MCInfo">
 <export>
    <use name=FWCore/Framework>
    <use name=Foundation/PluginManager>
