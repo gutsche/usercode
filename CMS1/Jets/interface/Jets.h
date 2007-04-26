@@ -10,13 +10,13 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/04/17 04:56:32 $
-// $Revision: 1.5 $
+// $Author: latb $
+// $Date: 2007/03/22 15:31:55 $
+// $Revision: 1.4 $
 //
 
 #include "DataFormats/JetReco/interface/CaloJet.h"
-#include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
+#include "DataFormats/EgammaCandidates/interface/SiStripElectron.h"
 #include "CMS1/Base/interface/Cuts.h"
 #include "CMS1/Base/interface/BlackBox.h"
 

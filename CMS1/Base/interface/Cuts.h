@@ -9,15 +9,15 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/03/16 07:03:58 $
-// $Revision: 1.4 $
+// $Author: sani $
+// $Date: 2007/03/09 18:31:56 $
+// $Revision: 1.3 $
 //
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "CLHEP/HepMC/GenParticle.h"
 #include "DataFormats/JetReco/interface/GenJet.h"
-#include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
+#include "DataFormats/EgammaCandidates/interface/SiStripElectron.h"
 #include "CMS1/Base/interface/EventData.h"
 
 namespace cms1 {
