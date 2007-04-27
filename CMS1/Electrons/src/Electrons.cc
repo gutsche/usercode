@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/04/17 04:54:53 $
-// $Revision: 1.9 $
+// $Author: sani $
+// $Date: 2007/04/18 17:20:42 $
+// $Revision: 1.10 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -20,11 +20,11 @@
 #include "DataFormats/EgammaReco/interface/BasicClusterShapeAssociation.h"
 #include "DataFormats/EcalDetId/interface/EcalSubdetector.h"
 
-std::vector<const reco::PixelMatchGsfElectron*> cms1::Electrons::getElectrons(const ElectronType electronType,
+std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const ElectronType electronType,
                                                                   const Cuts& userCuts, Cuts::IsolationType isolated, ElectronDef def) {
 
   // define output collection
-  std::vector<const reco::PixelMatchGsfElectron*> output_list, temp;
+  std::vector<const reco::Candidate*> output_list, temp;
   
   switch (electronType) {
   case LooseElectrons:
@@ -107,8 +107,9 @@ std::vector<const reco::PixelMatchGsfElectron*> cms1::Electrons::getElectrons(co
 	      return output_list;
       }
       temp = getElectrons(LooseElectrons, userCuts, isolated); 
-      for(std::vector<const reco::PixelMatchGsfElectron*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
-        if((*electron)->classification() == 0 || (*electron)->classification() == 100) 
+      for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
+        const reco::PixelMatchGsfElectron* ele = ( const reco::PixelMatchGsfElectron*)*electron;
+        if((ele)->classification() == 0 || (ele)->classification() == 100) 
           output_list.push_back(*electron);
       }
       return temp;
@@ -124,8 +125,9 @@ std::vector<const reco::PixelMatchGsfElectron*> cms1::Electrons::getElectrons(co
       }
       
       temp = getElectrons(LooseElectrons, userCuts, isolated);
-      for(std::vector<const reco::PixelMatchGsfElectron*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
-        if((*electron)->classification() == 10 || (*electron)->classification() == 110) 
+      for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
+        const reco::PixelMatchGsfElectron* ele = ( const reco::PixelMatchGsfElectron*)*electron;
+        if((ele)->classification() == 10 || (ele)->classification() == 110) 
           output_list.push_back(*electron);
       }
       
@@ -142,8 +144,9 @@ std::vector<const reco::PixelMatchGsfElectron*> cms1::Electrons::getElectrons(co
       }
       
       temp = getElectrons(LooseElectrons, userCuts, isolated);
-      for(std::vector<const reco::PixelMatchGsfElectron*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
-        if((*electron)->classification() == 20 || (*electron)->classification() == 120) 
+      for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
+        const reco::PixelMatchGsfElectron* ele = ( const reco::PixelMatchGsfElectron*)*electron;
+        if((ele)->classification() == 20 || (ele)->classification() == 120) 
           output_list.push_back(*electron);
       }
       
@@ -160,9 +163,10 @@ std::vector<const reco::PixelMatchGsfElectron*> cms1::Electrons::getElectrons(co
       }
       
       temp = getElectrons(LooseElectrons, userCuts, isolated);
-      for(std::vector<const reco::PixelMatchGsfElectron*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
-        if(((*electron)->classification() >= 30 && (*electron)->classification()<= 34) ||
-           ((*electron)->classification() >= 130 && (*electron)->classification() <= 134)) 
+      for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
+        const reco::PixelMatchGsfElectron* ele = ( const reco::PixelMatchGsfElectron*)*electron;
+        if(((ele)->classification() >= 30 && (ele)->classification()<= 34) ||
+           ((ele)->classification() >= 130 && (ele)->classification() <= 134)) 
           output_list.push_back(*electron);
       }
       
@@ -179,8 +183,9 @@ std::vector<const reco::PixelMatchGsfElectron*> cms1::Electrons::getElectrons(co
       
       temp = getElectrons(LooseElectrons, userCuts, isolated);
       
-      for(std::vector<const reco::PixelMatchGsfElectron*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
-        if (classify(def, *electron))
+      for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
+        const reco::PixelMatchGsfElectron* ele = ( const reco::PixelMatchGsfElectron*)*electron;
+        if (classify(def, ele))
             output_list.push_back(*electron);
       }
       

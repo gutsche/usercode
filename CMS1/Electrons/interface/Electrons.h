@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/03/16 07:15:17 $
-// $Revision: 1.4 $
+// $Author: sani $
+// $Date: 2007/04/18 17:20:30 $
+// $Revision: 1.7 $
 //
 
 //#include "DataFormats/EgammaCandidates/interface/Electron.h"
@@ -49,7 +49,7 @@ namespace cms1 {
     enum ElectronType {TightElectrons, LooseElectrons, TruthMatchedElectrons, Golden, BigBrem, Narrow, Showering, Custom};
      
     // FIXME: return type corresponds to a single algoritm
-    std::vector<const reco::PixelMatchGsfElectron*> getElectrons (const ElectronType, const Cuts&,
+    std::vector<const reco::Candidate*> getElectrons (const ElectronType, const Cuts&,
                                                       Cuts::IsolationType isolated = Cuts::NotIsolated,
                                                                   ElectronDef def = ElectronDef());
     bool classify(ElectronDef def, const reco::PixelMatchGsfElectron* electron);
