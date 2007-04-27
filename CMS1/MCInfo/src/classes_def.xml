@@ -1,3 +1,4 @@
 <lcgdict>
   <class name="cms1::MCInfo"/>
+  <class name="cms1::MCInfo::MCInfoData"/>
 </lcgdict>
