@@ -12,6 +12,7 @@
 # TnS stuff
 <use name=CMS1/Base>
 <use name=CMS1/Muons>
+<use name=CMS1/Tracks>
 <use name=CMS1/Electrons>
 <use name=CMS1/Jets>
 <use name=CMS1/MET>

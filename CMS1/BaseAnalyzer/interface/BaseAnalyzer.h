@@ -1,6 +1,5 @@
 #ifndef CMS1_BaseAnalyzer_h
 #define CMS1_BaseAnalyzer_h
-
 //
 // Package:         CMS1/BaseAnalyzer
 // Class:           BaseAnalyzer
@@ -10,20 +9,22 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/04/07 17:54:23 $
-// $Revision: 1.1 $
+// $Date: 2007/04/17 04:51:18 $
+// $Revision: 1.2 $
 //
 #include <vector>
 #include "CMS1/Base/interface/EventData.h"
+#include "CMS1/Base/interface/UserData.h"
+#include "CMS1/Base/interface/UserDataBlocks.h"
 #include "CMS1/Muons/interface/Muons.h"
+#include "CMS1/Tracks/interface/Tracks.h"
 #include "CMS1/Electrons/interface/Electrons.h"
 #include "CMS1/Jets/interface/Jets.h"
 #include "CMS1/MET/interface/MET.h"
-
+#include "TFile.h"
+#include "TTree.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-
 namespace cms1 {
-   
    class BaseAnalyzer 
      {
       public:
@@ -37,15 +38,25 @@ namespace cms1 {
 	// User code to process event 
 	// In this class basic stuff is done (black boxes)
 	virtual void processEvent(const edm::Event& );
+	
+	// finish event processing
+	virtual void finishEvent();
 
 	// User code to finilize data processing
-	virtual void finishProcessing(){}
+	virtual void finishProcessing();
 	
+	// fill ntuple and userdata
+	void fillUserData( EventData& event );
+	TFile* theRootFile;
+	TTree* theTree;
+	bool branchesInitialized;
+	  
 	// event data container
 	EventData theData;
 	
 	// black boxes
 	Muons         theMuons;
+	Tracks        theTracks;
 	Electrons     theElectrons;
 	Jets          theJets;
 	MET           theMET;
