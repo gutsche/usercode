@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
-// $Author: gutsche $
-// $Date: 2007/04/13 23:08:43 $
-// $Revision: 1.9 $
+// $Author: dmytro $
+// $Date: 2007/04/17 05:01:01 $
+// $Revision: 1.10 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
@@ -99,6 +99,23 @@ void cms1::Muons::dump(std::ostream& o, std::vector<const reco::Candidate*> ml) 
 	   }
 	   o << std::endl; 
 	}
+}
+
+void cms1::Muons::registerEventUserData()
+{
+   tracks.registerBlock( *data_, "muons",     "cms1_muons");
+}
+
+void cms1::Muons::fillEventUserData()
+{
+   const std::vector<reco::Muon>* muons = data_->getData<std::vector<reco::Muon> >("globalMuons");
+   if ( ! muons ) {
+      std::cout << "ERROR: global muon collection is not found in the event. Return nothing." << std::endl;
+      return;
+   }
+   for ( std::vector<reco::Muon>::const_iterator muon = muons->begin();
+	 muon != muons->end(); ++muon ) 
+     tracks.fill(*(muon->track().get()));
 }
 
 

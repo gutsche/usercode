@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/03/22 15:31:58 $
-// $Revision: 1.5 $
+// $Author: dmytro $
+// $Date: 2007/04/17 05:01:00 $
+// $Revision: 1.6 $
 //
 #include <iostream>
 
@@ -22,6 +22,7 @@
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "CMS1/Base/interface/Cuts.h"
 #include "CMS1/Base/interface/BlackBox.h"
+#include "CMS1/Base/interface/UserDataBlocks.h"
 
 namespace cms1 {
    class Muons: public BlackBox {
@@ -42,6 +43,10 @@ namespace cms1 {
 	 return getMuons(type,cuts).size();
       }
       void dump(std::ostream& o, std::vector<const reco::Candidate*>);
+      void registerEventUserData();
+      void fillEventUserData();
+    private:
+      TrackUserBlock tracks;
   };
 }
 
