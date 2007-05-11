@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: gutsche $
-// $Date: 2007/04/13 23:10:01 $
-// $Revision: 1.21 $
+// $Author: dmytro $
+// $Date: 2007/04/17 05:06:25 $
+// $Revision: 1.22 $
 //
 
 #include <vector>
@@ -74,6 +74,8 @@ unsigned int nJetsWithoutEl(std::vector<const reco::Candidate*> jets, const Cand
 
 void cms1::TableMaker::finishProcessing()
 {
+   // let the base analyzer finish its work
+   BaseAnalyzer::finishProcessing();
 //   hNJets->Write();
 //   for(int i=0;i<5;++i)
 //     {
@@ -210,6 +212,7 @@ void
 
   for ( std::vector<const cms1::DiLeptonCandidate*>::iterator dli = dlCandidates.begin(), dle = dlCandidates.end(); dli != dle; ++dli ) {
     const cms1::DiLeptonCandidate* dl = *dli;
+    diLeptonUserData.fill(*dl);
     FillHistograms(dl->jets, dl->lTight, dl->lLoose, dl->MET);
     int njet = dl->nJets(); if (njet > 4)  njet = 4;
     switch (dl->candidateType) {
@@ -288,6 +291,8 @@ void cms1::TableMaker::FillHistograms(std::vector<const reco::Candidate*> jets,c
 
 void cms1::TableMaker::configure(const edm::ParameterSet& iConfig)
 {
+   diLeptonUserData.registerBlock(theData, "dilep", "cms1_dilep");
+   
   // tight muon cuts
   tightMuon_.pt_min       = iConfig.getUntrackedParameter<double>("TightMuonPt");
   tightMuon_.eta_min      = iConfig.getUntrackedParameter<double>("TightMuonMinEta");

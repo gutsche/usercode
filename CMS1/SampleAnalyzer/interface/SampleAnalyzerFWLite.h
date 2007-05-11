@@ -10,8 +10,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/04/07 17:57:45 $
-// $Revision: 1.1 $
+// $Date: 2007/04/17 05:03:39 $
+// $Revision: 1.2 $
 //
 #include <vector>
 #include "CMS1/SampleAnalyzer/interface/SampleAnalyzer.h"
@@ -31,6 +31,9 @@ namespace cms1 {
 	   
 	   // run user code
 	   processEvent( iEvent );
+	   
+	   // finilize event processing (userdata etc)
+	   finishEvent();
 	}
 	virtual void setup(const edm::ParameterSet& iConfig) {
 	   // configure default stuff (black boxes)

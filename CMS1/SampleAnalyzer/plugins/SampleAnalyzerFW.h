@@ -9,9 +9,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/04/17 05:03:39 $
-// $Revision: 1.2 $
+// $Author: slava77 $
+// $Date: 2007/04/26 21:53:12 $
+// $Revision: 1.1 $
 //
 #include <vector>
 #include "CMS1/SampleAnalyzer/interface/SampleAnalyzer.h"
@@ -39,6 +39,8 @@ namespace cms1 {
 	     
 	     // run user code
 	     processEvent( iEvent );
+	     
+	     finishEvent();
 	  }
 	virtual void endJob(){ finishProcessing(); }
      };

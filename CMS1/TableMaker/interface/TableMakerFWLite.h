@@ -10,7 +10,7 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/04/07 17:57:45 $
+// $Date: 2007/04/17 05:06:25 $
 // $Revision: 1.1 $
 //
 #include <vector>
@@ -31,6 +31,7 @@ namespace cms1 {
 	   
 	   // run user code
 	   processEvent( iEvent );
+	   finishEvent();
 	}
 	virtual void setup(const edm::ParameterSet& iConfig) {
 	   // configure default stuff (black boxes)

@@ -11,9 +11,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: gutsche $
-// $Date: 2007/04/13 23:10:00 $
-// $Revision: 1.14 $
+// $Author: dmytro $
+// $Date: 2007/04/17 05:06:25 $
+// $Revision: 1.15 $
 //
 
 #include <vector>
@@ -23,7 +23,7 @@
 #include "CMS1/Electrons/interface/Electrons.h"
 #include "CMS1/Jets/interface/Jets.h"
 #include "CMS1/MET/interface/MET.h"
-
+#include "CMS1/EventHyp/interface/DiLeptonCandidate.h"
 #include "CMS1/Base/interface/Cuts.h"
 
 #include <TH1.h>
@@ -99,8 +99,10 @@ namespace cms1 {
     std::vector<TH1F *> hHT; //Events vs. temperature   x5
     std::vector<TH1F *> hMET; //events per missing et  x5
 
-
+     
     void FillHistograms(std::vector<const reco::Candidate*> jets, const reco::Candidate *,const reco::Candidate *, double);
+     
+    DiLeptonUserBlock diLeptonUserData;
 	
   };
 }

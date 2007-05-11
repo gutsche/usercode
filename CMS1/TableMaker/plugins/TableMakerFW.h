@@ -9,9 +9,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/04/17 05:06:25 $
-// $Revision: 1.5 $
+// $Author: slava77 $
+// $Date: 2007/04/26 21:53:13 $
+// $Revision: 1.1 $
 //
 #include <vector>
 #include "CMS1/TableMaker/interface/TableMaker.h"
@@ -39,6 +39,7 @@ namespace cms1 {
 	     
 	     // run user code
 	     processEvent( iEvent );
+	     finishEvent();
 	  }
 	virtual void endJob(){ finishProcessing(); }
      };
