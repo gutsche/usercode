@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: sani $
-// $Date: 2007/04/18 17:20:42 $
-// $Revision: 1.10 $
+// $Author: slava77 $
+// $Date: 2007/04/27 17:26:36 $
+// $Revision: 1.11 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -264,3 +264,22 @@ bool cms1::Electrons::classify(ElectronDef def, const reco::PixelMatchGsfElectro
 
   return result;
 }
+void cms1::Electrons::registerEventUserData()
+{
+   tracks.registerBlock( *data_, "electrons",     "cms1_electrons");
+}
+
+void cms1::Electrons::fillEventUserData()
+{
+   const std::vector<reco::PixelMatchGsfElectron>* collection = 
+     data_->getData<std::vector<reco::PixelMatchGsfElectron> >("pixelMatchGsfElectrons");
+   if ( ! collection ) {
+      std::cout << "ERROR: pixelMatchGsfElectrons collection is not found in the event. Return nothing." << std::endl;
+      return;
+   }
+   for ( std::vector<reco::PixelMatchGsfElectron>::const_iterator element = collection->begin();
+	 element != collection->end(); ++element ) 
+     tracks.fill(*(element->gsfTrack().get()));
+}
+
+

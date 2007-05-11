@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: sani $
-// $Date: 2007/04/18 17:20:30 $
-// $Revision: 1.7 $
+// $Author: slava77 $
+// $Date: 2007/04/27 17:26:36 $
+// $Revision: 1.8 $
 //
 
 //#include "DataFormats/EgammaCandidates/interface/Electron.h"
@@ -21,6 +21,7 @@
 
 #include "CMS1/Base/interface/Cuts.h"
 #include "CMS1/Base/interface/BlackBox.h"
+#include "CMS1/Base/interface/UserDataBlocks.h"
 
 namespace cms1 {
   struct ElectronDef {
@@ -54,6 +55,10 @@ namespace cms1 {
                                                                   ElectronDef def = ElectronDef());
     bool classify(ElectronDef def, const reco::PixelMatchGsfElectron* electron);
     void dump(std::ostream& o, std::vector<const reco::Candidate*> el);
+    void registerEventUserData();
+    void fillEventUserData();
+  private:
+      TrackUserBlock tracks;
   };
 }
 
