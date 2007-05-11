@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/04/17 04:56:32 $
-// $Revision: 1.8 $
+// $Author: sani $
+// $Date: 2007/04/18 17:19:28 $
+// $Revision: 1.9 $
 //
 
 #include "CMS1/Jets/interface/Jets.h"
@@ -131,3 +131,22 @@ void cms1::Jets::dump(std::ostream& o, std::vector<const reco::Candidate*> ml) {
 		o << std::endl; 
 	}
 }
+
+void cms1::Jets::registerEventUserData()
+{
+   jetBlock.registerBlock( *data_, "jets",     "cms1_jets");
+}
+
+void cms1::Jets::fillEventUserData()
+{
+   const std::vector<reco::CaloJet>* jets = data_->getData<std::vector<reco::CaloJet> >("midPointCone5CaloJets");
+   if ( ! jets ) {
+      std::cout << "ERROR: midPointCone5CaloJets collection is not found in the event. Return nothing." << std::endl;
+      return;
+   }
+   for ( std::vector<reco::CaloJet>::const_iterator jet = jets->begin();
+	 jet != jets->end(); ++jet ) 
+     jetBlock.fill(*jet);
+}
+
+

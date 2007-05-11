@@ -10,15 +10,16 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/04/17 04:56:32 $
-// $Revision: 1.5 $
+// $Author: sani $
+// $Date: 2007/04/18 17:19:21 $
+// $Revision: 1.6 $
 //
 
 #include "DataFormats/JetReco/interface/CaloJet.h"
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
 #include "CMS1/Base/interface/Cuts.h"
 #include "CMS1/Base/interface/BlackBox.h"
+#include "CMS1/Base/interface/UserDataBlocks.h"
 
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include "Math/VectorUtil.h"
@@ -32,6 +33,10 @@ namespace cms1 {
      
       std::vector<const reco::Candidate*> getJets ( const JetType, const Cuts& );
       void dump(std::ostream& o, std::vector<const reco::Candidate*>);
+      void registerEventUserData();
+      void fillEventUserData();
+    private:
+      JetUserBlock jetBlock;
   };
 }
 
