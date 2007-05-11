@@ -11,13 +11,14 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/03/09 19:40:49 $
-// $Revision: 1.1 $
+// $Date: 2007/03/16 07:24:25 $
+// $Revision: 1.2 $
 //
 
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "CMS1/Base/interface/Cuts.h"
 #include "CMS1/Base/interface/BlackBox.h"
+#include "CMS1/Base/interface/UserDataBlocks.h"
 
 namespace cms1 {
    class Tracks: public BlackBox  {
@@ -31,6 +32,10 @@ namespace cms1 {
       std::vector<const reco::Track*> getTracks (const TrackType,
 						 const Cuts&,
 						 Cuts::IsolationType isolated = Cuts::NotIsolated);
+      void registerEventUserData();
+      void fillEventUserData();
+    private:
+      TrackUserBlock tracks;
   };
 }
 
