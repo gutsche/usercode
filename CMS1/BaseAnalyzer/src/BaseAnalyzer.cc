@@ -7,12 +7,13 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/04/17 04:51:18 $
-// $Revision: 1.4 $
+// $Date: 2007/05/11 04:10:20 $
+// $Revision: 1.5 $
 //
 #include "CMS1/BaseAnalyzer/interface/BaseAnalyzer.h"
 #include "FWCore/Framework/interface/Handle.h"
 #include "FWCore/Framework/interface/Event.h"
+
 #include "SimDataFormats/HepMCProduct/interface/HepMCProduct.h"
 
 void cms1::BaseAnalyzer::configure(const edm::ParameterSet& iConfig)
@@ -22,6 +23,10 @@ void cms1::BaseAnalyzer::configure(const edm::ParameterSet& iConfig)
    theElectrons.setEventData ( &theData );
    theJets.setEventData      ( &theData );
    theMET.setEventData       ( &theData );
+   theMCInfo.setEventData    ( &theData );   
+
+   genJetInputTag_ = iConfig.getUntrackedParameter<edm::InputTag>("GenJetInputTag", edm::InputTag("midPointCone5GenJets"));
+
    theTracks.setEventData    ( &theData );
    
    // ntuples & userdata registration
@@ -45,7 +50,7 @@ void cms1::BaseAnalyzer::processEvent(const edm::Event& iEvent)
    }
    
    theData.iEvent = &iEvent;
-   
+
    // ntuples
    fillUserData( theData );
    
@@ -56,6 +61,10 @@ void cms1::BaseAnalyzer::processEvent(const edm::Event& iEvent)
    theData.mcInfo.clear();
    for (HepMC::GenEvent::particle_const_iterator p = genEvent->particles_begin(); p != genEvent->particles_end(); ++p)
      theData.mcInfo.push_back(**p);
+
+   edm::Handle<reco::GenJetCollection> jetCollectionHandle;
+   iEvent.getByLabel(genJetInputTag_,jetCollectionHandle);
+   theData.jetInfo = *(jetCollectionHandle.product());
 }
 
 void cms1::BaseAnalyzer::finishEvent()
