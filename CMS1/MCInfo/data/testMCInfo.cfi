@@ -1,6 +1,5 @@
-module testmcinfo = testMCInfo {
+module testmcinfo = testMCInfoFW {
  
-  untracked InputTag MCInputTag = VtxSmeared
   untracked InputTag GenJetInputTag = midPointCone5GenJets
   untracked double ElPtMinCut = 20
   untracked double MuPtMinCut = 20

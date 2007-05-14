@@ -3,8 +3,7 @@
    <use name=Foundation/PluginManager>
    <use name=FWCore/ParameterSet>
    <use name=FWCore/ServiceRegistry>
-   <use name=SimDataFormats/HepMCProduct>
-   <lib name=CMS1MCInfo>
-   <use name=clhep>	
+   <use name=CMS1/BaseAnalyzer>
+   <use name=CMS1/MCInfo>
 </library>
-# <Flags CXXFLAGS=-g>
+<Flags CXXFLAGS=-g>
