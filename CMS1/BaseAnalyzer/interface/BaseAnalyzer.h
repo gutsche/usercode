@@ -8,9 +8,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/05/11 04:10:20 $
-// $Revision: 1.3 $
+// $Author: sani $
+// $Date: 2007/05/14 15:29:41 $
+// $Revision: 1.4 $
 //
 #include <vector>
 #include "CMS1/Base/interface/EventData.h"
@@ -43,9 +43,12 @@ namespace cms1 {
       // User code to process event 
       // In this class basic stuff is done (black boxes)
       virtual void processEvent(const edm::Event& );
-      
+
+      // finish event processing
+	    virtual void finishEvent();
+
       // User code to finilize data processing
-      virtual void finishProcessing(){}
+      virtual void finishProcessing();
     
       // fill ntuple and userdata
       void fillUserData( EventData& event );
@@ -62,6 +65,7 @@ namespace cms1 {
       Jets          theJets;
       MET           theMET;
       MCInfo        theMCInfo;
+      Tracks        theTracks;
 
     private:
       edm::InputTag genJetInputTag_;
