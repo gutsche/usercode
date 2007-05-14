@@ -9,11 +9,12 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/04/17 04:43:13 $
-// $Revision: 1.5 $
+// $Date: 2007/05/11 04:08:51 $
+// $Revision: 1.6 $
 //
 
 #include "CLHEP/HepMC/GenParticle.h"
+#include "DataFormats/JetReco/interface/GenJet.h"
 // #include "DataFormats/Common/interface/Handle.h"
 #include "FWCore/Framework/interface/Handle.h"
 #include "FWCore/Framework/interface/Event.h"
@@ -23,7 +24,7 @@
 namespace cms1 {
    struct EventData 
      {
-	EventData():mcInfo(0){}
+	EventData():mcInfo(0), jetInfo(0){}
 	
 	// event data
 	const edm::Event* iEvent;
@@ -31,6 +32,7 @@ namespace cms1 {
 	// ------------ DERIVED STUFF ----------------
 	// generator info 
 	std::vector<HepMC::GenParticle>  mcInfo;
+	std::vector<reco::GenJet> jetInfo;
 
 	// ------------ USER DATA ----------------
 	// int container
