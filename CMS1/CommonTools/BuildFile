@@ -1,0 +1,20 @@
+<use name=FWCore/Framework>
+<use name=Foundation/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=FWCore/ServiceRegistry>
+<use name=CMS1/Base>
+<use name=CMS1/MCInfo>
+<use name=SimDataFormats/HepMCProduct>
+<use name=clhep>
+<use name=root>
+<export>
+   <lib name=CMS1CommonTools>	
+   <use name=FWCore/Framework>
+   <use name=Foundation/PluginManager>
+   <use name=FWCore/ParameterSet>
+   <use name=FWCore/ServiceRegistry>
+   <use name=SimDataFormats/HepMCProduct>
+   <use name=CMS1/MCInfo>
+   <use name=clhep>
+   <use name=root>	
+</export>
