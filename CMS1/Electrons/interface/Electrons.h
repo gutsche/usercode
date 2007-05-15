@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: slava77 $
-// $Date: 2007/04/27 17:26:36 $
-// $Revision: 1.8 $
+// $Author: dmytro $
+// $Date: 2007/05/11 04:12:17 $
+// $Revision: 1.9 $
 //
 
 //#include "DataFormats/EgammaCandidates/interface/Electron.h"
@@ -47,7 +47,7 @@ namespace cms1 {
       
     // These are "types of electrons" that we define. We can add as many as we want as
     // people invent new electron requirements
-    enum ElectronType {TightElectrons, LooseElectrons, TruthMatchedElectrons, Golden, BigBrem, Narrow, Showering, Custom};
+    enum ElectronType {AllElectrons, TightElectrons, LooseElectrons, TruthMatchedElectrons, Golden, BigBrem, Narrow, Showering, Custom};
      
     // FIXME: return type corresponds to a single algoritm
     std::vector<const reco::Candidate*> getElectrons (const ElectronType, const Cuts&,

@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: slava77 $
-// $Date: 2007/04/27 17:26:36 $
-// $Revision: 1.11 $
+// $Author: dmytro $
+// $Date: 2007/05/11 04:12:17 $
+// $Revision: 1.12 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -27,45 +27,55 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
   std::vector<const reco::Candidate*> output_list, temp;
   
   switch (electronType) {
-  case LooseElectrons:
+  case AllElectrons:
     {
-      // check inputs
       if (!data_) {
         std::cout << "ERROR: electron black box doesn't know where to find EvenData." << std::endl;
         return output_list;
       }
-      
       const std::vector<reco::PixelMatchGsfElectron>* collection = data_->getData<std::vector<reco::PixelMatchGsfElectron> >("pixelMatchGsfElectrons");
       if (!collection) {
-	      std::cout << "ERROR: electron muon collection is not found in the event. Return nothing." << std::endl;
-	      return output_list;
+        std::cout << "ERROR: electron collection is not found in the event. Return nothing." << std::endl;
+        return output_list;
       }
-
+      
       if (isolated && !data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks") ) {
-	      std::cout << "ERROR: track collection for electron isolation is not set" << std::endl;
-	      return output_list;
+        std::cout << "ERROR: track collection for electron isolation is not set" << std::endl;
+        return output_list;
       }
-	   
+      
       // set the default cuts for this type
       Cuts defaultCuts;
-      defaultCuts.pt_min = 19;
-      defaultCuts.eta_min = -2.4;
-      defaultCuts.eta_max = +2.4;
       defaultCuts.isolated = isolated;
       defaultCuts.setEventData(data_);
-
+      defaultCuts.AND(userCuts);
+      
       for (std::vector<reco::PixelMatchGsfElectron>::const_iterator electron = collection->begin(); electron != collection->end(); ++electron) {
         if (!defaultCuts.testCandidate(*electron)) 
           continue;
         if (!userCuts.testCandidate(*electron)) 
           continue;
-        /*
-        // cut on E/p
-        double energy = electron->superCluster()->energy();
-        if (electron->p() < 1 || energy/electron->p() <0.5) continue;
-        */
         output_list.push_back(&*electron);
-      }
+      } 
+      
+    //for (std::vector<reco::PixelMatchGsfElectron>::const_iterator el = collection->begin(); el != collection->end(); ++el) {
+    // Here we make simple cuts in a standard way
+    //  if (cuts.testCandidate(*el)) 
+    //    output_list.push_back(&*el);
+    // }
+    }
+    break;
+  case LooseElectrons:
+    {
+      // set the default cuts for this type
+      Cuts cuts;
+      cuts.pt_min = 19;
+      cuts.eta_min = -2.4;
+      cuts.eta_max = +2.4;
+      cuts.AND(userCuts);
+      cuts.setEventData(data_);
+
+      return getElectrons(AllElectrons, cuts, isolated);
     }
     break;
   case TightElectrons:
@@ -77,7 +87,7 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
       cuts.AND(userCuts);
       cuts.setEventData(data_);
       
-      return getElectrons(LooseElectrons, cuts, isolated);
+      return getElectrons(AllElectrons, cuts, isolated);
     }
     break;
   case TruthMatchedElectrons:
@@ -95,7 +105,7 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
       cuts.AND(userCuts);
       cuts.setEventData(data_);
 	   
-      return getElectrons(LooseElectrons, cuts, isolated);
+      return getElectrons(AllElectrons, cuts, isolated);
     }
     break;
   case Golden:
@@ -106,7 +116,7 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
 	      std::cout << "ERROR: event data is not provided to the electron black box" << std::endl;
 	      return output_list;
       }
-      temp = getElectrons(LooseElectrons, userCuts, isolated); 
+      temp = getElectrons(AllElectrons, userCuts, isolated); 
       for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
         const reco::PixelMatchGsfElectron* ele = ( const reco::PixelMatchGsfElectron*)*electron;
         if((ele)->classification() == 0 || (ele)->classification() == 100) 
@@ -124,7 +134,7 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
 	      return output_list;
       }
       
-      temp = getElectrons(LooseElectrons, userCuts, isolated);
+      temp = getElectrons(AllElectrons, userCuts, isolated);
       for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
         const reco::PixelMatchGsfElectron* ele = ( const reco::PixelMatchGsfElectron*)*electron;
         if((ele)->classification() == 10 || (ele)->classification() == 110) 
@@ -143,7 +153,7 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
 	      return output_list;
       }
       
-      temp = getElectrons(LooseElectrons, userCuts, isolated);
+      temp = getElectrons(AllElectrons, userCuts, isolated);
       for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
         const reco::PixelMatchGsfElectron* ele = ( const reco::PixelMatchGsfElectron*)*electron;
         if((ele)->classification() == 20 || (ele)->classification() == 120) 
@@ -162,7 +172,7 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
 	      return output_list;
       }
       
-      temp = getElectrons(LooseElectrons, userCuts, isolated);
+      temp = getElectrons(AllElectrons, userCuts, isolated);
       for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
         const reco::PixelMatchGsfElectron* ele = ( const reco::PixelMatchGsfElectron*)*electron;
         if(((ele)->classification() >= 30 && (ele)->classification()<= 34) ||
@@ -181,7 +191,7 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
 	      return output_list;
       }
       
-      temp = getElectrons(LooseElectrons, userCuts, isolated);
+      temp = getElectrons(AllElectrons, userCuts, isolated);
       
       for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
         const reco::PixelMatchGsfElectron* ele = ( const reco::PixelMatchGsfElectron*)*electron;
