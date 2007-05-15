@@ -17,6 +17,8 @@
 #include "DataFormats/EgammaReco/interface/SuperCluster.h"
 #include "DataFormats/TrackReco/interface/Track.h"
 
+#include "CMS1/CommonTools/interface/MCTruth.h"
+
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include <Math/VectorUtil.h>
 #include <Math/Point3D.h>
@@ -32,15 +34,13 @@ using namespace edm;
 using namespace reco;
 using namespace cms1;
 
-ElectronAnalyzer::ElectronAnalyzer(const ParameterSet& pset) {
+void cms1::ElectronAnalyzer::configure(const ParameterSet& pset) {
 
   barrelClusterShapeAssocProducer_ = pset.getParameter<InputTag>("barrelClusterShapeAssociation");
   endcapClusterShapeAssocProducer_ = pset.getParameter<InputTag>("endcapClusterShapeAssociation");
   std::cout << barrelClusterShapeAssocProducer_.label() << "  " << barrelClusterShapeAssocProducer_.instance() << " " << 
     barrelClusterShapeAssocProducer_.process() << std::endl;
 
-  theMCLabel = pset.getUntrackedParameter<string>("MCLabel");
-  theElectronLabel = pset.getUntrackedParameter<string>("ElectronLabel");
   nEvents = 0;
 
   hCharge = new TH1D("Charge", "Charge", 20, -10, 10);
@@ -79,13 +79,7 @@ ElectronAnalyzer::ElectronAnalyzer(const ParameterSet& pset) {
   }
 }
 
-ElectronAnalyzer::~ElectronAnalyzer() 
-{}
-
-void ElectronAnalyzer::beginJob(const EventSetup& eventSetup) 
-{}
-
-void ElectronAnalyzer::endJob() {
+void cms1::ElectronAnalyzer::finishProcessing() {
 
   TFile* file = new TFile("pixelMatch.root", "recreate");
   hPin->Write();
@@ -117,16 +111,19 @@ void ElectronAnalyzer::endJob() {
   }
   file->Close();
 }
+/*
+const HepMC::GenParticle* cms1::ElectronAnalyzer::match(reco::PixelMatchGsfElectron e) {
 
-HepMC::GenParticle ElectronAnalyzer::match(reco::PixelMatchGsfElectron e, vector<HepMC::GenParticle> genParticles) {
-
-  HepMC::GenParticle output;
+  const HepMC::GenParticle* output = 0;
   double dRmin = 0.1;
-  vector<HepMC::GenParticle>::const_iterator itPart;
-  for(itPart=genParticles.begin(); itPart!=genParticles.end(); ++itPart) {
 
-    const math::XYZVector v1(itPart->momentum().x(), itPart->momentum().y(), 
-                       itPart->momentum().z());
+  vector<const HepMC::GenParticle*>::const_iterator itPart;
+  vector<const HepMC::GenParticle*> genParticle = theMCInfo.getMCInfo(MCInfo::Electrons, Cuts());
+
+  for(itPart=genParticle.begin(); itPart!=genParticle.end(); ++itPart) {
+
+    const math::XYZVector v1((*itPart)->momentum().x(), (*itPart)->momentum().y(), 
+                       (*itPart)->momentum().z());
 
     const math::XYZVector v2(e.px(), e.py(), e.pz());
 
@@ -139,53 +136,32 @@ HepMC::GenParticle ElectronAnalyzer::match(reco::PixelMatchGsfElectron e, vector
   
   if (dRmin < 0.1) {
     hGenDeltaR->Fill(dRmin);
-    double ratio = (double)e.charge() / (double)output.pdg_id();
+    double ratio = (double)e.charge() / (double)output->pdg_id();
     hCharge->Fill(ratio); 
   }
 
   return output;
 }
-
-void ElectronAnalyzer::analyze(const Event & event, const EventSetup& eventSetup) {
+*/
+void cms1::ElectronAnalyzer::processEvent(const Event & event) {
 
   cout << "Run: " << event.id().run() << " Event: " << event.id().event() << endl;
   nEvents++;
-
-  EventData eventData;
-  eventData.iEvent = &event;
-  //edm::Handle<reco::PixelMatchGsfElectronCollection> electronHandle;
-  edm::Handle<HepMCProduct> evt;
-  //event.getByLabel(theElectronLabel, electronHandle);
-  event.getByLabel(theMCLabel, evt);
-
-  vector<HepMC::GenParticle> mcElectron;
-
-  const HepMC::GenEvent *myEvent = evt->GetEvent();
-
-  for(HepMC::GenEvent::particle_const_iterator p = myEvent->particles_begin(); p != myEvent->particles_end(); ++p) {
-    if (abs((*p)->pdg_id()) == 11) {
-      mcElectron.push_back(**p);
-    }
-  }
-  //eventData.pixelElectrons = electronHandle.product();
-
-  Electrons electrons;
-  electrons.setEventData(&eventData);
 
   Cuts cuts;
   vector<const reco::Candidate*>::const_iterator it;
   vector<const reco::Candidate*> el[4];
 
-  el[0] = electrons.getElectrons(Electrons::Golden, cuts);
-  el[1] = electrons.getElectrons(Electrons::BigBrem, cuts);
-  el[2] = electrons.getElectrons(Electrons::Narrow, cuts);
+  el[0] = theElectrons.getElectrons(Electrons::Golden, cuts);
+  el[1] = theElectrons.getElectrons(Electrons::BigBrem, cuts);
+  el[2] = theElectrons.getElectrons(Electrons::Narrow, cuts);
   //el[3] = electrons.getElectrons(Electrons::Showering, cuts);
   
   // to define a Custom electron you must define an object ElectronDef setting the cuts (default values are those for "Golden")
   ElectronDef def;
   //ElectronDef def(numberOfSCSeed, eOverP, deltaPhi, fBrem, hOverE, R9);
   // Then ask for Custom electrons...
-  el[3] = electrons.getElectrons(Electrons::Custom, cuts, Cuts::NotIsolated, def);
+  el[3] = theElectrons.getElectrons(Electrons::Custom, cuts, Cuts::NotIsolated, def);
 
   for(int j=0; j<4; j++) {
     for(it = el[j].begin(); it != el[j].end(); ++it) {
@@ -233,7 +209,16 @@ void ElectronAnalyzer::analyze(const Event & event, const EventSetup& eventSetup
 
       hClassEta[j]->Fill(fabs(iele->eta())); 
 
-      HepMC::GenParticle temp = match(*iele, mcElectron);
+      //const HepMC::GenParticle temp = (*match(*iele));
+      
+      MCTruth mc;
+      mc.setEventData(&theData);
+      
+      const HepMC::GenParticle temp = (*mc.matchCandToGen(*iele, MCInfo::Electrons, Cuts()));
+      
+      hGenDeltaR->Fill(dRmin);
+      double ratio = (double)e.charge() / (double)output->pdg_id();
+      hCharge->Fill(ratio); 
 
       double r = sqrt(temp.momentum().px()*temp.momentum().px() + temp.momentum().py()*temp.momentum().py() + 
                       temp.momentum().pz()*temp.momentum().pz());
