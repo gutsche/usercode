@@ -216,9 +216,9 @@ void cms1::ElectronAnalyzer::processEvent(const Event & event) {
       
       const HepMC::GenParticle temp = (*mc.matchCandToGen(*iele, MCInfo::Electrons, Cuts()));
       
-      hGenDeltaR->Fill(dRmin);
-      double ratio = (double)e.charge() / (double)output->pdg_id();
-      hCharge->Fill(ratio); 
+      //hGenDeltaR->Fill(dRmin);
+      //ratio = (double)e.charge() / (double)output->pdg_id();
+      //hCharge->Fill(ratio); 
 
       double r = sqrt(temp.momentum().px()*temp.momentum().px() + temp.momentum().py()*temp.momentum().py() + 
                       temp.momentum().pz()*temp.momentum().pz());
