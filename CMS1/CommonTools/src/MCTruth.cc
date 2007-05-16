@@ -150,9 +150,24 @@ const reco::Candidate* cms1::MCTruth::matchGenToCand(const HepMC::GenParticle& p
 
 reco::RecoToSimCollection cms1::MCTruth::recoToSimByHits() {
 
+  // need to be fixed compile but doesn't work of course
+  // access to EventSetup ???
+
+  /*
+  edm::ESHandle<MagneticField> theMF;
+  setup.get<IdealMagneticFieldRecord>().get(theMF);
+  
+  edm::ESHandle<TrackAssociatorBase> theChiAssociator;
+  setup.get<TrackAssociatorRecord>().get("TrackAssociatorByChi2",theChiAssociator);
+  associatorByChi2 = (TrackAssociatorBase *) theChiAssociator.product();
+  
+  edm::ESHandle<TrackAssociatorBase> theHitsAssociator;
+  setup.get<TrackAssociatorRecord>().get("TrackAssociatorByHits",theHitsAssociator);
+  associatorByHits = (TrackAssociatorBase *) theHitsAssociator.product();
+  */
   TrackAssociatorBase* associatorByHits;
   edm::Handle<reco::TrackCollection> trackCollectionH = data_->getHandle<reco::TrackCollection>("ctfWithMaterialTracks");
-  edm::Handle<TrackingParticleCollection>  TPCollectionH = data_->getHandle<TrackingParticleCollection>("trackingParticles");
+  edm::Handle<TrackingParticleCollection>  TPCollectionH = data_->getHandle<TrackingParticleCollection>("trackingtruth", "TrackTruth");
 
   reco::RecoToSimCollection p = associatorByHits->associateRecoToSim(trackCollectionH, TPCollectionH, data_->iEvent);
 
@@ -163,7 +178,7 @@ reco::SimToRecoCollection cms1::MCTruth::simToRecoByHits() {
   
   TrackAssociatorBase* associatorByHits;
   edm::Handle<reco::TrackCollection> trackCollectionH = data_->getHandle<reco::TrackCollection>("ctfWithMaterialTracks");
-  edm::Handle<TrackingParticleCollection>  TPCollectionH = data_->getHandle<TrackingParticleCollection>("trackingParticles");
+  edm::Handle<TrackingParticleCollection>  TPCollectionH = data_->getHandle<TrackingParticleCollection>("trackingtruth", "TrackTruth");
 
   reco::SimToRecoCollection p = associatorByHits->associateSimToReco(trackCollectionH, TPCollectionH, data_->iEvent);
 
@@ -174,7 +189,7 @@ reco::RecoToSimCollection cms1::MCTruth::recoToSimByChi2() {
 
   TrackAssociatorBase* associatorByChi2;
   edm::Handle<reco::TrackCollection> trackCollectionH = data_->getHandle<reco::TrackCollection>("ctfWithMaterialTracks");
-  edm::Handle<TrackingParticleCollection>  TPCollectionH = data_->getHandle<TrackingParticleCollection>("trackingParticles");
+  edm::Handle<TrackingParticleCollection>  TPCollectionH = data_->getHandle<TrackingParticleCollection>("trackingtruth", "TrackTruth");
 
   reco::RecoToSimCollection p = associatorByChi2->associateRecoToSim(trackCollectionH, TPCollectionH, data_->iEvent);
 
@@ -185,7 +200,7 @@ reco::SimToRecoCollection cms1::MCTruth::simToRecoByChi2() {
   
   TrackAssociatorBase* associatorByChi2;
   edm::Handle<reco::TrackCollection> trackCollectionH = data_->getHandle<reco::TrackCollection>("ctfWithMaterialTracks");
-  edm::Handle<TrackingParticleCollection>  TPCollectionH = data_->getHandle<TrackingParticleCollection>("trackingParticles");
+  edm::Handle<TrackingParticleCollection>  TPCollectionH = data_->getHandle<TrackingParticleCollection>("trackingtruth", "TrackTruth");
 
   reco::SimToRecoCollection p = associatorByChi2->associateSimToReco(trackCollectionH, TPCollectionH, data_->iEvent);
 
