@@ -2,6 +2,58 @@
 
 #include "CMS1/Muons/interface/Muons.h"
 #include "CMS1/Electrons/interface/Electrons.h"
+#include "CMS1/Jets/interface/Jets.h"
+
+#include "DataFormats/TrackReco/interface/TrackFwd.h"
+
+const reco::Candidate* cms1::MCTruth::matchGenToCand(const reco::GenJet& genJet, Cuts cuts) const {
+
+  const reco::Candidate* output = 0;
+  double dRmin = 0.1;
+
+  std::vector<const reco::Candidate*> cand;
+  std::vector<const reco::Candidate*>::const_iterator itCand;
+  
+  cms1::Jets j;
+  cand = j.getJets(Jets::JetsWithoutElectrons, cuts);
+
+  for(itCand=cand.begin(); itCand!=cand.end(); ++itCand) {
+
+    const math::XYZVector v1(genJet.momentum().x(), genJet.momentum().y(), genJet.momentum().z());
+
+    double dR = ROOT::Math::VectorUtil::DeltaR(v1, (*itCand)->p4());
+    if (dR < dRmin) {
+      dRmin = dR;
+      output = *itCand;
+    }
+  }
+
+  return output;
+}
+
+const reco::GenJet* cms1::MCTruth::matchCandToGen(const reco::Jet& jet, Cuts cuts) const { 
+  
+  const reco::GenJet* output = 0;
+  double dRmin = 0.1;
+  
+  MCInfo mcInfo;
+  mcInfo.setEventData(data_);
+  std::vector<const reco::GenJet*> genJets = mcInfo.getJetInfo(cuts);
+  std::vector<const reco::GenJet*>::const_iterator itJet;
+
+  for(itJet=genJets.begin(); itJet!=genJets.end(); ++itJet) {
+
+    const math::XYZVector v1((*itJet)->momentum().x(), (*itJet)->momentum().y(), (*itJet)->momentum().z());
+
+    double dR = ROOT::Math::VectorUtil::DeltaR(v1, jet.p4());
+    if (dR < dRmin) {
+      dRmin = dR;
+      output = *itJet;
+    }
+  }
+
+  return output;
+}
 
 const HepMC::GenParticle* cms1::MCTruth::matchCandToGen(const reco::Candidate& cand, MCInfo::ParticleType type, Cuts cuts) const {
 
@@ -13,13 +65,11 @@ const HepMC::GenParticle* cms1::MCTruth::matchCandToGen(const reco::Candidate& c
   std::vector<const HepMC::GenParticle*> genParticles = mcInfo.getMCInfo(type, cuts);
 
   std::vector<const HepMC::GenParticle*>::const_iterator itPart;
-
   for(itPart=genParticles.begin(); itPart!=genParticles.end(); ++itPart) {
 
     const math::XYZVector v1((*itPart)->momentum().x(), (*itPart)->momentum().y(), (*itPart)->momentum().z());
-    const math::XYZVector v2(cand.px(), cand.py(), cand.pz());
 
-    double dR = ROOT::Math::VectorUtil::DeltaR(v1, v2);
+    double dR = ROOT::Math::VectorUtil::DeltaR(v1,cand.p4());
     if (dR < dRmin) {
       dRmin = dR;
       output = *itPart;
@@ -98,117 +148,46 @@ const reco::Candidate* cms1::MCTruth::matchGenToCand(const HepMC::GenParticle& p
   return output;
 }
 
-// jet association still missing
+reco::RecoToSimCollection cms1::MCTruth::recoToSimByHits() {
 
-/*
-reco::RecoToSimCollection cms1::MCTruth::associationByHits(const reco::Track& track) {
+  TrackAssociatorBase* associatorByHits;
+  edm::Handle<reco::TrackCollection> trackCollectionH = data_->getHandle<reco::TrackCollection>("ctfWithMaterialTracks");
+  edm::Handle<TrackingParticleCollection>  TPCollectionH = data_->getHandle<TrackingParticleCollection>("trackingParticles");
 
-  //Handle<reco::TrackCollection> trackCollectionH;
-  //event.getByLabel("ctfWithMaterialTracks",trackCollectionH);
-  const  reco::TrackCollection tC;
-  tC.push_back(track);
-  
-  Handle<SimTrackContainer> simTrackCollection;
-  event.getByLabel("g4SimHits", simTrackCollection);
-//  event.getByLabel("SimG4Object", simTrackCollection);
-  const SimTrackContainer simTC = *(simTrackCollection.product());
-  
-  Handle<SimVertexContainer> simVertexCollection;
-  event.getByLabel("g4SimHits", simVertexCollection);
-//  event.getByLabel("SimG4Object", simVertexCollection);
-  const SimVertexContainer simVC = *(simVertexCollection.product());
+  reco::RecoToSimCollection p = associatorByHits->associateRecoToSim(trackCollectionH, TPCollectionH, data_->iEvent);
 
-  edm::Handle<TrackingParticleCollection>  TPCollectionH ;
-  event.getByLabel("trackingParticles",TPCollectionH);
-  const TrackingParticleCollection tPC   = *(TPCollectionH.product());
-
-  reco::RecoToSimCollection p = associatorByHits->associateRecoToSim(trackCollectionH, TPCollectionH, &event);
-
-  for(TrackCollection::size_type i=0; i<tC.size(); ++i) {
-    TrackRef track(trackCollectionH, i);
-    try{ 
-      std::vector<std::pair<TrackingParticleRef, double> > tp = p[track];
-      cout << "Reco Track " << setw(2) << track.index() << " pT: "  << setw(6) << track->pt() 
-           <<  " matched to " << tp.size() << " MC Tracks" << std::endl;
-      for (std::vector<std::pair<TrackingParticleRef, double> >::const_iterator it = tp.begin(); 
-           it != tp.end(); ++it) {
-        TrackingParticleRef tpr = it->first;
-        double assocChi2 = it->second;
-        cout << "\t\tMCTrack " << setw(2) << tpr.index() << " pT: " << setw(6) << tpr->pt() << 
-          " NShared: " << assocChi2 << endl;
-      }
-    } catch (Exception event) {
-      cout << "->   Track " << setw(2) << track.index() << " pT: " 
-           << setprecision(2) << setw(6) << track->pt() 
-           <<  " matched to 0  MC Tracks" << endl;
-    }
-  }
-  
   return p;
 }  
 
-cout << "-- Associator by chi2 --" << endl;  
-  p = associatorByChi2->associateRecoToSim (trackCollectionH,TPCollectionH,&event );
-  for(TrackCollection::size_type i=0; i<tC.size(); ++i) {
-    TrackRef track(trackCollectionH, i);
-    try{ 
-      std::vector<std::pair<TrackingParticleRef, double> > tp = p[track];
-      cout << "Reco Track " << setw(2) << track.index() << " pT: "  << setw(6) << track->pt() 
-	   <<  " matched to " << tp.size() << " MC Tracks" << std::endl;
-      for (std::vector<std::pair<TrackingParticleRef, double> >::const_iterator it = tp.begin(); 
-	   it != tp.end(); ++it) {
-	TrackingParticleRef tpr = it->first;
-	double assocChi2 = it->second;
-	cout << "\t\tMCTrack " << setw(2) << tpr.index() << " pT: " << setw(6) << tpr->pt() << 
-	  " chi2: " << assocChi2 << endl;
-      }
-    } catch (Exception event) {
-      cout << "->   Track " << setw(2) << track.index() << " pT: " 
-	   << setprecision(2) << setw(6) << track->pt() 
-	   <<  " matched to 0  MC Tracks" << endl;
-    }
-  }
-  //SIMTORECO
-  cout << "                      ****************** Sim To Reco ****************** " << endl;
-  cout << "-- Associator by hits --" << endl;  
-  reco::SimToRecoCollection q = 
-    associatorByHits->associateSimToReco(trackCollectionH,TPCollectionH,&event );
-  for(SimTrackContainer::size_type i=0; i<simTC.size(); ++i){
-    TrackingParticleRef tp (TPCollectionH,i);
-    try{ 
-      std::vector<std::pair<TrackRef, double> > trackV = q[tp];
-	cout << "Sim Track " << setw(2) << tp.index() << " pT: "  << setw(6) << tp->pt() 
-	     <<  " matched to " << trackV.size() << " reco::Tracks" << std::endl;
-	for (std::vector<std::pair<TrackRef,double> >::const_iterator it=trackV.begin(); it != trackV.end(); ++it) {
-	  TrackRef tr = it->first;
-	  double assocChi2 = it->second;
-	  cout << "\t\treco::Track " << setw(2) << tr.index() << " pT: " << setw(6) << tr->pt() << 
-	    " NShared: " << assocChi2 << endl;
-	}
-    } catch (Exception event) {
-      cout << "->   TrackingParticle " << setw(2) << tp.index() << " pT: " 
-	   <<setprecision(2)<<setw(6)<<tp->pt() 
-	   <<  " matched to 0  reco::Tracks" << endl;
-    }
-  }
-  cout << "-- Associator by chi2 --" << endl;  
-  q = associatorByChi2->associateSimToReco(trackCollectionH,TPCollectionH,&event );
-  for(SimTrackContainer::size_type i=0; i<simTC.size(); ++i){
-    TrackingParticleRef tp (TPCollectionH,i);
-    try{ 
-      std::vector<std::pair<TrackRef, double> > trackV = q[tp];
-      cout << "Sim Track " << setw(2) << tp.index() << " pT: "  << setw(6) << tp->pt() 
-	   <<  " matched to " << trackV.size() << " reco::Tracks" << std::endl;
-      for (std::vector<std::pair<TrackRef,double> >::const_iterator it=trackV.begin(); it != trackV.end(); ++it) {
-	TrackRef tr = it->first;
-	double assocChi2 = it->second;
-	cout << "\t\treco::Track " << setw(2) << tr.index() << " pT: " << setw(6) << tr->pt() << 
-	  " chi2: " << assocChi2 << endl;
-      }
-    } catch (Exception event) {
-      cout << "->   TrackingParticle " << setw(2) << tp.index() << " pT: " 
-	   <<setprecision(2)<<setw(6)<<tp->pt() 
-	   <<  " matched to 0  reco::Tracks" << endl;
-    }
-  }
-*/
+reco::SimToRecoCollection cms1::MCTruth::simToRecoByHits() {
+  
+  TrackAssociatorBase* associatorByHits;
+  edm::Handle<reco::TrackCollection> trackCollectionH = data_->getHandle<reco::TrackCollection>("ctfWithMaterialTracks");
+  edm::Handle<TrackingParticleCollection>  TPCollectionH = data_->getHandle<TrackingParticleCollection>("trackingParticles");
+
+  reco::SimToRecoCollection p = associatorByHits->associateSimToReco(trackCollectionH, TPCollectionH, data_->iEvent);
+
+  return p;
+}
+
+reco::RecoToSimCollection cms1::MCTruth::recoToSimByChi2() {
+
+  TrackAssociatorBase* associatorByChi2;
+  edm::Handle<reco::TrackCollection> trackCollectionH = data_->getHandle<reco::TrackCollection>("ctfWithMaterialTracks");
+  edm::Handle<TrackingParticleCollection>  TPCollectionH = data_->getHandle<TrackingParticleCollection>("trackingParticles");
+
+  reco::RecoToSimCollection p = associatorByChi2->associateRecoToSim(trackCollectionH, TPCollectionH, data_->iEvent);
+
+  return p;
+}  
+
+reco::SimToRecoCollection cms1::MCTruth::simToRecoByChi2() {
+  
+  TrackAssociatorBase* associatorByChi2;
+  edm::Handle<reco::TrackCollection> trackCollectionH = data_->getHandle<reco::TrackCollection>("ctfWithMaterialTracks");
+  edm::Handle<TrackingParticleCollection>  TPCollectionH = data_->getHandle<TrackingParticleCollection>("trackingParticles");
+
+  reco::SimToRecoCollection p = associatorByChi2->associateSimToReco(trackCollectionH, TPCollectionH, data_->iEvent);
+
+  return p;
+}
