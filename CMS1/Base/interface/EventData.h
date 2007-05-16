@@ -8,9 +8,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/05/11 04:08:51 $
-// $Revision: 1.6 $
+// $Author: sani $
+// $Date: 2007/05/14 15:22:57 $
+// $Revision: 1.7 $
 //
 
 #include "CLHEP/HepMC/GenParticle.h"
@@ -55,7 +55,14 @@ namespace cms1 {
 	     iEvent->getByLabel(label,instance,t);
 	     return t.product();
 	  }
-	void clearUserData()
+
+   template <class T> edm::Handle<T> getHandle(const std::string label, const std::string instance = "") {
+     edm::Handle<T> t;
+     iEvent->getByLabel(label, instance, t);
+     return t;
+   }
+
+  void clearUserData()
 	  {
 	     for(std::vector<UserDataVInt*>::iterator itr=vintUserData.begin(); itr!=vintUserData.end(); ++itr)
 	       (*itr)->get()->clear();
