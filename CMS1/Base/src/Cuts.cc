@@ -7,8 +7,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/04/12 19:32:27 $
-// $Revision: 1.7 $
+// $Date: 2007/04/17 04:43:13 $
+// $Revision: 1.8 $
 //
 
 #include "CMS1/Base/interface/Cuts.h"
@@ -187,7 +187,7 @@ void cms1::Cuts::AND( const Cuts& cuts )
    et_max = std::min( et_max, cuts.et_max );
    
    if ( met_min > cuts.met_max || met_max < cuts.met_min ) 
-     std::cout << "WARNING: Et cuts are not overlaping. No events will pass this cut." << std::endl;
+     std::cout << "WARNING: Met cuts are not overlaping. No events will pass this cut." << std::endl;
    met_min = std::min( met_min, cuts.met_min );
    met_max = std::max( met_max, cuts.met_max );
 
@@ -206,6 +206,97 @@ void cms1::Cuts::AND( const Cuts& cuts )
      truthMatchingType = cuts.truthMatchingType;
 }
 
+/*
+This function does not perform a logical AND, but instead replaces the previous cuts with the new cuts
+Designed to allow cuts specified in the .cfg to supersede Black Box Defaults
+This is still a rough draft, and relies heavily on shoddy code.  Should be improved.
+
+Note: User-Defined cuts means the cuts passed to this object for purposes of this documentation
+
+-mnorman
+
+Functional Guide:
+
+This function uses replacement cut values (passed in the form of a Cuts object and referred to as user-defined cuts), 
+to replace the values currently
+stored in this object.  The major weakness of this has to do with the fact that Cuts is intelligent enough to fill in 
+default values, meaning that when the user Cuts object is defined, all possible cuts have default values.  To counter 
+this, I have set the default values equal to Default_Parameter_Value (for maximums) and -1*Default_Parameter_Value for 
+minimums, except in the case of pt where the minimum is zero.  Hence, for each possible cut, I check to see if the value 
+passed by the user is within the boundaries established by Default_Parameter_Value.  If it is, I replace the previous 
+value with the user defined value.  Otherwise, it is assumed the user made an error (Default_Parameter_Value is very 
+far outside the physical range).  This, of course, depends on Default_Parameter_Value being functional, and is also a 
+very non-object oriented way to program.
+
+-mnorman
+
+NOTE:
+This function currently ALWAYS uses the user-defined isolation and truthMatching requirements
+
+*/
+void cms1::Cuts::REPLACE( const Cuts& cuts )
+{
+
+  //First check for overlapping cuts
+  //Assume we haven't entered non-physical cuts.  Hence only check the user-defined cuts.
+   if ( cuts.pt_min > cuts.pt_max ) 
+     {
+       std::cout << "WARNING: pt cuts are not overlaping. No events will pass this cut." << std::endl;
+       std::cout << cuts.pt_min << " : " << cuts.pt_max << std::endl;
+     }
+   if ( cuts.eta_min > cuts.eta_max )
+     std::cout << "WARNING: eta cuts are not overlaping. No events will pass this cut." << std::endl;
+   if ( cuts.phi_min > cuts.phi_max ) 
+     std::cout << "WARNING: phi cuts are not overlaping. No events will pass this cut." << std::endl;
+   if ( cuts.et_min > cuts.et_max ) 
+     std::cout << "WARNING: Et cuts are not overlaping. No events will pass this cut." << std::endl;
+   if ( cuts.met_min > cuts.met_max )
+     std::cout << "WARNING: Met cuts are not overlaping. No events will pass this cut." << std::endl;
+
+
+   //Now prepare to assign values
+   //First check and see if the value is the default value assigned by Cuts (if so ignore)
+   //Then pass to the variable
+   if (cuts.pt_min > 0.0) pt_min = cuts.pt_min;
+   if (cuts.pt_max < Default_Parameter_Value) pt_max = cuts.pt_max;
+   if (cuts.eta_min > -1*Default_Parameter_Value) eta_min = cuts.eta_min;
+   if (cuts.eta_max < Default_Parameter_Value) eta_max = cuts.eta_max;
+   if (cuts.phi_min > -1*Default_Parameter_Value) phi_min = cuts.phi_min;
+   if (cuts.phi_max < Default_Parameter_Value) phi_max = cuts.phi_max;
+   if (cuts.et_min > -1*Default_Parameter_Value) et_min = cuts.et_min;
+   if (cuts.et_max < Default_Parameter_Value) et_max = cuts.et_max;
+   if (cuts.met_min > -1*Default_Parameter_Value) met_min = cuts.met_min;
+   if (cuts.met_max < Default_Parameter_Value) met_max = cuts.met_max;
+   
+   //Always pass the isolation cuts?
+   isolated = cuts.isolated;
+
+
+//    if (isolated != NotIsolated) {
+//       if ( cuts.isolated != NotIsolated && isolated != cuts.isolated )
+// 	{
+// 	  std::cout << "WARNING: isolation requirements are not compatible for two set of cuts. Keep the new value." << std::endl;
+// 	  isolated = cuts.isolated;
+//    } 
+//    else 
+//      isolated = cuts.isolated;
+
+   //Always pass the truthMatching?
+   truthMatchingType = cuts.truthMatchingType;
+   
+//    if (truthMatchingType != NoMatching) {
+//       if ( cuts.truthMatchingType != NoMatching && truthMatchingType != cuts.truthMatchingType )
+// 	std::cout << "WARNING: truthMatchingType requirements are not compatible for two set of cuts. Keep the old value." << std::endl;
+//    }
+//    else
+//      truthMatchingType = cuts.truthMatchingType;
+
+   
+
+
+} //END REPLACE function
+
+
 bool cms1::Cuts::testJetForElectrons(const reco::Candidate& jet,
 				     const std::vector<const reco::Candidate*>& electrons)
 {
@@ -216,5 +307,24 @@ bool cms1::Cuts::testJetForElectrons(const reco::Candidate& jet,
       if (dR < 0.4) matched = true;
    }
    return ! matched;
+}
+
+
+//This is a simple print function created to print out the current cuts
+//Unfortunately, I can't seem to find a good place to print them out that doesn't activate every run
+//-mnorman
+void cms1::Cuts::PrintCuts()
+{
+  std::cout << "Now Printing Cuts:" << std::endl;
+  std::cout << "Pt_Min: " << pt_min << std::endl;
+  std::cout << "Pt_Max: " << pt_max << std::endl;
+  std::cout << "Et_Min: " << et_min << std::endl;
+  std::cout << "Et_Min: " << et_max << std::endl;
+  std::cout << "Eta_Min: " << eta_min << std::endl;
+  std::cout << "Eta_Min: " << eta_max << std::endl;
+  std::cout << "Phi_Min: " << phi_min << std::endl;
+  std::cout << "Phi_Min: " << phi_max << std::endl;
+  std::cout << "Met_Min: " << met_min << std::endl;
+  std::cout << "Met_Min: " << met_max << std::endl;
 }
 

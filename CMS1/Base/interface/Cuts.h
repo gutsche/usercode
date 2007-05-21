@@ -9,9 +9,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/03/16 07:03:58 $
-// $Revision: 1.4 $
+// $Author: sani $
+// $Date: 2007/04/18 17:18:33 $
+// $Revision: 1.5 $
 //
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
@@ -34,8 +34,15 @@ namespace cms1 {
 	
 	// perform logical AND of two cuts 
 	void AND(const Cuts& );
+
+	// REPLACE current cuts with cuts from a new object
+	void REPLACE(const Cuts& );
+
+	//Print cuts out
+	void PrintCuts();
 	
 	// Cut parameters
+	double Default_Parameter_Value;
 	double pt_min;
 	double pt_max;
 	double eta_min;
@@ -70,20 +77,24 @@ namespace cms1 {
 	
 	///////////////////// INTERNAL STUFF ////////////////////////
 	// default values
+	
+	
 	Cuts():
-	pt_min(0.), pt_max(99999.),
-	eta_min(-9999.), eta_max(9999),
-	phi_min(-9999.), phi_max(9999),
-	et_min(-99999.), et_max(99999),
-	met_min(-99999.), met_max(99999),
-	isolated(NotIsolated), truthMatchingType( NoMatching ),
-	data_(0)
+	  Default_Parameter_Value(99999.0),
+	  pt_min(0.0), pt_max(Default_Parameter_Value),
+	  eta_min(-1*Default_Parameter_Value), eta_max(Default_Parameter_Value),
+	  phi_min(-1*Default_Parameter_Value), phi_max(Default_Parameter_Value),
+	  et_min(-1*Default_Parameter_Value), et_max(Default_Parameter_Value),
+	  met_min(-1*Default_Parameter_Value), met_max(Default_Parameter_Value),
+	  isolated(NotIsolated), truthMatchingType( NoMatching ),
+	  data_(0)
 	{}
 	
 	
       private:
 	bool truthMatch( const math::XYZVector& ) const;
 	const EventData* data_;
+	
      };
    
 }
