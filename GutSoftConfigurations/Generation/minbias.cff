@@ -1,3 +1,30 @@
-include "IOMC/GeneratorInterface/data/PythiaSourceMinBias.cfi"
-replace PythiaSource.pythiaHepMCVerbosity = false
-replace PythiaSource.pythiaPylistVerbosity = 0
+source = PythiaSource 
+{ 
+  untracked int32 pythiaPylistVerbosity = 0
+  untracked bool pythiaHepMCVerbosity = false
+  untracked int32 maxEventsToPrint = 0
+
+  PSet PythiaParameters = {
+
+    # This is a vector of ParameterSet names to be read, in this order
+    vstring parameterSets = {
+      "pythiaUESettings", 
+      "processParameters"
+    }
+
+include "Configuration/Generator/data/PythiaUESettings.cfi"
+
+    vstring processParameters = {
+      'MSEL=0         ! User defined processes',
+      'CKIN(3)=20.    ! pthat cut',
+      'MSUB(11)=1     ! Min bias process',
+      'MSUB(12)=1     ! Min bias process',
+      'MSUB(13)=1     ! Min bias process',
+      'MSUB(28)=1     ! Min bias process',
+      'MSUB(53)=1     ! Min bias process',
+      'MSUB(68)=1     ! Min bias process',      
+      'MSUB(95)=1     ! Min bias process' 
+    }
+
+  }
+}
