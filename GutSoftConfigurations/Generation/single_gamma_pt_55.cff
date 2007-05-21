@@ -2,7 +2,6 @@ source = FlatRandomPtGunSource
 {
   string psethack  = "single gamma pt 55"    
   untracked uint32 firstRun  =  1
-  untracked int32 maxEvents = 1
   untracked PSet PGunParameters =
   {
     untracked vint32  PartID = {22}

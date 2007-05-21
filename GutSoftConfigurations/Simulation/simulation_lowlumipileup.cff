@@ -3,21 +3,36 @@
   
   service = RandomNumberGeneratorService
   {
-      untracked uint32 sourceSeed = 123456789
-      PSet moduleSeeds =
-      {
-         untracked uint32 VtxSmeared = 98765432
-	 untracked uint32 g4SimHits  = 11
-	 untracked uint32 mix        = 12345   
-      }
-   }
+    untracked uint32 sourceSeed = 134
+    PSet moduleSeeds =
+    {
+      untracked uint32 VtxSmeared = 134
+      untracked uint32 g4SimHits  = 134
+      untracked uint32 mix        =    134
+      untracked uint32 hcalDigis  = 134
 
+      untracked uint32 muonCSCDigis  = 134
+      untracked uint32 muonDTDigis = 134
+      untracked uint32 muonRPCDigis =  134
+
+      untracked uint32 siPixelDigis =134
+      untracked uint32 siStripDigis =134
+
+      untracked uint32 ecalUnsuppressedDigis = 134
+
+    }
+  }
+
+  untracked PSet maxEvents =
+  {
+    untracked int32 input = 1
+  }
 
   include "Configuration/StandardSequences/data/Simulation.cff"
   include "Configuration/StandardSequences/data/MixingLowLumiPileUp.cff" 
   include "Configuration/StandardSequences/data/VtxSmearedGauss.cff" 
   include "Configuration/StandardSequences/data/FakeConditions.cff"
-  include "Geometry/MuonNumbering/data/muonNumberingInitialization.cfi"
+  #include "Geometry/MuonNumbering/data/muonNumberingInitialization.cfi"
 
   path p = {simulation} # simulation
 
