@@ -1,3 +1,0 @@
-replace PoolSource.fileNames = {
-  "file:/uscmst1b_scratch/lpc1/lpctrk/noeding/TAC/reco_cluster_Run2048_FNAL.root"
-}
