@@ -1,5 +1,6 @@
 <use name=DataFormats/MuonReco>
 <use name=CMS1/Base>
+<use name=CMS1/CommonTools>
 <export>
    <lib name=CMS1EventHyp>
    <use name=CMS1/Base>
