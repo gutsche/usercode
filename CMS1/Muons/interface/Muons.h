@@ -11,8 +11,8 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/04/17 05:01:00 $
-// $Revision: 1.6 $
+// $Date: 2007/05/11 04:18:08 $
+// $Revision: 1.7 $
 //
 #include <iostream>
 
@@ -46,7 +46,7 @@ namespace cms1 {
       void registerEventUserData();
       void fillEventUserData();
     private:
-      TrackUserBlock tracks;
+      // TrackUserBlock tracks;
   };
 }
 

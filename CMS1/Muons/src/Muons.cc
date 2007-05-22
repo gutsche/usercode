@@ -8,8 +8,8 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/04/17 05:01:01 $
-// $Revision: 1.10 $
+// $Date: 2007/05/11 04:18:08 $
+// $Revision: 1.11 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
@@ -103,12 +103,12 @@ void cms1::Muons::dump(std::ostream& o, std::vector<const reco::Candidate*> ml) 
 
 void cms1::Muons::registerEventUserData()
 {
-   tracks.registerBlock( *data_, "muons",     "cms1_muons");
+   // tracks.registerBlock( *data_, "ev_muons",     "ev_cms1_muons");
 }
 
 void cms1::Muons::fillEventUserData()
 {
-   const std::vector<reco::Muon>* muons = data_->getData<std::vector<reco::Muon> >("globalMuons");
+/*   const std::vector<reco::Muon>* muons = data_->getData<std::vector<reco::Muon> >("globalMuons");
    if ( ! muons ) {
       std::cout << "ERROR: global muon collection is not found in the event. Return nothing." << std::endl;
       return;
@@ -116,6 +116,7 @@ void cms1::Muons::fillEventUserData()
    for ( std::vector<reco::Muon>::const_iterator muon = muons->begin();
 	 muon != muons->end(); ++muon ) 
      tracks.fill(*(muon->track().get()));
+ */
 }
 
 

@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/05/11 04:12:17 $
-// $Revision: 1.9 $
+// $Author: sani $
+// $Date: 2007/05/15 13:09:40 $
+// $Revision: 1.10 $
 //
 
 //#include "DataFormats/EgammaCandidates/interface/Electron.h"
@@ -58,7 +58,7 @@ namespace cms1 {
     void registerEventUserData();
     void fillEventUserData();
   private:
-      TrackUserBlock tracks;
+      // TrackUserBlock tracks;
   };
 }
 

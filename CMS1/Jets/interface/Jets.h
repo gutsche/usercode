@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: sani $
-// $Date: 2007/04/18 17:19:21 $
-// $Revision: 1.6 $
+// $Author: dmytro $
+// $Date: 2007/05/11 04:15:34 $
+// $Revision: 1.7 $
 //
 
 #include "DataFormats/JetReco/interface/CaloJet.h"
@@ -36,7 +36,7 @@ namespace cms1 {
       void registerEventUserData();
       void fillEventUserData();
     private:
-      JetUserBlock jetBlock;
+      // JetUserBlock jetBlock;
   };
 }
 
