@@ -31,7 +31,7 @@ const reco::Candidate* cms1::MCTruth::matchGenToCand(const reco::GenJet& genJet,
   return output;
 }
 
-const reco::GenJet* cms1::MCTruth::matchCandToGen(const reco::Jet& jet, Cuts cuts) const { 
+const reco::GenJet* cms1::MCTruth::matchCandToGenJet(const reco::Candidate& jet, Cuts cuts) const { 
   
   const reco::GenJet* output = 0;
   double dRmin = 0.1;
@@ -63,7 +63,6 @@ const HepMC::GenParticle* cms1::MCTruth::matchCandToGen(const reco::Candidate& c
   MCInfo mcInfo;
   mcInfo.setEventData(data_);
   std::vector<const HepMC::GenParticle*> genParticles = mcInfo.getMCInfo(type, cuts);
-
   std::vector<const HepMC::GenParticle*>::const_iterator itPart;
   for(itPart=genParticles.begin(); itPart!=genParticles.end(); ++itPart) {
 

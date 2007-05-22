@@ -34,7 +34,7 @@ namespace cms1 {
      const HepMC::GenParticle* matchP4ToGen(const math::XYZTLorentzVector& v, MCInfo::ParticleType type=MCInfo::All, Cuts cuts=Cuts()) const;
 
      const HepMC::GenParticle* matchCandToGen(const reco::Candidate&, MCInfo::ParticleType type=MCInfo::All, Cuts cuts=Cuts()) const;
-     const reco::GenJet* matchCandToGen(const reco::Jet& jet, Cuts cuts=Cuts()) const; 
+     const reco::GenJet*       matchCandToGenJet(const reco::Candidate& jet, Cuts cuts=Cuts()) const; 
 
      const reco::Candidate* matchGenToCand(const HepMC::GenParticle&, CandidateType type = MCTruth::Muons, Cuts cuts=Cuts()) const; 
      const reco::Candidate* matchGenToCand(const reco::GenJet&, Cuts cuts=Cuts()) const;
