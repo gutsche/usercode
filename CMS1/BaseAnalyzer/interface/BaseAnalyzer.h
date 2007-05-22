@@ -9,8 +9,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: sani $
-// $Date: 2007/05/14 15:29:41 $
-// $Revision: 1.4 $
+// $Date: 2007/05/14 16:10:17 $
+// $Revision: 1.5 $
 //
 #include <vector>
 #include "CMS1/Base/interface/EventData.h"
@@ -55,6 +55,8 @@ namespace cms1 {
       TFile* theRootFile;
       TTree* theTree;
       bool branchesInitialized;
+      bool makeNtuples;
+      bool candidateBasedNtuples;
 	  
       // event data container
       EventData theData;

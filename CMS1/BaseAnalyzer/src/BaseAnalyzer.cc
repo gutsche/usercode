@@ -6,9 +6,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/05/11 04:10:20 $
-// $Revision: 1.5 $
+// $Author: sani $
+// $Date: 2007/05/14 15:31:16 $
+// $Revision: 1.6 $
 //
 #include "CMS1/BaseAnalyzer/interface/BaseAnalyzer.h"
 #include "FWCore/Framework/interface/Handle.h"
@@ -26,7 +26,10 @@ void cms1::BaseAnalyzer::configure(const edm::ParameterSet& iConfig)
    theMCInfo.setEventData    ( &theData );   
 
    genJetInputTag_ = iConfig.getUntrackedParameter<edm::InputTag>("GenJetInputTag", edm::InputTag("midPointCone5GenJets"));
-
+   makeNtuples = iConfig.getUntrackedParameter<bool>("makeNtuples");
+   candidateBasedNtuples = iConfig.getUntrackedParameter<bool>("candidateBasedNtuples");
+   std::string ntupleFileName = iConfig.getUntrackedParameter<std::string>("fileName");
+   
    theTracks.setEventData    ( &theData );
    
    // ntuples & userdata registration
@@ -36,23 +39,24 @@ void cms1::BaseAnalyzer::configure(const edm::ParameterSet& iConfig)
    theJets.registerEventUserData();
    
    // ntuple stuff
-   theRootFile = new TFile("ntuple.root","RECREATE");
-   theTree = new TTree("event","Event data");
-   
+   if ( makeNtuples ) {
+      theRootFile = new TFile(ntupleFileName.c_str(),"RECREATE");
+      theTree = new TTree("event","Event data");
+   }
    branchesInitialized = false;
 }
 
 void cms1::BaseAnalyzer::processEvent(const edm::Event& iEvent)
 {
-   if (! branchesInitialized) {
-      theData.addBranches(*theTree);
+   if (! branchesInitialized && makeNtuples) {
+      theData.addBranches(*theTree, candidateBasedNtuples);
       branchesInitialized = true;
    }
    
    theData.iEvent = &iEvent;
 
    // ntuples
-   fillUserData( theData );
+   if (makeNtuples) fillUserData( theData );
    
    // get MC Event
    edm::Handle<edm::HepMCProduct> mcCollectionHandle;
@@ -70,22 +74,24 @@ void cms1::BaseAnalyzer::processEvent(const edm::Event& iEvent)
 void cms1::BaseAnalyzer::finishEvent()
 {
    // store data in the ntuple
-   theTree->Fill();
+   if (makeNtuples) theData.fillEvent(*theTree, candidateBasedNtuples);
    // clear stored data to avoid memory leaks
-   theData.clearUserData();
+   if (makeNtuples) theData.clearUserData();
 }
 
 void cms1::BaseAnalyzer::fillUserData( EventData& event )
 {
    // fill event data for ntuples and userdata
-   theMuons.fillEventUserData();
-   theTracks.fillEventUserData();
-   theElectrons.fillEventUserData();
-   theJets.fillEventUserData();
+   if (makeNtuples){
+      theMuons.fillEventUserData();
+      theTracks.fillEventUserData();
+      theElectrons.fillEventUserData();
+      theJets.fillEventUserData();
+   }
 }
 
 void cms1::BaseAnalyzer::finishProcessing()
 {
-   theRootFile->Write();
+   if (makeNtuples) theRootFile->Write();
 }
 
