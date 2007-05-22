@@ -5,8 +5,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/04/17 04:43:13 $
-// $Revision: 1.5 $
+// $Date: 2007/05/11 04:08:51 $
+// $Revision: 1.1 $
 //
 #include "CMS1/Base/interface/UserData.h"
 #include "CMS1/Base/interface/EventData.h"
@@ -17,105 +17,152 @@
 namespace cms1 {
    struct BaseUserBlock
      {
-	// register new block constituents according to their types
-	virtual void registerBlock(EventData& event, const std::string& name_prefix, const std::string& alias_prefix="") = 0;
-	
-	// check whether the block can be used
-	virtual bool usable() = 0;
-
 	template <class T> void addEntry(std::vector<UserData<T>* >& container, 
 					 UserData<T>*& var,
 					 const std::string& name,
 					 const std::string& name_prefix,
-					 const std::string& alias_prefix="")
+					 const std::string& alias_prefix)
 	  {
-	     container.push_back( new UserData<T>(name, name_prefix, alias_prefix) );
+	     container.push_back( new UserData<T>(name, name_prefix, alias_prefix, isCandidate_) );
 	     var = container.back();
 	  }
+	BaseUserBlock():isCandidate_(false){}
+	void setCandidateFlag( bool flag ){ isCandidate_ = flag; }
+	bool isCandidate() { return isCandidate_; }
+      protected:
+	bool isCandidate_;
      };
    
+   template <class T> struct ScalarUserBlock: public BaseUserBlock
+     {
+	void registerBlock(EventData& event, const std::string& name_prefix, const std::string& alias_prefix="")
+	  {
+	     // get names from the streamer
+	     std::vector<std::string> ints   = streamer.getIntNames();
+	     std::vector<std::string> floats = streamer.getFloatNames();
+	     std::vector<std::string> p4s    = streamer.getP4Names();
+	     
+	     for(std::vector<std::string>::const_iterator str = ints.begin(); str != ints.end(); ++str) {
+		UserDataInt* var(0);
+	        addEntry(event.intUserData, var,  *str, name_prefix, alias_prefix );
+		intUserData.push_back(var);
+	     }
+	     for(std::vector<std::string>::const_iterator str = floats.begin(); str != floats.end(); ++str) {
+		UserDataFloat* var(0);
+	        addEntry(event.floatUserData, var,  *str, name_prefix, alias_prefix );
+		floatUserData.push_back(var);
+	     }
+	     for(std::vector<std::string>::const_iterator str = p4s.begin(); str != p4s.end(); ++str) {
+		UserDataP4* var(0);
+	        addEntry(event.p4UserData, var,  *str, name_prefix, alias_prefix );
+		p4UserData.push_back(var);
+	     }
+	  }
 	
-   struct TrackUserBlock: public BaseUserBlock
-     {
-	TrackUserBlock(): vP4(0),vD0(0),vZ0(0),vSiHits(0)
-	  {}
-
-	void registerBlock(EventData& event, const std::string& name_prefix, const std::string& alias_prefix="")
-	  {
-	     addEntry(event.vp4UserData,    vP4,     "_p4",   name_prefix, alias_prefix);
-	     addEntry(event.vfloatUserData, vD0,     "_d0",   name_prefix, alias_prefix);
-	     addEntry(event.vfloatUserData, vZ0,     "_z0",   name_prefix, alias_prefix);
-	     addEntry(event.vintUserData,   vSiHits, "_hits", name_prefix, alias_prefix);
-	  }
-	void fill(const reco::Candidate& candidate){
-	   if ( ! usable() ) return;
-	   vP4->get()->push_back( candidate.p4() );
-	   vD0->get()->push_back( -999. );
-	   vZ0->get()->push_back( -999. );
-	   vSiHits->get()->push_back( -999 );
+	template <class Z> void fill( const Z data ) {
+	   streamer.fill(data);
+	   for(unsigned int i=0; i < intUserData.size(); ++i)
+	     intUserData[i]->addData( streamer.getInt(i) );
+	   for(unsigned int i=0; i < floatUserData.size(); ++i)
+	     floatUserData[i]->addData( streamer.getFloat(i) );
+	   for(unsigned int i=0; i < p4UserData.size(); ++i)
+	     p4UserData[i]->addData( streamer.getP4(i) );
 	}
-	void fill(const reco::Track& track){
-	   if ( ! usable() ) return;
-	   // use massless track hypothesis, not that big deal at high energy pp colider
-	   // add 1e-6 to momentum, to avoid rounding errors leading to imaginary mass
-	   vP4->get()->push_back( LorentzVector( track.px(), track.py(), track.pz(), track.p()+1e-6 ) );
-	   vD0->get()->push_back( track.d0() );
-	   vZ0->get()->push_back( track.dz() );
-	   vSiHits->get()->push_back( track.numberOfValidHits() );
-	}
-	bool usable()
-	  {
-	     if (vP4 == 0||vD0==0||vZ0==0||vSiHits==0){
-		std::cout << "ERROR: attempt to fill data for non-registered TrackUserBlock" << std::endl;
-		return false;
-	     }
-	     return true;
-	  }
-	UserDataVP4*         vP4;
-	UserDataVFloat*      vD0;
-	UserDataVFloat*      vZ0;
-	UserDataVInt*        vSiHits;
+	
+      private:
+	std::vector<UserDataInt*>    intUserData;
+	std::vector<UserDataFloat*>  floatUserData;
+	std::vector<UserDataP4*>     p4UserData;
+	T                            streamer;
      };
    
-   struct JetUserBlock: public BaseUserBlock
+   template <class T> struct VectorUserBlock: public BaseUserBlock
      {
-	JetUserBlock(): vP4(0),vEmFraction(0)
-	  {}
-
 	void registerBlock(EventData& event, const std::string& name_prefix, const std::string& alias_prefix="")
 	  {
-	     addEntry(event.vp4UserData,    vP4,         "_p4",   name_prefix, alias_prefix);
-	     addEntry(event.vfloatUserData, vEmFraction, "_emFraction",   name_prefix, alias_prefix);
-	  }
-	void fill(const reco::CaloJet& jet){
-	   if ( ! usable() ) return;
-	   vP4->get()->push_back( jet.p4() );
-	   vEmFraction->get()->push_back( jet.emEnergyFraction() );
-	}
-	bool usable()
-	  {
-	     if (vP4 == 0||vEmFraction==0){
-		std::cout << "ERROR: attempt to fill data for non-registered JetUserBlock" << std::endl;
-		return false;
+	     // get names from the streamer
+	     std::vector<std::string> ints   = streamer.getIntNames();
+	     std::vector<std::string> floats = streamer.getFloatNames();
+	     std::vector<std::string> p4s    = streamer.getP4Names();
+	     
+	     for(std::vector<std::string>::const_iterator str = ints.begin(); str != ints.end(); ++str) {
+		UserDataInt1D* var(0);
+	        addEntry(event.intUserData1D, var,  *str, name_prefix, alias_prefix );
+		intUserData1D.push_back(var);
 	     }
-	     return true;
+	     for(std::vector<std::string>::const_iterator str = floats.begin(); str != floats.end(); ++str) {
+		UserDataFloat1D* var(0);
+	        addEntry(event.floatUserData1D, var,  *str, name_prefix, alias_prefix );
+		floatUserData1D.push_back(var);
+	     }
+	     for(std::vector<std::string>::const_iterator str = p4s.begin(); str != p4s.end(); ++str) {
+		UserDataP41D* var(0);
+	        addEntry(event.p4UserData1D, var,  *str, name_prefix, alias_prefix );
+		p4UserData1D.push_back(var);
+	     }
 	  }
-	UserDataVP4*         vP4;
-	UserDataVFloat*      vEmFraction;
+	
+	// template <class Z> void fill( const std::vector<const Z>& data ) {
+	template <class Z> void fill( const Z data ) {
+	   // the code below can be optimized ( who would doubt this? :)
+	   
+	   // first vector corresponds to input vector dimension and the second
+	   // to number of instances of the base type in Z. Since the 2D array
+	   // has fixed dimensions, it can be read out in transposed order.
+	   std::vector<std::vector<int> >            intData2D; 
+	   std::vector<std::vector<float> >          floatData2D;
+	   std::vector<std::vector<LorentzVector> >  p4Data2D;
+	   
+	   // for(typename std::vector<const Z>::const_iterator itr = data.begin(); itr != data.end(); ++itr) {
+	   for(typename Z::const_iterator itr = data.begin(); itr != data.end(); ++itr) {
+	      streamer.fill(*itr);
+	      std::vector<int>            intData1D;
+	      std::vector<float>          floatData1D;
+	      std::vector<LorentzVector>  p4Data1D;
+	      
+	      for(unsigned int i=0; i < intUserData1D.size(); ++i)
+		intData1D.push_back( streamer.getInt(i) );
+	      for(unsigned int i=0; i < floatUserData1D.size(); ++i)
+		floatData1D.push_back( streamer.getFloat(i) );
+	      for(unsigned int i=0; i < p4UserData1D.size(); ++i)
+		p4Data1D.push_back( streamer.getP4(i) );
+	      
+	      intData2D.push_back(intData1D);
+	      floatData2D.push_back(floatData1D);
+	      p4Data2D.push_back(p4Data1D);
+	   }
+	   
+	   // now we can fill ntuples
+	   for(unsigned int i=0; i < intUserData1D.size(); ++i)
+	     {
+		std::vector<int>            intData1D;
+		for(unsigned int j=0; j < data.size(); ++j)
+		  intData1D.push_back(intData2D[j][i]);
+		intUserData1D[i]->addData( intData1D );
+	     }
+	   for(unsigned int i=0; i < floatUserData1D.size(); ++i)
+	     {
+		std::vector<float>          floatData1D;
+		for(unsigned int j=0; j < data.size(); ++j)
+		  floatData1D.push_back(floatData2D[j][i]);
+		floatUserData1D[i]->addData( floatData1D );
+	     }
+	   for(unsigned int i=0; i < p4UserData1D.size(); ++i)
+	     {
+		std::vector<LorentzVector>  p4Data1D;
+		for(unsigned int j=0; j < data.size(); ++j)
+		  p4Data1D.push_back(p4Data2D[j][i]);
+		p4UserData1D[i]->addData( p4Data1D );
+	     }
+	}
+	
+      private:
+	std::vector<UserDataInt1D*>    intUserData1D;
+	std::vector<UserDataFloat1D*>  floatUserData1D;
+	std::vector<UserDataP41D*>     p4UserData1D;
+	T                              streamer;
      };
-/*   struct EnergyUserBlock: public BaseUserBlock
-     {
-	void registerBlock(EventData& event, const std::string& name_prefix, const std::string& alias_prefix="")
-	  {
-	     addEntry(event.vp4UserData,    vEmEnergy,     "_emEnergy",   name_prefix, alias_prefix);
-	     addEntry(event.vfloatUserData, vHadEnergy,    "_hadEnergy",  name_prefix, alias_prefix);
-	     addEntry(event.vfloatUserData, vHoEnergy,     "_hoEnergy",   name_prefix, alias_prefix);
-	  }
-	UserDataVFloat*               vEmEnergy;
-	UserDataVFloat*               vHadEnergy;
-	UserDataVFloat*               vHoEnergy;
-     };
- */
+   
 }
 
 #endif

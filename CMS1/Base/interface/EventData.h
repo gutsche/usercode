@@ -9,8 +9,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: sani $
-// $Date: 2007/05/14 15:22:57 $
-// $Revision: 1.7 $
+// $Date: 2007/05/16 14:29:44 $
+// $Revision: 1.8 $
 //
 
 #include "CLHEP/HepMC/GenParticle.h"
@@ -20,7 +20,7 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "CMS1/Base/interface/UserData.h"
 #include "TTree.h"
-
+#include <vector>
 namespace cms1 {
    struct EventData 
      {
@@ -34,21 +34,15 @@ namespace cms1 {
 	std::vector<HepMC::GenParticle>  mcInfo;
 	std::vector<reco::GenJet> jetInfo;
 
-	// ------------ USER DATA ----------------
-	// int container
-	std::vector<UserDataInt*>    intUserData;
-	// int vector container
-	std::vector<UserDataVInt*>   vintUserData;
-	// float container
-	std::vector<UserDataFloat*>  floatUserData;
-	// float vector container
-	std::vector<UserDataVFloat*> vfloatUserData;
-	// p4 container
-	std::vector<UserDataP4*>     p4UserData;
-	// p4 vector container
-	std::vector<UserDataVP4*>    vp4UserData;
+	// ------------ USER DATA by types ----------------
+	std::vector<UserDataInt*>      intUserData;
+	std::vector<UserDataInt1D*>    intUserData1D;
+	std::vector<UserDataFloat*>    floatUserData;
+	std::vector<UserDataFloat1D*>  floatUserData1D;
+	std::vector<UserDataP4*>       p4UserData;
+	std::vector<UserDataP41D*>     p4UserData1D;
 
-	// ------------ METHODS ----------------------
+	// ----------------- METHODS ----------------------
 	template <class T> const T* getData(const std::string label, const std::string instance = "") const
 	  {
 	     edm::Handle<T> t;
@@ -56,37 +50,38 @@ namespace cms1 {
 	     return t.product();
 	  }
 
-   template <class T> edm::Handle<T> getHandle(const std::string label, const std::string instance = "") {
-     edm::Handle<T> t;
-     iEvent->getByLabel(label, instance, t);
-     return t;
-   }
+	template <class T> edm::Handle<T> getHandle(const std::string label, const std::string instance = "") {
+	   edm::Handle<T> t;
+	   iEvent->getByLabel(label, instance, t);
+	   return t;
+	}
 
-  void clearUserData()
+	void clearUserData();
+	template <class T> void checkDataConsistency(const std::vector<T>& block, int& nCandidates )
 	  {
-	     for(std::vector<UserDataVInt*>::iterator itr=vintUserData.begin(); itr!=vintUserData.end(); ++itr)
-	       (*itr)->get()->clear();
-	     for(std::vector<UserDataVFloat*>::iterator itr=vfloatUserData.begin(); itr!=vfloatUserData.end(); ++itr)
-	       (*itr)->get()->clear();
-	     for(std::vector<UserDataVP4*>::iterator itr=vp4UserData.begin(); itr!=vp4UserData.end(); ++itr)
-	       (*itr)->get()->clear();
+	     for(typename std::vector<T>::const_iterator itr=block.begin(); itr!=block.end(); ++itr)
+	       if ( (*itr)->isCandidate() ){
+		  if (nCandidates == 0){
+		     nCandidates = (*itr)->getVector()->size();
+		     continue;
+		  }
+		  if (nCandidates != int((*itr)->getVector()->size()) ) {
+		     std::cout << "Sorry, data structure is inconsistent. Number of candidates in different blocks is different. Abort" << std::endl;
+		     assert(0);
+		  }
+	       }
 	  }
-	void addBranches( TTree& tree )
+	template <class T> void projectData(std::vector<T>& block, int index )
 	  {
-	     for(std::vector<UserDataInt*>::iterator itr=intUserData.begin(); itr!=intUserData.end(); ++itr)
-	       tree.Branch((*itr)->name().c_str(),"int",(*itr)->getAddress());
-	     for(std::vector<UserDataVInt*>::iterator itr=vintUserData.begin(); itr!=vintUserData.end(); ++itr)
-	       tree.Branch((*itr)->name().c_str(),"std::vector<int>",(*itr)->getAddress());
-	     for(std::vector<UserDataFloat*>::iterator itr=floatUserData.begin(); itr!=floatUserData.end(); ++itr)
-	       tree.Branch((*itr)->name().c_str(),"float",(*itr)->getAddress());
-	     for(std::vector<UserDataVFloat*>::iterator itr=vfloatUserData.begin(); itr!=vfloatUserData.end(); ++itr)
-	       tree.Branch((*itr)->name().c_str(),"std::vector<float>",(*itr)->getAddress());
-	     for(std::vector<UserDataP4*>::iterator itr=p4UserData.begin(); itr!=p4UserData.end(); ++itr)
-	       tree.Branch((*itr)->name().c_str(),"ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >",(*itr)->getAddress());
-	     for(std::vector<UserDataVP4*>::const_iterator itr=vp4UserData.begin(); itr!=vp4UserData.end(); ++itr)
-	       tree.Branch((*itr)->name().c_str(),"std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",(*itr)->getAddress());
-	     // tree.Branch(((*itr)->name()+".").c_str(),"std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",(*itr)->getAddress());
+	     for(typename std::vector<T>::iterator itr=block.begin(); itr!=block.end(); ++itr)
+	       if ( (*itr)->isCandidate() ){
+		  *((*itr)->get()) = (*itr)->getVector()->at(index);
+	       }
 	  }
+
+	// ntuple specific stuff (not used for edm root files)
+	void addBranches( TTree& tree, bool candidateBased = false );
+	void fillEvent( TTree& tree, bool candidateBased = false );
      };
    
 }
