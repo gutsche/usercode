@@ -1,3 +1,4 @@
+# -*-sh-*-
 module tableMaker = TableMakerFW
 {
   untracked InputTag GlobalTrackInputTag    = ctfWithMaterialTracks
@@ -37,4 +38,8 @@ module tableMaker = TableMakerFW
   untracked string fileTag = "default"
   untracked int32 MaxEventDebug  = 0
 
+  # ntuples stuff
+  untracked bool   makeNtuples          = true
+  untracked bool   candidateBasedNtuples = true
+  untracked string fileName             = "ntuple.root"
 }

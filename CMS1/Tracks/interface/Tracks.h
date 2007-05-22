@@ -11,8 +11,8 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/03/16 07:24:25 $
-// $Revision: 1.2 $
+// $Date: 2007/05/11 04:21:23 $
+// $Revision: 1.3 $
 //
 
 #include "DataFormats/TrackReco/interface/Track.h"
@@ -35,7 +35,7 @@ namespace cms1 {
       void registerEventUserData();
       void fillEventUserData();
     private:
-      TrackUserBlock tracks;
+      // TrackUserBlock tracks;
   };
 }
 

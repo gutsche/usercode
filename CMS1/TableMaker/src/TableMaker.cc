@@ -9,8 +9,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/04/17 05:06:25 $
-// $Revision: 1.22 $
+// $Date: 2007/05/11 04:20:13 $
+// $Revision: 1.23 $
 //
 
 #include <vector>
@@ -212,7 +212,7 @@ void
 
   for ( std::vector<const cms1::DiLeptonCandidate*>::iterator dli = dlCandidates.begin(), dle = dlCandidates.end(); dli != dle; ++dli ) {
     const cms1::DiLeptonCandidate* dl = *dli;
-    diLeptonUserData.fill(*dl);
+    if (makeNtuples) diLeptonUserData.fill(theData,*dl, jets);
     FillHistograms(dl->jets, dl->lTight, dl->lLoose, dl->MET);
     int njet = dl->nJets(); if (njet > 4)  njet = 4;
     switch (dl->candidateType) {

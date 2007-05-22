@@ -12,8 +12,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/04/17 05:06:25 $
-// $Revision: 1.15 $
+// $Date: 2007/05/11 04:20:12 $
+// $Revision: 1.16 $
 //
 
 #include <vector>
@@ -24,6 +24,7 @@
 #include "CMS1/Jets/interface/Jets.h"
 #include "CMS1/MET/interface/MET.h"
 #include "CMS1/EventHyp/interface/DiLeptonCandidate.h"
+#include "CMS1/EventHyp/interface/DiLeptonUserBlock.h"
 #include "CMS1/Base/interface/Cuts.h"
 
 #include <TH1.h>

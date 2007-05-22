@@ -8,8 +8,8 @@
 // Created:         Thu Mar 1 20:27:42 UTC 2007
 //
 // $Author: sani $
-// $Date: 2007/04/23 09:15:23 $
-// $Revision: 1.2 $
+// $Date: 2007/05/14 15:17:14 $
+// $Revision: 1.4 $
 //
 
 #include "CMS1/MCInfo/interface/MCInfo.h"
@@ -98,16 +98,25 @@ std::vector<const HepMC::GenParticle*> cms1::MCInfo::getMCInfo(const ParticleTyp
       if (it->status() == 3)
         if (cuts.testGenParticle(*it))
           output_list.push_back(&*it); 
-    } 
-  } else {
+    }
+    return  output_list;
+  }
+  
+  if (particleType == MCInfo::All) {
     for(std::vector<HepMC::GenParticle>::const_iterator it=data_->mcInfo.begin(); it!=data_->mcInfo.end(); ++it) {
+      if (it->status() != 3)
+        if (cuts.testGenParticle(*it))
+          output_list.push_back(&*it); 
+    }
+    return  output_list;
+  }
+   
+   for(std::vector<HepMC::GenParticle>::const_iterator it=data_->mcInfo.begin(); it!=data_->mcInfo.end(); ++it) {
       if ((abs(it->pdg_id()) == particleType) && (it->status() != 3))
         if (cuts.testGenParticle(*it)) {
           output_list.push_back(&*it); 
         }
     }
-  }
-  
   return output_list;
 }
 

@@ -8,8 +8,8 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/04/17 05:09:02 $
-// $Revision: 1.4 $
+// $Date: 2007/05/11 04:21:23 $
+// $Revision: 1.5 $
 //
 
 #include "CMS1/Tracks/interface/Tracks.h"
@@ -53,12 +53,12 @@ std::vector<const reco::Track*> cms1::Tracks::getTracks(const TrackType trackTyp
 void cms1::Tracks::registerEventUserData()
 {
    // tracks.setMass();
-   tracks.registerBlock( *data_, "tracks",     "cms1_tracks");
+   // tracks.registerBlock( *data_, "tracks",     "cms1_tracks");
 }
 
 void cms1::Tracks::fillEventUserData()
 {
-   const std::vector<reco::Track>* collection = data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks");
+/*   const std::vector<reco::Track>* collection = data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks");
    if ( ! collection ) {
       std::cout << "ERROR: ctfWithMaterialTracks collection is not found in the event. Return nothing." << std::endl;
       return;
@@ -66,6 +66,7 @@ void cms1::Tracks::fillEventUserData()
    for ( std::vector<reco::Track>::const_iterator track = collection->begin();
 	 track != collection->end(); ++track ) 
      tracks.fill(*track);
+*/
 }
 
 
