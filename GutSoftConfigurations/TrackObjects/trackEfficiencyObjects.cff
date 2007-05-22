@@ -1,17 +1,17 @@
 # tracking efficiency analyzers
 include "GutSoftAnalyzers/GutSoftTrackingEfficiencyAnalyzer/data/rsTrackingEfficiencyAnalyzerHits.cff" 
-#include "GutSoftAnalyzers/GutSoftTrackingEfficiencyAnalyzer/data/ckfTrackingEfficiencyAnalyzerHits.cff" 
+include "GutSoftAnalyzers/GutSoftTrackingEfficiencyAnalyzer/data/ckfTrackingEfficiencyAnalyzerHits.cff" 
 include "GutSoftAnalyzers/GutSoftTrackingEfficiencyAnalyzer/data/rsTrackingEfficiencyAnalyzerChi2.cff" 
-#include "GutSoftAnalyzers/GutSoftTrackingEfficiencyAnalyzer/data/ckfTrackingEfficiencyAnalyzerChi2.cff"
+include "GutSoftAnalyzers/GutSoftTrackingEfficiencyAnalyzer/data/ckfTrackingEfficiencyAnalyzerChi2.cff"
 
-include "GutSoftAnalyzers/GutSoftSeedingEfficiencyAnalyzer/data/rsSeedingEfficiencyAnalyzer.cff"
+#include "GutSoftAnalyzers/GutSoftSeedingEfficiencyAnalyzer/data/rsSeedingEfficiencyAnalyzer.cff"
 #include "GutSoftAnalyzers/GutSoftSeedingEfficiencyAnalyzer/data/ctfSeedingEfficiencyAnalyzer.cff"
 
 sequence trackEfficiencyObjects = {
   rsTrackingEfficiencyAnalyzerHits, 
-#  ckfTrackingEfficiencyAnalyzerHits,
+  ckfTrackingEfficiencyAnalyzerHits,
   rsTrackingEfficiencyAnalyzerChi2,
-#  ckfTrackingEfficiencyAnalyzerChi2
-  rsSeedingEfficiencyAnalyzer
+  ckfTrackingEfficiencyAnalyzerChi2
+#  rsSeedingEfficiencyAnalyzer,
 #  ctfSeedingEfficiencyAnalyzer
 }

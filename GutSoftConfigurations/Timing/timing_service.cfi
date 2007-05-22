@@ -1,2 +1,6 @@
 # timing service
 service = Timing {}
+#service = TimerService {
+#  untracked bool useCPUtime = true // set to false for wall-clock-time
+#}
+

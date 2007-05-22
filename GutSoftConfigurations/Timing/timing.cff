@@ -5,11 +5,11 @@ include "GutSoftConfigurations/Timing/timing_service.cfi"
 include "GutSoftAnalyzers/GutSoftTimingNormalizationAnalyzer/data/gutSoftTimingNormalizationAnalyzer.cff"
 
 # timer
-module timer = timing from "GutSoftConfigurations/Timing/timing.cfi"
+#module timer = timing from "GutSoftConfigurations/Timing/timing.cfi"
 
 # sequence
 sequence timing =
 {
-  gutSoftTimingNormalizationAnalyzer,
-  timer
+  gutSoftTimingNormalizationAnalyzer
+#  timer
 }
