@@ -1,7 +1,7 @@
 module gutSoftHepMCAnalyzer = GutSoftHepMCAnalyzer 
 {
   untracked InputTag HepMCInputTag          = source
-  untracked InputTag TrackingTruthInputTag  = trackingtruth
+  untracked InputTag TrackingTruthInputTag  = trackingParticles
 
   untracked string BaseDirectoryName = "HepMC"
 

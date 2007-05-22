@@ -1,3 +1,4 @@
+<flags EDM_PLUGIN=1>
 <use name=FWCore/Framework>
 <use name=Foundation/PluginManager>
 <use name=FWCore/ParameterSet>
@@ -9,7 +10,6 @@
 <use name=SimTracker/Records>
 <use name=GutSoftTools/GutSoftHistogramFactory>
 <use name=GutSoftTools/GutSoftHistogramFileService>
-<flags SEAL_PLUGIN_NAME="GutSoftAnalyzersGutSoftTrackingEfficiencyAnalyzer">
 <export>
    <lib name=GutSoftAnalyzersGutSoftTrackingEfficiencyAnalyzer>
    <use name=FWCore/Framework>

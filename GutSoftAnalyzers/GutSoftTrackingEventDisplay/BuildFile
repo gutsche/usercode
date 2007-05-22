@@ -1,3 +1,4 @@
+<flags EDM_PLUGIN=1>
 <use name=FWCore/Framework>
 <use name=Foundation/PluginManager>
 <use name=FWCore/ParameterSet>
@@ -10,7 +11,6 @@
 <use name=RecoTracker/RoadMapRecord>
 <use name=TrackingTools/RoadSearchHitAccess>
 <use name=DataFormats/TrajectorySeed>
-<flags SEAL_PLUGIN_NAME="GutSoftAnalyzersGutSoftTrackingEventDisplay">
 <export>
    <lib name=GutSoftAnalyzersGutSoftTrackingEventDisplay>
    <use name=FWCore/Framework>

@@ -1,7 +1,7 @@
 module gutSoftTrackingEventDisplay = GutSoftTrackingEventDisplay 
 {
 
-  untracked InputTag TrackingTruthInputTag  = trackingtruth
+  untracked InputTag TrackingTruthInputTag  = trackingParticles
   untracked InputTag TrajectorySeedInputTag = roadSearchSeeds
 
   untracked string RingLabel = ""

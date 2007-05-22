@@ -1,3 +1,4 @@
+<flags EDM_PLUGIN=1>
 <use name=FWCore/Framework>
 <use name=Foundation/PluginManager>
 <use name=FWCore/ParameterSet>
@@ -10,7 +11,6 @@
 <use name=Geometry/Records>
 <use name=Geometry/CommonDetUnit>
 <use name=Geometry/TrackerGeometryBuilder>
-<flags SEAL_PLUGIN_NAME="GutSoftAnalyzersGutSoftTrackCandidateAnalyzer">
 <export>
    <lib name=GutSoftAnalyzersGutSoftTrackCandidateAnalyzer>
    <use name=FWCore/Framework>

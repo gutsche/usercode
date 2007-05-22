@@ -1,6 +1,6 @@
 module gutSoftTrackingEfficiencyAnalyzer = GutSoftTrackingEfficiencyAnalyzer 
 {
-  untracked InputTag TrackingTruthInputTag = trackingtruth
+  untracked InputTag TrackingTruthInputTag = trackingParticles
   untracked InputTag TrackInputTag         = rsWithMaterialTracks
   untracked string BaseDirectoryName       = "TrackingEfficiency"
 

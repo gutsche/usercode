@@ -1,3 +1,4 @@
+<flags EDM_PLUGIN=1>
 <use name=FWCore/Framework>
 <use name=Foundation/PluginManager>
 <use name=FWCore/ParameterSet>
@@ -8,7 +9,6 @@
 <use name=DataFormats/SiPixelDetId>
 <use name=GutSoftTools/GutSoftHistogramFactory>
 <use name=GutSoftTools/GutSoftHistogramFileService>
-<flags SEAL_PLUGIN_NAME="GutSoftAnalyzersGutSoftTrackAnalyzer">
 <export>
    <lib name=GutSoftAnalyzersGutSoftTrackAnalyzer>
    <use name=FWCore/Framework>
