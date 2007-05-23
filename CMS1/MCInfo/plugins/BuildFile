@@ -1,9 +1,0 @@
-<library name=CMS1MCInfoPlugins file="*.cc">
-   <use name=FWCore/Framework>
-   <use name=Foundation/PluginManager>
-   <use name=FWCore/ParameterSet>
-   <use name=FWCore/ServiceRegistry>
-   <use name=CMS1/BaseAnalyzer>
-   <use name=CMS1/MCInfo>
-</library>
-<Flags CXXFLAGS=-g>
