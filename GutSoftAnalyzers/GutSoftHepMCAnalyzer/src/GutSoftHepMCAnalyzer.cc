@@ -8,8 +8,8 @@
 // Created:         Thu Feb 15 21:09:04 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/04/04 01:21:57 $
-// $Revision: 1.3 $
+// $Date: 2007/04/08 16:47:50 $
+// $Revision: 1.4 $
 //
 
 #include <string>
@@ -184,41 +184,41 @@ GutSoftHepMCAnalyzer::dumpTrackingParticles(const TrackingParticleCollection *tr
 	  trackingParticleEnd = trackingParticleCollection->end();
         trackingParticle != trackingParticleEnd;
         ++trackingParticle ) {
-    result << "----------" << std::endl
-	   << "TrackingParticle PDG ID: " << trackingParticle->pdgId() << std::endl
-	   << "pt: " << std::sqrt(trackingParticle->momentum().perp2()) << " eta: " << trackingParticle->momentum().eta() << " number of hits: " << trackingParticle->trackPSimHit().size() << std::endl;
-    TrackingParticle::GenParticleRefVector genParticles = trackingParticle->genParticle();
-    for ( TrackingParticle::GenParticleRefVector::const_iterator hepMCParticle = genParticles.begin(),
-	    hepMCParticleEnd = genParticles.end();
-	  hepMCParticle != hepMCParticleEnd;
-	  ++hepMCParticle ) {
-      result << "barcode: " << (*hepMCParticle)->barcode() << std::endl;
-    }
-
-    for ( std::vector<PSimHit>::const_iterator simHit = trackingParticle->pSimHit_begin(),
-	    simHitEnd = trackingParticle->pSimHit_end();
-	  simHit != simHitEnd;
-	  ++simHit ) {
-      const Ring *ring = rings_->getRing(RoadSearchDetIdHelper::ReturnRPhiId(DetId(simHit->detUnitId())));
-      std::vector<const Ring*>::iterator innerSeedRingIterator = std::find(innerSeedRings_.begin(),innerSeedRings_.end(),ring);
-      std::vector<const Ring*>::iterator outerSeedRingIterator = std::find(outerSeedRings_.begin(),outerSeedRings_.end(),ring);
-
-      if ( innerSeedRingIterator != innerSeedRings_.end() ||
-	   outerSeedRingIterator != outerSeedRings_.end() ) {
-
-	GlobalPoint globalPosition = tracker_->idToDet(DetId(simHit->detUnitId()))->surface().toGlobal(simHit->localPosition());
-
-	if ( ring != 0 ) {
-	  result << "Hit DetId: " << simHit->detUnitId() << " ring: " << ring->getindex() << " " << globalPosition.perp() << " " << globalPosition.phi() 
-		 << " " << globalPosition.x() << " " << globalPosition.y() << " " << globalPosition.z() << std::endl;
-	} else {
-	  result << "Hit DetId: " << simHit->detUnitId() << " ring: NAN " << globalPosition.perp() << " " << globalPosition.phi() 
-		 << " " << globalPosition.x() << " " << globalPosition.y() << " " << globalPosition.z() << std::endl;
-	}
+    if ( trackingParticle->charge() != 0 ) {
+      result << "----------" << std::endl
+	     << "TrackingParticle PDG ID: " << trackingParticle->pdgId() << std::endl
+	     << "pt: " << std::sqrt(trackingParticle->momentum().perp2()) << " eta: " << trackingParticle->momentum().eta() << " number of hits: " << trackingParticle->trackPSimHit().size() << std::endl;
+      TrackingParticle::GenParticleRefVector genParticles = trackingParticle->genParticle();
+      for ( TrackingParticle::GenParticleRefVector::const_iterator hepMCParticle = genParticles.begin(),
+	      hepMCParticleEnd = genParticles.end();
+	    hepMCParticle != hepMCParticleEnd;
+	    ++hepMCParticle ) {
+	result << "barcode: " << (*hepMCParticle)->barcode() << std::endl;
       }
-      
-    } // loop over sim hits
 
+      for ( std::vector<PSimHit>::const_iterator simHit = trackingParticle->pSimHit_begin(),
+	      simHitEnd = trackingParticle->pSimHit_end();
+	    simHit != simHitEnd;
+	    ++simHit ) {
+	const Ring *ring = rings_->getRing(RoadSearchDetIdHelper::ReturnRPhiId(DetId(simHit->detUnitId())));
+	std::vector<const Ring*>::iterator innerSeedRingIterator = std::find(innerSeedRings_.begin(),innerSeedRings_.end(),ring);
+	std::vector<const Ring*>::iterator outerSeedRingIterator = std::find(outerSeedRings_.begin(),outerSeedRings_.end(),ring);
+
+	if ( innerSeedRingIterator != innerSeedRings_.end() ||
+	     outerSeedRingIterator != outerSeedRings_.end() ) {
+
+	  GlobalPoint globalPosition = tracker_->idToDet(DetId(simHit->detUnitId()))->surface().toGlobal(simHit->localPosition());
+
+	  if ( ring != 0 ) {
+	    result << "Hit DetId: " << simHit->detUnitId() << " ring: " << ring->getindex() << " " << globalPosition.perp() << " " << globalPosition.phi() 
+		   << " " << globalPosition.x() << " " << globalPosition.y() << " " << globalPosition.z() << std::endl;
+	  } else {
+	    result << "Hit DetId: " << simHit->detUnitId() << " ring: NAN " << globalPosition.perp() << " " << globalPosition.phi() 
+		   << " " << globalPosition.x() << " " << globalPosition.y() << " " << globalPosition.z() << std::endl;
+	  }
+	}
+      } // loop over sim hits
+    }
 
   } // loop over tracking particles
   
