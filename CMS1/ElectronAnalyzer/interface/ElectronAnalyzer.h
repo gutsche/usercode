@@ -1,11 +1,6 @@
 #ifndef ElectronAnalyzer_H
 #define ElectronAnalyzer_H
 
-//#include "FWCore/Framework/interface/EDAnalyzer.h"
-//#include "FWCore/Framework/interface/Event.h"
-//#include "DataFormats/Common/interface/Handle.h"
-//#include "FWCore/Framework/interface/ESHandle.h"
-//#include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
 #include "DataFormats/TrackReco/interface/Track.h"
@@ -13,12 +8,6 @@
 #include "CMS1/Electrons/interface/Electrons.h"
 
 #include "CMS1/BaseAnalyzer/interface/BaseAnalyzer.h"
-
-//namespace edm {
-//  class ParameterSet;
-//  class Event;
-//  class EventSetup;
-//}
 
 class TFile;
 class TH1D;
@@ -34,7 +23,6 @@ namespace cms1 {
     
   protected:
     virtual void configure(const edm::ParameterSet& pset);
-    //const HepMC::GenParticle* match(reco::PixelMatchGsfElectron e);  
     virtual void processEvent(const edm::Event & event);
     virtual void finishProcessing();
 
