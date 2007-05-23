@@ -5,6 +5,7 @@
 <use name=CMS1/Base>
 <use name=CMS1/MCInfo>
 <use name=SimDataFormats/HepMCProduct>
+<use name=SimTracker/TrackAssociation>
 <use name=clhep>
 <use name=root>
 <export>
@@ -14,6 +15,7 @@
    <use name=FWCore/ParameterSet>
    <use name=FWCore/ServiceRegistry>
    <use name=SimDataFormats/HepMCProduct>
+   <use name=SimTracker/TrackAssociation>
    <use name=CMS1/MCInfo>
    <use name=clhep>
    <use name=root>	
