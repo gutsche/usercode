@@ -11,7 +11,7 @@
 // Created:         Thu Mar 1 20:27:02 UTC 2007
 //
 // $Author: sani $
-// $Revision: 1.2 $
+// $Revision: 1.4 $
 //
 
 #include "CMS1/Base/interface/BlackBox.h"
@@ -34,8 +34,8 @@ namespace cms1 {
  
     //const HepMC::GenParticle* match(const reco::Candidate& candidate, const ParticleType particleType, Cuts cuts=Cuts());
     // This is the function that does all the work
-    std::vector<const HepMC::GenParticle*> getMCInfo (const ParticleType, const Cuts&);
-    std::vector<const reco::GenJet*> getJetInfo (const Cuts&);
+    std::vector<const HepMC::GenParticle*> getMCInfo (ParticleType=MCInfo::All, Cuts=Cuts());
+    std::vector<const reco::GenJet*> getJetInfo (Cuts=Cuts());
  
     // a trivial function that uses getJetInfo to return the number of
     // jets in the event

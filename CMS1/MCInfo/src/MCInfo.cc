@@ -7,9 +7,9 @@
 // Original Author: Matteo Sani, matteo.sani@cern.ch
 // Created:         Thu Mar 1 20:27:42 UTC 2007
 //
-// $Author: sani $
-// $Date: 2007/05/14 15:17:14 $
-// $Revision: 1.4 $
+// $Author: dmytro $
+// $Date: 2007/05/22 07:24:55 $
+// $Revision: 1.5 $
 //
 
 #include "CMS1/MCInfo/interface/MCInfo.h"
@@ -56,7 +56,7 @@ void cms1::MCInfo::dumpJets(Cuts cut_jet) {
   std::cout << "----------------------------------------------------------" << std::endl;
 }
 
-std::vector<const reco::GenJet*> cms1::MCInfo::getJetInfo(const Cuts& cuts) {
+std::vector<const reco::GenJet*> cms1::MCInfo::getJetInfo(Cuts cuts) {
  
   // this is the output list
   std::vector<const reco::GenJet*> output_list;
@@ -78,7 +78,7 @@ std::vector<const reco::GenJet*> cms1::MCInfo::getJetInfo(const Cuts& cuts) {
   return output_list;
 }
 
-std::vector<const HepMC::GenParticle*> cms1::MCInfo::getMCInfo(const ParticleType particleType, const Cuts& cuts) {
+std::vector<const HepMC::GenParticle*> cms1::MCInfo::getMCInfo(ParticleType particleType, Cuts cuts) {
 
   // this is the output list
   std::vector<const HepMC::GenParticle*> output_list;
