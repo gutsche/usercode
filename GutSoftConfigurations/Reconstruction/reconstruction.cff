@@ -6,11 +6,6 @@ untracked PSet maxEvents =
   untracked int32 input = -1
 }
 
-untracked PSet skipEvents = 
-{
-  untracked int32 input = 0
-}
-
 # input
 source = PoolSource
 {
@@ -18,6 +13,7 @@ source = PoolSource
   {
     "file:test.root"
   }
+  untracked uint32 skipEvents = 0
 }
 
 # timer
@@ -36,8 +32,8 @@ include "GutSoftConfigurations/TrackObjects/trackObjects.cff"
 include "GutSoftConfigurations/TrackObjects/trackEfficiencyObjects.cff"
 
 # timing analyzer
-include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/ckfGutSoftTimingAnalyzer.cff"
-include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/rsGutSoftTimingAnalyzer.cff"
+#include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/ckfGutSoftTimingAnalyzer.cff"
+#include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/rsGutSoftTimingAnalyzer.cff"
 #include "GutSoftAnalyzers/GutSoftHepMCAnalyzer/data/gutSoftHepMCAnalyzer.cff"
 #include "GutSoftConfigurations/TrackObjects/dumpObjects.cff"
 #include "GutSoftAnalyzers/GutSoftTrackingEventDisplay/data/gutSoftTrackingEventDisplay.cff"
@@ -68,13 +64,13 @@ path p1 =
   trackEfficiencyObjects
 }
 
-path p3 =
-{
-  ckfGutSoftTimingAnalyzer,
-  rsGutSoftTimingAnalyzer
-}
+#path p3 =
+#{
+#  ckfGutSoftTimingAnalyzer,
+#  rsGutSoftTimingAnalyzer
+#}
 
-schedule = {pR,pT,p1,p3,e}
+schedule = {pR,pT,p1,e}
 
 endpath e =
 {
