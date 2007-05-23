@@ -1,18 +1,42 @@
 #include "CMS1/CommonTools/interface/MCTruth.h"
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
 
-/*
-const reco::Candidate* cms1::MCTruth::matchGenToCand(const reco::GenJet& genJet, Cuts cuts) const {
+#include <vector>
+#include <string>
+#include <iostream>
+
+cms1::MCTruth::MCTruth() {
+
+  std::vector<std::string> trackerContainers;
+  trackerContainers.push_back("TrackerHitsTIBLowTof");
+  trackerContainers.push_back("TrackerHitsTIBHighTof");
+  trackerContainers.push_back("TrackerHitsTIDLowTof");
+  trackerContainers.push_back("TrackerHitsTIDHighTof");
+  trackerContainers.push_back("TrackerHitsTOBLowTof");
+  trackerContainers.push_back("TrackerHitsTOBHighTof");
+  trackerContainers.push_back("TrackerHitsTECLowTof");
+  trackerContainers.push_back("TrackerHitsTECHighTof");
+  trackerContainers.push_back("TrackerHitsPixelBarrelLowTof");
+  trackerContainers.push_back("TrackerHitsPixelBarrelHighTof");
+  trackerContainers.push_back("TrackerHitsPixelEndcapLowTof");
+  trackerContainers.push_back("TrackerHitsPixelEndcapHighTof");
+
+  conf_.addParameter("MinHitFraction", (double)0.5);
+  conf_.addParameter("associatePixel",(bool)true);
+  conf_.addParameter("associateStrip", (bool)true);
+  conf_.addParameter("associateRecoTracks", (bool)true);
+  conf_.addParameter("ROUList", (std::vector<std::string>)trackerContainers);
+  
+  data_ = 0;
+}
+
+const reco::Candidate* cms1::MCTruth::matchGenToCand(const reco::GenJet& genJet, std::vector<const reco::Candidate*> cand) const {
 
   const reco::Candidate* output = 0;
   double dRmin = 0.1;
 
-  std::vector<const reco::Candidate*> cand;
   std::vector<const reco::Candidate*>::const_iterator itCand;
   
-  cms1::Jets j;
-  cand = j.getJets(Jets::JetsWithoutElectrons, cuts);
-
   for(itCand=cand.begin(); itCand!=cand.end(); ++itCand) {
 
     const math::XYZVector v1(genJet.momentum().x(), genJet.momentum().y(), genJet.momentum().z());
@@ -26,8 +50,8 @@ const reco::Candidate* cms1::MCTruth::matchGenToCand(const reco::GenJet& genJet,
 
   return output;
 }
-*/
-const reco::GenJet* cms1::MCTruth::matchCandToGenJet(const reco::Candidate& jet, Cuts cuts) const { 
+
+const reco::GenJet* cms1::MCTruth::matchCandToGenJet(const reco::Candidate& jet,  Cuts cuts) const { 
   
   const reco::GenJet* output = 0;
   double dRmin = 0.1;
@@ -99,37 +123,13 @@ const HepMC::GenParticle* cms1::MCTruth::matchP4ToGen(const math::XYZTLorentzVec
   return output;
 }
 
-/*
-const reco::Candidate* cms1::MCTruth::matchGenToCand(const HepMC::GenParticle& p, MCTruth::CandidateType type, Cuts cuts) const {
+const reco::Candidate* cms1::MCTruth::matchGenToCand(const HepMC::GenParticle& p, std::vector<const reco::Candidate*> cand) const {
 
   const reco::Candidate* output = 0;
   double dRmin = 0.1;
 
-  std::vector<const reco::Candidate*> cand;
   std::vector<const reco::Candidate*>::const_iterator itCand;
   
-  //Fill cand with selected Candidate Collection
-
-  switch (type) {
-  case Muons:
-    {
-      cms1::Muons m;
-      cand = m.getMuons(Muons::AllGlobalMuons, cuts);
-    }
-    break;
-  case Electrons:
-    {
-      cms1::Electrons e;
-      cand = e.getElectrons(Electrons::AllElectrons, cuts);
-    }
-    break;
-  default: 
-    {
-      std::cout << "Something wrong: no valid collection selected" << std::endl;
-    }
-    break;
-  } 
-
   for(itCand=cand.begin(); itCand!=cand.end(); ++itCand) {
 
     const math::XYZVector v1(p.momentum().x(), p.momentum().y(), p.momentum().z());
@@ -143,25 +143,10 @@ const reco::Candidate* cms1::MCTruth::matchGenToCand(const HepMC::GenParticle& p
 
   return output;
 }
-*/
+
 reco::RecoToSimCollection cms1::MCTruth::recoToSimByHits() {
 
-  // need to be fixed compile but doesn't work of course
-  // access to EventSetup ???
-
-  /*
-  edm::ESHandle<MagneticField> theMF;
-  setup.get<IdealMagneticFieldRecord>().get(theMF);
-  
-  edm::ESHandle<TrackAssociatorBase> theChiAssociator;
-  setup.get<TrackAssociatorRecord>().get("TrackAssociatorByChi2",theChiAssociator);
-  associatorByChi2 = (TrackAssociatorBase *) theChiAssociator.product();
-  
-  edm::ESHandle<TrackAssociatorBase> theHitsAssociator;
-  setup.get<TrackAssociatorRecord>().get("TrackAssociatorByHits",theHitsAssociator);
-  associatorByHits = (TrackAssociatorBase *) theHitsAssociator.product();
-  */
-  TrackAssociatorBase* associatorByHits;
+  TrackAssociatorByHits* associatorByHits = new TrackAssociatorByHits(conf_);
   edm::Handle<reco::TrackCollection> trackCollectionH = data_->getHandle<reco::TrackCollection>("ctfWithMaterialTracks");
   edm::Handle<TrackingParticleCollection>  TPCollectionH = data_->getHandle<TrackingParticleCollection>("trackingtruth", "TrackTruth");
 
@@ -172,7 +157,7 @@ reco::RecoToSimCollection cms1::MCTruth::recoToSimByHits() {
 
 reco::SimToRecoCollection cms1::MCTruth::simToRecoByHits() {
   
-  TrackAssociatorBase* associatorByHits;
+  TrackAssociatorByHits* associatorByHits = new TrackAssociatorByHits(conf_);
   edm::Handle<reco::TrackCollection> trackCollectionH = data_->getHandle<reco::TrackCollection>("ctfWithMaterialTracks");
   edm::Handle<TrackingParticleCollection>  TPCollectionH = data_->getHandle<TrackingParticleCollection>("trackingtruth", "TrackTruth");
 
@@ -180,7 +165,7 @@ reco::SimToRecoCollection cms1::MCTruth::simToRecoByHits() {
 
   return p;
 }
-
+/*
 reco::RecoToSimCollection cms1::MCTruth::recoToSimByChi2() {
 
   TrackAssociatorBase* associatorByChi2;
@@ -202,3 +187,4 @@ reco::SimToRecoCollection cms1::MCTruth::simToRecoByChi2() {
 
   return p;
 }
+*/
