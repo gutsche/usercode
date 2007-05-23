@@ -37,6 +37,8 @@ namespace cms1 {
 	UserDataFloat*      mass;
 	
 	UserDataInt*        type;
+	UserDataInt*        nJets;
+	UserDataInt*        nOtherJets;
      };
 }
 

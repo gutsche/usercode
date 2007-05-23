@@ -11,14 +11,16 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/11 04:21:23 $
-// $Revision: 1.3 $
+// $Date: 2007/05/22 07:24:56 $
+// $Revision: 1.4 $
 //
 
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "CMS1/Base/interface/Cuts.h"
 #include "CMS1/Base/interface/BlackBox.h"
 #include "CMS1/Base/interface/UserDataBlocks.h"
+#include "CMS1/Base/interface/TrackStreamer.h"
+#include "CMS1/Base/interface/JetStreamer.h"
 
 namespace cms1 {
    class Tracks: public BlackBox  {
@@ -35,7 +37,10 @@ namespace cms1 {
       void registerEventUserData();
       void fillEventUserData();
     private:
-      // TrackUserBlock tracks;
+      VectorUserBlock<TrackStreamer> tracks;
+      UserDataInt*        runNumber;
+      UserDataInt*        eventNumber;
+      UserDataInt*        nTracks;
   };
 }
 

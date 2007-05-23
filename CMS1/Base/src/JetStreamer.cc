@@ -3,22 +3,22 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/05/11 04:08:51 $
+// $Date: 2007/05/22 07:12:39 $
 // $Revision: 1.1 $
 //
 #include "CMS1/Base/interface/JetStreamer.h"
 cms1::JetStreamer::JetStreamer() 
 {
-   p4Names_.push_back("_p4");                 p4s_.push_back( LorentzVector(0,0,0,0) );
-   p4Names_.push_back("_mc_p4");              p4s_.push_back( LorentzVector(0,0,0,0) );
-   p4Names_.push_back("_mc_gp_p4");           p4s_.push_back( LorentzVector(0,0,0,0) );
-   floatNames_.push_back("_emFrac");          floats_.push_back(0);
-   floatNames_.push_back("_chFrac");          floats_.push_back(0);
-   floatNames_.push_back("_mc_emEnergy");     floats_.push_back(0);
-   floatNames_.push_back("_mc_hadEnergy");    floats_.push_back(0);
-   floatNames_.push_back("_mc_invEnergy");    floats_.push_back(0);
-   floatNames_.push_back("_mc_otherEnergy");  floats_.push_back(0);
-   intNames_.push_back("_mc_id");             ints_.push_back(0);
+   p4Names_.push_back("p4");                 p4s_.push_back( LorentzVector(0,0,0,0) );
+   p4Names_.push_back("mc_p4");              p4s_.push_back( LorentzVector(0,0,0,0) );
+   p4Names_.push_back("mc_gp_p4");           p4s_.push_back( LorentzVector(0,0,0,0) );
+   floatNames_.push_back("emFrac");          floats_.push_back(0);
+   floatNames_.push_back("chFrac");          floats_.push_back(0);
+   floatNames_.push_back("mc_emEnergy");     floats_.push_back(0);
+   floatNames_.push_back("mc_hadEnergy");    floats_.push_back(0);
+   floatNames_.push_back("mc_invEnergy");    floats_.push_back(0);
+   floatNames_.push_back("mc_otherEnergy");  floats_.push_back(0);
+   intNames_.push_back("mc_id");             ints_.push_back(0);
 }
 
 void cms1::JetStreamer::setDefaults()

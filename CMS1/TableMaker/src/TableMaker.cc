@@ -9,8 +9,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/11 04:20:13 $
-// $Revision: 1.23 $
+// $Date: 2007/05/22 07:24:56 $
+// $Revision: 1.24 $
 //
 
 #include <vector>
@@ -209,10 +209,12 @@ void
   if (events_ < MaxEventDebug_) {
     eventHyp_.dump(std::cout, dlCandidates);
   }
+   // all jets for ntuples
+   std::vector<const reco::Candidate*> allJets = theJets.getJets(Jets::DefaultJets,jetCut_);
 
   for ( std::vector<const cms1::DiLeptonCandidate*>::iterator dli = dlCandidates.begin(), dle = dlCandidates.end(); dli != dle; ++dli ) {
-    const cms1::DiLeptonCandidate* dl = *dli;
-    if (makeNtuples) diLeptonUserData.fill(theData,*dl, jets);
+     const cms1::DiLeptonCandidate* dl = *dli;
+     if (makeNtuples) diLeptonUserData.fill(theData,*dl, allJets); // Fill ntuples
     FillHistograms(dl->jets, dl->lTight, dl->lLoose, dl->MET);
     int njet = dl->nJets(); if (njet > 4)  njet = 4;
     switch (dl->candidateType) {
@@ -291,7 +293,7 @@ void cms1::TableMaker::FillHistograms(std::vector<const reco::Candidate*> jets,c
 
 void cms1::TableMaker::configure(const edm::ParameterSet& iConfig)
 {
-   diLeptonUserData.registerBlock(theData, "dilep", "cms1_dilep");
+   diLeptonUserData.registerBlock(theData, "", "cms1_");
    
   // tight muon cuts
   tightMuon_.pt_min       = iConfig.getUntrackedParameter<double>("TightMuonPt");

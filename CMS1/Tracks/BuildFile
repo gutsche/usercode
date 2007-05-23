@@ -1,5 +1,6 @@
 <use name=DataFormats/TrackReco>
 <use name=CMS1/Base>
+<use name=CMS1/CommonTools>
 <export>
    <lib name=CMS1Tracks>
    <use name=DataFormats/TrackReco>

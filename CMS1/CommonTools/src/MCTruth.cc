@@ -1,11 +1,7 @@
 #include "CMS1/CommonTools/interface/MCTruth.h"
-
-#include "CMS1/Muons/interface/Muons.h"
-#include "CMS1/Electrons/interface/Electrons.h"
-#include "CMS1/Jets/interface/Jets.h"
-
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
 
+/*
 const reco::Candidate* cms1::MCTruth::matchGenToCand(const reco::GenJet& genJet, Cuts cuts) const {
 
   const reco::Candidate* output = 0;
@@ -30,7 +26,7 @@ const reco::Candidate* cms1::MCTruth::matchGenToCand(const reco::GenJet& genJet,
 
   return output;
 }
-
+*/
 const reco::GenJet* cms1::MCTruth::matchCandToGenJet(const reco::Candidate& jet, Cuts cuts) const { 
   
   const reco::GenJet* output = 0;
@@ -103,6 +99,7 @@ const HepMC::GenParticle* cms1::MCTruth::matchP4ToGen(const math::XYZTLorentzVec
   return output;
 }
 
+/*
 const reco::Candidate* cms1::MCTruth::matchGenToCand(const HepMC::GenParticle& p, MCTruth::CandidateType type, Cuts cuts) const {
 
   const reco::Candidate* output = 0;
@@ -146,7 +143,7 @@ const reco::Candidate* cms1::MCTruth::matchGenToCand(const HepMC::GenParticle& p
 
   return output;
 }
-
+*/
 reco::RecoToSimCollection cms1::MCTruth::recoToSimByHits() {
 
   // need to be fixed compile but doesn't work of course

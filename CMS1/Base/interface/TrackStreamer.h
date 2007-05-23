@@ -5,7 +5,7 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/05/11 04:08:51 $
+// $Date: 2007/05/22 07:12:39 $
 // $Revision: 1.1 $
 //
 #include "CMS1/Base/interface/BaseStreamer.h"
@@ -14,7 +14,7 @@ namespace cms1 {
      {
       public:
 	enum IntVars   { varValidHits, varlostHits, varPdgId };
-	enum FloatVars { varD0, varZ0, varChi2, varNdof };
+	enum FloatVars { varD0, varZ0, varChi2, varNdof, varD0Err, varZ0Err, varPtErr, varEtaErr, varPhiErr };
 	enum P4Vars    { varP4, varMCP4 };
 	     
 	TrackStreamer();

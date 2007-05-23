@@ -3,7 +3,7 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/05/11 04:08:51 $
+// $Date: 2007/05/22 07:12:39 $
 // $Revision: 1.1 $
 //
 #include "DataFormats/MuonReco/interface/Muon.h"
@@ -12,16 +12,21 @@
 cms1::TrackStreamer::TrackStreamer() 
 {
    // ORDER IS CRITICAL !
-   p4Names_.push_back("_p4");            p4s_.push_back( LorentzVector(0,0,0,0) );
-   floatNames_.push_back("_d0");         floats_.push_back(0);
-   floatNames_.push_back("_z0");         floats_.push_back(0);
-   floatNames_.push_back("_chi2");       floats_.push_back(0);
-   floatNames_.push_back("_ndof");       floats_.push_back(0);
-   intNames_.push_back("_validHits");    ints_.push_back(0);
-   intNames_.push_back("_lostHits");     ints_.push_back(0);
+   p4Names_.push_back("p4");            p4s_.push_back( LorentzVector(0,0,0,0) );
+   floatNames_.push_back("d0");         floats_.push_back(0);
+   floatNames_.push_back("z0");         floats_.push_back(0);
+   floatNames_.push_back("chi2");       floats_.push_back(0);
+   floatNames_.push_back("ndof");       floats_.push_back(0);
+   intNames_.push_back("validHits");    ints_.push_back(0);
+   intNames_.push_back("lostHits");     ints_.push_back(0);
+   floatNames_.push_back("d0Err");      floats_.push_back(0);
+   floatNames_.push_back("z0Err");      floats_.push_back(0);
+   floatNames_.push_back("ptErr");      floats_.push_back(0);
+   floatNames_.push_back("etaErr");      floats_.push_back(0);
+   floatNames_.push_back("phiErr");      floats_.push_back(0);
    // truth matching
-   p4Names_.push_back("_mc_p4");         p4s_.push_back( LorentzVector(0,0,0,0) );
-   intNames_.push_back("_mc_id");        ints_.push_back(0);
+   p4Names_.push_back("mc_p4");         p4s_.push_back( LorentzVector(0,0,0,0) );
+   intNames_.push_back("mc_id");        ints_.push_back(0);
    
    mass_ = 0;
 }
@@ -36,6 +41,11 @@ void cms1::TrackStreamer::setDefaults()
    ints_[varValidHits] = -999 ;
    ints_[varlostHits] = -999 ;
    ints_[varPdgId] = 0 ; 
+   floats_[varD0Err] = -999. ;
+   floats_[varZ0Err] = -999. ;
+   floats_[varPtErr] = -999. ;
+   floats_[varEtaErr] = -999. ;
+   floats_[varPhiErr] = -999. ;
 }
 
 void cms1::TrackStreamer::fill( const reco::Candidate* candidate ) 
@@ -64,10 +74,14 @@ void cms1::TrackStreamer::fill( const reco::Track* track )
    p4s_[varP4] = LorentzVector( track->px(), track->py(), track->pz(), sqrt(track->p()*track->p()+mass_*mass_) );
    floats_[varD0] = track->d0() ;
    floats_[varZ0] = track->dz() ;
+   floats_[varD0Err] = track->d0Error() ;
+   floats_[varZ0Err] = track->dzError() ;
    floats_[varChi2] = track->chi2() ;
    floats_[varNdof] = track->ndof();
    ints_[varValidHits] = track->numberOfValidHits() ;
    ints_[varlostHits] = track->numberOfLostHits() ;
+   floats_[varEtaErr] = track->etaError() ;
+   floats_[varPhiErr] = track->phiError() ;
 }
 
 void cms1::TrackStreamer::fill( const StreamerArguments& args )

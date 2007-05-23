@@ -3,7 +3,6 @@
 <use name=FWCore/ParameterSet>
 <use name=FWCore/ServiceRegistry>
 <use name=CMS1/Base>
-<use name=CMS1/BaseAnalyzer>
 <use name=SimDataFormats/HepMCProduct>
 <use name=clhep>
 <export>
@@ -13,6 +12,5 @@
    <use name=FWCore/ParameterSet>
    <use name=FWCore/ServiceRegistry>
    <use name=SimDataFormats/HepMCProduct>
-   <use name=CMS1/BaseAnalyzer>
    <use name=clhep>	
 </export>

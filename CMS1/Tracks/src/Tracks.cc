@@ -8,12 +8,13 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/11 04:21:23 $
-// $Revision: 1.5 $
+// $Date: 2007/05/22 07:24:56 $
+// $Revision: 1.6 $
 //
 
 #include "CMS1/Tracks/interface/Tracks.h"
 #include <Math/GenVector/VectorUtil.h>
+#include "CMS1/CommonTools/interface/UserDataTools.h"
 
 std::vector<const reco::Track*> cms1::Tracks::getTracks(const TrackType trackType,
 							const Cuts& userCuts,
@@ -52,21 +53,22 @@ std::vector<const reco::Track*> cms1::Tracks::getTracks(const TrackType trackTyp
 }
 void cms1::Tracks::registerEventUserData()
 {
-   // tracks.setMass();
-   // tracks.registerBlock( *data_, "tracks",     "cms1_tracks");
+   tracks.registerBlock( *data_, "trks_", "cms1_trks_");
+   data_->intUserData.push_back( new UserData<int>("trks_size", "", "cms1_", false) );
+   nTracks = data_->intUserData.back();
+   data_->intUserData.push_back( new UserData<int>("run", "", "cms1_", false) );
+   runNumber = data_->intUserData.back();
+   data_->intUserData.push_back( new UserData<int>("event", "", "cms1_", false) );
+   eventNumber = data_->intUserData.back();
 }
 
 void cms1::Tracks::fillEventUserData()
 {
-/*   const std::vector<reco::Track>* collection = data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks");
-   if ( ! collection ) {
-      std::cout << "ERROR: ctfWithMaterialTracks collection is not found in the event. Return nothing." << std::endl;
-      return;
-   }
-   for ( std::vector<reco::Track>::const_iterator track = collection->begin();
-	 track != collection->end(); ++track ) 
-     tracks.fill(*track);
-*/
+   std::vector<const reco::Track*> trks = getTracks(AllTracks,Cuts());
+   tracks.fill( getStreamerArguments(data_, trks) );
+   runNumber->addData( data_->iEvent->id().run() );
+   eventNumber->addData( data_->iEvent->id().event() );
+   nTracks->addData( trks.size() );
 }
 
 
