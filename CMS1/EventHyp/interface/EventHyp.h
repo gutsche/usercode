@@ -32,6 +32,7 @@ namespace cms1 {
 			std::vector<const reco::Candidate*> looseMuons,
 			std::vector<const reco::Candidate*> jets,
 			double met,
+			double metPhi,
 			Cuts metCut,
 			Cuts metCutAroundZ);
 

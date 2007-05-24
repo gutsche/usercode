@@ -12,8 +12,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/11 04:20:12 $
-// $Revision: 1.16 $
+// $Date: 2007/05/22 07:24:55 $
+// $Revision: 1.17 $
 //
 
 #include <vector>
@@ -104,7 +104,7 @@ namespace cms1 {
     void FillHistograms(std::vector<const reco::Candidate*> jets, const reco::Candidate *,const reco::Candidate *, double);
      
     DiLeptonUserBlock diLeptonUserData;
-	
+    UserDataInt* nCandidates;
   };
 }
 

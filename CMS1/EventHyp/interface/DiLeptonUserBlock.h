@@ -30,6 +30,7 @@ namespace cms1 {
 	
 	UserDataP4*         p4Hyp;
 	UserDataFloat*      met;
+	UserDataFloat*      metPhi;
 	
 	UserDataInt*        type;
 	UserDataInt*        nJets;

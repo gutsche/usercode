@@ -9,8 +9,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/23 02:23:25 $
-// $Revision: 1.25 $
+// $Date: 2007/05/24 17:41:01 $
+// $Revision: 1.26 $
 //
 
 #include <vector>
@@ -177,10 +177,10 @@ void
   // get MET without cut and correct
   const reco::Candidate* metObj = theMET.getMET(MET::DefaultMET);
   double met = metObj->pt();
-  double mephi = metObj->phi();
-  // ACHTUNG, Baby -- here we change met and mephi in situ!!
+  double metphi = metObj->phi();
+  // ACHTUNG, Baby -- here we change met and metphi in situ!!
   // but metObj is not changed 
-  MET::correctMETmuons(&allMuons, met, mephi);
+  MET::correctMETmuons(&allMuons, met, metphi);
 
 
   // Dump Event contents
@@ -204,11 +204,13 @@ void
 	
   EventHyp eventHyp_; 
   eventHyp_.setEventData(&theData);
-  std::vector<const cms1::DiLeptonCandidate*> dlCandidates = eventHyp_.getEventHyp(tightElectrons, looseElectrons, tightMuons, looseMuons, jets, met,
+  std::vector<const cms1::DiLeptonCandidate*> dlCandidates = eventHyp_.getEventHyp(tightElectrons, looseElectrons, tightMuons, looseMuons, jets, met, metphi,
 										   metCut_, metCutAroundZ_);
   if (events_ < MaxEventDebug_) {
     eventHyp_.dump(std::cout, dlCandidates);
   }
+   
+  if (makeNtuples) nCandidates->addData(dlCandidates.size()); // Fill ntuples
 
   for ( std::vector<const cms1::DiLeptonCandidate*>::iterator dli = dlCandidates.begin(), dle = dlCandidates.end(); dli != dle; ++dli ) {
      const cms1::DiLeptonCandidate* dl = *dli;
@@ -291,8 +293,11 @@ void cms1::TableMaker::FillHistograms(std::vector<const reco::Candidate*> jets,c
 
 void cms1::TableMaker::configure(const edm::ParameterSet& iConfig)
 {
-   diLeptonUserData.registerBlock(theData, "", "cms1_");
-   
+   if (makeNtuples) {
+      diLeptonUserData.registerBlock(theData, "", "cms1_");
+      theData.intUserData.push_back( new UserData<int>("nCand", "evt_", "cms1_evt_", false) );
+      nCandidates = theData.intUserData.back();
+   }
   // tight muon cuts
   tightMuon_.pt_min       = iConfig.getUntrackedParameter<double>("TightMuonPt");
   tightMuon_.eta_min      = iConfig.getUntrackedParameter<double>("TightMuonMinEta");

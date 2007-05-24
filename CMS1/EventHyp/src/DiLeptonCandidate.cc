@@ -9,7 +9,7 @@
 #include "CMS1/EventHyp/interface/DiLeptonCandidate.h"
 
 cms1::DiLeptonCandidate* cms1::DiLeptonCandidate::returnDiLeptonCandidate(
-	const reco::Candidate* lt, const reco::Candidate* ll,  std::vector<const reco::Candidate*> jets, double met, DiLeptonType t
+	const reco::Candidate* lt, const reco::Candidate* ll,  std::vector<const reco::Candidate*> jets, double met, double metPhi, DiLeptonType t
 	) {
 	
 	cms1::DiLeptonCandidate*
@@ -18,6 +18,7 @@ cms1::DiLeptonCandidate* cms1::DiLeptonCandidate::returnDiLeptonCandidate(
 	dl->lLoose = ll;
 	dl->jets = jets;
 	dl->MET = met;
+	dl->METphi = metPhi;
 	dl->candidateType = t;
 	return dl;
 }

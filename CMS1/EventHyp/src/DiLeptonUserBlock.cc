@@ -25,6 +25,7 @@ void cms1::DiLeptonUserBlock::registerBlock(EventData& event, const std::string&
    
    addEntry(event.p4UserData,    p4Hyp,           "hyp_p4",         name_prefix, alias_prefix);
    addEntry(event.floatUserData, met,             "hyp_met",        name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metPhi,          "hyp_metPhi",     name_prefix, alias_prefix);
    addEntry(event.intUserData,   type,            "hyp_type",       name_prefix, alias_prefix);
    addEntry(event.intUserData,   nJets,           "hyp_njets",      name_prefix, alias_prefix);
    addEntry(event.intUserData,   nOtherJets,      "hyp_nojets",     name_prefix, alias_prefix);
@@ -42,6 +43,7 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
    jets.fill( getStreamerArguments(&event, candidate.jets) );
    type->addData( candidate.candidateType );
    met->addData( candidate.MET );
+   metPhi->addData( candidate.METphi );
    p4Hyp->addData( candidate.lTight->p4()+candidate.lLoose->p4() );
    // fill a vector of jets that were not used
    std::vector<const reco::Candidate*> notUsedJets;

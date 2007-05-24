@@ -23,6 +23,7 @@ namespace cms1 {
       const reco::Candidate* lLoose;
       std::vector<const reco::Candidate*> jets; // sorted by energy
       double MET;
+      double METphi;
       //		should probably add commonPrimaryVertex
       enum DiLeptonType { MuMu, MuEl, ElMu, ElEl };
       DiLeptonType candidateType;
@@ -37,7 +38,7 @@ namespace cms1 {
 							const reco::Candidate* lt, 
 							const reco::Candidate* ll,  
 							std::vector<const reco::Candidate*> jets, 
-							double met, DiLeptonType t
+							double met, double metPhi, DiLeptonType t
 							);
       static void resetStore();		
     protected:

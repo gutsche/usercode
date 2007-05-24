@@ -22,6 +22,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 		std::vector<const reco::Candidate*> looseMuons,
 		std::vector<const reco::Candidate*> jets,
 		double met,
+		double metPhi,
 		Cuts metCut,
 		Cuts metCutAroundZ		
 	) {
@@ -96,7 +97,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 									if ( Cuts::testJetForElectrons(**jet, el ) ) jetsnoel.push_back(*jet);
 									
 // do it: jetsnoel, tightElectron, looseElectron, met
-								cms1::DiLeptonCandidate* dl = cms1::DiLeptonCandidate::returnDiLeptonCandidate(*tightElectron, *looseElectron, jetsnoel, met, cms1::DiLeptonCandidate::ElEl);
+								cms1::DiLeptonCandidate* dl = cms1::DiLeptonCandidate::returnDiLeptonCandidate(*tightElectron, *looseElectron, jetsnoel, met, metPhi, cms1::DiLeptonCandidate::ElEl);
 								output_list.push_back(dl);
 
 							}
@@ -111,7 +112,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 								if ( Cuts::testJetForElectrons(**jet, el ) ) jetsnoel.push_back(*jet);
 																	
 // do it: jetsnoel, tightElectron, looseElectron, met
-							cms1::DiLeptonCandidate* dl = cms1::DiLeptonCandidate::returnDiLeptonCandidate(*tightElectron, *looseElectron, jetsnoel, met, cms1::DiLeptonCandidate::ElEl);
+							cms1::DiLeptonCandidate* dl = cms1::DiLeptonCandidate::returnDiLeptonCandidate(*tightElectron, *looseElectron, jetsnoel, met, metPhi, cms1::DiLeptonCandidate::ElEl);
 							output_list.push_back(dl);
 
 						}
@@ -138,7 +139,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 					if ( Cuts::testJetForElectrons(**jet, el ) ) jetsnoel.push_back(*jet);
 					
 // do it: jetsnoel, tightElectron, looseMuon, met
-				cms1::DiLeptonCandidate* dl = cms1::DiLeptonCandidate::returnDiLeptonCandidate(*tightElectron, *looseMuon, jetsnoel, met, cms1::DiLeptonCandidate::ElMu);
+				cms1::DiLeptonCandidate* dl = cms1::DiLeptonCandidate::returnDiLeptonCandidate(*tightElectron, *looseMuon, jetsnoel, met, metPhi, cms1::DiLeptonCandidate::ElMu);
 				output_list.push_back(dl);
 
 			}
@@ -189,7 +190,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 
 																	
 // do it: jetsnoel, tightMuon, looseElectron, met
-					cms1::DiLeptonCandidate* dl = cms1::DiLeptonCandidate::returnDiLeptonCandidate(*tightMuon, *looseElectron, jetsnoel, met, cms1::DiLeptonCandidate::MuEl);
+					cms1::DiLeptonCandidate* dl = cms1::DiLeptonCandidate::returnDiLeptonCandidate(*tightMuon, *looseElectron, jetsnoel, met, metPhi, cms1::DiLeptonCandidate::MuEl);
 					output_list.push_back(dl);
 
 				}
@@ -231,7 +232,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 								takenMuMu.push_back(std::make_pair(*tightMuon,*looseMuon));
 
 // do it: jets, tightMuon, looseMuon, met
-								cms1::DiLeptonCandidate* dl = cms1::DiLeptonCandidate::returnDiLeptonCandidate(*tightMuon, *looseMuon, jets, met, cms1::DiLeptonCandidate::MuMu);
+								cms1::DiLeptonCandidate* dl = cms1::DiLeptonCandidate::returnDiLeptonCandidate(*tightMuon, *looseMuon, jets, met, metPhi, cms1::DiLeptonCandidate::MuMu);
 								output_list.push_back(dl);
 
 							}
@@ -239,7 +240,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 							takenMuMu.push_back(std::make_pair(*tightMuon,*looseMuon));
 																	
 // do it: jets, tightMuon, looseMuon, met
-							cms1::DiLeptonCandidate* dl = cms1::DiLeptonCandidate::returnDiLeptonCandidate(*tightMuon, *looseMuon, jets, met, cms1::DiLeptonCandidate::MuMu);
+							cms1::DiLeptonCandidate* dl = cms1::DiLeptonCandidate::returnDiLeptonCandidate(*tightMuon, *looseMuon, jets, met, metPhi, cms1::DiLeptonCandidate::MuMu);
 							output_list.push_back(dl);
 
 						}

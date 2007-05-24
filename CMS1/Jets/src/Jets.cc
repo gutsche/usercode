@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/22 07:20:41 $
-// $Revision: 1.11 $
+// $Date: 2007/05/24 17:40:59 $
+// $Revision: 1.12 $
 //
 
 #include "CMS1/Jets/interface/Jets.h"
@@ -115,6 +115,22 @@ std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
 	     }
 	}
       break;
+    case AllJets:
+	{
+	   if (! data_ ) {
+	      std::cout << "ERROR: jet black box doesn't know where to find EvenData." << std::endl;
+	      return output_list;
+	   }
+	   const std::vector<reco::CaloJet>* collection = data_->getData<std::vector<reco::CaloJet> >("midPointCone5CaloJets");
+	   if ( ! collection ) {
+	      std::cout << "ERROR: jet collection is not found in the event. Return nothing." << std::endl;
+	      return output_list;
+	   }
+	   for ( std::vector<reco::CaloJet>::const_iterator jet = collection->begin();
+		 jet != collection->end(); ++jet ) 
+	     output_list.push_back(&*jet);
+	}
+      break;
     // You get here if you have requested a "jetType" that is not implemented
   default:
     std::cout << "Unkown or not implemented jet type" << std::endl;
@@ -135,19 +151,21 @@ void cms1::Jets::dump(std::ostream& o, std::vector<const reco::Candidate*> ml) {
 
 void cms1::Jets::registerEventUserData()
 {
-   return;
+   /*
    evtJets.registerBlock( *data_, "jets_", "cms1_jets_");
    data_->intUserData.push_back( new UserData<int>("njets", "evt_", "cms1_evt_", false) );
    nJets = data_->intUserData.back();
+    */
 }
 
 void cms1::Jets::fillEventUserData()
 {
-   return;
-   std::vector<const reco::Candidate*> jets = getJets(DefaultJets,Cuts());
+   std::vector<const reco::Candidate*> jets = getJets(AllJets,Cuts());
    data_->refJets = jets;
+   /*
    evtJets.fill( getStreamerArguments(data_, jets) );
    nJets->addData( jets.size() );
+    */
 }
 
 
