@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: sani $
-// $Date: 2007/05/15 13:09:40 $
-// $Revision: 1.10 $
+// $Author: dmytro $
+// $Date: 2007/05/22 07:18:53 $
+// $Revision: 1.11 $
 //
 
 //#include "DataFormats/EgammaCandidates/interface/Electron.h"
@@ -22,6 +22,7 @@
 #include "CMS1/Base/interface/Cuts.h"
 #include "CMS1/Base/interface/BlackBox.h"
 #include "CMS1/Base/interface/UserDataBlocks.h"
+#include "CMS1/Base/interface/TrackStreamer.h"
 
 namespace cms1 {
   struct ElectronDef {
@@ -58,7 +59,8 @@ namespace cms1 {
     void registerEventUserData();
     void fillEventUserData();
   private:
-      // TrackUserBlock tracks;
+      VectorUserBlock<TrackStreamer> evtElectrons;
+      UserDataInt*        nElectrons;
   };
 }
 

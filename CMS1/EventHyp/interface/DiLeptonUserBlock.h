@@ -18,27 +18,27 @@ namespace cms1 {
 	DiLeptonUserBlock();
 
 	void registerBlock(EventData& event, const std::string& name_prefix, const std::string& alias_prefix="");
-	void fill(EventData& event, 
-		  const DiLeptonCandidate& candidate, 
-		  std::vector<const reco::Candidate*>& allJets);
+	void fill(EventData& event, const DiLeptonCandidate& candidate);
+
 	bool usable();
       private:
 	ScalarUserBlock<TrackStreamer>   lTight;
 	ScalarUserBlock<TrackStreamer>   lLoose;
-	ScalarUserBlock<TrackStreamer>   elec1;
-	ScalarUserBlock<TrackStreamer>   elec2;
-	ScalarUserBlock<TrackStreamer>   muon1;
-	ScalarUserBlock<TrackStreamer>   muon2;
 	
 	VectorUserBlock<JetStreamer>     jets;
 	VectorUserBlock<JetStreamer>     otherJets;
 	
+	UserDataP4*         p4Hyp;
 	UserDataFloat*      met;
-	UserDataFloat*      mass;
 	
 	UserDataInt*        type;
 	UserDataInt*        nJets;
 	UserDataInt*        nOtherJets;
+	UserDataInt*        ltIndex;
+	UserDataInt*        llIndex;
+	UserDataInt*        ltId;
+	UserDataInt*        llId;
+	
      };
 }
 

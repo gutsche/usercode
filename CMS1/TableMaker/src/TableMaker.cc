@@ -9,8 +9,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/22 07:24:56 $
-// $Revision: 1.24 $
+// $Date: 2007/05/23 02:23:25 $
+// $Revision: 1.25 $
 //
 
 #include <vector>
@@ -209,12 +209,10 @@ void
   if (events_ < MaxEventDebug_) {
     eventHyp_.dump(std::cout, dlCandidates);
   }
-   // all jets for ntuples
-   std::vector<const reco::Candidate*> allJets = theJets.getJets(Jets::DefaultJets,jetCut_);
 
   for ( std::vector<const cms1::DiLeptonCandidate*>::iterator dli = dlCandidates.begin(), dle = dlCandidates.end(); dli != dle; ++dli ) {
      const cms1::DiLeptonCandidate* dl = *dli;
-     if (makeNtuples) diLeptonUserData.fill(theData,*dl, allJets); // Fill ntuples
+     if (makeNtuples) diLeptonUserData.fill(theData,*dl); // Fill ntuples
     FillHistograms(dl->jets, dl->lTight, dl->lLoose, dl->MET);
     int njet = dl->nJets(); if (njet > 4)  njet = 4;
     switch (dl->candidateType) {

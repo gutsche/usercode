@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: sani $
-// $Date: 2007/05/15 13:09:51 $
-// $Revision: 1.13 $
+// $Author: dmytro $
+// $Date: 2007/05/22 07:18:54 $
+// $Revision: 1.14 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -19,6 +19,7 @@
 
 #include "DataFormats/EgammaReco/interface/BasicClusterShapeAssociation.h"
 #include "DataFormats/EcalDetId/interface/EcalSubdetector.h"
+#include "CMS1/CommonTools/interface/UserDataTools.h"
 
 std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const ElectronType electronType,
                                                                   const Cuts& userCuts, Cuts::IsolationType isolated, ElectronDef def) {
@@ -276,21 +277,17 @@ bool cms1::Electrons::classify(ElectronDef def, const reco::PixelMatchGsfElectro
 }
 void cms1::Electrons::registerEventUserData()
 {
-   // tracks.registerBlock( *data_, "electrons",     "cms1_electrons");
+   evtElectrons.registerBlock( *data_, "els_", "cms1_els_");
+   data_->intUserData.push_back( new UserData<int>("nels", "evt_", "cms1_evt_", false) );
+   nElectrons = data_->intUserData.back();
 }
 
 void cms1::Electrons::fillEventUserData()
 {
- /*  const std::vector<reco::PixelMatchGsfElectron>* collection = 
-     data_->getData<std::vector<reco::PixelMatchGsfElectron> >("pixelMatchGsfElectrons");
-   if ( ! collection ) {
-      std::cout << "ERROR: pixelMatchGsfElectrons collection is not found in the event. Return nothing." << std::endl;
-      return;
-   }
-   for ( std::vector<reco::PixelMatchGsfElectron>::const_iterator element = collection->begin();
-	 element != collection->end(); ++element ) 
-     tracks.fill(*(element->gsfTrack().get()));
-  */
+   std::vector<const reco::Candidate*> els = getElectrons(AllElectrons,Cuts());
+   data_->refElectrons = els;
+   evtElectrons.fill( getStreamerArguments(data_, els) );
+   nElectrons->addData( els.size() );
 }
 
 

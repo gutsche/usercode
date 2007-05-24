@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/03/22 15:31:55 $
-// $Revision: 1.5 $
+// $Author: dmytro $
+// $Date: 2007/04/17 04:57:24 $
+// $Revision: 1.6 $
 //
 #include <iostream>
 
@@ -21,6 +21,7 @@
 
 #include "CMS1/Base/interface/Cuts.h"
 #include "CMS1/Base/interface/BlackBox.h"
+#include "CMS1/Base/interface/UserDataBlocks.h"
 
 namespace cms1 {
    class MET: public BlackBox  {
@@ -36,6 +37,14 @@ namespace cms1 {
       static void correctMETmuons(const std::vector<const reco::Candidate*>* m,
 				  double& et, double& phi);
       void dump(std::ostream&, const reco::Candidate*);
+      void registerEventUserData();
+      void fillEventUserData();
+    private:
+      UserDataFloat*        evtMet;
+      UserDataFloat*        evtMetPhi;
+      UserDataFloat*        evtSumEt;
+      UserDataFloat*        evtMetSig;
+
   };
 }
 

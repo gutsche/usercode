@@ -8,12 +8,13 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/11 04:18:08 $
-// $Revision: 1.11 $
+// $Date: 2007/05/22 07:19:52 $
+// $Revision: 1.12 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
 #include <iostream>
+#include "CMS1/CommonTools/interface/UserDataTools.h"
 
 std::vector<const reco::Candidate*> cms1::Muons::getMuons(const MuonType muonType,
 						     const Cuts& userCuts,
@@ -103,20 +104,17 @@ void cms1::Muons::dump(std::ostream& o, std::vector<const reco::Candidate*> ml) 
 
 void cms1::Muons::registerEventUserData()
 {
-   // tracks.registerBlock( *data_, "ev_muons",     "ev_cms1_muons");
+   evtMuons.registerBlock( *data_, "mus_", "cms1_mus_");
+   data_->intUserData.push_back( new UserData<int>("nmus", "evt_", "cms1_evt_", false) );
+   nMuons = data_->intUserData.back();
 }
 
 void cms1::Muons::fillEventUserData()
 {
-/*   const std::vector<reco::Muon>* muons = data_->getData<std::vector<reco::Muon> >("globalMuons");
-   if ( ! muons ) {
-      std::cout << "ERROR: global muon collection is not found in the event. Return nothing." << std::endl;
-      return;
-   }
-   for ( std::vector<reco::Muon>::const_iterator muon = muons->begin();
-	 muon != muons->end(); ++muon ) 
-     tracks.fill(*(muon->track().get()));
- */
+   std::vector<const reco::Candidate*> mus = getMuons(AllGlobalMuons,Cuts());
+   data_->refMuons = mus;
+   evtMuons.fill( getStreamerArguments(data_, mus) );
+   nMuons->addData( mus.size() );
 }
 
 

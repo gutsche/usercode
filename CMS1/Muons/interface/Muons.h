@@ -11,8 +11,8 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/11 04:18:08 $
-// $Revision: 1.7 $
+// $Date: 2007/05/22 07:19:52 $
+// $Revision: 1.8 $
 //
 #include <iostream>
 
@@ -23,6 +23,7 @@
 #include "CMS1/Base/interface/Cuts.h"
 #include "CMS1/Base/interface/BlackBox.h"
 #include "CMS1/Base/interface/UserDataBlocks.h"
+#include "CMS1/Base/interface/TrackStreamer.h"
 
 namespace cms1 {
    class Muons: public BlackBox {
@@ -46,7 +47,8 @@ namespace cms1 {
       void registerEventUserData();
       void fillEventUserData();
     private:
-      // TrackUserBlock tracks;
+      VectorUserBlock<TrackStreamer> evtMuons;
+      UserDataInt*        nMuons;
   };
 }
 

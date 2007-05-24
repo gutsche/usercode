@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/04/12 20:39:22 $
-// $Revision: 1.7 $
+// $Date: 2007/04/17 04:57:25 $
+// $Revision: 1.8 $
 //
 
 #include <iostream>
@@ -77,6 +77,26 @@ void cms1::MET::dump(std::ostream& o, const reco::Candidate* mo) {
 	o << std::endl; 
 }
 
+void cms1::MET::registerEventUserData()
+{
+   data_->floatUserData.push_back( new UserData<float>("met", "evt_", "cms1_evt_", false) );
+   evtMet = data_->floatUserData.back();
+   data_->floatUserData.push_back( new UserData<float>("metPhi", "evt_", "cms1_evt_", false) );
+   evtMetPhi = data_->floatUserData.back();
+   data_->floatUserData.push_back( new UserData<float>("sumEt", "evt_", "cms1_evt_", false) );
+   evtSumEt = data_->floatUserData.back();
+   data_->floatUserData.push_back( new UserData<float>("metSig", "evt_", "cms1_evt_", false) );
+   evtMetSig = data_->floatUserData.back();
+}
+
+void cms1::MET::fillEventUserData()
+{
+   const reco::CaloMET* met = getMET(DefaultMET);
+   evtMet->addData( met->et() );
+   evtMetPhi->addData( met->phi() );
+   evtSumEt->addData( met->sumEt() );
+   evtMetSig->addData( met->mEtSig() );
+}
 
 
 

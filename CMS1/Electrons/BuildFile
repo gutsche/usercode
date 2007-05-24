@@ -1,5 +1,6 @@
 <use name=DataFormats/EgammaCandidates>
 <use name=CMS1/Base>
+<use name=CMS1/CommonTools>
 <export>
    <lib name=CMS1Electrons>
    <use name=DataFormats/EgammaCandidates>

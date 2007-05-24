@@ -8,13 +8,14 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: sani $
-// $Date: 2007/05/16 14:29:44 $
-// $Revision: 1.8 $
+// $Author: dmytro $
+// $Date: 2007/05/22 07:12:39 $
+// $Revision: 1.9 $
 //
 
 #include "CLHEP/HepMC/GenParticle.h"
 #include "DataFormats/JetReco/interface/GenJet.h"
+#include "DataFormats/TrackReco/interface/Track.h"
 // #include "DataFormats/Common/interface/Handle.h"
 #include "FWCore/Framework/interface/Handle.h"
 #include "FWCore/Framework/interface/Event.h"
@@ -28,6 +29,12 @@ namespace cms1 {
 	
 	// event data
 	const edm::Event* iEvent;
+	
+	// reference collections
+	std::vector<const reco::Track*>     refTracks;
+	std::vector<const reco::Candidate*> refMuons;
+	std::vector<const reco::Candidate*> refElectrons;
+	std::vector<const reco::Candidate*> refJets;
 	
 	// ------------ DERIVED STUFF ----------------
 	// generator info 

@@ -8,8 +8,8 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/22 07:24:56 $
-// $Revision: 1.6 $
+// $Date: 2007/05/23 02:23:26 $
+// $Revision: 1.7 $
 //
 
 #include "CMS1/Tracks/interface/Tracks.h"
@@ -54,17 +54,18 @@ std::vector<const reco::Track*> cms1::Tracks::getTracks(const TrackType trackTyp
 void cms1::Tracks::registerEventUserData()
 {
    tracks.registerBlock( *data_, "trks_", "cms1_trks_");
-   data_->intUserData.push_back( new UserData<int>("trks_size", "", "cms1_", false) );
+   data_->intUserData.push_back( new UserData<int>("ntrks", "evt_", "cms1_evt_", false) );
    nTracks = data_->intUserData.back();
-   data_->intUserData.push_back( new UserData<int>("run", "", "cms1_", false) );
+   data_->intUserData.push_back( new UserData<int>("run", "evt_", "cms1_evt_", false) );
    runNumber = data_->intUserData.back();
-   data_->intUserData.push_back( new UserData<int>("event", "", "cms1_", false) );
+   data_->intUserData.push_back( new UserData<int>("event", "evt_", "cms1_evt_", false) );
    eventNumber = data_->intUserData.back();
 }
 
 void cms1::Tracks::fillEventUserData()
 {
    std::vector<const reco::Track*> trks = getTracks(AllTracks,Cuts());
+   data_->refTracks = trks;
    tracks.fill( getStreamerArguments(data_, trks) );
    runNumber->addData( data_->iEvent->id().run() );
    eventNumber->addData( data_->iEvent->id().event() );

@@ -1,5 +1,6 @@
 <use name=DataFormats/JetReco>
 <use name=CMS1/Base>
+<use name=CMS1/CommonTools>
 <export>
    <lib name=CMS1Jets>
    <use name=DataFormats/JetReco>

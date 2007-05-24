@@ -6,9 +6,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: sani $
-// $Date: 2007/05/14 15:31:16 $
-// $Revision: 1.6 $
+// $Author: dmytro $
+// $Date: 2007/05/22 07:14:58 $
+// $Revision: 1.7 $
 //
 #include "CMS1/BaseAnalyzer/interface/BaseAnalyzer.h"
 #include "FWCore/Framework/interface/Handle.h"
@@ -32,14 +32,15 @@ void cms1::BaseAnalyzer::configure(const edm::ParameterSet& iConfig)
    
    theTracks.setEventData    ( &theData );
    
-   // ntuples & userdata registration
-   theMuons.registerEventUserData();
-   theTracks.registerEventUserData();
-   theElectrons.registerEventUserData();
-   theJets.registerEventUserData();
-   
-   // ntuple stuff
    if ( makeNtuples ) {
+      // ntuples & userdata registration
+      theMuons.registerEventUserData();
+      theTracks.registerEventUserData();
+      theElectrons.registerEventUserData();
+      theJets.registerEventUserData();
+      theMET.registerEventUserData();
+   
+      // ntuple stuff
       theRootFile = new TFile(ntupleFileName.c_str(),"RECREATE");
       theTree = new TTree("event","Event data");
    }
@@ -87,6 +88,7 @@ void cms1::BaseAnalyzer::fillUserData( EventData& event )
       theTracks.fillEventUserData();
       theElectrons.fillEventUserData();
       theJets.fillEventUserData();
+      theMET.fillEventUserData();
    }
 }
 

@@ -11,8 +11,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/11 04:15:34 $
-// $Revision: 1.7 $
+// $Date: 2007/05/22 07:20:41 $
+// $Revision: 1.8 $
 //
 
 #include "DataFormats/JetReco/interface/CaloJet.h"
@@ -20,6 +20,7 @@
 #include "CMS1/Base/interface/Cuts.h"
 #include "CMS1/Base/interface/BlackBox.h"
 #include "CMS1/Base/interface/UserDataBlocks.h"
+#include "CMS1/Base/interface/JetStreamer.h"
 
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include "Math/VectorUtil.h"
@@ -36,7 +37,9 @@ namespace cms1 {
       void registerEventUserData();
       void fillEventUserData();
     private:
-      // JetUserBlock jetBlock;
+      VectorUserBlock<JetStreamer> evtJets;
+      UserDataInt*                 nJets;
+
   };
 }
 

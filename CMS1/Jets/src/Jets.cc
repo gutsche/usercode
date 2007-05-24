@@ -8,14 +8,15 @@
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/11 04:15:35 $
-// $Revision: 1.10 $
+// $Date: 2007/05/22 07:20:41 $
+// $Revision: 1.11 $
 //
 
 #include "CMS1/Jets/interface/Jets.h"
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
 #include "DataFormats/EgammaReco/interface/SuperClusterFwd.h"
 #include "DataFormats/EgammaReco/interface/SuperCluster.h"
+#include "CMS1/CommonTools/interface/UserDataTools.h"
 
 std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
 						       const Cuts& userCuts )
@@ -134,20 +135,19 @@ void cms1::Jets::dump(std::ostream& o, std::vector<const reco::Candidate*> ml) {
 
 void cms1::Jets::registerEventUserData()
 {
-   // jetBlock.registerBlock( *data_, "ev_jet",     "cms1_event_jet");
+   return;
+   evtJets.registerBlock( *data_, "jets_", "cms1_jets_");
+   data_->intUserData.push_back( new UserData<int>("njets", "evt_", "cms1_evt_", false) );
+   nJets = data_->intUserData.back();
 }
 
 void cms1::Jets::fillEventUserData()
 {
-/*   const std::vector<reco::CaloJet>* jets = data_->getData<std::vector<reco::CaloJet> >("midPointCone5CaloJets");
-   if ( ! jets ) {
-      std::cout << "ERROR: midPointCone5CaloJets collection is not found in the event. Return nothing." << std::endl;
-      return;
-   }
-   for ( std::vector<reco::CaloJet>::const_iterator jet = jets->begin();
-	 jet != jets->end(); ++jet ) 
-     jetBlock.fill(*jet);
- */
+   return;
+   std::vector<const reco::Candidate*> jets = getJets(DefaultJets,Cuts());
+   data_->refJets = jets;
+   evtJets.fill( getStreamerArguments(data_, jets) );
+   nJets->addData( jets.size() );
 }
 
 
