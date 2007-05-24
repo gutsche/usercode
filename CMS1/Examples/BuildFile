@@ -1,9 +1,0 @@
-<use name=FWCore/Framework>
-<use name=Foundation/PluginManager>
-<use name=FWCore/ParameterSet>
-<use name=FWCore/ServiceRegistry>>
-<use name=CMS1/BaseAnalyzer>
-<export>
-   <lib name=CMS1Examples>
-</export>
-# <Flags CXXFLAGS=-g>
