@@ -12,23 +12,26 @@ void compareTwoHistograms(std::string fileName1) {
   // define histograms to compare
   std::vector<std::string> histos1;
   std::vector<std::string> histos2;
- histos1.push_back("rsTrackingEfficiency_Hits/efficiencyEta");
- histos2.push_back("ckfTrackingEfficiency_Hits/efficiencyEta");
+  histos1.push_back("rsTrackingEfficiency_Hits/efficiencyEta");
+  histos2.push_back("ckfTrackingEfficiency_Hits/efficiencyEta");
+
+  histos1.push_back("rsTrackingEfficiency_Hits/efficiencyPt");
+  histos2.push_back("ckfTrackingEfficiency_Hits/efficiencyPt");
 
   histos1.push_back("rsSeeds/nSeed");
   histos2.push_back("ckfSeeds/nSeed");
 
- histos1.push_back("rsTracks/nTracks");
- histos2.push_back("ckfTracks/nTracks");
+  histos1.push_back("rsTracks/nTracks");
+  histos2.push_back("ckfTracks/nTracks");
 
- histos1.push_back("rsTracks/eta");
- histos2.push_back("ckfTracks/eta");
+  histos1.push_back("rsTracks/eta");
+  histos2.push_back("ckfTracks/eta");
 
- histos1.push_back("rsTracks/pt");
- histos2.push_back("ckfTracks/pt");
+  histos1.push_back("rsTracks/pt");
+  histos2.push_back("ckfTracks/pt");
 
- histos1.push_back("rsTracks/nhit");
- histos2.push_back("ckfTracks/nhit");
+  histos1.push_back("rsTracks/nhit");
+  histos2.push_back("ckfTracks/nhit");
 
   for ( unsigned int i = 0;
 	i < histos1.size();
