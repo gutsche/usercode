@@ -8,8 +8,8 @@
 // Created:         Thu Feb 15 21:09:04 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/04/08 16:47:50 $
-// $Revision: 1.4 $
+// $Date: 2007/05/23 17:04:10 $
+// $Revision: 1.5 $
 //
 
 #include <string>
@@ -36,10 +36,14 @@
 #include "Geometry/Records/interface/TrackerDigiGeometryRecord.h"
 #include "DataFormats/GeometryVector/interface/GlobalPoint.h"
 
+#include "DataFormats/TrackerRecHit2D/interface/SiStripRecHit2D.h"
+
 #include "RecoTracker/RingRecord/interface/RingRecord.h"
 #include "RecoTracker/RoadMapRecord/interface/RoadMapRecord.h"
 
 #include "DataFormats/DetId/interface/DetId.h"
+
+#include "RecoTracker/RoadSearchSeedFinder/interface/RoadSearchCircleSeed.h"
 
 GutSoftHepMCAnalyzer::GutSoftHepMCAnalyzer(const edm::ParameterSet& iConfig)
 {
@@ -189,12 +193,18 @@ GutSoftHepMCAnalyzer::dumpTrackingParticles(const TrackingParticleCollection *tr
 	     << "TrackingParticle PDG ID: " << trackingParticle->pdgId() << std::endl
 	     << "pt: " << std::sqrt(trackingParticle->momentum().perp2()) << " eta: " << trackingParticle->momentum().eta() << " number of hits: " << trackingParticle->trackPSimHit().size() << std::endl;
       TrackingParticle::GenParticleRefVector genParticles = trackingParticle->genParticle();
+      int barCode = 0;
       for ( TrackingParticle::GenParticleRefVector::const_iterator hepMCParticle = genParticles.begin(),
 	      hepMCParticleEnd = genParticles.end();
 	    hepMCParticle != hepMCParticleEnd;
 	    ++hepMCParticle ) {
 	result << "barcode: " << (*hepMCParticle)->barcode() << std::endl;
+	if ( barCode == 0 ) {
+	  barCode = (*hepMCParticle)->barcode();
+	}
       }
+
+//       std::vector<GlobalPoint> globalPositions;
 
       for ( std::vector<PSimHit>::const_iterator simHit = trackingParticle->pSimHit_begin(),
 	      simHitEnd = trackingParticle->pSimHit_end();
@@ -208,6 +218,7 @@ GutSoftHepMCAnalyzer::dumpTrackingParticles(const TrackingParticleCollection *tr
 	     outerSeedRingIterator != outerSeedRings_.end() ) {
 
 	  GlobalPoint globalPosition = tracker_->idToDet(DetId(simHit->detUnitId()))->surface().toGlobal(simHit->localPosition());
+// 	  globalPositions.push_back(globalPosition);
 
 	  if ( ring != 0 ) {
 	    result << "Hit DetId: " << simHit->detUnitId() << " ring: " << ring->getindex() << " " << globalPosition.perp() << " " << globalPosition.phi() 
@@ -218,8 +229,18 @@ GutSoftHepMCAnalyzer::dumpTrackingParticles(const TrackingParticleCollection *tr
 	  }
 	}
       } // loop over sim hits
-    }
 
+//       if ( barCode == 341 ) {
+// 	const SiStripRecHit2D hit;
+// 	RoadSearchCircleSeed circle(&hit,
+// 				    &hit,
+// 				    &hit,
+// 				    globalPositions[0],
+// 				    globalPositions[1],
+// 				    globalPositions[globalPositions.size()-1]);
+// 	edm::LogInfo("OLI") << "OLI: " << circle.print();
+//       }
+    }
   } // loop over tracking particles
   
   return result.str();

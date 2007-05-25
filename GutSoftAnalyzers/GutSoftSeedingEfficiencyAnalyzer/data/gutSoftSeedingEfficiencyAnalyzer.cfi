@@ -2,6 +2,7 @@ module gutSoftSeedingEfficiencyAnalyzer = GutSoftSeedingEfficiencyAnalyzer
 {
   untracked InputTag TrajectorySeedInputTag = roadSearchSeeds
   untracked InputTag TrackingTruthInputTag  = trackingParticles
+  untracked InputTag SimTracksInputTag      = g4SimHits
   untracked InputTag matchedStripRecHits    = siStripMatchedRecHits:matchedRecHit
   untracked InputTag rphiStripRecHits       = siStripMatchedRecHits:rphiRecHit
   untracked InputTag stereoStripRecHits     = siStripMatchedRecHits:stereoRecHit
@@ -77,5 +78,6 @@ module gutSoftSeedingEfficiencyAnalyzer = GutSoftSeedingEfficiencyAnalyzer
 
   # label for roads service
   untracked string RoadsLabel = ""
+  untracked string RingsLabel = ""
 
 }

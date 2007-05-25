@@ -13,6 +13,7 @@
 <use name=DataFormats/DetId>
 <use name=RecoTracker/RingRecord>
 <use name=RecoTracker/RoadMapRecord>
+<use name=RecoTracker/RoadSearchSeedFinder>
 <use name=TrackingTools/RoadSearchHitAccess>
 <export>
    <lib name=GutSoftAnalyzersGutSoftHepMCAnalyzer>
@@ -30,5 +31,6 @@
    <use name=DataFormats/DetId>
    <use name=RecoTracker/RingRecord>
    <use name=RecoTracker/RoadMapRecord>
+   <use name=RecoTracker/RoadSearchSeedFinder>
    <use name=TrackingTools/RoadSearchHitAccess>
 </export>

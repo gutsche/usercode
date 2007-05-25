@@ -8,8 +8,8 @@
 // Created:         Thu Feb  8 19:03:24 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/03/27 23:40:43 $
-// $Revision: 1.3 $
+// $Date: 2007/03/28 20:16:15 $
+// $Revision: 1.4 $
 //
 
 #include <string>
@@ -46,6 +46,8 @@
 #include "DataFormats/SiPixelDetId/interface/PXBDetId.h"
 #include "DataFormats/SiPixelDetId/interface/PXFDetId.h"
 
+#include "RecoTracker/RoadSearchSeedFinder/interface/RoadSearchCircleSeed.h"
+
 GutSoftSeedingEfficiencyAnalyzer::GutSoftSeedingEfficiencyAnalyzer(const edm::ParameterSet& conf) : 
 conf_(conf),
 trackingParticleSelector_(conf.getParameter<edm::ParameterSet>("TrackingParticleCuts"))
@@ -53,50 +55,16 @@ trackingParticleSelector_(conf.getParameter<edm::ParameterSet>("TrackingParticle
   
   trajectorySeedInputTag_      = conf_.getUntrackedParameter<edm::InputTag>("TrajectorySeedInputTag");
   trackingTruthInputTag_       = conf_.getUntrackedParameter<edm::InputTag>("TrackingTruthInputTag");
-  matchedStripRecHitsInputTag_ = conf_.getUntrackedParameter<edm::InputTag>("matchedStripRecHits");
-  rphiStripRecHitsInputTag_    = conf_.getUntrackedParameter<edm::InputTag>("rphiStripRecHits");
-  stereoStripRecHitsInputTag_  = conf_.getUntrackedParameter<edm::InputTag>("stereoStripRecHits");
-  pixelRecHitsInputTag_        = conf_.getUntrackedParameter<edm::InputTag>("pixelRecHits");
+  simTracksInputTag_           = conf_.getUntrackedParameter<edm::InputTag>("SimTracksInputTag");
   
-  baseDirectoryName_      = conf_.getUntrackedParameter<std::string>("BaseDirectoryName");
+  baseDirectoryName_           = conf_.getUntrackedParameter<std::string>("BaseDirectoryName");
   
-  trackingParticleMinimumPt_            = conf_.getUntrackedParameter<double>("TrackinParticleMinimumPt");
   trackingParticleHitsInInnerSeedRings_ = conf_.getUntrackedParameter<unsigned int>("TrackingParticleHitsInInnerSeedRings");
   trackingParticleHitsInOuterSeedRings_ = conf_.getUntrackedParameter<unsigned int>("TrackingParticleHitsInOuterSeedRings");
   trackingParticleHitsInSeedRings_      = conf_.getUntrackedParameter<unsigned int>("TrackingParticleHitsInSeedRings");
   
-  // hit access
-  std::string tmp             = conf.getUntrackedParameter<std::string>("InnerSeedRecHitAccessMode");
-  if ( tmp == "STANDARD" ) {
-    innerSeedHitAccessMode_ = DetHitAccess::standard;
-  } else if ( tmp == "RPHI" ) {
-    innerSeedHitAccessMode_ = DetHitAccess::rphi;
-  } else {
-    innerSeedHitAccessMode_ = DetHitAccess::standard;
-  }
-  innerSeedHitAccessUseRPhi_  = conf.getUntrackedParameter<bool>("InnerSeedRecHitAccessUseRPhi");
-  innerSeedHitAccessUseStereo_  = conf.getUntrackedParameter<bool>("InnerSeedRecHitAccessUseStereo");
-  
-  tmp                         = conf.getUntrackedParameter<std::string>("OuterSeedRecHitAccessMode");
-  if ( tmp == "STANDARD" ) {
-    outerSeedHitAccessMode_ = DetHitAccess::standard;
-  } else if ( tmp == "RPHI" ) {
-    outerSeedHitAccessMode_ = DetHitAccess::rphi;
-  } else {
-    outerSeedHitAccessMode_ = DetHitAccess::standard;
-  }
-  outerSeedHitAccessUseRPhi_  = conf.getUntrackedParameter<bool>("OuterSeedRecHitAccessUseRPhi");
-  outerSeedHitAccessUseStereo_  = conf.getUntrackedParameter<bool>("OuterSeedRecHitAccessUseStereo");
-  
-  // configure DetHitAccess
-  innerSeedHitVector_.setMode(innerSeedHitAccessMode_);
-  innerSeedHitVector_.use_rphiRecHits(innerSeedHitAccessUseRPhi_);
-  innerSeedHitVector_.use_stereoRecHits(innerSeedHitAccessUseStereo_);
-  outerSeedHitVector_.setMode(outerSeedHitAccessMode_);
-  outerSeedHitVector_.use_rphiRecHits(outerSeedHitAccessUseRPhi_);
-  outerSeedHitVector_.use_stereoRecHits(outerSeedHitAccessUseStereo_);
-  
   roadsLabel_ = conf_.getUntrackedParameter<std::string>("RoadsLabel");
+  ringsLabel_ = conf_.getUntrackedParameter<std::string>("RingsLabel");
   
   // GutSoftHistogramFactory
   histograms_ = edm::Service<GutSoftHistogramFileService>()->getFactory();
@@ -141,167 +109,201 @@ GutSoftSeedingEfficiencyAnalyzer::analyze(const edm::Event& iEvent, const edm::E
     }
   }
   
-  // rechit collections
-  // get Inputs
-  edm::Handle<SiStripMatchedRecHit2DCollection> matchedRecHitHandle;
-  iEvent.getByLabel(matchedStripRecHitsInputTag_ ,matchedRecHitHandle);
-  const SiStripMatchedRecHit2DCollection *matchedRecHitCollection = matchedRecHitHandle.product();
-  edm::Handle<SiStripRecHit2DCollection> rphiRecHitHandle;
-  iEvent.getByLabel(rphiStripRecHitsInputTag_ ,rphiRecHitHandle);
-  const SiStripRecHit2DCollection *rphiRecHitCollection = rphiRecHitHandle.product();
-  edm::Handle<SiStripRecHit2DCollection> stereoRecHitHandle;
-  iEvent.getByLabel(stereoStripRecHitsInputTag_ ,stereoRecHitHandle);
-  const SiStripRecHit2DCollection *stereoRecHitCollection = stereoRecHitHandle.product();
-  
-  // special treatment for getting pixel collection
-  // if collection exists in file, use collection from file
-  // if collection does not exist in file, create empty collection
-  const SiPixelRecHitCollection *pixelRecHitCollection = 0;
-  try {
-    edm::Handle<SiPixelRecHitCollection> pixelRecHitHandle;
-    iEvent.getByLabel(pixelRecHitsInputTag_, pixelRecHitHandle);
-    pixelRecHitCollection = pixelRecHitHandle.product();
-  }
-  catch (edm::Exception const& x) {
-    if ( x.categoryCode() == edm::errors::ProductNotFound ) {
-      if ( x.history().size() == 1 ) {
-        static const SiPixelRecHitCollection s_empty;
-        pixelRecHitCollection = &s_empty;
-        edm::LogWarning("GutSoftSeedingEfficiencyAnalyzer") << "Collection SiPixelRecHitCollection with InputTag " << pixelRecHitsInputTag_ << " cannot be found, using empty collection of same type.";
-      }
-    }
-  }
-  
-  // initialize general hit access for road search
-  innerSeedHitVector_.setCollections(rphiRecHitCollection,
-                                     stereoRecHitCollection,
-                                     matchedRecHitCollection,
-                                     pixelRecHitCollection);
-  outerSeedHitVector_.setCollections(rphiRecHitCollection,
-                                     stereoRecHitCollection,
-                                     matchedRecHitCollection,
-                                     pixelRecHitCollection);
-  
+  // get simTracks
+  edm::Handle<edm::SimTrackContainer> simTrackHandle;
+  iEvent.getByLabel(simTracksInputTag_, simTrackHandle);
+  const edm::SimTrackContainer *simTracks = simTrackHandle.product();
+
   // get trackinghit associator
   TrackerHitAssociator associator(iEvent, conf_);
   
-  // create map of all true hits to all rechits in all seed rings
-  SimHitMap simHitMap = CreateMapTrueHitsToRecHits(associator);
-  
-  // fill histograms
+  // barCode vectors
+  std::vector<int> trueBarCodes;
+  std::vector<int> trueRSBarCodes;
+
+  // clear barCode map
+  trueParticles_.clear();
+
   for ( TrackingParticleCollection::const_iterator trackingParticle = trackingParticleCollection->begin(),
-        trackingParticleEnd = trackingParticleCollection->end();
+	  trackingParticleEnd = trackingParticleCollection->end();
         trackingParticle != trackingParticleEnd;
         ++trackingParticle ) {
     
     // apply tracking particle cuts
     if ( trackingParticleSelector_( *trackingParticle ) ) {
       if ( trackingParticle->charge() != 0 ) {
-	// enumerator
-	// check which tracking particles could be seeded by RS seeding
-	//
+
+	// check if trackingParticle is seebable by RS
+	bool seedable = false;
 	unsigned int hitsInInnerRings = hitsInRings(innerSeedRings_,&(*trackingParticle));
 	unsigned int hitsInOuterRings = hitsInRings(outerSeedRings_,&(*trackingParticle));
-	if ( std::sqrt(trackingParticle->momentum().perp2()) >= trackingParticleMinimumPt_ ) {
-	  histograms_->fill("eff_eta_true",trackingParticle->momentum().eta());
-	  unsigned int nTP = 0;
-	  std::vector<unsigned int> layers = ExtractLayers(&(*trackingParticle),nTP);
-	  if ( layers.size() > 0 ) {
-	    for ( std::vector<unsigned int>::iterator layer = layers.begin(),
-		    layerEnd = layers.end();
-		  layer != layerEnd;
-		  ++layer ) {
-	      histograms_->fill("nHitPerLayerVsEta",trackingParticle->momentum().eta(),*layer);
-	    }
-	    histograms_->fill("firstLayerVsEta",trackingParticle->momentum().eta(),layers.front());
-	    histograms_->fill("lastLayerVsEta",trackingParticle->momentum().eta(),layers.back());
-	    histograms_->fill("tip",std::sqrt(trackingParticle->vertex().perp2()));
-	    histograms_->fill("lip",std::fabs(trackingParticle->vertex().z()));
-	    histograms_->fill("nHitPerTrackingParticleVsEta",trackingParticle->momentum().eta(),trackingParticle->trackPSimHit().size());
-          
-	    if ( hitsInInnerRings >= trackingParticleHitsInInnerSeedRings_ ) {
-	      if ( hitsInOuterRings >= trackingParticleHitsInOuterSeedRings_ ) {
-		if ( (hitsInInnerRings+hitsInOuterRings) >= trackingParticleHitsInSeedRings_ ) {
-		  histograms_->fill("eff_eta_rs_true",trackingParticle->momentum().eta());
-		  for ( std::vector<unsigned int>::iterator layer = layers.begin(),
-			  layerEnd = layers.end();
-			layer != layerEnd;
-			++layer ) {
-		    histograms_->fill("nHitPerLayerVsEta_rs",trackingParticle->momentum().eta(),*layer);
-		  }
-		  histograms_->fill("firstLayerVsEta_rs",trackingParticle->momentum().eta(),layers.front());
-		  histograms_->fill("lastLayerVsEta_rs",trackingParticle->momentum().eta(),layers.back());
-		  histograms_->fill("tip_rs",std::sqrt(trackingParticle->vertex().perp2()));
-		  histograms_->fill("lip_rs",std::fabs(trackingParticle->vertex().z()));
-		  histograms_->fill("nHitPerTrackingParticleVsEta_rs",trackingParticle->momentum().eta(),trackingParticle->trackPSimHit().size());
-		  // denominator
-		  // loop over tracking particles
-		  // create list of reco hits corresponding to simhits
-		  // loop over seeds
-		  // check whether all seed hits are in list of reco hits of tracking particle
-		  // fill trueNrec
-                
-		  std::vector<TrackingRecHit*> recHits = AllRecHitsOfTrackingParticle(simHitMap,&(*trackingParticle));
-                
-		  // how many seeds are seeding this tracking particle
-		  unsigned int seeded = 0;
-		  for ( TrajectorySeedCollection::const_iterator seed = seedCollection->begin(),
-			  seedEnd = seedCollection->end();
-			seed != seedEnd;
-			++seed ) {
-		    bool seeds = true;
-		    for ( edm::OwnVector<TrackingRecHit>::const_iterator seedHit = seed->recHits().first,
-			    seedHitEnd = seed->recHits().second;
-			  seedHit != seedHitEnd;
-			  ++seedHit ) {
-		      bool included = false;
-		      for ( std::vector<TrackingRecHit*>::iterator hit = recHits.begin(),
-			      hitEnd = recHits.end();
-			    hit != hitEnd;
-			    ++hit ) {
-			// compare two hits
-			if ( seedHit->geographicalId() == (*hit)->geographicalId() ) {
-			  if ( std::abs(seedHit->localPosition().x()-(*hit)->localPosition().x()) < 1E-9 ) {
-			    if ( std::abs(seedHit->localPosition().y()-(*hit)->localPosition().y()) < 1E-9 ) {
-			      included = true;
-			    }
-			  }
-			}
-		      }
-		      if ( !included ) {
-			seeds = false;
-		      }
-		    }
-		    if (seeds = true ) {
-		      ++seeded;
-		    }
-		  }
-		  if ( seeded > 0 ) {
-		    histograms_->fill("eff_eta_trueNrec",trackingParticle->momentum().eta());
-		    for ( unsigned int i = 0;
-			  i < seeded;
-			  ++i ) {
-		      histograms_->fill("eta_multiplicity",trackingParticle->momentum().eta());
-		    }
-		  }
-		}
-	      }
+	if ( hitsInInnerRings >= trackingParticleHitsInInnerSeedRings_ ) {
+	  if ( hitsInOuterRings >= trackingParticleHitsInOuterSeedRings_ ) {
+	    if ( (hitsInInnerRings+hitsInOuterRings) >= trackingParticleHitsInSeedRings_ ) {
+	      seedable = true;
 	    }
 	  }
-        }
+	}
+
+	// fill barcode vectors
+	TrackingParticle::GenParticleRefVector genParticles = trackingParticle->genParticle();
+	for ( TrackingParticle::GenParticleRefVector::const_iterator hepMCParticle = genParticles.begin(),
+		hepMCParticleEnd = genParticles.end();
+	      hepMCParticle != hepMCParticleEnd;
+	      ++hepMCParticle ) {
+	  int barCode = (*hepMCParticle)->barcode();
+	  if ( barCode != 0 ) {
+	    trueBarCodes.push_back(barCode);
+	    trueParticles_[barCode] = *(*hepMCParticle);
+	    if ( seedable ) {
+	      trueRSBarCodes.push_back(barCode);
+	    }
+	  }
+	}
       }
     }
-    
-    for ( TrajectorySeedCollection::const_iterator seed = seedCollection->begin(),
-          seedEnd = seedCollection->end();
-          seed != seedEnd;
-          ++seed ) {
-      // fill eta of outermost hit
-      const TrackingRecHit *hit = &(*(seed->recHits().second-1));
-      GlobalPoint globalPosition = tracker_->idToDet(hit->geographicalId())->surface().toGlobal(hit->localPosition());
-      histograms_->fill("eff_eta_rec",globalPosition.eta());
+  }
+
+  // sort and unique
+  std::sort(trueBarCodes.begin(),trueBarCodes.end());
+  trueBarCodes.erase(std::unique(trueBarCodes.begin(),trueBarCodes.end()),trueBarCodes.end());
+  std::sort(trueRSBarCodes.begin(),trueRSBarCodes.end());
+  trueRSBarCodes.erase(std::unique(trueRSBarCodes.begin(),trueRSBarCodes.end()),trueRSBarCodes.end());
+
+  // determine barCodes corresponding to a seed (a seed has three hits belonging to the same barCode)
+  std::vector<int> foundBarCodes;
+  for ( TrajectorySeedCollection::const_iterator seed = seedCollection->begin(), 
+	  seedsEnd = seedCollection->end();
+	seed != seedsEnd; 
+	++seed ) {
+
+    std::vector<const TrackingRecHit*> recHits;
+    std::vector<GlobalPoint>           recHitGlobalPoints;
+    std::vector<const Ring*>           recHitRings;
+    std::vector<std::vector<int> >     recHitBarCodes;
+    for ( TrajectorySeed::const_iterator hit = seed->recHits().first , hitEnd = seed->recHits().second;
+	  hit != hitEnd;
+	  ++hit ) {
+      recHits.push_back(&*hit);
+      DetId id = hit->geographicalId();
+      recHitGlobalPoints.push_back(tracker_->idToDet(id)->surface().toGlobal(hit->localPosition()));
+      recHitRings.push_back(rings_->getRing(RoadSearchDetIdHelper::ReturnRPhiId(id)));
+      recHitBarCodes.push_back(GenParticleBarCodeFromRecHit(associator,simTracks,&*hit));
+    }
+
+    bool firstInLoop = true;
+    int savedBarCode = 0;
+    if ( recHits.size() == 3 ) {
+      RoadSearchCircleSeed circle(recHits[0],
+				  recHits[1],
+				  recHits[2],
+				  recHitGlobalPoints[0],
+				  recHitGlobalPoints[1],
+				  recHitGlobalPoints[2]);
+      for (unsigned int i = 0;
+	   i < recHits.size();
+	   ++i ) {
+
+	int barCode = recHitBarCodes[i].front();
+	if ( firstInLoop ) {
+	  savedBarCode = barCode;
+	  firstInLoop = false;
+	} else {
+	  if ( barCode != savedBarCode ) {
+	    savedBarCode = 0;
+	  }
+	}
+      }
+    }
+    if ( savedBarCode != 0 &&
+	 savedBarCode != -1 ) {
+      foundBarCodes.push_back(savedBarCode);
+    }
+  } // end of loop over seeds
+  
+  // sort and unique
+  std::sort(foundBarCodes.begin(),foundBarCodes.end());
+  foundBarCodes.erase(std::unique(foundBarCodes.begin(),foundBarCodes.end()),foundBarCodes.end());
+
+  std::vector<int> missedBarCodes;
+  std::vector<int> trueFoundBarCodes;
+  for ( std::vector<int>::iterator trueBarCode = trueBarCodes.begin(),
+	  trueBarCodeEnd = trueBarCodes.end();
+	trueBarCode != trueBarCodeEnd;
+	++ trueBarCode ) {
+    bool missed = true;
+    for ( std::vector<int>::iterator foundBarCode = foundBarCodes.begin(),
+	    foundBarCodeEnd = foundBarCodes.end();
+	  foundBarCode != foundBarCodeEnd;
+	  ++ foundBarCode ) {
+      if ( *trueBarCode == *foundBarCode ) {
+	trueFoundBarCodes.push_back(*trueBarCode);
+	missed = false;
+	break;
+      }
+    }
+    if ( missed ) {
+      missedBarCodes.push_back(*trueBarCode);
     }
   }
+  if ( missedBarCodes.size() > 0 ) {
+    missingBarCodes_.push_back(missedBarCodes);
+    percentages_.push_back((double)missedBarCodes.size()/(double)trueBarCodes.size());
+    runs_.push_back(iEvent.id().run());
+    events_.push_back(iEvent.id().event());
+  }
+
+  std::vector<int> missedRSBarCodes;
+  for ( std::vector<int>::iterator trueRSBarCode = trueRSBarCodes.begin(),
+	  trueRSBarCodeEnd = trueRSBarCodes.end();
+	trueRSBarCode != trueRSBarCodeEnd;
+	++ trueRSBarCode ) {
+    bool missed = true;
+    for ( std::vector<int>::iterator foundBarCode = foundBarCodes.begin(),
+	    foundBarCodeEnd = foundBarCodes.end();
+	  foundBarCode != foundBarCodeEnd;
+	  ++ foundBarCode ) {
+      if ( *trueRSBarCode == *foundBarCode ) {
+	missed = false;
+	break;
+      }
+    }
+    if ( missed ) {
+      missedRSBarCodes.push_back(*trueRSBarCode);
+    }
+  }
+  if ( missedRSBarCodes.size() > 0 ) {
+    missingRSBarCodes_.push_back(missedRSBarCodes);
+    percentagesRS_.push_back((double)missedRSBarCodes.size()/(double)trueRSBarCodes.size());
+    runsRS_.push_back(iEvent.id().run());
+    eventsRS_.push_back(iEvent.id().event());
+  }
+
+  // fill histograms
+  for ( std::vector<int>::iterator trueBarCode = trueBarCodes.begin(),
+	  trueBarCodeEnd = trueBarCodes.end();
+	trueBarCode != trueBarCodeEnd;
+	++ trueBarCode ) {
+    histograms_->fill("eff_eta_true",trueParticles_[*trueBarCode].momentum().eta());
+    histograms_->fill("eff_pt_true",trueParticles_[*trueBarCode].momentum().perp());
+  }
+
+  for ( std::vector<int>::iterator trueRSBarCode = trueRSBarCodes.begin(),
+	  trueRSBarCodeEnd = trueRSBarCodes.end();
+	trueRSBarCode != trueRSBarCodeEnd;
+	++ trueRSBarCode ) {
+    histograms_->fill("eff_eta_rs_true",trueParticles_[*trueRSBarCode].momentum().eta());
+    histograms_->fill("eff_pt_rs_true",trueParticles_[*trueRSBarCode].momentum().perp());
+  }
+
+  for ( std::vector<int>::iterator trueFoundBarCode = trueFoundBarCodes.begin(),
+	  trueFoundBarCodeEnd = trueFoundBarCodes.end();
+	trueFoundBarCode != trueFoundBarCodeEnd;
+	++ trueFoundBarCode ) {
+    histograms_->fill("eff_eta_trueNrec",trueParticles_[*trueFoundBarCode].momentum().eta());
+    histograms_->fill("eff_pt_trueNrec",trueParticles_[*trueFoundBarCode].momentum().perp());
+  }
+
 }
 
 
@@ -314,6 +316,11 @@ GutSoftSeedingEfficiencyAnalyzer::beginJob(const edm::EventSetup &es)
   es.get<TrackerDigiGeometryRecord>().get(tracker);
   tracker_ = tracker.product();
   
+  // get rings
+  edm::ESHandle<Rings> ringsHandle;
+  es.get<RingRecord>().get(ringsLabel_, ringsHandle);
+  rings_ = ringsHandle.product();
+
   // get roads
   edm::ESHandle<Roads> roads;
   es.get<RoadMapRecord>().get(roadsLabel_, roads);
@@ -340,6 +347,10 @@ GutSoftSeedingEfficiencyAnalyzer::beginJob(const edm::EventSetup &es)
   unsigned int eta_nbins = 60;
   double       eta_low   = -3.;
   double       eta_high  =  3.;
+  
+  unsigned int pt_nbins = 60;
+  double       pt_low   =  0.;
+  double       pt_high  = 30.;
   
   unsigned int nhit_nbins = 31;
   double       nhit_low   = -0.5;
@@ -370,6 +381,17 @@ GutSoftSeedingEfficiencyAnalyzer::beginJob(const edm::EventSetup &es)
   histograms_->bookHistogram("eff_eta_trueNrec","seeded TrackingParticle #eta",
                              directory,eta_nbins,eta_low,eta_high,
                              "#eta","Events");
+
+  histograms_->bookHistogram("eff_pt_true","TrackingParticle p_{T} [GeV]",
+                             directory,pt_nbins,pt_low,pt_high,
+                             "p_{T} [GeV]","Events");
+  histograms_->bookHistogram("eff_pt_rs_true","TrackingParticle p_{T} [GeV] for RS seeding algorithm",
+                             directory,pt_nbins,pt_low,pt_high,
+                             "p_{T} [GeV]","Events");
+  histograms_->bookHistogram("eff_pt_trueNrec","seeded TrackingParticle p_{T} [GeV]",
+                             directory,pt_nbins,pt_low,pt_high,
+                             "p_{T} [GeV]","Events");
+
   histograms_->bookHistogram("eff_eta_rec","TrajectorySeed #eta",
                              directory,eta_nbins,eta_low,eta_high,
                              "#eta","Events");
@@ -422,6 +444,67 @@ GutSoftSeedingEfficiencyAnalyzer::beginJob(const edm::EventSetup &es)
 void 
 GutSoftSeedingEfficiencyAnalyzer::endJob() {
   
+  std::ostringstream output;
+  
+  output << std::endl
+	 << "Missed BarCodes and percentages per run:event:"
+	 << std::endl << std::endl;
+  
+  bool first = false;
+  for ( unsigned int counter = 0;
+	counter < missingBarCodes_.size();
+	++counter ) {
+    first = true;
+    output << runs_[counter] 
+	   << ":"
+	   << events_[counter]
+	   << " : ";
+
+    for ( std::vector<int>::iterator missingBarCode = missingBarCodes_[counter].begin(),
+	    missingBarCodeEnd = missingBarCodes_[counter].end();
+	  missingBarCode != missingBarCodeEnd;
+	  ++missingBarCode) {
+      if ( first ) {
+	output << *missingBarCode;
+	first = false;
+      } else {
+	output << "," << *missingBarCode;
+      }
+    }
+    output << " " << percentages_[counter] 
+	   << std::endl;
+  }
+  
+  output << std::endl
+	 << "Missed RSBarCodes and percentages per run:event:"
+	 << std::endl << std::endl;
+  
+  first = false;
+  for ( unsigned int counter = 0;
+	counter < missingRSBarCodes_.size();
+	++counter ) {
+    first = true;
+    output << runsRS_[counter] 
+	   << ":"
+	   << eventsRS_[counter]
+	   << " : ";
+
+    for ( std::vector<int>::iterator missingRSBarCode = missingRSBarCodes_[counter].begin(),
+	    missingRSBarCodeEnd = missingRSBarCodes_[counter].end();
+	  missingRSBarCode != missingRSBarCodeEnd;
+	  ++missingRSBarCode) {
+      if ( first ) {
+	output << *missingRSBarCode;
+	first = false;
+      } else {
+	output << "," << *missingRSBarCode;
+      }
+    }
+    output << " " << percentagesRS_[counter] 
+	   << std::endl;
+  }
+  
+  edm::LogInfo("GutSOftSeedingEfficiencyAnalyzer") << output.str();
 }
 
 bool 
@@ -486,167 +569,30 @@ GutSoftSeedingEfficiencyAnalyzer::hitsInRings(std::vector<const Ring*> &rings,
   return countedIds.size();
 }
 
-std::vector<TrackingRecHit*>
-GutSoftSeedingEfficiencyAnalyzer::AllRecHitsOfTrackingParticle(SimHitMap &simHitMap,
-                                                               const TrackingParticle *trackingParticle)
-{
-  // 
-  // return all TrackingRecHit which are associated to TrackingParticle
+std::vector<int>
+GutSoftSeedingEfficiencyAnalyzer::GenParticleBarCodeFromRecHit(TrackerHitAssociator &associator,
+							       const edm::SimTrackContainer *simTracks,
+							       const TrackingRecHit* hit) {
   //
-  
-  // return value
-  std::vector<TrackingRecHit*> result;
-  
-  for ( std::vector<PSimHit>::const_iterator simHit = trackingParticle->pSimHit_begin(),
-        simHitEnd = trackingParticle->pSimHit_end();
-        simHit != simHitEnd;
-        ++simHit ) {
-    if ( simHitMap.count(*simHit) > 0 ) {
-      std::vector<TrackingRecHit*> temp = simHitMap[*simHit];
-      result.insert(result.end(),temp.begin(),temp.end());
-    }
-  }
-  
-  return result;
-  
-}
+  // return BarCode of GenParticle for RecHit
+  //
 
-GutSoftSeedingEfficiencyAnalyzer::SimHitMap 
-GutSoftSeedingEfficiencyAnalyzer::CreateMapTrueHitsToRecHits(TrackerHitAssociator &associator) 
-{
-  //
-  // create map between all rechits in seed rings to true simhits
-  //
+  std::vector<int> barcodes;
+  std::vector< SimHitIdpr> simHitIds = associator.associateHitId(*hit);
   
-  // return value
-  SimHitMap result;
-  
-  // loop over inner seed rings
-  for ( std::vector<const Ring*>::iterator ring = innerSeedRings_.begin(),
-        ringEnd = innerSeedRings_.end();
-        ring != ringEnd;
-        ++ring ) {
-    // loop over detid's in ring
-    for ( Ring::const_iterator ringDetIdIterator = (*ring)->begin(),
-          ringDetIdIteratorEnd = (*ring)->end(); 
-          ringDetIdIterator != ringDetIdIteratorEnd; 
-          ++ringDetIdIterator ) {
-      
-      std::vector<TrackingRecHit*> ringRecHits = innerSeedHitVector_.getHitVector(&(ringDetIdIterator->second));
-      
-      // loop over inner rechits
-      for (std::vector<TrackingRecHit*>::const_iterator ringRecHit = ringRecHits.begin();
-           ringRecHit != ringRecHits.end(); 
-           ++ringRecHit) {
-        // associate recHit to simHits
-        std::vector<PSimHit> simHits = associator.associateHit(**ringRecHit);
-        
-        // loop over simHits and fill map
-        for ( std::vector<PSimHit>::iterator simHit = simHits.begin(),
-              simHitEnd = simHits.end();
-              simHit != simHitEnd;
-              ++simHit ) {
-          if ( result.count(*simHit) == 0 ) {
-            std::vector<TrackingRecHit*> temp;
-            temp.push_back(*ringRecHit);
-            result[*simHit] = temp;
-          } else {
-            result[*simHit].push_back(*ringRecHit);
-          }
-        }
+  for ( std::vector<SimHitIdpr>::iterator simHitId = simHitIds.begin(),
+	  simHitIdEnd = simHitIds.end();
+	simHitId != simHitIdEnd;
+	++simHitId ) {
+    for ( edm::SimTrackContainer::const_iterator simTrack = simTracks->begin(),
+	    simTrackEnd = simTracks->end();
+	  simTrack != simTrackEnd;
+	  ++simTrack ) {
+      if ( simHitId->first == simTrack->trackId() ) {
+	barcodes.push_back(simTrack->genpartIndex());
       }
     }
   }
-  
-  // loop over outer seed rings
-  for ( std::vector<const Ring*>::iterator ring = outerSeedRings_.begin(),
-        ringEnd = outerSeedRings_.end();
-        ring != ringEnd;
-        ++ring ) {
-    // loop over detid's in ring
-    for ( Ring::const_iterator ringDetIdIterator = (*ring)->begin(),
-          ringDetIdIteratorEnd = (*ring)->end(); 
-          ringDetIdIterator != ringDetIdIteratorEnd; 
-          ++ringDetIdIterator ) {
-      
-      std::vector<TrackingRecHit*> ringRecHits = outerSeedHitVector_.getHitVector(&(ringDetIdIterator->second));
-      
-      // loop over outer rechits
-      for (std::vector<TrackingRecHit*>::const_iterator ringRecHit = ringRecHits.begin();
-           ringRecHit != ringRecHits.end(); 
-           ++ringRecHit) {
-        // associate recHit to simHits
-        std::vector<PSimHit> simHits = associator.associateHit(**ringRecHit);
-        
-        // loop over simHits and fill map
-        for ( std::vector<PSimHit>::iterator simHit = simHits.begin(),
-              simHitEnd = simHits.end();
-              simHit != simHitEnd;
-              ++simHit ) {
-          if ( result.count(*simHit) == 0 ) {
-            std::vector<TrackingRecHit*> temp;
-            temp.push_back(*ringRecHit);
-            result[*simHit] = temp;
-          } else {
-            result[*simHit].push_back(*ringRecHit);
-          }
-        }
-      }
-    }
-  }
-  
-  return result;
-}
 
-std::vector<unsigned int> 
-GutSoftSeedingEfficiencyAnalyzer::ExtractLayers(const TrackingParticle *particle, unsigned int &nTP) {
-  //
-  // extract layers of the simhits and return them in a sorted vector
-  //
-  // layers: PXB: 1-3, PXF: 4-5, TIB: 6-9, TID: 10-12, TOB: 13-18, TEC: 19-27
-  // 
-  
-  // return value
-  std::vector<unsigned int> layers;
-  unsigned int offset = 0;
-  
-  for ( std::vector<PSimHit>::const_iterator simHit = particle->pSimHit_begin(),
-        simHitEnd = particle->pSimHit_end();
-        simHit != simHitEnd;
-        ++simHit ) {
-    
-    ++nTP;
-    
-    DetId id(simHit->detUnitId());
-    if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
-      offset = 5;
-      TIBDetId tibid(id.rawId()); 
-      layers.push_back(tibid.layer()+offset);
-    } else if ( (unsigned int)id.subdetId() == StripSubdetector::TOB ) {
-      offset = 12;
-      TOBDetId tobid(id.rawId()); 
-      layers.push_back(tobid.layer()+offset); 
-    } else if ( (unsigned int)id.subdetId() == StripSubdetector::TID ) {
-      offset = 9;
-      TIDDetId tidid(id.rawId()); 
-      layers.push_back(tidid.wheel()+offset); 
-    } else if ( (unsigned int)id.subdetId() == StripSubdetector::TEC ) {
-      offset = 18;
-      TECDetId tecid(id.rawId()); 
-      layers.push_back(tecid.wheel()+offset); 
-    } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelBarrel ) {
-      offset = 0;
-      PXBDetId pxbid(id.rawId()); 
-      layers.push_back(pxbid.layer()+offset); 
-    } else if ( (unsigned int)id.subdetId() == PixelSubdetector::PixelEndcap ) {
-      offset = 3;
-      PXFDetId pxfid(id.rawId()); 
-      layers.push_back(pxfid.disk()+offset); 
-    }
-  }
-  
-  std::sort(layers.begin(),layers.end());
-  
-  return layers;
-  
+  return barcodes;
 }
