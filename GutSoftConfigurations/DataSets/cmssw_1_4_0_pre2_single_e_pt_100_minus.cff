@@ -6,11 +6,11 @@
 #
 # list of corrupt files (format: file events):
 #
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070402_03_26/9117_3.root -1
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070402_03_26/9117_4.root -1
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070402_03_26/9117_1.root -1
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070402_03_26/9117_2.root -1
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070402_03_26/9117_0.root -1
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070402_03_26/9117_3.root -1
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070402_03_26/9117_4.root -1
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070402_03_26/9117_1.root -1
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070402_03_26/9117_2.root -1
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070402_03_26/9117_0.root -1
 #
 replace PoolSource.fileNames = 
 }

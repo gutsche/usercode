@@ -6,16 +6,16 @@
 #
 # list of corrupt files (format: file events):
 #
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_84/6164_8.root -1
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_84/6164_5.root -1
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_84/6164_3.root -1
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_84/6164_2.root -1
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_84/6164_9.root -1
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_84/6164_0.root -1
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_84/6164_7.root -1
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_84/6164_6.root -1
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_84/6164_4.root -1
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070328_84/6164_1.root -1
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070328_84/6164_8.root -1
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070328_84/6164_5.root -1
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070328_84/6164_3.root -1
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070328_84/6164_2.root -1
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070328_84/6164_9.root -1
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070328_84/6164_0.root -1
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070328_84/6164_7.root -1
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070328_84/6164_6.root -1
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070328_84/6164_4.root -1
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070328_84/6164_1.root -1
 #
 replace PoolSource.fileNames = 
 }

@@ -1,5 +1,0 @@
-replace PoolSource.fileNames = {
-'/store/RelVal/2006/12/16/RelVal120SingleMuPlusPt100/0000/3CD77B3E-598D-DB11-8FA7-001731AF6BCD.root',
-'/store/RelVal/2006/12/16/RelVal120SingleMuPlusPt100/0000/78C6B72C-598D-DB11-910A-00304876A15B.root',
-'/store/RelVal/2006/12/16/RelVal120SingleMuMinusPt100/0000/B2211918-598D-DB11-859E-00304876A061.root'
-}

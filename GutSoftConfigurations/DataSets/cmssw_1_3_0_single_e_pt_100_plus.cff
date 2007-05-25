@@ -3,19 +3,19 @@
 #
 # list of files (format: file events):
 #
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070402_02_36/42963_0.root 1000
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070402_02_36/42963_4.root 1000
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070402_02_36/42963_3.root 1000
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070402_02_36/42963_1.root 1000
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070402_02_36/42963_0.root 1000
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070402_02_36/42963_4.root 1000
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070402_02_36/42963_3.root 1000
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070402_02_36/42963_1.root 1000
 #
 # list of corrupt files (format: file events):
 #
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070402_02_36/42963_2.root -1
+# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070402_02_36/42963_2.root -1
 #
 replace PoolSource.fileNames = {
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070402_02_36/42963_0.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070402_02_36/42963_4.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070402_02_36/42963_3.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070402_02_36/42963_1.root"
+  "dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070402_02_36/42963_0.root",
+  "dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070402_02_36/42963_4.root",
+  "dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070402_02_36/42963_3.root",
+  "dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070402_02_36/42963_1.root"
 }
 
