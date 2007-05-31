@@ -61,26 +61,26 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
    llId->addData( candidate.lLoose->pdgId() );
    // fill index
    if ( candidate.candidateType == DiLeptonCandidate::MuMu || candidate.candidateType == DiLeptonCandidate::MuEl ){
-      for (int i=0; i<event.refMuons.size(); ++i)
+      for (unsigned int i=0; i<event.refMuons.size(); ++i)
 	if (candidate.lTight == event.refMuons[i]) { 
 	   ltIndex->addData( i );
 	   break;
 	}
    }else{
-      for (int i=0; i<event.refElectrons.size(); ++i)
+      for (unsigned int i=0; i<event.refElectrons.size(); ++i)
 	if (candidate.lTight == event.refElectrons[i]) { 
 	   ltIndex->addData( i );
 	   break;
 	}
    }
    if ( candidate.candidateType == DiLeptonCandidate::MuEl || candidate.candidateType == DiLeptonCandidate::ElEl ){
-      for (int i=0; i<event.refElectrons.size(); ++i)
+      for (unsigned int i=0; i<event.refElectrons.size(); ++i)
 	if (candidate.lLoose == event.refElectrons[i]) { 
 	   llIndex->addData( i );
 	   break;
 	}
    }else{
-      for (int i=0; i<event.refMuons.size(); ++i)
+      for (unsigned int i=0; i<event.refMuons.size(); ++i)
 	if (candidate.lLoose == event.refMuons[i]) { 
 	   llIndex->addData( i );
 	   break;
