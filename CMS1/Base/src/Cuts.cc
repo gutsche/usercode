@@ -6,9 +6,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/04/17 04:43:13 $
-// $Revision: 1.8 $
+// $Author: mangano $
+// $Date: 2007/05/21 16:51:30 $
+// $Revision: 1.9 $
 //
 
 #include "CMS1/Base/interface/Cuts.h"
@@ -63,11 +63,11 @@ bool cms1::Cuts::testCandidate(const reco::Candidate& candidate) const
    return true;
 }
 
-bool cms1::Cuts::testGenParticle(const HepMC::GenParticle& particle) const {
+bool cms1::Cuts::testGenParticle(const HepMC::GenParticle* particle) const {
 
-   if (particle.momentum().perp() < pt_min || particle.momentum().perp() > pt_max) return false;
-   if (particle.momentum().eta() < eta_min || particle.momentum().eta() > eta_max) return false;
-   if (particle.momentum().phi() < phi_min || particle.momentum().phi() > phi_max) return false;
+   if (particle->momentum().perp() < pt_min || particle->momentum().perp() > pt_max) return false;
+   if (particle->momentum().eta() < eta_min || particle->momentum().eta() > eta_max) return false;
+   if (particle->momentum().phi() < phi_min || particle->momentum().phi() > phi_max) return false;
 
    return true;
 }
@@ -137,23 +137,25 @@ bool cms1::Cuts::truthMatch( const math::XYZVector& testParticleP3 ) const
       std::cout << "Warning: generator particle list is empty. Not filled?" <<std::endl;
       return matched;
    }
-   for(std::vector<HepMC::GenParticle>::const_iterator genParticle = data_->mcInfo.begin(); 
+   for(std::vector<HepMC::GenParticle*>::const_iterator genParticle = data_->mcInfo.begin(); 
        genParticle != data_->mcInfo.end(); ++genParticle)
      {
-	math::XYZVector genP3(genParticle->momentum().x(),genParticle->momentum().y(),genParticle->momentum().z());
+	math::XYZVector genP3((*genParticle)->momentum().x(),
+			      (*genParticle)->momentum().y(),
+			      (*genParticle)->momentum().z());
 	//  && fabs((electron->pt()-genParticle->momentum().perp())/genParticle->momentum().perp()-1)<0.2)
 	// matching cone radius can be different for different particle types
 	switch ( truthMatchingType ) {
 	 case Electron:
-	   if ( abs( genParticle->pdg_id() ) != 11 || genParticle->status() == 3 ) continue;
+	   if ( abs( (*genParticle)->pdg_id() ) != 11 || (*genParticle)->status() == 3 ) continue;
 	   if ( ROOT::Math::VectorUtil::DeltaR(testParticleP3, genP3) < 0.1 ) matched = true;
 	   break;
 	 case Muon:
-	   if ( abs( genParticle->pdg_id() ) != 13 || genParticle->status() == 3 ) continue;
+	   if ( abs( (*genParticle)->pdg_id() ) != 13 || (*genParticle)->status() == 3 ) continue;
 	   if ( ROOT::Math::VectorUtil::DeltaR(testParticleP3, genP3) < 0.1 ) matched = true;
 	   break;
 	 case Tau:
-	   if ( abs( genParticle->pdg_id() ) != 15 || genParticle->status() == 3 ) continue;
+	   if ( abs( (*genParticle)->pdg_id() ) != 15 || (*genParticle)->status() == 3 ) continue;
 	   if ( ROOT::Math::VectorUtil::DeltaR(testParticleP3, genP3) < 0.1 ) matched = true;
 	   break;
 	 default:

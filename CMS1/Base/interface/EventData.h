@@ -9,8 +9,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/05/22 07:12:39 $
-// $Revision: 1.9 $
+// $Date: 2007/05/24 17:40:56 $
+// $Revision: 1.10 $
 //
 
 #include "CLHEP/HepMC/GenParticle.h"
@@ -38,7 +38,7 @@ namespace cms1 {
 	
 	// ------------ DERIVED STUFF ----------------
 	// generator info 
-	std::vector<HepMC::GenParticle>  mcInfo;
+	std::vector<HepMC::GenParticle*>  mcInfo;
 	std::vector<reco::GenJet> jetInfo;
 
 	// ------------ USER DATA by types ----------------

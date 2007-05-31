@@ -7,8 +7,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/05/22 07:14:58 $
-// $Revision: 1.7 $
+// $Date: 2007/05/24 17:40:56 $
+// $Revision: 1.8 $
 //
 #include "CMS1/BaseAnalyzer/interface/BaseAnalyzer.h"
 #include "FWCore/Framework/interface/Handle.h"
@@ -65,7 +65,7 @@ void cms1::BaseAnalyzer::processEvent(const edm::Event& iEvent)
    const HepMC::GenEvent* genEvent = mcCollectionHandle->GetEvent();
    theData.mcInfo.clear();
    for (HepMC::GenEvent::particle_const_iterator p = genEvent->particles_begin(); p != genEvent->particles_end(); ++p)
-     theData.mcInfo.push_back(**p);
+     theData.mcInfo.push_back(*p);
 
    edm::Handle<reco::GenJetCollection> jetCollectionHandle;
    iEvent.getByLabel(genJetInputTag_,jetCollectionHandle);

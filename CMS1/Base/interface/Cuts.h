@@ -9,9 +9,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: sani $
-// $Date: 2007/04/18 17:18:33 $
-// $Revision: 1.5 $
+// $Author: mangano $
+// $Date: 2007/05/21 16:51:30 $
+// $Revision: 1.6 $
 //
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
@@ -29,7 +29,7 @@ namespace cms1 {
 	     
 	bool testTrack(const reco::Track&) const;
 	bool testCandidate(const reco::Candidate &) const;
-	bool testGenParticle(const HepMC::GenParticle&) const;
+	bool testGenParticle(const HepMC::GenParticle*) const;
 	bool testGenJet(const reco::GenJet&) const;
 	
 	// perform logical AND of two cuts 

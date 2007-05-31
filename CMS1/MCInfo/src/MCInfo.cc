@@ -7,9 +7,9 @@
 // Original Author: Matteo Sani, matteo.sani@cern.ch
 // Created:         Thu Mar 1 20:27:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/05/22 07:24:55 $
-// $Revision: 1.5 $
+// $Author: sani $
+// $Date: 2007/05/23 16:32:27 $
+// $Revision: 1.6 $
 //
 
 #include "CMS1/MCInfo/interface/MCInfo.h"
@@ -94,27 +94,27 @@ std::vector<const HepMC::GenParticle*> cms1::MCInfo::getMCInfo(ParticleType part
   }
 
   if (particleType == MCInfo::Summary) {
-    for(std::vector<HepMC::GenParticle>::const_iterator it=data_->mcInfo.begin(); it!=data_->mcInfo.end(); ++it) {
-      if (it->status() == 3)
+    for(std::vector<HepMC::GenParticle*>::const_iterator it=data_->mcInfo.begin(); it!=data_->mcInfo.end(); ++it) {
+      if ((*it)->status() == 3)
         if (cuts.testGenParticle(*it))
-          output_list.push_back(&*it); 
+          output_list.push_back(*it); 
     }
     return  output_list;
   }
   
   if (particleType == MCInfo::All) {
-    for(std::vector<HepMC::GenParticle>::const_iterator it=data_->mcInfo.begin(); it!=data_->mcInfo.end(); ++it) {
-      if (it->status() != 3)
+    for(std::vector<HepMC::GenParticle*>::const_iterator it=data_->mcInfo.begin(); it!=data_->mcInfo.end(); ++it) {
+      if ((*it)->status() != 3)
         if (cuts.testGenParticle(*it))
-          output_list.push_back(&*it); 
+          output_list.push_back(*it); 
     }
     return  output_list;
   }
    
-   for(std::vector<HepMC::GenParticle>::const_iterator it=data_->mcInfo.begin(); it!=data_->mcInfo.end(); ++it) {
-      if ((abs(it->pdg_id()) == particleType) && (it->status() != 3))
+   for(std::vector<HepMC::GenParticle*>::const_iterator it=data_->mcInfo.begin(); it!=data_->mcInfo.end(); ++it) {
+      if ((abs((*it)->pdg_id()) == particleType) && ((*it)->status() != 3))
         if (cuts.testGenParticle(*it)) {
-          output_list.push_back(&*it); 
+          output_list.push_back(*it); 
         }
     }
   return output_list;
