@@ -6,9 +6,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/05/24 17:40:56 $
-// $Revision: 1.8 $
+// $Author: mangano $
+// $Date: 2007/05/31 17:07:06 $
+// $Revision: 1.9 $
 //
 #include "CMS1/BaseAnalyzer/interface/BaseAnalyzer.h"
 #include "FWCore/Framework/interface/Handle.h"
@@ -43,6 +43,7 @@ void cms1::BaseAnalyzer::configure(const edm::ParameterSet& iConfig)
       // ntuple stuff
       theRootFile = new TFile(ntupleFileName.c_str(),"RECREATE");
       theTree = new TTree("event","Event data");
+      legoPtr = new TH2F("lego","CaloTower Et distribution",60,-2.610,2.610,36,-3.1416,3.1416);
    }
    branchesInitialized = false;
 }
@@ -52,7 +53,15 @@ void cms1::BaseAnalyzer::processEvent(const edm::Event& iEvent)
    if (! branchesInitialized && makeNtuples) {
       theData.addBranches(*theTree, candidateBasedNtuples);
       branchesInitialized = true;
+      // event display
+      theTree->Branch("evt_lego","TH2F",&legoPtr);
    }
+   // fill CaloTowers
+   edm::Handle<CaloTowerCollection> caloTowers;
+   iEvent.getByLabel( "towerMaker", caloTowers );
+   legoPtr->Reset();
+   for(CaloTowerCollection::const_iterator tower = caloTowers->begin(); tower != caloTowers->end(); ++tower)
+     legoPtr->Fill(tower->eta(), tower->phi(), tower->et());
    
    theData.iEvent = &iEvent;
 

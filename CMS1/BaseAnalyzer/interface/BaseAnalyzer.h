@@ -8,9 +8,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: sani $
-// $Date: 2007/05/14 16:10:17 $
-// $Revision: 1.5 $
+// $Author: dmytro $
+// $Date: 2007/05/22 07:14:57 $
+// $Revision: 1.6 $
 //
 #include <vector>
 #include "CMS1/Base/interface/EventData.h"
@@ -26,6 +26,7 @@
 
 #include "TFile.h"
 #include "TTree.h"
+#include "TH2F.h"
 
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 namespace cms1 {
@@ -45,7 +46,7 @@ namespace cms1 {
       virtual void processEvent(const edm::Event& );
 
       // finish event processing
-	    virtual void finishEvent();
+      virtual void finishEvent();
 
       // User code to finilize data processing
       virtual void finishProcessing();
@@ -54,6 +55,7 @@ namespace cms1 {
       void fillUserData( EventData& event );
       TFile* theRootFile;
       TTree* theTree;
+      TH2F* legoPtr;
       bool branchesInitialized;
       bool makeNtuples;
       bool candidateBasedNtuples;
