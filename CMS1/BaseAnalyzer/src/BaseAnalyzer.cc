@@ -6,9 +6,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: mangano $
-// $Date: 2007/05/31 17:07:06 $
-// $Revision: 1.9 $
+// $Author: dmytro $
+// $Date: 2007/06/01 09:32:05 $
+// $Revision: 1.10 $
 //
 #include "CMS1/BaseAnalyzer/interface/BaseAnalyzer.h"
 #include "FWCore/Framework/interface/Handle.h"
@@ -39,11 +39,12 @@ void cms1::BaseAnalyzer::configure(const edm::ParameterSet& iConfig)
       theElectrons.registerEventUserData();
       theJets.registerEventUserData();
       theMET.registerEventUserData();
-   
+      theMCInfo.registerEventUserData();
+      
       // ntuple stuff
       theRootFile = new TFile(ntupleFileName.c_str(),"RECREATE");
       theTree = new TTree("event","Event data");
-      legoPtr = new TH2F("lego","CaloTower Et distribution",60,-2.610,2.610,36,-3.1416,3.1416);
+      legoPtr = new TH2F("lego","CaloTower Et distribution",120,-5.220,5.220,36,-3.1416,3.1416);
    }
    branchesInitialized = false;
 }
@@ -98,6 +99,7 @@ void cms1::BaseAnalyzer::fillUserData( EventData& event )
       theElectrons.fillEventUserData();
       theJets.fillEventUserData();
       theMET.fillEventUserData();
+      theMCInfo.fillEventUserData();
    }
 }
 

@@ -11,13 +11,16 @@
 // Created:         Thu Mar 1 20:27:02 UTC 2007
 //
 // $Author: sani $
-// $Revision: 1.4 $
+// $Revision: 1.5 $
 //
 
 #include "CMS1/Base/interface/BlackBox.h"
 #include "CLHEP/HepMC/GenParticle.h"
 #include "CMS1/Base/interface/Cuts.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
+#include "CMS1/Base/interface/UserDataBlocks.h"
+#include "CMS1/Base/interface/GenParticleStreamer.h"
+#include "CMS1/Base/interface/GenJetStreamer.h"
 
 namespace cms1 {
   class MCInfo : public BlackBox {
@@ -48,9 +51,12 @@ namespace cms1 {
     int numberOfParticles(const ParticleType type, const Cuts& cuts) {
       return getMCInfo(type,cuts).size();
     }
+     void registerEventUserData();
+     void fillEventUserData();
+   private:
+     VectorUserBlock<GenParticleStreamer> evtGenParticles;
+     VectorUserBlock<GenJetStreamer>      evtGenJets;
   };
-
-
 }
 
 #endif

@@ -3,8 +3,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/05/22 07:12:39 $
-// $Revision: 1.1 $
+// $Date: 2007/05/23 02:23:23 $
+// $Revision: 1.2 $
 //
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
@@ -60,6 +60,7 @@ void cms1::TrackStreamer::fill( const reco::Candidate* candidate )
    }
    if ( const reco::PixelMatchGsfElectron* elec = dynamic_cast<const reco::PixelMatchGsfElectron*>(candidate) ) {
       fill((const reco::Track*)elec->gsfTrack().get());
+      p4s_[varP4] = candidate->p4(); // Candidate has a proper mix of calorimeter and tracker information (energy from ECAL, direction from tracker)
       return;
    }
    p4s_[varP4] = candidate->p4();

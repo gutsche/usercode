@@ -7,9 +7,9 @@
 // Original Author: Matteo Sani, matteo.sani@cern.ch
 // Created:         Thu Mar 1 20:27:42 UTC 2007
 //
-// $Author: sani $
-// $Date: 2007/05/23 16:32:27 $
-// $Revision: 1.6 $
+// $Author: mangano $
+// $Date: 2007/05/31 17:08:03 $
+// $Revision: 1.7 $
 //
 
 #include "CMS1/MCInfo/interface/MCInfo.h"
@@ -120,27 +120,18 @@ std::vector<const HepMC::GenParticle*> cms1::MCInfo::getMCInfo(ParticleType part
   return output_list;
 }
 
-/*
-const HepMC::GenParticle* cms1::MCInfo::match(const reco::Candidate& candidate, const ParticleType particleType, Cuts cuts) {
-  
-  const HepMC::GenParticle* output = 0;
-  double dRmin = 0.1;
-  
-  std::vector<const HepMC::GenParticle*> genParticles = getMCInfo(particleType, cuts);
-  std::vector<const HepMC::GenParticle*>::const_iterator itPart;
-
-  for(itPart=genParticles.begin(); itPart!=genParticles.end(); ++itPart) {
-
-    const math::XYZVector v1((*itPart)->momentum().x(), (*itPart)->momentum().y(), (*itPart)->momentum().z());
-    const math::XYZVector v2(candidate.px(), candidate.py(), candidate.pz());
-
-    double dR = ROOT::Math::VectorUtil::DeltaR(v1, v2);
-    if (dR < dRmin) {
-      dRmin = dR;
-      output = *itPart;
-    }
-  }
-
-  return output;
+void cms1::MCInfo::registerEventUserData()
+{
+   evtGenParticles.registerBlock( *data_, "genps_", "cms1_genps_");
+   evtGenJets.registerBlock( *data_, "genjs_", "cms1_genjs_");
 }
-*/
+
+void cms1::MCInfo::fillEventUserData()
+{
+   std::vector<const HepMC::GenParticle*> summary = getMCInfo(Summary,Cuts());
+   evtGenParticles.fill( summary );
+   std::vector<const reco::GenJet*> sumJets = getJetInfo(Cuts());
+   evtGenJets.fill( sumJets );
+}
+
+
