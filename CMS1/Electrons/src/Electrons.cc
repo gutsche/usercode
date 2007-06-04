@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/05/24 17:40:57 $
-// $Revision: 1.15 $
+// $Author: sani $
+// $Date: 2007/06/04 18:58:55 $
+// $Revision: 1.16 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -373,9 +373,8 @@ void cms1::Electrons::fillEventUserData() {
 
   std::vector<const reco::Candidate*> els = getElectrons(AllElectrons,Cuts());
   data_->refElectrons = els;
-  std::cout << "ARRIVO e..." << std::endl;
+
   evtElectrons.fill(getStreamerArguments(data_, els));
-  std::cout << "Finito." << std::endl;
   nElectrons->addData(els.size());
  
   std::vector<int> vint0, vint1;
