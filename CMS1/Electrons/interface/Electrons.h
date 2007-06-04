@@ -11,11 +11,10 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/22 07:18:53 $
-// $Revision: 1.11 $
+// $Date: 2007/05/24 17:40:57 $
+// $Revision: 1.12 $
 //
 
-//#include "DataFormats/EgammaCandidates/interface/Electron.h"
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
 #include "CLHEP/HepMC/GenParticle.h"
 
@@ -23,6 +22,7 @@
 #include "CMS1/Base/interface/BlackBox.h"
 #include "CMS1/Base/interface/UserDataBlocks.h"
 #include "CMS1/Base/interface/TrackStreamer.h"
+//#include "CMS1/Base/interface/ElIdStreamer.h"
 
 namespace cms1 {
   struct ElectronDef {
@@ -50,17 +50,24 @@ namespace cms1 {
     // people invent new electron requirements
     enum ElectronType {AllElectrons, TightElectrons, LooseElectrons, TruthMatchedElectrons, Golden, BigBrem, Narrow, Showering, Custom};
      
-    // FIXME: return type corresponds to a single algoritm
     std::vector<const reco::Candidate*> getElectrons (const ElectronType, const Cuts&,
                                                       Cuts::IsolationType isolated = Cuts::NotIsolated,
                                                                   ElectronDef def = ElectronDef());
     bool classify(ElectronDef def, const reco::PixelMatchGsfElectron* electron);
+    void R9_25(const reco::PixelMatchGsfElectron*, float&, float&, float&);
+    void sigma(const reco::PixelMatchGsfElectron*, float&, float&);
+    void removeElectrons(const std::vector<reco::PixelMatchGsfElectron>*);
+
     void dump(std::ostream& o, std::vector<const reco::Candidate*> el);
     void registerEventUserData();
     void fillEventUserData();
   private:
       VectorUserBlock<TrackStreamer> evtElectrons;
-      UserDataInt*        nElectrons;
+
+      UserDataInt *nElectrons;
+      UserDataInt1D *nSeed, *cms_class;
+      UserDataFloat1D *hOverE, *fBrem, *dEtaIn, *dEtaOut, *dPhiIn, *dPhiOut, *vareMax, *vare3x3, *vare5x5;
+      UserDataFloat1D *eOverPIn, *eOverPOut, *eSeed, *sPhiPhi, *sEtaEta;
   };
 }
 

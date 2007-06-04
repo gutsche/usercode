@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/22 07:18:54 $
-// $Revision: 1.14 $
+// $Date: 2007/05/24 17:40:57 $
+// $Revision: 1.15 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -20,6 +20,34 @@
 #include "DataFormats/EgammaReco/interface/BasicClusterShapeAssociation.h"
 #include "DataFormats/EcalDetId/interface/EcalSubdetector.h"
 #include "CMS1/CommonTools/interface/UserDataTools.h"
+
+void cms1::Electrons::removeElectrons(const std::vector<reco::PixelMatchGsfElectron>* collection) {
+  
+  std::vector<reco::PixelMatchGsfElectron>* prova = const_cast<std::vector<reco::PixelMatchGsfElectron>* >(collection);
+  std::vector<reco::PixelMatchGsfElectron>::iterator it1, it2;
+  
+  std::vector<std::vector<reco::PixelMatchGsfElectron>::iterator> remove;
+
+  for(it1=prova->begin(); it1!=prova->end(); ++it1) {
+    for(it2=prova->begin(); it2!=prova->end(); ++it2) {
+
+      if (it1 == it2)
+        continue;
+
+      if (((*it1).superCluster().id() == (*it2).superCluster().id()) &&
+          ((*it1).superCluster().index() == (*it2).superCluster().index())) {
+        
+        float deltaEp1 = fabs((*it1).eSuperClusterOverP() - 1.);
+        float deltaEp2 = fabs((*it2).eSuperClusterOverP() - 1.);
+        if (deltaEp2 < deltaEp1) 
+          remove.push_back(it2);
+      }
+    }
+  }
+
+  for(unsigned int i=0; i<remove.size(); ++i)
+    prova->erase(remove[i]);
+}
 
 std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const ElectronType electronType,
                                                                   const Cuts& userCuts, Cuts::IsolationType isolated, ElectronDef def) {
@@ -39,18 +67,21 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
         std::cout << "ERROR: electron collection is not found in the event. Return nothing." << std::endl;
         return output_list;
       }
+
+      // remove electrons reconstructed twice
+      removeElectrons(collection);
       
       if (isolated && !data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks") ) {
         std::cout << "ERROR: track collection for electron isolation is not set" << std::endl;
         return output_list;
       }
-      
+
       // set the default cuts for this type
       Cuts defaultCuts;
       defaultCuts.isolated = isolated;
       defaultCuts.setEventData(data_);
       defaultCuts.AND(userCuts);
-      
+
       for (std::vector<reco::PixelMatchGsfElectron>::const_iterator electron = collection->begin(); electron != collection->end(); ++electron) {
         if (!defaultCuts.testCandidate(*electron)) 
           continue;
@@ -58,12 +89,6 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
           continue;
         output_list.push_back(&*electron);
       } 
-      
-    //for (std::vector<reco::PixelMatchGsfElectron>::const_iterator el = collection->begin(); el != collection->end(); ++el) {
-    // Here we make simple cuts in a standard way
-    //  if (cuts.testCandidate(*el)) 
-    //    output_list.push_back(&*el);
-    // }
     }
     break;
   case LooseElectrons:
@@ -85,6 +110,8 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
       // set the default cuts for this type and merge them with user Cuts
       Cuts cuts;
       cuts.pt_min = 20;
+      cuts.eta_min = -2.4;
+      cuts.eta_max = +2.4;
       cuts.AND(userCuts);
       cuts.setEventData(data_);
       
@@ -118,12 +145,12 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
 	      return output_list;
       }
       temp = getElectrons(AllElectrons, userCuts, isolated); 
+
       for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
         const reco::PixelMatchGsfElectron* ele = ( const reco::PixelMatchGsfElectron*)*electron;
         if((ele)->classification() == 0 || (ele)->classification() == 100) 
           output_list.push_back(*electron);
       }
-      return temp;
     }
     break;
   case BigBrem:
@@ -141,8 +168,6 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
         if((ele)->classification() == 10 || (ele)->classification() == 110) 
           output_list.push_back(*electron);
       }
-      
-      return temp;
     }
     break;
   case Narrow:
@@ -160,8 +185,6 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
         if((ele)->classification() == 20 || (ele)->classification() == 120) 
           output_list.push_back(*electron);
       }
-      
-      return temp;
     }
     break;
   case Showering:
@@ -180,8 +203,6 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
            ((ele)->classification() >= 130 && (ele)->classification() <= 134)) 
           output_list.push_back(*electron);
       }
-      
-      return temp;
     }
   case Custom:
     {
@@ -193,14 +214,11 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
       }
       
       temp = getElectrons(AllElectrons, userCuts, isolated);
-      
       for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
-        const reco::PixelMatchGsfElectron* ele = ( const reco::PixelMatchGsfElectron*)*electron;
+        const reco::PixelMatchGsfElectron* ele = ( const reco::PixelMatchGsfElectron*)*electron; 
         if (classify(def, ele))
             output_list.push_back(*electron);
       }
-      
-      return temp;
     }
     break;
   default:
@@ -225,9 +243,9 @@ void cms1::Electrons::dump(std::ostream& o, std::vector<const reco::Candidate*> 
 	}
 }
 
-bool cms1::Electrons::classify(ElectronDef def, const reco::PixelMatchGsfElectron* electron) {
+void cms1::Electrons::R9_25(const reco::PixelMatchGsfElectron* electron,
+			   float& eMax, float& e3x3, float& e5x5) { 
 
-  bool result = false;
   reco::SuperClusterRef sclRef=electron->superCluster();
 
   const reco::BasicClusterShapeAssociationCollection* barrelClShp = data_->getData<reco::BasicClusterShapeAssociationCollection>("hybridSuperClusters", "hybridShapeAssoc");
@@ -243,7 +261,38 @@ bool cms1::Electrons::classify(ElectronDef def, const reco::PixelMatchGsfElectro
   
   // Get the ClusterShapeRef corresponding to the BasicCluster
   const reco::ClusterShapeRef& seedShapeRef = seedShpItr->val;
-  double ratio = seedShapeRef->eMax()/seedShapeRef->e3x3();
+
+  eMax = sclRef->energy();
+  e3x3 = seedShapeRef->e3x3();
+  e5x5 = seedShapeRef->e5x5();
+}
+
+void cms1::Electrons::sigma(const reco::PixelMatchGsfElectron* electron, float& sphiphi, float& setaeta) {
+  
+  reco::SuperClusterRef sclRef = electron->superCluster();
+  reco::BasicClusterRef seedRef = electron->superCluster()->seed();
+  
+  reco::basicCluster_iterator it;
+  
+  sphiphi = 0.;
+  setaeta = 0.;
+
+  for(it = sclRef->clustersBegin(); it != sclRef->clustersEnd(); ++it) {
+    float deltaphi = (seedRef->phi()-(*it)->phi());
+    float deltaeta = (seedRef->eta()-(*it)->eta());
+    sphiphi += deltaphi*deltaphi*(*it)->energy()/seedRef->energy();
+    setaeta += deltaeta*deltaeta*(*it)->energy()/seedRef->energy();
+  }
+}
+
+bool cms1::Electrons::classify(ElectronDef def, const reco::PixelMatchGsfElectron* electron) {
+
+  bool result = false;
+  reco::SuperClusterRef sclRef = electron->superCluster();
+
+  float eMax, e3x3, e5x5;
+  R9_25(electron, eMax, e3x3, e5x5);
+  float ratio = eMax/e3x3;
   
   // use supercluster energy including f(Ncry) correction
   float scEnergy=sclRef->energy();
@@ -275,19 +324,114 @@ bool cms1::Electrons::classify(ElectronDef def, const reco::PixelMatchGsfElectro
 
   return result;
 }
-void cms1::Electrons::registerEventUserData()
-{
-   evtElectrons.registerBlock( *data_, "els_", "cms1_els_");
-   data_->intUserData.push_back( new UserData<int>("nels", "evt_", "cms1_evt_", false) );
-   nElectrons = data_->intUserData.back();
+
+void cms1::Electrons::registerEventUserData() {
+  
+  evtElectrons.registerBlock( *data_, "els_", "cms1_els_");
+  data_->intUserData.push_back( new UserData<int>("nels", "evt_", "cms1_evt_", false) );
+  nElectrons = data_->intUserData.back();
+  
+  data_->intUserData1D.push_back( new UserDataInt1D("nSeed", "elid_", "cms1_els_", false) );
+  nSeed = data_->intUserData1D.back(); 
+  data_->intUserData1D.push_back( new UserDataInt1D("class", "elid_", "cms1_els_", false) );
+  cms_class = data_->intUserData1D.back(); 
+  
+  data_->floatUserData1D.push_back( new UserDataFloat1D("hOverE", "elid_", "cms1_els_", false) );
+  hOverE = data_->floatUserData1D.back(); 
+  data_->floatUserData1D.push_back( new UserDataFloat1D("eOverPIn", "elid_", "cms1_els_", false) );
+  eOverPIn = data_->floatUserData1D.back();
+  data_->floatUserData1D.push_back( new UserDataFloat1D("eSeedOverPOut", "elid_", "cms1_els_", false) );
+  eOverPOut = data_->floatUserData1D.back();
+  data_->floatUserData1D.push_back( new UserDataFloat1D("fBrem", "elid_", "cms1_els_", false) );
+  fBrem = data_->floatUserData1D.back(); 
+  
+  data_->floatUserData1D.push_back(new UserDataFloat1D("dEtaIn", "elid_", "cms1_els_", false));
+  dEtaIn = data_->floatUserData1D.back();
+  data_->floatUserData1D.push_back(new UserDataFloat1D("dEtaOut", "elid_", "cms1_els_", false) );
+  dEtaOut = data_->floatUserData1D.back();
+  data_->floatUserData1D.push_back(new UserDataFloat1D("dPhiIn", "elid_", "cms1_els_", false) );
+  dPhiIn = data_->floatUserData1D.back();
+  data_->floatUserData1D.push_back(new UserDataFloat1D("dPhiOut", "elid_", "cms1_els_", false) );
+  dPhiOut = data_->floatUserData1D.back();
+  data_->floatUserData1D.push_back(new UserDataFloat1D("ESc", "elid_", "cms1_els_", false));
+  vareMax = data_->floatUserData1D.back(); 
+  data_->floatUserData1D.push_back(new UserDataFloat1D("e3x3", "elid_", "cms1_els_", false));
+  vare3x3 = data_->floatUserData1D.back();
+  data_->floatUserData1D.push_back(new UserDataFloat1D("e5x5", "elid_", "cms1_els_", false));
+  vare5x5 = data_->floatUserData1D.back(); 
+  data_->floatUserData1D.push_back(new UserDataFloat1D("ESeed", "elid_", "cms1_els_", false));
+  eSeed = data_->floatUserData1D.back();  
+  data_->floatUserData1D.push_back(new UserDataFloat1D("sigmaPhiPhi", "elid_", "cms1_els_", false));
+  sPhiPhi = data_->floatUserData1D.back();  
+  data_->floatUserData1D.push_back(new UserDataFloat1D("sigmaEtaEta", "elid_", "cms1_els_", false));
+  sEtaEta = data_->floatUserData1D.back(); 
 }
 
-void cms1::Electrons::fillEventUserData()
-{
-   std::vector<const reco::Candidate*> els = getElectrons(AllElectrons,Cuts());
-   data_->refElectrons = els;
-   evtElectrons.fill( getStreamerArguments(data_, els) );
-   nElectrons->addData( els.size() );
-}
+void cms1::Electrons::fillEventUserData() {
+
+  float eMax=0., e3x3=0., e5x5=0., see, spp;
+
+  std::vector<const reco::Candidate*> els = getElectrons(AllElectrons,Cuts());
+  data_->refElectrons = els;
+  std::cout << "ARRIVO e..." << std::endl;
+  evtElectrons.fill(getStreamerArguments(data_, els));
+  std::cout << "Finito." << std::endl;
+  nElectrons->addData(els.size());
+ 
+  std::vector<int> vint0, vint1;
+  std::vector<float> vfloat0,vfloat1,vfloat2,vfloat3;
+  std::vector<float> vfloat4,vfloat5,vfloat6,vfloat7,vfloat8;
+  std::vector<float> vfloat9,vfloat10, vfloat11, vfloat12, vfloat13;
+  std::vector<const reco::Candidate*>::const_iterator it;
+    
+  for(it = els.begin(); it != els.end(); ++it) {
+    const reco::PixelMatchGsfElectron* el = dynamic_cast<const reco::PixelMatchGsfElectron*>(*it);
+    
+    float pin  = el->trackMomentumAtVtx().R(); 
+    float pout = el->trackMomentumOut().R();
+
+    R9_25(el, eMax, e3x3, e5x5);
+    sigma(el, spp, see);
+
+    vint0.push_back(el->numberOfClusters()-1);
+    vint1.push_back(el->classification());
+    
+    vfloat0.push_back(el->hadronicOverEm());                  
+    vfloat1.push_back(el->eSuperClusterOverP());                  
+    vfloat2.push_back(el->eSeedClusterOverPout());                
+    vfloat3.push_back((pin-pout)/pin);                        
+    
+    vfloat4.push_back(el->deltaEtaSuperClusterTrackAtVtx());  
+    vfloat5.push_back(el->deltaEtaSeedClusterTrackAtCalo());
+    vfloat6.push_back(el->deltaPhiSuperClusterTrackAtVtx());
+    vfloat7.push_back(el->deltaPhiSeedClusterTrackAtCalo());  
+    vfloat8.push_back(eMax);
+    vfloat9.push_back(e3x3);
+    vfloat10.push_back(e5x5);
+    vfloat11.push_back(el->superCluster()->seed()->energy());
+    vfloat12.push_back(spp);
+    vfloat13.push_back(see);
+  }
+
+  nSeed->addData(vint0);
+  cms_class->addData(vint1);
+  
+  hOverE->addData(vfloat0);
+  eOverPIn->addData(vfloat1);
+  eOverPOut->addData(vfloat2);
+  fBrem->addData(vfloat3);
+  
+  dEtaIn->addData(vfloat4);
+  dEtaOut->addData(vfloat5);
+  dPhiIn->addData(vfloat6);
+  dPhiOut->addData(vfloat7);
+  vareMax->addData(vfloat8);
+  vare3x3->addData(vfloat9);
+  vare5x5->addData(vfloat10);
+  eSeed->addData(vfloat11);
+  sPhiPhi->addData(vfloat12);
+  sEtaEta->addData(vfloat13);
+}  
+
 
 
