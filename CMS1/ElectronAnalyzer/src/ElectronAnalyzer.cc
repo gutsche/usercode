@@ -145,10 +145,13 @@ void cms1::ElectronAnalyzer::processEvent(const Event & event) {
       reco::SuperClusterRef sclRef=iele->superCluster();
 
       // Get association maps linking BasicClusters to ClusterShape
-      edm::Handle<reco::BasicClusterShapeAssociationCollection> barrelClShpHandle;
-      event.getByLabel(barrelClusterShapeAssocProducer_, barrelClShpHandle);
-      edm::Handle<reco::BasicClusterShapeAssociationCollection> endcapClShpHandle;
-      event.getByLabel(endcapClusterShapeAssocProducer_, endcapClShpHandle);
+      edm::Handle<reco::BasicClusterShapeAssociationCollection> barrelClShpHandle = 
+        theData.getHandle<reco::BasicClusterShapeAssociationCollection>(barrelClusterShapeAssocProducer_.label(), barrelClusterShapeAssocProducer_.instance());
+      
+      //event.getByLabel(barrelClusterShapeAssocProducer_, barrelClShpHandle);
+      edm::Handle<reco::BasicClusterShapeAssociationCollection> endcapClShpHandle =
+        theData.getHandle<reco::BasicClusterShapeAssociationCollection>(endcapClusterShapeAssocProducer_.label(), endcapClusterShapeAssocProducer_.instance());;
+      //event.getByLabel(endcapClusterShapeAssocProducer_, endcapClShpHandle);
 
       reco::BasicClusterShapeAssociationCollection::const_iterator seedShpItr;
 
