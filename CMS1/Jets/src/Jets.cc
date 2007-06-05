@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/24 17:40:59 $
-// $Revision: 1.12 $
+// $Date: 2007/05/24 23:35:27 $
+// $Revision: 1.13 $
 //
 
 #include "CMS1/Jets/interface/Jets.h"
@@ -131,7 +131,23 @@ std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
 	     output_list.push_back(&*jet);
 	}
       break;
-    // You get here if you have requested a "jetType" that is not implemented
+   case AllCorrectedJets:
+     {
+       if (! data_ ) {
+	 std::cout << "ERROR: jet black box doesn't know where to find EvenData." << std::endl;
+	 return output_list;
+       }
+       const std::vector<reco::CaloJet>* collection = data_->getData<std::vector<reco::CaloJet> >("MCJetCorJetMcone5");
+	   if ( ! collection ) {
+	     std::cout << "ERROR: Corrected Jet collection is not found in the event. Return nothing." << std::endl;
+	     return output_list;
+	   }
+	   for ( std::vector<reco::CaloJet>::const_iterator jet = collection->begin();
+		 jet != collection->end(); ++jet ) 
+	     output_list.push_back(&*jet);
+     }
+     break;
+     // You get here if you have requested a "jetType" that is not implemented
   default:
     std::cout << "Unkown or not implemented jet type" << std::endl;
   }

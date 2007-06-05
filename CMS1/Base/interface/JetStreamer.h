@@ -5,7 +5,7 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/05/11 04:08:51 $
+// $Date: 2007/05/22 07:12:39 $
 // $Revision: 1.1 $
 //
 #include "CMS1/Base/interface/BaseStreamer.h"
@@ -14,13 +14,13 @@ namespace cms1 {
      {
       public:
 	enum IntVars   { varMCId };
-	enum FloatVars { varEmFrac, varChFrac, varMCEmEnergy, varMCHadEnergy, varMCInvEnergy, varMCOtherEnergy };
+	enum FloatVars { varEmFrac, varChFrac, varMCEmEnergy, varMCHadEnergy, varMCInvEnergy, varMCOtherEnergy, varCor };
 	enum P4Vars    { varP4, varMCP4, varMCparticleP4 };
 	
 	JetStreamer();
 	void setDefaults();
-	void fill( const reco::Candidate* candidate );
-	void fill( const reco::CaloJet* jet );
+	void fill( const reco::Candidate* candidate);
+	void fill( const reco::CaloJet* jet);
 	void fill( const StreamerArguments args);
      };
 }

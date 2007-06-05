@@ -33,7 +33,7 @@ cms1::MCTruth::MCTruth() {
 const reco::Candidate* cms1::MCTruth::matchGenToCand(const reco::GenJet& genJet, std::vector<const reco::Candidate*> cand) const {
 
   const reco::Candidate* output = 0;
-  double dRmin = 0.1;
+  double dRmin = 0.25;
 
   std::vector<const reco::Candidate*>::const_iterator itCand;
   
@@ -54,7 +54,7 @@ const reco::Candidate* cms1::MCTruth::matchGenToCand(const reco::GenJet& genJet,
 const reco::GenJet* cms1::MCTruth::matchCandToGenJet(const reco::Candidate& jet,  Cuts cuts) const { 
   
   const reco::GenJet* output = 0;
-  double dRmin = 0.1;
+  double dRmin = 0.25;
   
   MCInfo mcInfo;
   mcInfo.setEventData(data_);

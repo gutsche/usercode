@@ -3,8 +3,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/05/23 02:23:23 $
-// $Revision: 1.2 $
+// $Date: 2007/06/02 18:03:49 $
+// $Revision: 1.3 $
 //
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
@@ -83,6 +83,16 @@ void cms1::TrackStreamer::fill( const reco::Track* track )
    ints_[varlostHits] = track->numberOfLostHits() ;
    floats_[varEtaErr] = track->etaError() ;
    floats_[varPhiErr] = track->phiError() ;
+
+   float pt = track->pt();
+   float p = track->p();
+   float q = track->charge();
+   float pz = track->pz();
+   float err = (track->charge()!=0) ? sqrt(pt*pt*p*p/pow(q, 2)*(track->covariance(0,0))
+					   +2*pt*p/q*pz*(track->covariance(0,1))
+					   + pz*pz*(track->covariance(1,1) ) )
+                                           : -999.;
+   floats_[varPtErr]=err;
 }
 
 void cms1::TrackStreamer::fill( const StreamerArguments& args )

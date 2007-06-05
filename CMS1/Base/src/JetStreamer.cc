@@ -3,8 +3,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/05/22 07:12:39 $
-// $Revision: 1.1 $
+// $Date: 2007/05/23 02:23:23 $
+// $Revision: 1.2 $
 //
 #include "CMS1/Base/interface/JetStreamer.h"
 cms1::JetStreamer::JetStreamer() 
@@ -18,6 +18,7 @@ cms1::JetStreamer::JetStreamer()
    floatNames_.push_back("mc_hadEnergy");    floats_.push_back(0);
    floatNames_.push_back("mc_invEnergy");    floats_.push_back(0);
    floatNames_.push_back("mc_otherEnergy");  floats_.push_back(0);
+   floatNames_.push_back("cor");             floats_.push_back(0);
    intNames_.push_back("mc_id");             ints_.push_back(0);
 }
 
@@ -32,6 +33,7 @@ void cms1::JetStreamer::setDefaults()
    floats_[varMCHadEnergy] = -999. ;
    floats_[varMCInvEnergy] = -999. ;
    floats_[varMCOtherEnergy] = -999. ;
+   floats_[varCor] = -999. ;
    ints_[varMCId] = -999;
 }
 
@@ -42,7 +44,7 @@ void cms1::JetStreamer::fill( const reco::Candidate* candidate )
       return;
    }
    if ( const reco::CaloJet* jet = dynamic_cast<const reco::CaloJet*>(candidate) ) {
-      fill(jet);
+     fill(jet);
       return;
    }
    p4s_[varP4] = candidate->p4();
@@ -76,8 +78,9 @@ void cms1::JetStreamer::fill( const StreamerArguments args )
       HepLorentzVector p = args.genParticle->momentum();
       p4s_[varMCparticleP4] = LorentzVector(p.px(),p.py(),p.pz(),p.e());
    }
+   floats_[varCor]=args.jetcorrection;
    if ( args.candidate ) {
-      fill(args.candidate);
+     fill(args.candidate);
       return;
    }
 }

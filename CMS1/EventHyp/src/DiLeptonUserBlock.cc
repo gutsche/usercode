@@ -38,6 +38,11 @@ void cms1::DiLeptonUserBlock::registerBlock(EventData& event, const std::string&
 void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& candidate)
 {
    if ( ! usable() ) return;
+   const reco::PixelMatchGsfElectron* e1=0;
+   const reco::PixelMatchGsfElectron* e2=0;
+   e1 = dynamic_cast<const reco::PixelMatchGsfElectron*>(candidate.lTight);
+   e2 = dynamic_cast<const reco::PixelMatchGsfElectron*>(candidate.lLoose);
+
    lTight.fill( getStreamerArguments(&event, candidate.lTight) );
    lLoose.fill( getStreamerArguments(&event, candidate.lLoose) );
    jets.fill( getStreamerArguments(&event, candidate.jets) );
@@ -50,10 +55,25 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
    for (std::vector<const reco::Candidate*>::const_iterator itr = event.refJets.begin(); itr != event.refJets.end(); ++itr)
      {
 	bool notUsed = true;
-	for(std::vector<const reco::Candidate*>::const_iterator itr2=candidate.jets.begin(); itr2 != candidate.jets.end(); ++itr2)
+	bool electron = true;
+	std::vector<const reco::Candidate*> vect_elecs;
+	if(e1 !=0 || e2 !=0 ) {
+	  if( e1!=0 ) vect_elecs.push_back(e1);
+	  if( e2!=0 ) vect_elecs.push_back(e2);
+	  //testJetForElectrons returns false if the Jet contains an electron
+	  electron = cms1::Cuts::testJetForElectrons(**itr, vect_elecs) ;
+	}
+	
+	for(std::vector<const reco::Candidate*>::const_iterator itr2=candidate.jets.begin(); itr2 != candidate.jets.end(); ++itr2) {
 	  if ( (*itr)==(*itr2) ) notUsed = false;
-	if ( notUsed ) notUsedJets.push_back(*itr);
+	}
+	
+	if ( notUsed && electron ) notUsedJets.push_back(*itr);
      }
+
+
+
+
    otherJets.fill( getStreamerArguments(&event, notUsedJets) );
    nJets->addData( candidate.jets.size() );
    nOtherJets->addData( notUsedJets.size() );

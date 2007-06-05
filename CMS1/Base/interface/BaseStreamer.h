@@ -5,7 +5,7 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/05/11 04:08:51 $
+// $Date: 2007/05/22 07:12:39 $
 // $Revision: 1.1 $
 //
 #include "CMS1/Base/interface/UserData.h"
@@ -24,10 +24,11 @@ namespace cms1 {
 	const HepMC::GenParticle* genParticle;
 	const reco::GenJet*       genJet;
 	const reco::Track*        track;
-	  
+        float                     jetcorrection;
+
 	StreamerArguments():
-	candidate(0),genParticle(0),genJet(0),track(0)
-	  {}
+	  candidate(0),genParticle(0),genJet(0),track(0),jetcorrection(0)
+          {}
      };
    
    class BaseStreamer
