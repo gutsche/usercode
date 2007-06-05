@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/05/24 17:40:57 $
-// $Revision: 1.12 $
+// $Author: sani $
+// $Date: 2007/06/04 18:58:45 $
+// $Revision: 1.13 $
 //
 
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
@@ -42,32 +42,32 @@ namespace cms1 {
     double R9;
   };
   
-   class Electrons: public BlackBox  {
+  class Electrons: public BlackBox  {
   public:
-     Electrons(): BlackBox() {}
-      
+    Electrons(): BlackBox() {}
+    
     // These are "types of electrons" that we define. We can add as many as we want as
     // people invent new electron requirements
     enum ElectronType {AllElectrons, TightElectrons, LooseElectrons, TruthMatchedElectrons, Golden, BigBrem, Narrow, Showering, Custom};
-     
+    
     std::vector<const reco::Candidate*> getElectrons (const ElectronType, const Cuts&,
                                                       Cuts::IsolationType isolated = Cuts::NotIsolated,
-                                                                  ElectronDef def = ElectronDef());
+                                                      ElectronDef def = ElectronDef());
     bool classify(ElectronDef def, const reco::PixelMatchGsfElectron* electron);
-    void R9_25(const reco::PixelMatchGsfElectron*, float&, float&, float&);
-    void sigma(const reco::PixelMatchGsfElectron*, float&, float&);
     void removeElectrons(const std::vector<reco::PixelMatchGsfElectron>*);
-
+    
     void dump(std::ostream& o, std::vector<const reco::Candidate*> el);
     void registerEventUserData();
     void fillEventUserData();
-  private:
-      VectorUserBlock<TrackStreamer> evtElectrons;
 
-      UserDataInt *nElectrons;
-      UserDataInt1D *nSeed, *cms_class;
-      UserDataFloat1D *hOverE, *fBrem, *dEtaIn, *dEtaOut, *dPhiIn, *dPhiOut, *vareMax, *vare3x3, *vare5x5;
-      UserDataFloat1D *eOverPIn, *eOverPOut, *eSeed, *sPhiPhi, *sEtaEta;
+  private:
+    void R9_25(const reco::PixelMatchGsfElectron*, float&, float&, float&, float&, float&);
+    VectorUserBlock<TrackStreamer> evtElectrons;
+    
+    UserDataInt *nElectrons;
+    UserDataInt1D *nSeed, *cms_class;
+    UserDataFloat1D *hOverE, *fBrem, *dEtaIn, *dEtaOut, *dPhiIn, *dPhiOut, *vareMax, *vare3x3, *vare5x5;
+    UserDataFloat1D *eOverPIn, *eOverPOut, *eSeed, *sPhiPhi, *sEtaEta;
   };
 }
 

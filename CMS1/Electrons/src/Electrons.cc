@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: sani $
-// $Date: 2007/06/04 18:58:55 $
-// $Revision: 1.16 $
+// $Date: 2007/06/04 19:39:19 $
+// $Revision: 1.17 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -244,7 +244,7 @@ void cms1::Electrons::dump(std::ostream& o, std::vector<const reco::Candidate*> 
 }
 
 void cms1::Electrons::R9_25(const reco::PixelMatchGsfElectron* electron,
-			   float& eMax, float& e3x3, float& e5x5) { 
+			   float& eMax, float& e3x3, float& e5x5, float& spp, float& see) { 
 
   reco::SuperClusterRef sclRef=electron->superCluster();
 
@@ -265,24 +265,8 @@ void cms1::Electrons::R9_25(const reco::PixelMatchGsfElectron* electron,
   eMax = sclRef->energy();
   e3x3 = seedShapeRef->e3x3();
   e5x5 = seedShapeRef->e5x5();
-}
-
-void cms1::Electrons::sigma(const reco::PixelMatchGsfElectron* electron, float& sphiphi, float& setaeta) {
-  
-  reco::SuperClusterRef sclRef = electron->superCluster();
-  reco::BasicClusterRef seedRef = electron->superCluster()->seed();
-  
-  reco::basicCluster_iterator it;
-  
-  sphiphi = 0.;
-  setaeta = 0.;
-
-  for(it = sclRef->clustersBegin(); it != sclRef->clustersEnd(); ++it) {
-    float deltaphi = (seedRef->phi()-(*it)->phi());
-    float deltaeta = (seedRef->eta()-(*it)->eta());
-    sphiphi += deltaphi*deltaphi*(*it)->energy()/seedRef->energy();
-    setaeta += deltaeta*deltaeta*(*it)->energy()/seedRef->energy();
-  }
+  spp = seedShapeRef->covPhiPhi();
+  see = seedShapeRef->covEtaEta();
 }
 
 bool cms1::Electrons::classify(ElectronDef def, const reco::PixelMatchGsfElectron* electron) {
@@ -290,8 +274,8 @@ bool cms1::Electrons::classify(ElectronDef def, const reco::PixelMatchGsfElectro
   bool result = false;
   reco::SuperClusterRef sclRef = electron->superCluster();
 
-  float eMax, e3x3, e5x5;
-  R9_25(electron, eMax, e3x3, e5x5);
+  float eMax, e3x3, e5x5, spp, see;
+  R9_25(electron, eMax, e3x3, e5x5, spp, see);
   float ratio = eMax/e3x3;
   
   // use supercluster energy including f(Ncry) correction
@@ -389,8 +373,7 @@ void cms1::Electrons::fillEventUserData() {
     float pin  = el->trackMomentumAtVtx().R(); 
     float pout = el->trackMomentumOut().R();
 
-    R9_25(el, eMax, e3x3, e5x5);
-    sigma(el, spp, see);
+    R9_25(el, eMax, e3x3, e5x5, spp, see);
 
     vint0.push_back(el->numberOfClusters()-1);
     vint1.push_back(el->classification());
