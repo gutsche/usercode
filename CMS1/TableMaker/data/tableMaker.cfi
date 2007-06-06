@@ -24,13 +24,9 @@ module tableMaker = TableMakerFW
   untracked double LooseElectronMinEta  = -2.4
   untracked double LooseElectronMaxEta  =  2.4
 
-  #untracked double JetPt                = 20
-  #untracked double JetMinEta            = -2.5
-  #untracked double JetMaxEta            =  2.5
-
-  untracked double JetPt                = 5
-  untracked double JetMinEta            = -3.5
-  untracked double JetMaxEta            =  3.5
+  untracked double JetPt                = 20
+  untracked double JetMinEta            = -2.5
+  untracked double JetMaxEta            =  2.5
 
   untracked double MET                  = 00
 
