@@ -1,2 +1,6 @@
 # include analyzer
 include "CMS1/TableMaker/data/tableMaker.cfi"
+include "JetMETCorrections/MCJet/data/MCJetCorrections.cff"
+es_prefer MCJetCorrectorMcone5 = MCJetCorrectionService {}
+
+sequence tableMaker_corr = {MCJetCorrections, tableMaker}
