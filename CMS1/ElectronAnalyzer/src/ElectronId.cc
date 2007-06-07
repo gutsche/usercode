@@ -26,14 +26,17 @@ void cms1::ElectronId::finishProcessing() {
 void cms1::ElectronId::processEvent(const edm::Event& iEvent) {
   
   std::vector<const reco::Candidate*> electrons = theElectrons.getElectrons(Electrons::AllElectrons, Cuts());
-
-  elidUserData.fill(theData, electrons);  
+  std::vector<const HepMC::GenParticle*> mcel = theMCInfo.getMCInfo(MCInfo::Electrons, Cuts());
+  elidUserData.fill(theData, electrons, mcel);  
   nCandidates->addData(electrons.size());
+  nPythiaEl->addData(mcel.size());
 
 }
 
 void cms1::ElectronId::configure(const edm::ParameterSet& iConfig) {
   elidUserData.registerBlock(theData, "", "cms1_");
-  theData.intUserData.push_back( new UserData<int>("nCand", "evt_", "cms1_evt_", false) );
+  theData.intUserData.push_back( new UserData<int>("nCand", "elid_", "cms1_elid_", false) );
   nCandidates = theData.intUserData.back();
+  theData.intUserData.push_back( new UserData<int>("nPythia", "elid_", "cms1_elid_", false) );
+  nPythiaEl = theData.intUserData.back();
 }

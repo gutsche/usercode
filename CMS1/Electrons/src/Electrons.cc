@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: sani $
-// $Date: 2007/06/04 19:39:19 $
-// $Revision: 1.17 $
+// $Date: 2007/06/05 14:04:12 $
+// $Revision: 1.18 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -314,7 +314,7 @@ void cms1::Electrons::registerEventUserData() {
   evtElectrons.registerBlock( *data_, "els_", "cms1_els_");
   data_->intUserData.push_back( new UserData<int>("nels", "evt_", "cms1_evt_", false) );
   nElectrons = data_->intUserData.back();
-  
+  /*
   data_->intUserData1D.push_back( new UserDataInt1D("nSeed", "elid_", "cms1_els_", false) );
   nSeed = data_->intUserData1D.back(); 
   data_->intUserData1D.push_back( new UserDataInt1D("class", "elid_", "cms1_els_", false) );
@@ -349,27 +349,40 @@ void cms1::Electrons::registerEventUserData() {
   sPhiPhi = data_->floatUserData1D.back();  
   data_->floatUserData1D.push_back(new UserDataFloat1D("sigmaEtaEta", "elid_", "cms1_els_", false));
   sEtaEta = data_->floatUserData1D.back(); 
+  data_->floatUserData1D.push_back(new UserDataFloat1D("tkIso", "elid_", "cms1_els_", false));
+  tkIso = data_->floatUserData1D.back(); 
+  */
 }
 
 void cms1::Electrons::fillEventUserData() {
 
-  float eMax=0., e3x3=0., e5x5=0., see, spp;
+  //float eMax=0., e3x3=0., e5x5=0., see, spp;
+  //double iso;
 
   std::vector<const reco::Candidate*> els = getElectrons(AllElectrons,Cuts());
   data_->refElectrons = els;
 
   evtElectrons.fill(getStreamerArguments(data_, els));
   nElectrons->addData(els.size());
- 
+  /*
   std::vector<int> vint0, vint1;
   std::vector<float> vfloat0,vfloat1,vfloat2,vfloat3;
   std::vector<float> vfloat4,vfloat5,vfloat6,vfloat7,vfloat8;
-  std::vector<float> vfloat9,vfloat10, vfloat11, vfloat12, vfloat13;
+  std::vector<float> vfloat9,vfloat10, vfloat11, vfloat12, vfloat13, vfloat14;
   std::vector<const reco::Candidate*>::const_iterator it;
-    
+
+  // add isolation info
+  const  std::vector<reco::Track>* tracks = data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks");
+
   for(it = els.begin(); it != els.end(); ++it) {
+
     const reco::PixelMatchGsfElectron* el = dynamic_cast<const reco::PixelMatchGsfElectron*>(*it);
     
+    if (tracks) {
+      iso = cms1::Cuts::trackRelIsolation(el->trackMomentumAtVtx(), el->vertex(), tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
+    } else 
+      iso = 0.;
+
     float pin  = el->trackMomentumAtVtx().R(); 
     float pout = el->trackMomentumOut().R();
 
@@ -393,6 +406,7 @@ void cms1::Electrons::fillEventUserData() {
     vfloat11.push_back(el->superCluster()->seed()->energy());
     vfloat12.push_back(spp);
     vfloat13.push_back(see);
+    vfloat14.push_back(iso);
   }
 
   nSeed->addData(vint0);
@@ -413,7 +427,10 @@ void cms1::Electrons::fillEventUserData() {
   eSeed->addData(vfloat11);
   sPhiPhi->addData(vfloat12);
   sEtaEta->addData(vfloat13);
+  tkIso->addData(vfloat14);
+  */
 }  
+
 
 
 

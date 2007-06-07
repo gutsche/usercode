@@ -11,8 +11,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: sani $
-// $Date: 2007/06/04 18:58:45 $
-// $Revision: 1.13 $
+// $Date: 2007/06/05 14:04:03 $
+// $Revision: 1.14 $
 //
 
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
@@ -63,11 +63,11 @@ namespace cms1 {
   private:
     void R9_25(const reco::PixelMatchGsfElectron*, float&, float&, float&, float&, float&);
     VectorUserBlock<TrackStreamer> evtElectrons;
-    
     UserDataInt *nElectrons;
-    UserDataInt1D *nSeed, *cms_class;
-    UserDataFloat1D *hOverE, *fBrem, *dEtaIn, *dEtaOut, *dPhiIn, *dPhiOut, *vareMax, *vare3x3, *vare5x5;
-    UserDataFloat1D *eOverPIn, *eOverPOut, *eSeed, *sPhiPhi, *sEtaEta;
+
+    //    UserDataInt1D *nSeed, *cms_class;
+    //UserDataFloat1D *hOverE, *fBrem, *dEtaIn, *dEtaOut, *dPhiIn, *dPhiOut, *vareMax, *vare3x3, *vare5x5;
+    //UserDataFloat1D *eOverPIn, *eOverPOut, *eSeed, *sPhiPhi, *sEtaEta, *tkIso;
   };
 }
 

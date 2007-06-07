@@ -34,7 +34,7 @@ namespace cms1 {
     virtual void finishProcessing();
   private:
     ElIdUserBlock elidUserData;
-    UserDataInt* nCandidates;
+    UserDataInt *nCandidates, *nPythiaEl;
 
   };
 }
