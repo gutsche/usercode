@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: sani $
-// $Date: 2007/06/05 14:04:12 $
-// $Revision: 1.18 $
+// $Date: 2007/06/07 13:23:44 $
+// $Revision: 1.19 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -23,30 +23,35 @@
 
 void cms1::Electrons::removeElectrons(const std::vector<reco::PixelMatchGsfElectron>* collection) {
   
-  std::vector<reco::PixelMatchGsfElectron>* prova = const_cast<std::vector<reco::PixelMatchGsfElectron>* >(collection);
-  std::vector<reco::PixelMatchGsfElectron>::iterator it1, it2;
+  std::vector<reco::PixelMatchGsfElectron>* newEl = const_cast<std::vector<reco::PixelMatchGsfElectron>* >(collection);
+  std::vector<reco::PixelMatchGsfElectron> copy = *newEl;
+
+  newEl->clear();
   
-  std::vector<std::vector<reco::PixelMatchGsfElectron>::iterator> remove;
+  std::vector<reco::PixelMatchGsfElectron>::iterator it1, it2;
 
-  for(it1=prova->begin(); it1!=prova->end(); ++it1) {
-    for(it2=prova->begin(); it2!=prova->end(); ++it2) {
+  for(it1=copy.begin(); it1!=copy.end(); ++it1) {
 
+    bool isRemoved = false;
+    for(it2=copy.begin(); it2!=copy.end(); ++it2) {
       if (it1 == it2)
         continue;
-
       if (((*it1).superCluster().id() == (*it2).superCluster().id()) &&
           ((*it1).superCluster().index() == (*it2).superCluster().index())) {
-        
+
         float deltaEp1 = fabs((*it1).eSuperClusterOverP() - 1.);
         float deltaEp2 = fabs((*it2).eSuperClusterOverP() - 1.);
-        if (deltaEp2 < deltaEp1) 
-          remove.push_back(it2);
+        if (deltaEp1 > deltaEp2) {
+          isRemoved = true;
+          break;
+        }
       }
     }
-  }
+    
+    if (!isRemoved)
+      newEl->push_back(*it1);
 
-  for(unsigned int i=0; i<remove.size(); ++i)
-    prova->erase(remove[i]);
+  }
 }
 
 std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const ElectronType electronType,
@@ -69,8 +74,9 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
       }
 
       // remove electrons reconstructed twice
-      removeElectrons(collection);
-      
+      if (collection->size() > 1)
+        removeElectrons(collection);
+
       if (isolated && !data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks") ) {
         std::cout << "ERROR: track collection for electron isolation is not set" << std::endl;
         return output_list;
@@ -358,7 +364,6 @@ void cms1::Electrons::fillEventUserData() {
 
   //float eMax=0., e3x3=0., e5x5=0., see, spp;
   //double iso;
-
   std::vector<const reco::Candidate*> els = getElectrons(AllElectrons,Cuts());
   data_->refElectrons = els;
 
