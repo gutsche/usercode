@@ -7,9 +7,9 @@
 // Original Author: Matteo Sani, matteo.sani@cern.ch
 // Created:         Thu Mar 1 20:27:42 UTC 2007
 //
-// $Author: mangano $
-// $Date: 2007/05/31 17:08:03 $
-// $Revision: 1.7 $
+// $Author: dmytro $
+// $Date: 2007/06/02 18:03:50 $
+// $Revision: 1.8 $
 //
 
 #include "CMS1/MCInfo/interface/MCInfo.h"
@@ -84,7 +84,7 @@ std::vector<const HepMC::GenParticle*> cms1::MCInfo::getMCInfo(ParticleType part
   std::vector<const HepMC::GenParticle*> output_list;
 
   if (!data_) {
-    std::cout << "ERROR: Monte Carlo black box doesn't know where to find EvenData." << std::endl;
+    std::cout << "ERROR: Monte Carlo black box doesn't know where to find EventData." << std::endl;
     return output_list;
   }
   
@@ -117,13 +117,53 @@ std::vector<const HepMC::GenParticle*> cms1::MCInfo::getMCInfo(ParticleType part
           output_list.push_back(*it); 
         }
     }
-  return output_list;
+   return output_list;
 }
+
+math::XYZTLorentzVector cms1::MCInfo::getGenMET() 
+{
+  math::XYZTLorentzVector tempvect = math::XYZTLorentzVector(0,0,0,0);
+  if(!data_) {
+    std::cout << "ERROR: Monte Carlo black box doesn't know where to find EventData." << std::endl
+	      << "Returning an empty Loretz Vector and therefore Gen MET = 0, and Gen METPHI=0" << std::endl;
+    
+    return tempvect;
+  }
+  
+  if (data_->mcInfo.empty()) {
+    std::cout << "Warning: generator particle list is empty. Not filled?" << std::endl
+	      << "Returning an empty Loretz Vector and therefore Gen MET = 0, and Gen METPHI=0" << std::endl;;
+    
+    return tempvect;
+  }
+  
+  for(std::vector<HepMC::GenParticle*>::const_iterator it=data_->mcInfo.begin(); it!=data_->mcInfo.end(); ++it) {
+    int part_id = abs( (*it)->pdg_id() );
+    //12 = nuE, 14=nuMu, 16=nuTau, 
+    if( (*it)->status() != 3) {
+       if( part_id == 12 || part_id == 14 || part_id == 16) {
+	 tempvect = tempvect+math::XYZTLorentzVector( (*it)->momentum().x(),
+						      (*it)->momentum().y(),
+						      (*it)->momentum().z(),
+						      (*it)->momentum().e() );
+       }
+    }
+  }
+  return tempvect;
+  
+}
+  
+   
+   
 
 void cms1::MCInfo::registerEventUserData()
 {
    evtGenParticles.registerBlock( *data_, "genps_", "cms1_genps_");
    evtGenJets.registerBlock( *data_, "genjs_", "cms1_genjs_");
+   data_->floatUserData.push_back( new UserData<float>("MET", "gen_", "cms1_gen_", false) );
+   evtGenMET = data_->floatUserData.back();
+   data_->floatUserData.push_back( new UserData<float>("METPhi", "gen_", "cms1_gen_", false) );
+   evtGenMETPhi = data_->floatUserData.back();
 }
 
 void cms1::MCInfo::fillEventUserData()
@@ -132,6 +172,9 @@ void cms1::MCInfo::fillEventUserData()
    evtGenParticles.fill( summary );
    std::vector<const reco::GenJet*> sumJets = getJetInfo(Cuts());
    evtGenJets.fill( sumJets );
+   math::XYZTLorentzVector met = getGenMET();
+   evtGenMET->addData( met.Pt() );
+   evtGenMETPhi->addData( std::atan2(met.Py(), met.Px()) );
 }
 
 

@@ -10,8 +10,8 @@
 // Original Author: Matteo Sani, matteo.sani@cern.ch
 // Created:         Thu Mar 1 20:27:02 UTC 2007
 //
-// $Author: sani $
-// $Revision: 1.5 $
+// $Author: dmytro $
+// $Revision: 1.6 $
 //
 
 #include "CMS1/Base/interface/BlackBox.h"
@@ -51,11 +51,17 @@ namespace cms1 {
     int numberOfParticles(const ParticleType type, const Cuts& cuts) {
       return getMCInfo(type,cuts).size();
     }
+    //function to return a LorentzVector that is the sum of 
+    //all the neutrino LorentzVectors in the event
+    math::XYZTLorentzVector getGenMET();
      void registerEventUserData();
      void fillEventUserData();
    private:
      VectorUserBlock<GenParticleStreamer> evtGenParticles;
      VectorUserBlock<GenJetStreamer>      evtGenJets;
+     UserDataFloat*                       evtGenMET;
+     UserDataFloat*                       evtGenMETPhi;
+
   };
 }
 
