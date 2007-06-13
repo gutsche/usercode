@@ -9,8 +9,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/24 17:41:01 $
-// $Revision: 1.26 $
+// $Date: 2007/05/24 23:35:28 $
+// $Revision: 1.27 $
 //
 
 #include <vector>
@@ -37,6 +37,8 @@
 
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
 #include "CMS1/TableMaker/src/UtilFunctions_isolation.h"
+
+//#include "TrackPropagation/SteppingHelixPropagator/interface/SteppingHelixPropagator.h"
 
 
 //Number of bins in histograms
@@ -74,35 +76,35 @@ unsigned int nJetsWithoutEl(std::vector<const reco::Candidate*> jets, const Cand
 
 void cms1::TableMaker::finishProcessing()
 {
-   // let the base analyzer finish its work
-   BaseAnalyzer::finishProcessing();
-//   hNJets->Write();
-//   for(int i=0;i<5;++i)
-//     {
-//       hMll[i]->Write();
-//       hPTLoose[i]->Write();
-//       hPTTight[i]->Write();
-//       hPTLeading[i]->Write();
-//       hPTTrailing[i]->Write();
-//       hHT[i]->Write();
-//       hMET[i]->Write();
-//       if(i<4)
-// 	{
-// 	  hPTJet[i]->Write();
-// 	}
-//     }
+  // let the base analyzer finish its work
+  BaseAnalyzer::finishProcessing();
+  //   hNJets->Write();
+  //   for(int i=0;i<5;++i)
+  //     {
+  //       hMll[i]->Write();
+  //       hPTLoose[i]->Write();
+  //       hPTTight[i]->Write();
+  //       hPTLeading[i]->Write();
+  //       hPTTrailing[i]->Write();
+  //       hHT[i]->Write();
+  //       hMET[i]->Write();
+  //       if(i<4)
+  // 	{
+  // 	  hPTJet[i]->Write();
+  // 	}
+  //     }
 
-//   for (int table_index = 1; table_index < 6; ++table_index)
-//     {
+  //   for (int table_index = 1; table_index < 6; ++table_index)
+  //     {
 
-//       hTable->SetBinContent(table_index,1,countedEEJets_[table_index-1]);
-//       hTable->SetBinContent(table_index,2,countedEMuJets_[table_index-1]);
-//       hTable->SetBinContent(table_index,3,countedMuEJets_[table_index-1]);
-//       hTable->SetBinContent(table_index,4,countedMuMuJets_[table_index-1]);
+  //       hTable->SetBinContent(table_index,1,countedEEJets_[table_index-1]);
+  //       hTable->SetBinContent(table_index,2,countedEMuJets_[table_index-1]);
+  //       hTable->SetBinContent(table_index,3,countedMuEJets_[table_index-1]);
+  //       hTable->SetBinContent(table_index,4,countedMuMuJets_[table_index-1]);
 	    
-//     }//END table index
+  //     }//END table index
 
-//   hTable->Write();
+  //   hTable->Write();
 
 	
   histogramFile->Write();
@@ -141,18 +143,17 @@ void cms1::TableMaker::finishProcessing()
 
   std::cout << output.str() << std::endl; 
 
-//   delete  hNJets;
-//   for(int i=0;i<5;++i){
-//     delete hMll[i];
-//     delete hPTLeading[i];
-//     delete hPTTrailing[i];
-//     delete hHT[i];
-//   }
+  //   delete  hNJets;
+  //   for(int i=0;i<5;++i){
+  //     delete hMll[i];
+  //     delete hPTLeading[i];
+  //     delete hPTTrailing[i];
+  //     delete hHT[i];
+  //   }
 
 }
-
 void
-  cms1::TableMaker::processEvent( const edm::Event& iEvent )
+cms1::TableMaker::processEvent( const edm::Event& iEvent, const edm::EventSetup& iSetup )
 {
 
   ++events_;
@@ -181,12 +182,49 @@ void
   // ACHTUNG, Baby -- here we change met and metphi in situ!!
   // but metObj is not changed 
   MET::correctMETmuons(&allMuons, met, metphi);
-
-
+  //PDK now correct the MET for the muon deposits
+  double muEx = 0.0;
+  double muEy = 0.0;
+  for(std::vector<const reco::Candidate*>::const_iterator iter=allMuons.begin();
+      iter!=allMuons.end(); 
+      iter++) {
+    if( const reco::Muon* mu = dynamic_cast<const reco::Muon*>( *iter ) ) {
+      const reco::Track* mu_track = mu->track().get();
+      trackAssociator_.useDefaultPropagator();
+      TrackDetectorAssociator::AssociatorParameters trackparameters;
+      trackparameters.useEcal = false ;
+      trackparameters.useHcal = false ;
+      trackparameters.useHO = true ;
+      trackparameters.useCalo = true ;
+      trackparameters.useMuon = false ;
+      trackparameters.useOldMuonMatching = false;
+      //trackparameters.
+      TrackDetMatchInfo info = trackAssociator_.associate(iEvent,
+							  iSetup, 
+							  trackAssociator_.getFreeTrajectoryState(iSetup, *mu_track),
+							  trackparameters);
+      double theta = mu_track->theta();
+      double phi = mu_track->phi();
+      //added PDK - fix MET for muon deposit in calo
+      
+      //there is a bug in the TrackDetMatchInfo class
+      //Asking for the HO tower energy returns the total energy in the tower
+      //so using the rechits for the HO will work better (hits and towers 
+      //should be the same for the HO anyway)
+      muEx += (info.ecalTowerEnergy() + info.hcalTowerEnergy() + info.hoCrossedEnergy())*sin(theta)*cos( phi );
+      muEy += (info.ecalTowerEnergy() + info.hcalTowerEnergy() + info.hoCrossedEnergy())*sin(theta)*sin( phi );
+    }
+  }
+  //added PDK - fix the MET for the muon deposit in calo
+  double metx = met*cos(metphi) + muEx;
+  double mety = met*sin(metphi) + muEy;
+  met = std::sqrt(metx*metx + mety*mety);
+  metphi = atan2(mety, metx);
+  
   // Dump Event contents
   if (events_ < MaxEventDebug_) {
     const std::vector<reco::CaloJet>* jetColl =
-       theData.getData<std::vector<reco::CaloJet> >("midPointCone5CaloJets");
+      theData.getData<std::vector<reco::CaloJet> >("midPointCone5CaloJets");
 
     std::cout << "------------------------------------------------------------------------" << std::endl; 
     std::cout << "Dump of Event, " 
@@ -209,12 +247,12 @@ void
   if (events_ < MaxEventDebug_) {
     eventHyp_.dump(std::cout, dlCandidates);
   }
-   
+
   if (makeNtuples) nCandidates->addData(dlCandidates.size()); // Fill ntuples
 
   for ( std::vector<const cms1::DiLeptonCandidate*>::iterator dli = dlCandidates.begin(), dle = dlCandidates.end(); dli != dle; ++dli ) {
-     const cms1::DiLeptonCandidate* dl = *dli;
-     if (makeNtuples) diLeptonUserData.fill(theData,*dl); // Fill ntuples
+    const cms1::DiLeptonCandidate* dl = *dli;
+    if (makeNtuples) diLeptonUserData.fill(theData,*dl); // Fill ntuples
     FillHistograms(dl->jets, dl->lTight, dl->lLoose, dl->MET);
     int njet = dl->nJets(); if (njet > 4)  njet = 4;
     switch (dl->candidateType) {
@@ -293,11 +331,11 @@ void cms1::TableMaker::FillHistograms(std::vector<const reco::Candidate*> jets,c
 
 void cms1::TableMaker::configure(const edm::ParameterSet& iConfig)
 {
-   if (makeNtuples) {
-      diLeptonUserData.registerBlock(theData, "", "cms1_");
-      theData.intUserData.push_back( new UserData<int>("nCand", "evt_", "cms1_evt_", false) );
-      nCandidates = theData.intUserData.back();
-   }
+  if (makeNtuples) {
+    diLeptonUserData.registerBlock(theData, "", "cms1_");
+    theData.intUserData.push_back( new UserData<int>("nCand", "evt_", "cms1_evt_", false) );
+    nCandidates = theData.intUserData.back();
+  }
   // tight muon cuts
   tightMuon_.pt_min       = iConfig.getUntrackedParameter<double>("TightMuonPt");
   tightMuon_.eta_min      = iConfig.getUntrackedParameter<double>("TightMuonMinEta");
@@ -336,6 +374,17 @@ void cms1::TableMaker::configure(const edm::ParameterSet& iConfig)
   ZRangeMinMass_             = iConfig.getUntrackedParameter<double>("ZRangeMinMass");
   ZRangeMaxMass_             = iConfig.getUntrackedParameter<double>("ZRangeMaxMass");
 
+  
+  // Fill data labels for TrackAssociator - PDK
+  trackAssociator_.theEBRecHitCollectionLabel = edm::InputTag("ecalRecHit:EcalRecHitsEB");
+  trackAssociator_.theEERecHitCollectionLabel = edm::InputTag("ecalRecHit:EcalRecHitsEE");
+  trackAssociator_.theCaloTowerCollectionLabel = edm::InputTag("towerMaker");
+  trackAssociator_.theHBHERecHitCollectionLabel = edm::InputTag("hbhereco");
+  trackAssociator_.theHORecHitCollectionLabel = edm::InputTag("horeco");
+  trackAssociator_.theDTRecSegment4DCollectionLabel = edm::InputTag("dt4DSegmets");
+  trackAssociator_.theCSCSegmentCollectionLabel = edm::InputTag("cscSegments");
+
+  
   fileTag 					= iConfig.getUntrackedParameter<std::string>("fileTag");
 
   MaxEventDebug_             = (unsigned int) iConfig.getUntrackedParameter<int>("MaxEventDebug");
@@ -410,5 +459,7 @@ void cms1::TableMaker::configure(const edm::ParameterSet& iConfig)
   }
 
   events_ = 0;
+  
+  
 
 }

@@ -12,8 +12,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/22 07:24:55 $
-// $Revision: 1.17 $
+// $Date: 2007/05/24 23:35:28 $
+// $Revision: 1.18 $
 //
 
 #include <vector>
@@ -26,6 +26,8 @@
 #include "CMS1/EventHyp/interface/DiLeptonCandidate.h"
 #include "CMS1/EventHyp/interface/DiLeptonUserBlock.h"
 #include "CMS1/Base/interface/Cuts.h"
+#include "TrackingTools/TrackAssociator/interface/TrackDetectorAssociator.h"
+#include "TrackingTools/TrackAssociator/interface/TrackDetMatchInfo.h"
 
 #include <TH1.h>
 #include <TH2.h>
@@ -46,8 +48,9 @@ namespace cms1 {
     virtual void configure(const edm::ParameterSet& iConfig);
 	
     // process event using EventData
-    virtual void processEvent(const edm::Event&);
-     
+    // changed to add MET from mus - PDK 
+    virtual void processEvent(const edm::Event&, const edm::EventSetup& iSetup);
+    
     // finish process
     virtual void finishProcessing();
 
@@ -65,13 +68,22 @@ namespace cms1 {
 
     Cuts          noCut_;
 
-    double        ZRangeMinMass_;
-    double        ZRangeMaxMass_;
+   //added PDK - TrackAssociator
+   TrackDetectorAssociator trackAssociator_;
+   bool useEcal_;
+   bool useHcal_;
+   bool useMuon_;
+   bool useOldMuonMatching_;
+   
+   
 
-    unsigned int  MaxEventDebug_;
-
-    // Black boxes
-    // Muons         muons_;
+   double        ZRangeMinMass_;
+   double        ZRangeMaxMass_;
+   
+   unsigned int  MaxEventDebug_;
+   
+   // Black boxes
+   // Muons         muons_;
     // Electrons     electrons_;
     // Jets          jets_;
     // MET           MET_;
@@ -100,7 +112,6 @@ namespace cms1 {
     std::vector<TH1F *> hHT; //Events vs. temperature   x5
     std::vector<TH1F *> hMET; //events per missing et  x5
 
-     
     void FillHistograms(std::vector<const reco::Candidate*> jets, const reco::Candidate *,const reco::Candidate *, double);
      
     DiLeptonUserBlock diLeptonUserData;

@@ -9,9 +9,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: slava77 $
-// $Date: 2007/04/26 21:53:13 $
-// $Revision: 1.1 $
+// $Author: dmytro $
+// $Date: 2007/05/11 04:20:12 $
+// $Revision: 1.2 $
 //
 #include <vector>
 #include "CMS1/TableMaker/interface/TableMaker.h"
@@ -38,7 +38,8 @@ namespace cms1 {
 	     BaseAnalyzer::processEvent( iEvent );
 	     
 	     // run user code
-	     processEvent( iEvent );
+	     //Breaking FWLite for now by adding iSetup to fix MET for muons - PDK
+	     processEvent( iEvent, iSetup);
 	     finishEvent();
 	  }
 	virtual void endJob(){ finishProcessing(); }
