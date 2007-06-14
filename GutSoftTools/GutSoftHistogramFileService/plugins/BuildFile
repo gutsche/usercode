@@ -1,4 +1,0 @@
-<use name=GutSoftTools/GutSoftHistogramFileService>
-<library name="GutSoftToolsGutSoftHistogramFileServicePlugin" file="*.cc">
-  <flags EDM_PLUGIN=1>
-</library>
