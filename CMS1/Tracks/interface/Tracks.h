@@ -11,8 +11,8 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/22 07:24:56 $
-// $Revision: 1.4 $
+// $Date: 2007/05/23 02:23:26 $
+// $Revision: 1.5 $
 //
 
 #include "DataFormats/TrackReco/interface/Track.h"
@@ -28,7 +28,7 @@ namespace cms1 {
       Tracks():BlackBox() {}
       
       // track types
-      enum TrackType { AllTracks };
+      enum TrackType { AllTracks, LooseTracks };
       
       // This is the function that does all the work
       std::vector<const reco::Track*> getTracks (const TrackType,

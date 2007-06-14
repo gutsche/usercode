@@ -8,8 +8,8 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/23 02:23:26 $
-// $Revision: 1.7 $
+// $Date: 2007/05/24 17:41:01 $
+// $Revision: 1.8 $
 //
 
 #include "CMS1/Tracks/interface/Tracks.h"
@@ -18,7 +18,7 @@
 
 std::vector<const reco::Track*> cms1::Tracks::getTracks(const TrackType trackType,
 							const Cuts& userCuts,
-							Cuts::IsolationType isolated)
+							Cuts::IsolationType isolationType)
 {
    // this is the output list
    std::vector<const reco::Track*> output_list;
@@ -32,7 +32,7 @@ std::vector<const reco::Track*> cms1::Tracks::getTracks(const TrackType trackTyp
 	   }
 	   // set the default cuts for this type
 	   Cuts cuts;
-	   cuts.isolated = isolated;
+	   cuts.isolated = isolationType;
 	   cuts.setEventData( data_ );
 	   cuts.AND(userCuts);
 	   const std::vector<reco::Track>* collection = data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks");
@@ -45,6 +45,16 @@ std::vector<const reco::Track*> cms1::Tracks::getTracks(const TrackType trackTyp
 	     }
 	}
       break;
+    case LooseTracks:
+	{
+	   // set the default cuts for this type and merge them with user Cuts
+	   Cuts cuts;
+	   cuts.pt_min = 2;
+	   cuts.AND(userCuts);
+	   cuts.setEventData(data_);
+	   
+	   return getTracks(AllTracks, cuts, isolationType);
+	}
       // You get here if you have requested a "muonType" that is not implemented
     default:
       std::cout << "Tracks::getTracks - Unkown or not implemented type" << std::endl;
@@ -64,7 +74,7 @@ void cms1::Tracks::registerEventUserData()
 
 void cms1::Tracks::fillEventUserData()
 {
-   std::vector<const reco::Track*> trks = getTracks(AllTracks,Cuts());
+   std::vector<const reco::Track*> trks = getTracks(LooseTracks,Cuts());
    data_->refTracks = trks;
    tracks.fill( getStreamerArguments(data_, trks) );
    runNumber->addData( data_->iEvent->id().run() );

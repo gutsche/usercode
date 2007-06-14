@@ -14,7 +14,24 @@ void cms1::EventData::clearUserData()
    for(std::vector<UserDataP41D*>::iterator itr=p4UserData1D.begin(); itr!=p4UserData1D.end(); ++itr)
      (*itr)->clearData();
 }
-	
+
+void cms1::EventData::clearEventData()
+{
+   refTracks.clear();
+   refMuons.clear();
+   refElectrons.clear();
+   refJets.clear();
+   mcInfo.clear();
+   jetInfo.clear();
+}
+
+void cms1::EventData::setEvent( const edm::Event* event )
+{
+   clearEventData();
+   clearUserData();
+   iEvent = event;
+}
+
 void cms1::EventData::addBranches( TTree& tree, bool candidateBased )
 {
    for(std::vector<UserDataInt*>::iterator itr=intUserData.begin(); itr!=intUserData.end(); ++itr)

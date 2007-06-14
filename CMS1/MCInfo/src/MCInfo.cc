@@ -7,9 +7,9 @@
 // Original Author: Matteo Sani, matteo.sani@cern.ch
 // Created:         Thu Mar 1 20:27:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/06/02 18:03:50 $
-// $Revision: 1.8 $
+// $Author: kalavase $
+// $Date: 2007/06/08 19:23:02 $
+// $Revision: 1.9 $
 //
 
 #include "CMS1/MCInfo/interface/MCInfo.h"
@@ -96,7 +96,6 @@ std::vector<const HepMC::GenParticle*> cms1::MCInfo::getMCInfo(ParticleType part
   if (particleType == MCInfo::Summary) {
     for(std::vector<HepMC::GenParticle*>::const_iterator it=data_->mcInfo.begin(); it!=data_->mcInfo.end(); ++it) {
       if ((*it)->status() == 3)
-        if (cuts.testGenParticle(*it))
           output_list.push_back(*it); 
     }
     return  output_list;
@@ -160,9 +159,9 @@ void cms1::MCInfo::registerEventUserData()
 {
    evtGenParticles.registerBlock( *data_, "genps_", "cms1_genps_");
    evtGenJets.registerBlock( *data_, "genjs_", "cms1_genjs_");
-   data_->floatUserData.push_back( new UserData<float>("MET", "gen_", "cms1_gen_", false) );
+   data_->floatUserData.push_back( new UserData<float>("met", "gen_", "cms1_gen_", false) );
    evtGenMET = data_->floatUserData.back();
-   data_->floatUserData.push_back( new UserData<float>("METPhi", "gen_", "cms1_gen_", false) );
+   data_->floatUserData.push_back( new UserData<float>("metPhi", "gen_", "cms1_gen_", false) );
    evtGenMETPhi = data_->floatUserData.back();
 }
 

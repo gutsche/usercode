@@ -23,9 +23,16 @@ void cms1::DiLeptonUserBlock::registerBlock(EventData& event, const std::string&
    jets.registerBlock(      event, name_prefix+"hyp_jets_", alias_prefix );
    otherJets.registerBlock( event, name_prefix+"hyp_other_jets_", alias_prefix );
    
-   addEntry(event.p4UserData,    p4Hyp,           "hyp_p4",         name_prefix, alias_prefix);
-   addEntry(event.floatUserData, met,             "hyp_met",        name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metPhi,          "hyp_metPhi",     name_prefix, alias_prefix);
+   addEntry(event.p4UserData,    p4Hyp,           "hyp_p4",           name_prefix, alias_prefix);
+   addEntry(event.floatUserData, met,             "hyp_met",          name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metPhi,          "hyp_metPhi",       name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metDPhiJet10,    "hyp_metDPhiJet10", name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metDPhiJet15,    "hyp_metDPhiJet15", name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metDPhiJet20,    "hyp_metDPhiJet20", name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metDPhiTrk10,    "hyp_metDPhiTrk10", name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metDPhiTrk25,    "hyp_metDPhiTrk25", name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metDPhiTrk50,    "hyp_metDPhiTrk50", name_prefix, alias_prefix);
+   
    addEntry(event.intUserData,   type,            "hyp_type",       name_prefix, alias_prefix);
    addEntry(event.intUserData,   nJets,           "hyp_njets",      name_prefix, alias_prefix);
    addEntry(event.intUserData,   nOtherJets,      "hyp_nojets",     name_prefix, alias_prefix);
@@ -71,9 +78,6 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
 	if ( notUsed && electron ) notUsedJets.push_back(*itr);
      }
 
-
-
-
    otherJets.fill( getStreamerArguments(&event, notUsedJets) );
    nJets->addData( candidate.jets.size() );
    nOtherJets->addData( notUsedJets.size() );
@@ -106,6 +110,72 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
 	   break;
 	}
    }
+   
+	
+   // MET dPhi wrt various things
+   // compute dPhi with respect to jets
+     {
+	float minDPhi10 = 9999;
+	float minDPhi15 = 9999;
+	float minDPhi20 = 9999;
+	float dPhi10 = 9999;
+	float dPhi15 = 9999;
+	float dPhi20 = 9999;
+	for (std::vector<const reco::Candidate*>::const_iterator cand = event.refJets.begin();
+	     cand != event.refJets.end(); ++cand)
+	  {
+	     // dphi units are not radians in the search for a minimum,
+	     // but they are radians for the output
+	     double dphi = fabs(cos((*cand)->phi()-candidate.METphi));
+	     if( (*cand)->pt()>10 && minDPhi10 > dphi ) {
+		minDPhi10 = dphi;
+		dPhi10 = (*cand)->phi()-candidate.METphi;
+	     }
+	     if( (*cand)->pt()>15 && minDPhi15 > dphi ) {
+		minDPhi15 = dphi;
+		dPhi15 = (*cand)->phi()-candidate.METphi;
+	     }
+	     if( (*cand)->pt()>20 && minDPhi20 > dphi ) {
+		minDPhi20 = dphi;
+		dPhi20 = (*cand)->phi()-candidate.METphi;
+	     }
+	  }
+	metDPhiJet10->addData( dPhi10 );
+	metDPhiJet15->addData( dPhi15 );
+	metDPhiJet20->addData( dPhi20 );
+     }
+   
+   // compute dPhi with respect to tracks
+     {
+	float minDPhi10 = 9999;
+	float minDPhi25 = 9999;
+	float minDPhi50 = 9999;
+	float dPhi10 = 9999;
+	float dPhi25 = 9999;
+	float dPhi50 = 9999;
+	for (std::vector<const reco::Track*>::const_iterator cand = event.refTracks.begin();
+	     cand != event.refTracks.end(); ++cand)
+	  {
+	     // dphi units are not radians in the search for a minimum,
+	     // but they are radians for the output
+	     double dphi = fabs(cos((*cand)->phi()-candidate.METphi));
+	     if( (*cand)->pt()>10 && minDPhi10 > dphi ) {
+		minDPhi10 = dphi;
+		dPhi10 = (*cand)->phi()-candidate.METphi;
+	     }
+	     if( (*cand)->pt()>25 && minDPhi25 > dphi ) {
+		minDPhi25 = dphi;
+		dPhi25 = (*cand)->phi()-candidate.METphi;
+	     }
+	     if( (*cand)->pt()>50 && minDPhi50 > dphi ) {
+		minDPhi50 = dphi;
+		dPhi50 = (*cand)->phi()-candidate.METphi;
+	     }
+	  }
+	metDPhiTrk10->addData( dPhi10 );
+	metDPhiTrk25->addData( dPhi25 );
+	metDPhiTrk50->addData( dPhi50 );
+     }
 }
 
 bool cms1::DiLeptonUserBlock::usable()

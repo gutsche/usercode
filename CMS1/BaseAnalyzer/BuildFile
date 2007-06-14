@@ -24,11 +24,18 @@
 <use name=DataFormats/TrackReco>
 <use name=SimDataFormats/HepMCProduct>
 
+# misc
+<use name=Utilities/Timing>
+<use name=TrackingTools/TrackAssociator>
+
 <export>
    <lib name=CMS1BaseAnalyzer>
    <use name=FWCore/TFWLiteSelector>
    <use name=DataFormats/TrackReco>
    <use name=DataFormats/JetReco>
    <use name=clhep>
+   # misc
+   <use name=Utilities/Timing>
+   <use name=TrackingTools/TrackAssociator>
 </export>
 # <Flags CXXFLAGS=-g>

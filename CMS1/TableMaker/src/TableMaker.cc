@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/05/24 23:35:28 $
-// $Revision: 1.27 $
+// $Author: kalavase $
+// $Date: 2007/06/13 18:14:39 $
+// $Revision: 1.28 $
 //
 
 #include <vector>
@@ -38,8 +38,8 @@
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
 #include "CMS1/TableMaker/src/UtilFunctions_isolation.h"
 
-//#include "TrackPropagation/SteppingHelixPropagator/interface/SteppingHelixPropagator.h"
-
+#include "Utilities/Timing/interface/TimingReport.h"
+#include "TrackingTools/TrackAssociator/interface/TimerStack.h" 
 
 //Number of bins in histograms
 #define BINS 20
@@ -155,9 +155,11 @@ void cms1::TableMaker::finishProcessing()
 void
 cms1::TableMaker::processEvent( const edm::Event& iEvent, const edm::EventSetup& iSetup )
 {
-
+  TimerStack timers;
+  timers.push("TableMaker::processEvent");
   ++events_;
-   
+  
+  timers.push("TableMaker::processEvent::getInfoFromBlackBoxes");
   // get vector of muons
   std::vector<const reco::Candidate*> tightMuons = theMuons.getMuons(Muons::TightGlobalMuons,tightMuon_);
   std::vector<const reco::Candidate*> looseMuons = theMuons.getMuons(Muons::LooseGlobalMuons,looseMuon_);
@@ -175,6 +177,8 @@ cms1::TableMaker::processEvent( const edm::Event& iEvent, const edm::EventSetup&
   // get vector of Jets
   std::vector<const reco::Candidate*> jets = theJets.getJets(Jets::DefaultJets,jetCut_);
 
+  timers.pop_and_push("TableMaker::processEvent::correctMET");
+   
   // get MET without cut and correct
   const reco::Candidate* metObj = theMET.getMET(MET::DefaultMET);
   double met = metObj->pt();
@@ -182,6 +186,7 @@ cms1::TableMaker::processEvent( const edm::Event& iEvent, const edm::EventSetup&
   // ACHTUNG, Baby -- here we change met and metphi in situ!!
   // but metObj is not changed 
   MET::correctMETmuons(&allMuons, met, metphi);
+
   //PDK now correct the MET for the muon deposits
   double muEx = 0.0;
   double muEy = 0.0;
@@ -203,8 +208,10 @@ cms1::TableMaker::processEvent( const edm::Event& iEvent, const edm::EventSetup&
 							  iSetup, 
 							  trackAssociator_.getFreeTrajectoryState(iSetup, *mu_track),
 							  trackparameters);
-      double theta = mu_track->theta();
-      double phi = mu_track->phi();
+      // use position at HCAL as the most resonable estimate
+      // where majority of energy was deposited in the calorimeter
+      double theta = info.trkGlobPosAtHcal.theta();
+      double phi = info.trkGlobPosAtHcal.phi();
       //added PDK - fix MET for muon deposit in calo
       
       //there is a bug in the TrackDetMatchInfo class
@@ -221,6 +228,8 @@ cms1::TableMaker::processEvent( const edm::Event& iEvent, const edm::EventSetup&
   met = std::sqrt(metx*metx + mety*mety);
   metphi = atan2(mety, metx);
   
+  timers.pop_and_push("TableMaker::processEvent::dumpEventContent");
+
   // Dump Event contents
   if (events_ < MaxEventDebug_) {
     const std::vector<reco::CaloJet>* jetColl =
@@ -240,6 +249,7 @@ cms1::TableMaker::processEvent( const edm::Event& iEvent, const edm::EventSetup&
     std::cout << "------------------------------------------------------------------------" << std::endl; 
   }
 	
+  timers.pop_and_push("TableMaker::processEvent::makeHypothesis");
   EventHyp eventHyp_; 
   eventHyp_.setEventData(&theData);
   std::vector<const cms1::DiLeptonCandidate*> dlCandidates = eventHyp_.getEventHyp(tightElectrons, looseElectrons, tightMuons, looseMuons, jets, met, metphi,
@@ -248,6 +258,8 @@ cms1::TableMaker::processEvent( const edm::Event& iEvent, const edm::EventSetup&
     eventHyp_.dump(std::cout, dlCandidates);
   }
 
+  timers.pop_and_push("TableMaker::processEvent::storeHypothesisInfo");
+   
   if (makeNtuples) nCandidates->addData(dlCandidates.size()); // Fill ntuples
 
   for ( std::vector<const cms1::DiLeptonCandidate*>::iterator dli = dlCandidates.begin(), dle = dlCandidates.end(); dli != dle; ++dli ) {

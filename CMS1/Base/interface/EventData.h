@@ -8,9 +8,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/05/24 17:40:56 $
-// $Revision: 1.10 $
+// $Author: mangano $
+// $Date: 2007/05/31 17:06:32 $
+// $Revision: 1.11 $
 //
 
 #include "CLHEP/HepMC/GenParticle.h"
@@ -29,6 +29,7 @@ namespace cms1 {
 	
 	// event data
 	const edm::Event* iEvent;
+	void setEvent( const edm::Event* iEvent );
 	
 	// reference collections
 	std::vector<const reco::Track*>     refTracks;
@@ -50,6 +51,18 @@ namespace cms1 {
 	std::vector<UserDataP41D*>     p4UserData1D;
 
 	// ----------------- METHODS ----------------------
+	// clear the event data to avoid copying old event information
+	void clearUserData();
+	void clearEventData();
+	
+	// ntuple specific stuff (not used for edm root files)
+	void addBranches( TTree& tree, bool candidateBased = false );
+	void fillEvent( TTree& tree, bool candidateBased = false );
+	
+	// --------------- the rest is a brain surgery ---------------
+	// proceed only if you are a compiler or close to it in	your 
+	// brain setup.
+	
 	template <class T> const T* getData(const std::string label, const std::string instance = "") const
 	  {
 	     edm::Handle<T> t;
@@ -63,7 +76,6 @@ namespace cms1 {
 	   return t;
 	}
 
-	void clearUserData();
 	template <class T> void checkDataConsistency(const std::vector<T>& block, int& nCandidates )
 	  {
 	     for(typename std::vector<T>::const_iterator itr=block.begin(); itr!=block.end(); ++itr)
@@ -86,9 +98,6 @@ namespace cms1 {
 	       }
 	  }
 
-	// ntuple specific stuff (not used for edm root files)
-	void addBranches( TTree& tree, bool candidateBased = false );
-	void fillEvent( TTree& tree, bool candidateBased = false );
      };
    
 }

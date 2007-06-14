@@ -11,8 +11,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/04/17 04:57:24 $
-// $Revision: 1.6 $
+// $Date: 2007/05/24 17:40:59 $
+// $Revision: 1.7 $
 //
 #include <iostream>
 
@@ -44,7 +44,6 @@ namespace cms1 {
       UserDataFloat*        evtMetPhi;
       UserDataFloat*        evtSumEt;
       UserDataFloat*        evtMetSig;
-
   };
 }
 

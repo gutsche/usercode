@@ -31,6 +31,12 @@ namespace cms1 {
 	UserDataP4*         p4Hyp;
 	UserDataFloat*      met;
 	UserDataFloat*      metPhi;
+	UserDataFloat*      metDPhiJet10;
+	UserDataFloat*      metDPhiJet15;
+	UserDataFloat*      metDPhiJet20;
+	UserDataFloat*      metDPhiTrk10;
+	UserDataFloat*      metDPhiTrk25;
+	UserDataFloat*      metDPhiTrk50;
 	
 	UserDataInt*        type;
 	UserDataInt*        nJets;
