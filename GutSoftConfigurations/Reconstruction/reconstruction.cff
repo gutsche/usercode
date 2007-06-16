@@ -34,8 +34,8 @@ include "GutSoftConfigurations/TrackObjects/trackEfficiencyObjects.cff"
 # timing analyzer
 #include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/ckfGutSoftTimingAnalyzer.cff"
 #include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/rsGutSoftTimingAnalyzer.cff"
-include "GutSoftAnalyzers/GutSoftHepMCAnalyzer/data/gutSoftHepMCAnalyzer.cff"
-include "GutSoftConfigurations/TrackObjects/dumpObjects.cff"
+#include "GutSoftAnalyzers/GutSoftHepMCAnalyzer/data/gutSoftHepMCAnalyzer.cff"
+#include "GutSoftConfigurations/TrackObjects/dumpObjects.cff"
 #include "GutSoftAnalyzers/GutSoftTrackingEventDisplay/data/gutSoftTrackingEventDisplay.cff"
 
 # output
@@ -58,8 +58,8 @@ path pT = {
 path p1 = 
 {
 #  gutSoftTrackingEventDisplay,
-  gutSoftHepMCAnalyzer,
-  dumpObjects,
+#  gutSoftHepMCAnalyzer,
+#  dumpObjects,
   trackObjects,
   trackEfficiencyObjects
 }

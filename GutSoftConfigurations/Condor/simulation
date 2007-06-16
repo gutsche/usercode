@@ -18,6 +18,7 @@ def main(argv) :
     6: GENERATOR_CFF   (FileInPath location of generator.cff, will be replaced for the placeholder CONDORGENERATIONCFF)
     7: NUM_EVENTS_PER_JOB
     8: Seed
+    9: PILEUP_CFF
     
     """
 
@@ -29,6 +30,11 @@ def main(argv) :
     generator_cff      = argv[5]
     num_events_per_job = argv[6]
     seed               = argv[7]
+    try:
+        pileup = argv[8]
+    except:
+        pileup = ''
+        
 
     # check if cmssw_dir exists
     if not os.path.exists(cmssw_dir) :
@@ -54,6 +60,8 @@ def main(argv) :
         line = line.replace('CONDORMAXEVENTS',num_events_per_job)
         line = line.replace('CONDORGENERATIONCFF',generator_cff)
         line = line.replace('CONDORSEED',str(final_seed))
+        if pileup != '' :
+            line = line.replace('CONDORPILEUPCFF',pileup)
         line = line.replace('CONDOR',cluster + '_' + process)
         output.write(line)
 

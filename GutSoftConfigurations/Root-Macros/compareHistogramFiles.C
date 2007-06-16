@@ -192,6 +192,7 @@ void compareHistogramFiles(std::vector<std::string> filenames) {
 	  filenameEnd = filenames.end();
 	filename != filenameEnd;
 	++filename ) {
+    std::cout << "File with name: " << *filename << " cannot be opened!" << std::endl;
     TFile *file = new TFile(filename->c_str());
     if ( file->IsZombie() ) {
       std::cout << "File with name: " << *filename << " cannot be opened!" << std::endl;
@@ -202,17 +203,19 @@ void compareHistogramFiles(std::vector<std::string> filenames) {
 
   // define histograms to compare
   std::vector<std::string> histonames;
-  histonames.push_back("rsTracks/eta");
-  histonames.push_back("rsTracks/nTracks");
-  histonames.push_back("rsTracks/chi2");
-  histonames.push_back("rsTracks/nhit");
-  histonames.push_back("rsTracks/phi");
-  histonames.push_back("rsTracks/pt");
-  histonames.push_back("rsTrackingEfficiency_Hits/efficiencyEta");
-  histonames.push_back("rsTrackingEfficiency_Hits/purityEta");
   histonames.push_back("rsSeedEfficiency/trueSeedingEfficiencyEta");
-  histonames.push_back("rsSeedEfficiency/seedingEfficiencyEta");
-  histonames.push_back("rsSeedEfficiency/rsSeedingEfficiencyEta");
+
+//   histonames.push_back("rsTracks/eta");
+//   histonames.push_back("rsTracks/nTracks");
+//   histonames.push_back("rsTracks/chi2");
+//   histonames.push_back("rsTracks/nhit");
+//   histonames.push_back("rsTracks/phi");
+//   histonames.push_back("rsTracks/pt");
+//   histonames.push_back("rsTrackingEfficiency_Hits/efficiencyEta");
+//   histonames.push_back("rsTrackingEfficiency_Hits/purityEta");
+//   histonames.push_back("rsSeedEfficiency/trueSeedingEfficiencyEta");
+//   histonames.push_back("rsSeedEfficiency/seedingEfficiencyEta");
+//   histonames.push_back("rsSeedEfficiency/rsSeedingEfficiencyEta");
   
 
 

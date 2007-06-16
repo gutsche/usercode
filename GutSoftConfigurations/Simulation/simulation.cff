@@ -1,5 +1,5 @@
   # initialize  MessageLogger
-  include "GutSoftConfigurations/MessageLogger/messageLogger.cff"
+  include "FWCore/MessageService/data/MessageLogger.cfi"
   
   service = RandomNumberGeneratorService
   {
