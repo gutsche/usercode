@@ -8,8 +8,8 @@
 // Created:         Thu Feb  8 19:03:24 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/03/28 20:16:15 $
-// $Revision: 1.4 $
+// $Date: 2007/05/25 00:03:00 $
+// $Revision: 1.5 $
 //
 
 #include <string>
@@ -155,8 +155,10 @@ GutSoftSeedingEfficiencyAnalyzer::analyze(const edm::Event& iEvent, const edm::E
 	  if ( barCode != 0 ) {
 	    trueBarCodes.push_back(barCode);
 	    trueParticles_[barCode] = *(*hepMCParticle);
+	    histograms_->fill("tip",std::sqrt(trackingParticle->vertex().perp2()));
 	    if ( seedable ) {
 	      trueRSBarCodes.push_back(barCode);
+	      histograms_->fill("tip_rs",std::sqrt(trackingParticle->vertex().perp2()));
 	    }
 	  }
 	}
@@ -200,6 +202,7 @@ GutSoftSeedingEfficiencyAnalyzer::analyze(const edm::Event& iEvent, const edm::E
 				  recHitGlobalPoints[0],
 				  recHitGlobalPoints[1],
 				  recHitGlobalPoints[2]);
+      histograms_->fill("lip",circle.ImpactParameter());
       for (unsigned int i = 0;
 	   i < recHits.size();
 	   ++i ) {
@@ -362,14 +365,14 @@ GutSoftSeedingEfficiencyAnalyzer::beginJob(const edm::EventSetup &es)
   double       layer_high  = 27.5;
   
   // transversal impact parameter
-  unsigned int tip_nbins   = 2000;
+  unsigned int tip_nbins   = 1000;
   double tip_low           = 0.0;
-  double tip_high          = 100.0;
+  double tip_high          = 10.0;
   
   // longitudinal impact parameter
-  unsigned int lip_nbins   = 2000;
+  unsigned int lip_nbins   = 1000;
   double lip_low           = 0.0;
-  double lip_high          = 100.0;
+  double lip_high          = 10.0;
   
   // book histogram
   histograms_->bookHistogram("eff_eta_true","TrackingParticle #eta",
