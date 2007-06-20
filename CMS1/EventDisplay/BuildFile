@@ -12,6 +12,7 @@
 <use name=RecoTracker/RingRecord>
 <use name=RecoTracker/RoadMapRecord>
 <use name=TrackingTools/RoadSearchHitAccess>
+<use name=DataFormats/CaloTowers>
 <flags SEAL_PLUGIN_NAME="CMS1EventDisplay">
 <export>
    <lib name=CMS1EventDisplay>

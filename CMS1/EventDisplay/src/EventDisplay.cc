@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Apr  3 21:47:43 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/06/14 21:58:04 $
-// $Revision: 1.2 $
+// $Author: dmytro $
+// $Date: 2007/06/17 06:43:41 $
+// $Revision: 1.1 $
 //
 #include "CMS1/EventDisplay/interface/EventDisplay.h"
 
@@ -27,6 +27,8 @@
 #include "Geometry/Records/interface/TrackerDigiGeometryRecord.h"
 #include "DataFormats/GeometryVector/interface/GlobalPoint.h"
 
+#include "DataFormats/CaloTowers/interface/CaloTower.h"
+#include "DataFormats/CaloTowers/interface/CaloTowerDetId.h"
 #include "DataFormats/TrajectorySeed/interface/TrajectorySeed.h"
 #include "DataFormats/TrajectorySeed/interface/TrajectorySeedCollection.h"
 
@@ -37,6 +39,7 @@
 
 #include "SimDataFormats/TrackingHit/interface/PSimHit.h"
 #include "TGraph.h"
+#include "TEllipse.h"
 
 
 EventDisplay::EventDisplay(const edm::ParameterSet& iConfig)
@@ -54,8 +57,12 @@ EventDisplay::EventDisplay(const edm::ParameterSet& iConfig)
 
 	labelRings_             = iConfig.getUntrackedParameter<bool>("LabelRings");
 	
-        minTrackPt_             = iConfig.getUntrackedParameter<double>("MinTrackPt");
+	minTrackPt_             = iConfig.getUntrackedParameter<double>("MinTrackPt");
+
+	hadColor = 34; //TColor::GetColor(190,190,255);
+	emColor = kBlue; //TColor::GetColor(90,90,255);
    
+
 }
 
 
@@ -101,12 +108,15 @@ void
 	double y[100];
 	std::vector<TGraph*> particles;
 
-	// draw run and event number
+	// draw run and event number, EPH view
 	ef_pad_left_->cd();
-	ef_histo_->Draw();
-	ef_histo_axis_right_->Draw("SAME");
-	ef_histo_axis_top_->Draw("SAME");
-	displayCaloTowers(iEvent);
+  ef_histo_->Draw();
+//	ef_histo_axis_right_->Draw("SAME");
+//	ef_histo_axis_top_->Draw("SAME");
+
+
+
+	displayCaloTowers(EPH, iEvent);
 
 	std::ostringstream run_event;
 	run_event << "run: " << iEvent.id().run() << " event: " << iEvent.id().event();
@@ -118,8 +128,12 @@ void
 	xy_histo_->Draw();
 	xy_histo_axis_right_->Draw("SAME");
 	xy_histo_axis_top_->Draw("SAME");
-//	xy_histo_x_line_->Draw("SAME");
-//	xy_histo_y_line_->Draw("SAME");
+
+	double rhoBarrel = 175; // cm
+	TEllipse innerBarrel(0.,0.,rhoBarrel, rhoBarrel);
+	innerBarrel.Draw();
+	displayCaloTowers(XY, iEvent);
+
 
 	// draw tracking particles
 	for ( TrackingParticleCollection::const_iterator trackingParticle = trackingParticleCollection->begin(),
@@ -194,6 +208,7 @@ void
 
 		particles.push_back(graph);
 	}
+
 
 	// draw rz
 	rz_pad_->cd();
@@ -405,9 +420,10 @@ void
 	// create xy histogram
 
 	xy_pad_right_->cd();
-	double xy_max = 120.;
+	double xy_max = 250.;
 	xy_histo_ = new TH2D("xy_histo","",100,-xy_max,xy_max,100,-xy_max,xy_max);
 	xy_histo_->SetStats(kFALSE);
+//////	gStyle->SetHistFillColor(kWhite);
 	xy_histo_->GetXaxis()->SetTitle("x [cm]");
 	xy_histo_->GetXaxis()->SetTitleOffset(1.0);
 	xy_histo_->GetXaxis()->SetTitleSize(0.05);
@@ -423,31 +439,34 @@ void
 	xy_histo_axis_top_ = new TGaxis(-xy_max,xy_max,xy_max,xy_max,
 		-xy_max,xy_max,510,"-L");
 
-	xy_histo_x_line_ = new TLine(-xy_max,0,xy_max,0);
-	xy_histo_x_line_->SetLineWidth(3);
-
-	xy_histo_y_line_ = new TLine(0,-xy_max,0,xy_max);
-	xy_histo_y_line_->SetLineWidth(3);
-
 	// create ef (eta-phi) histogram
 	ef_pad_left_->cd();
-	double ef_max = 5;
-	ef_histo_ = new TH2D("ef_histo","",100,-ef_max,ef_max,100,-ef_max,ef_max);
+	double eta_max = 5;
+	double phi_max = 3.5;
+	ef_histo_ = new TH2D("ef_histo","",100,-eta_max,eta_max,100,-phi_max,phi_max);
 	ef_histo_->SetStats(kFALSE);
+	ef_pad_left_->SetTicks(1,1);
+	ef_pad_left_->SetLeftMargin(.001);
+	ef_pad_left_->SetRightMargin(.001);
+	double marg = (eta_max-phi_max)/eta_max/2.;
+	ef_pad_left_->SetTopMargin(marg);
+	ef_pad_left_->SetBottomMargin(marg);
 	ef_histo_->GetXaxis()->SetTitle("eta");
-	ef_histo_->GetXaxis()->SetTitleOffset(1.0);
+	ef_histo_->GetXaxis()->SetTitleOffset(-1.0);
 	ef_histo_->GetXaxis()->SetTitleSize(0.05);
 	ef_histo_->GetYaxis()->SetTitle("phi");
-	ef_histo_->GetYaxis()->SetTitleOffset(1.1);
+	ef_histo_->GetYaxis()->SetTitleOffset(-1.1);
 	ef_histo_->GetYaxis()->SetTitleSize(0.05);
+//	ef_histo_->GetXaxis()->SetLabelOffset(3.);
+	ef_histo_->GetYaxis()->SetLabelOffset(-.1);
 
 	//draw an axis on the right side
-	ef_histo_axis_right_ = new TGaxis(ef_max,-ef_max,ef_max,ef_max,
-		-ef_max,ef_max,510,"+L");
+//	ef_histo_axis_right_ = new TGaxis(eta_max,-eta_max,ef_max,ef_max,
+//		-ef_max,ef_max,510,"+L");
 
 	//draw an axis on the top side
-	ef_histo_axis_top_ = new TGaxis(-ef_max,ef_max,ef_max,ef_max,
-		-ef_max,ef_max,510,"-L");
+//	ef_histo_axis_top_ = new TGaxis(-ef_max,ef_max,ef_max,ef_max,
+//		-ef_max,ef_max,510,"-L");
 
 	// create rz histogram
 	rz_pad_->cd();
@@ -458,7 +477,7 @@ void
 	rz_histo_->GetXaxis()->SetTitleOffset(0.9);
 	rz_histo_->GetXaxis()->SetTitleSize(0.05);
 	rz_histo_->GetYaxis()->SetTitle("r [cm]");
-	rz_histo_->GetYaxis()->SetTitleOffset(1.0);
+	rz_histo_->GetYaxis()->SetTitleOffset(-50.0);
 	rz_histo_->GetYaxis()->SetTitleSize(0.05);
 
 	//draw an axis on the right side
@@ -471,45 +490,163 @@ void
 
 }
 
-void EventDisplay::displayCaloTowers(const edm::Event& iEvent) {
-
-	int color = TColor::GetColor(190,190,255);
-	int black = TColor::GetColor(0,0,0);
+void EventDisplay::displayCaloTowers(View_t viewType, const edm::Event& iEvent) {
 
 // fill CaloTowers
 	edm::Handle<CaloTowerCollection> caloTowers;
 	iEvent.getByLabel( "towerMaker", caloTowers );
 
 	for(CaloTowerCollection::const_iterator tower = caloTowers->begin(); tower != caloTowers->end(); ++tower) {
-		displayCaloTower(tower->eta(), tower->phi(), tower->et(), color, black);
+		CaloTower ct = *tower;
+
+		displayCaloTower(viewType, &ct);
+
+		CaloTowerDetId id = tower->id();
+		std::cout << "Tower (" << id.ieta() << "," << id.iphi() << ")" << ":"; 
+		std::cout << ct.et() << " GeV ET (EM=" << ct.emEt() <<
+		  " HAD=" << ct.hadEt() << " OUTER=" << ct.outerEt() << ") (" << ct.eta() << "," << ct.phi() << ")"
+			<< std::endl;
 	}
 
 }
 
-void EventDisplay::displayCaloTower(double eta, double phi, double et, int color, int black) {
+void EventDisplay::displayCaloTower(View_t viewType, CaloTower* t) {
 
-	double etaprop[5];
-	double phiprop[5];
+	double eta                = t->eta();
+	double phi                = t->phi();
+	double et                 = t->et();
+	double emfrac             = t->emEt()/et;
 
-	double ampl=.5;
-	double me = 50.;
-	double rectx[5] = {-1., 1., 1., -1., -1.};
-	double recty[5] = {-1., -1., 1., 1., -1.};
 
-	if(me>0) ampl = ampl*(log(et + 1.)/log(me + 1.));
+	double ampl               = .5;
+	double me                 = 50.;
+	double rectx[5]           = {-1., 1., 1., -1., -1.};
+	double recty[5]           = {-1., -1., 1., 1., -1.};
 
-	for ( unsigned jc=0; jc<4; ++jc ) { 
-		etaprop[jc] = eta + rectx[jc]*ampl;
-		phiprop[jc] = phi + recty[jc]*ampl;
+	Layer_t layer;
+	int iEta = t->id().ieta();
+	if (iEta < -15) 		layer = ENDCAP;
+	else if (iEta > 15) layer = ENDCAP;
+	else 								layer = BARREL;
+
+	ampl *= (log(et + 1.)/log(me + 1.));
+	if (viewType == XY) ampl *=50.;
+	
+	switch( viewType ) {
+		case EPH:
+		{
+			double etaprop[5];
+			double phiprop[5];
+			for ( unsigned jc = 0; jc<4; ++jc ) { 	
+				etaprop[jc]            = eta + rectx[jc]*ampl;
+				phiprop[jc]            = phi + recty[jc]*ampl;
+			}
+
+			etaprop[4]              = etaprop[0];
+			phiprop[4]              = phiprop[0]; // closing the polycell    
+
+			cout << "e,p " << eta << " " << phi <<  " " << etaprop[0] << " " << phiprop[0] << endl;
+
+			TPolyLine linePropXY;          
+			linePropXY.SetLineColor(kBlack);
+			linePropXY.SetFillColor(hadColor);
+			linePropXY.DrawPolyLine(5,etaprop,phiprop,"F");
+
+			for ( unsigned jc = 0; jc<4; ++jc ) { 	
+				etaprop[jc]            = eta + rectx[jc]*ampl*emfrac;
+				phiprop[jc]            = phi + recty[jc]*ampl*emfrac;
+			}
+			etaprop[4]              = etaprop[0];
+			phiprop[4]              = phiprop[0]; // closing the polycell    
+			linePropXY.SetFillColor(emColor);
+			linePropXY.DrawPolyLine(5,etaprop,phiprop,"F");
+
+
+
+			break;
+		}
+		case  XY:
+		{
+			if(layer == BARREL) {
+				double rho = 180.;//cm barrel radius
+				double dphi = .05;
+				double xprop[5];
+				double yprop[5];
+
+				double rho1 = rho;
+				double rho2 = rho+5*ampl;
+				double sphic1 = sin(phi-dphi);
+				double cphic1 = cos(phi-dphi);
+				double sphic2 = sin(phi+dphi);
+				double cphic2 = cos(phi+dphi);
+				xprop[0] = rho1*cphic1;
+				yprop[0] = rho1*sphic1;
+				xprop[1] = rho2*cphic1;
+				yprop[1] = rho2*sphic1;
+				xprop[2] = rho2*cphic2;
+				yprop[2] = rho2*sphic2;
+				xprop[3] = rho1*cphic2;
+				yprop[3] = rho1*sphic2;
+				xprop[4] = xprop[0];
+				yprop[4] = yprop[0]; // closing the polycell    
+				
+				cout << "x,y " << xprop[0] << " " << yprop[0] <<  " " << xprop[1] << " " << yprop[1] << endl;
+
+				TPolyLine linePropXY;          
+				linePropXY.SetLineColor(kBlack);
+				linePropXY.SetFillColor(hadColor);
+				linePropXY.DrawPolyLine(5,xprop,yprop,"F");
+
+				rho2 = rho+5*ampl*emfrac;
+				xprop[0] = rho1*cphic1;
+				yprop[0] = rho1*sphic1;
+				xprop[1] = rho2*cphic1;
+				yprop[1] = rho2*sphic1;
+				xprop[2] = rho2*cphic2;
+				yprop[2] = rho2*sphic2;
+				xprop[3] = rho1*cphic2;
+				yprop[3] = rho1*sphic2;
+				xprop[4] = xprop[0];
+				yprop[4] = yprop[0]; // closing the polycell    
+
+				linePropXY.SetFillColor(emColor);
+				linePropXY.DrawPolyLine(5,xprop,yprop,"F");
+
+			} else {
+				double the             = 2.*std::atan(std::exp(-eta));
+				double zec             = 300.; //cm endcap z position
+				double rho             = zec*tan(the);
+				double xx              = rho*cos(phi);
+				double yy              = rho*sin(phi);
+
+				double xprop[5];
+				double yprop[5];
+				for ( unsigned jc = 0; jc<4; ++jc ) { 	
+					xprop[jc]             = xx + rectx[jc]*ampl;
+					yprop[jc]             = yy + recty[jc]*ampl;
+				}
+				xprop[4]               = xprop[0];
+				yprop[4]               = yprop[0]; // closing the polycell    
+
+				TPolyLine linePropXY;          
+				linePropXY.SetLineColor(kBlack);
+				linePropXY.SetFillColor(hadColor);
+				linePropXY.DrawPolyLine(5,xprop,yprop,"F");
+
+				for ( unsigned jc = 0; jc<4; ++jc ) { 	
+					xprop[jc]             = xx + rectx[jc]*ampl*emfrac;
+					yprop[jc]             = yy + recty[jc]*ampl*emfrac;
+				}
+				xprop[4]                = xprop[0];
+				yprop[4]                = yprop[0]; // closing the polycell    
+				linePropXY.SetFillColor(emColor);
+				linePropXY.DrawPolyLine(5,xprop,yprop,"F");
+			}
+			break;
+		}
+		default:
+		break;
 	}
-
-	etaprop[4]=etaprop[0];
-	phiprop[4]=phiprop[0]; // closing the polycell    
-
-	TPolyLine linePropXY;          
-	linePropXY.SetLineColor(black);
-	linePropXY.SetFillColor(color);
-	linePropXY.DrawPolyLine(5,etaprop,phiprop,"F");
 
 	return;
 }
@@ -522,3 +659,4 @@ EventDisplay::endJob() {
 	canvas_->Print(outputFileNameEnd_.c_str());
 
 }
+

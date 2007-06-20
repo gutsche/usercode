@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Apr  3 21:47:43 UTC 2007
 //
-// $Author: latb $
-// $Date: 2007/06/14 21:58:03 $
-// $Revision: 1.2 $
+// $Author: dmytro $
+// $Date: 2007/06/17 06:43:41 $
+// $Revision: 1.1 $
 //
 
 #include <string>
@@ -62,8 +62,11 @@ class EventDisplay : public edm::EDAnalyzer {
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
   virtual void endJob() ;
 
-	virtual void displayCaloTowers(const edm::Event& iEvent);
-	virtual void displayCaloTower(double eta, double phi, double et, int color, int black);
+  enum View_t { XY = 0, RZ = 1, EPE = 2, EPH = 3, NViews = 4 };
+  enum Layer_t { BARREL = 0, ENDCAP = 1 };
+	virtual void displayCaloTowers(View_t viewType, const edm::Event& iEvent);
+	virtual void displayCaloTower(View_t viewType, CaloTower* t);
+
 
   std::string  outputFileNameBegin_;
   std::string  outputFileName_;
@@ -105,6 +108,9 @@ class EventDisplay : public edm::EDAnalyzer {
   edm::InputTag trajectorySeedInputTag_;
    
   double minTrackPt_;
+
+	int hadColor;
+	int emColor;
 
 };
 
