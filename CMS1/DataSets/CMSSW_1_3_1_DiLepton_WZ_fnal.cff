@@ -1,0 +1,12 @@
+replace PoolSource.fileNames = {
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_3_1_test/WZ/outputfile_0.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_3_1_test/WZ/outputfile_1.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_3_1_test/WZ/outputfile_2.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_3_1_test/WZ/outputfile_3.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_3_1_test/WZ/outputfile_4.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_3_1_test/WZ/outputfile_5.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_3_1_test/WZ/outputfile_6.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_3_1_test/WZ/outputfile_7.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_3_1_test/WZ/outputfile_8.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_3_1_test/WZ/outputfile_9.root"
+}

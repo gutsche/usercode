@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Apr  3 21:47:43 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/06/17 06:43:41 $
-// $Revision: 1.1 $
+// $Author: latb $
+// $Date: 2007/06/20 15:45:04 $
+// $Revision: 1.2 $
 //
 
 #include <string>
@@ -109,9 +109,16 @@ class EventDisplay : public edm::EDAnalyzer {
    
   double minTrackPt_;
 
-	int hadColor;
-	int emColor;
+	int hadColor_;
+	int emColor_;
 
+	double EBradius_;
+	double EEz_;
+	
+	int RZprojective_;
+	int XYshowEndcaps_;
+
+	int debug_;
 };
 
 #endif

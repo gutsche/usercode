@@ -14,4 +14,8 @@ module eventDisplay = EventDisplay
   
   untracked double MinTrackPt = 0.9
 
+  untracked bool RZprojective = false
+  untracked bool XYshowEndcaps = false
+
+  untracked bool Debug = false
 }

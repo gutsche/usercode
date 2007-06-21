@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Apr  3 21:47:43 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/06/17 06:43:41 $
-// $Revision: 1.1 $
+// $Author: latb $
+// $Date: 2007/06/20 15:45:05 $
+// $Revision: 1.2 $
 //
 #include "CMS1/EventDisplay/interface/EventDisplay.h"
 
@@ -40,7 +40,15 @@
 #include "SimDataFormats/TrackingHit/interface/PSimHit.h"
 #include "TGraph.h"
 #include "TEllipse.h"
+#include "TBox.h"
 
+
+/*
+ECAL: Volume (minR, maxR, minZ, maxZ): 129.054, 160.52, 315.899, 342.844
+HCAL: Volume (minR, maxR, minZ, maxZ): 190.181, 332.502, 388, 568
+towers active volume: Volume (minR, maxR, minZ, maxZ): 143.136, 407.388, 320, 1265
+CaloTowers: EBradius = 143.0, EEz = 320.0
+*/
 
 EventDisplay::EventDisplay(const edm::ParameterSet& iConfig)
 {
@@ -59,10 +67,15 @@ EventDisplay::EventDisplay(const edm::ParameterSet& iConfig)
 	
 	minTrackPt_             = iConfig.getUntrackedParameter<double>("MinTrackPt");
 
-	hadColor = 34; //TColor::GetColor(190,190,255);
-	emColor = kBlue; //TColor::GetColor(90,90,255);
-   
+	RZprojective_ = iConfig.getUntrackedParameter<bool>("RZprojective");
+	XYshowEndcaps_ = iConfig.getUntrackedParameter<bool>("XYshowEndcaps");
+	hadColor_ = 34; //TColor::GetColor(190,190,255);
+	emColor_ = kBlue; //TColor::GetColor(90,90,255);
 
+	EBradius_ = 143.;
+	EEz_ = 320.;
+
+	debug_ = iConfig.getUntrackedParameter<bool>("Debug");
 }
 
 
@@ -113,14 +126,16 @@ void
   ef_histo_->Draw();
 //	ef_histo_axis_right_->Draw("SAME");
 //	ef_histo_axis_top_->Draw("SAME");
-
-
+////??????????????????????????????????????????????????????
+	hadColor_ = TColor::GetColor(190,190,255);
+	emColor_ = TColor::GetColor(90,90,255);
+////??????????????????????????????????????????????????????
 
 	displayCaloTowers(EPH, iEvent);
 
 	std::ostringstream run_event;
 	run_event << "run: " << iEvent.id().run() << " event: " << iEvent.id().event();
-	TPaveLabel label(0.,0.95,1.,1.,run_event.str().c_str(),"brNDC");
+	TPaveLabel label(0.,0.9,1.,1.,run_event.str().c_str(),"brNDC");
 	label.Draw();
 
 	// draw xy
@@ -129,8 +144,7 @@ void
 	xy_histo_axis_right_->Draw("SAME");
 	xy_histo_axis_top_->Draw("SAME");
 
-	double rhoBarrel = 175; // cm
-	TEllipse innerBarrel(0.,0.,rhoBarrel, rhoBarrel);
+	TEllipse innerBarrel(0.,0.,EBradius_, EBradius_);
 	innerBarrel.Draw();
 	displayCaloTowers(XY, iEvent);
 
@@ -157,16 +171,16 @@ void
 			        
 			   switch ( abs(trackingParticle->pdgId()) ) {
 			    case 13: // muon
-			      graph->SetLineColor(kRed);
-			      graph->SetMarkerColor(kRed); 
+			      graph->SetLineColor(kMagenta);
+			      graph->SetMarkerColor(kMagenta); 
 			      break;
 			    case 211: // pion
-			      graph->SetLineColor(6);
-			      graph->SetMarkerColor(6);
+			      graph->SetLineColor(kBlue);
+			      graph->SetMarkerColor(kBlue);
 			      break;
 			    case 11: // electron
-			      graph->SetLineColor(4);
-			      graph->SetMarkerColor(4);
+			      graph->SetLineColor(kRed);
+			      graph->SetMarkerColor(kRed);
 			      break;
 			    default:
 			      graph->SetLineColor(kBlack);
@@ -216,6 +230,15 @@ void
 	rz_histo_axis_right_->Draw("SAME");
 	rz_histo_axis_top_->Draw("SAME");
 
+	TBox myBox(-EEz_, 0., EEz_, EBradius_);
+	myBox.SetFillStyle(0);
+	myBox.SetLineColor(kBlack);
+	myBox.SetLineWidth(1);
+	myBox.Draw("l");
+
+	displayCaloTowers(RZ, iEvent);
+
+
 	// draw rings
 	for ( std::vector<TPaveLabel*>::iterator ringLabel = allRings_.begin();
 	ringLabel != allRings_.end();
@@ -256,16 +279,16 @@ void
 			   
 			   switch ( abs(trackingParticle->pdgId()) ) {
 			    case 13: // muon
-			      graph->SetLineColor(kRed);
-			      graph->SetMarkerColor(kRed); 
+			      graph->SetLineColor(kMagenta);
+			      graph->SetMarkerColor(kMagenta); 
 			      break;
 			    case 211: // pion
-			      graph->SetLineColor(6);
-			      graph->SetMarkerColor(6);
+			      graph->SetLineColor(kBlue);
+			      graph->SetMarkerColor(kBlue);
 			      break;
 			    case 11: // electron
-			      graph->SetLineColor(4);
-			      graph->SetMarkerColor(4);
+			      graph->SetLineColor(kRed);
+			      graph->SetMarkerColor(kRed);
 			      break;
 			    default:
 			      graph->SetLineColor(kBlack);
@@ -423,6 +446,12 @@ void
 	double xy_max = 250.;
 	xy_histo_ = new TH2D("xy_histo","",100,-xy_max,xy_max,100,-xy_max,xy_max);
 	xy_histo_->SetStats(kFALSE);
+	xy_pad_right_->SetTicks(1,1);
+	xy_pad_right_->SetLeftMargin(.001);
+	xy_pad_right_->SetRightMargin(.001);
+	xy_pad_right_->SetTopMargin(.001);
+	xy_pad_right_->SetBottomMargin(.001);
+
 //////	gStyle->SetHistFillColor(kWhite);
 	xy_histo_->GetXaxis()->SetTitle("x [cm]");
 	xy_histo_->GetXaxis()->SetTitleOffset(1.0);
@@ -430,6 +459,9 @@ void
 	xy_histo_->GetYaxis()->SetTitle("y [cm]");
 	xy_histo_->GetYaxis()->SetTitleOffset(1.1);
 	xy_histo_->GetYaxis()->SetTitleSize(0.05);
+
+	xy_histo_->GetYaxis()->SetLabelOffset(-.11);
+	xy_histo_->GetXaxis()->SetLabelOffset(-.95);
 
 	//draw an axis on the right side
 	xy_histo_axis_right_ = new TGaxis(xy_max,-xy_max,xy_max,xy_max,
@@ -470,15 +502,23 @@ void
 
 	// create rz histogram
 	rz_pad_->cd();
-	double rz_max = 300;
+	double rz_max = 400;
 	rz_histo_ = new TH2D("rz_histo","",100,-rz_max,rz_max,100,0,xy_max);
 	rz_histo_->SetStats(kFALSE);
+	rz_pad_->SetTicks(1,1);
+	rz_pad_->SetLeftMargin(.001);
+	rz_pad_->SetRightMargin(.001);
+	rz_pad_->SetTopMargin(.001);
+	rz_pad_->SetBottomMargin(.001);
+
 	rz_histo_->GetXaxis()->SetTitle("z [cm]");
 	rz_histo_->GetXaxis()->SetTitleOffset(0.9);
 	rz_histo_->GetXaxis()->SetTitleSize(0.05);
 	rz_histo_->GetYaxis()->SetTitle("r [cm]");
 	rz_histo_->GetYaxis()->SetTitleOffset(-50.0);
 	rz_histo_->GetYaxis()->SetTitleSize(0.05);
+	rz_histo_->GetXaxis()->SetLabelOffset(-.95);
+	rz_histo_->GetYaxis()->SetLabelOffset(-.001);
 
 	//draw an axis on the right side
 	rz_histo_axis_right_ = new TGaxis(rz_max,0,rz_max,xy_max,
@@ -502,8 +542,8 @@ void EventDisplay::displayCaloTowers(View_t viewType, const edm::Event& iEvent) 
 		displayCaloTower(viewType, &ct);
 
 		CaloTowerDetId id = tower->id();
-		std::cout << "Tower (" << id.ieta() << "," << id.iphi() << ")" << ":"; 
-		std::cout << ct.et() << " GeV ET (EM=" << ct.emEt() <<
+		if (debug_) std::cout << "Tower (" << id.ieta() << "," << id.iphi() << ")" << ":"; 
+		if (debug_) std::cout << ct.et() << " GeV ET (EM=" << ct.emEt() <<
 		  " HAD=" << ct.hadEt() << " OUTER=" << ct.outerEt() << ") (" << ct.eta() << "," << ct.phi() << ")"
 			<< std::endl;
 	}
@@ -515,26 +555,28 @@ void EventDisplay::displayCaloTower(View_t viewType, CaloTower* t) {
 	double eta                = t->eta();
 	double phi                = t->phi();
 	double et                 = t->et();
-	double emfrac             = t->emEt()/et;
+	double emfrac             = abs(t->emEt()/et);
 
 
-	double ampl               = .5;
-	double me                 = 50.;
 	double rectx[5]           = {-1., 1., 1., -1., -1.};
 	double recty[5]           = {-1., -1., 1., 1., -1.};
 
-	Layer_t layer;
 	int iEta = t->id().ieta();
-	if (iEta < -15) 		layer = ENDCAP;
-	else if (iEta > 15) layer = ENDCAP;
-	else 								layer = BARREL;
+	Layer_t layer = BARREL;
+	if (iEta < -17) 		layer = ENDCAP;
+	else if (iEta > 17) layer = ENDCAP;
+	Layer_t hlayer = BARREL;
+	if (iEta < -16) 		hlayer = ENDCAP;
+	else if (iEta > 16) hlayer = ENDCAP;
 
-	ampl *= (log(et + 1.)/log(me + 1.));
-	if (viewType == XY) ampl *=50.;
+
 	
 	switch( viewType ) {
 		case EPH:
 		{
+			double me                 = 50.;
+			double ampl               = .5;
+			ampl *= (log(et + 1.)/log(me + 1.));
 			double etaprop[5];
 			double phiprop[5];
 			for ( unsigned jc = 0; jc<4; ++jc ) { 	
@@ -545,11 +587,12 @@ void EventDisplay::displayCaloTower(View_t viewType, CaloTower* t) {
 			etaprop[4]              = etaprop[0];
 			phiprop[4]              = phiprop[0]; // closing the polycell    
 
-			cout << "e,p " << eta << " " << phi <<  " " << etaprop[0] << " " << phiprop[0] << endl;
+			if (debug_) cout << "e,p " << eta << " " << phi <<  " " << etaprop[0] << " " << phiprop[0] << endl;
 
 			TPolyLine linePropXY;          
 			linePropXY.SetLineColor(kBlack);
-			linePropXY.SetFillColor(hadColor);
+			linePropXY.SetLineWidth(1);
+			linePropXY.SetFillColor(hadColor_);
 			linePropXY.DrawPolyLine(5,etaprop,phiprop,"F");
 
 			for ( unsigned jc = 0; jc<4; ++jc ) { 	
@@ -558,7 +601,7 @@ void EventDisplay::displayCaloTower(View_t viewType, CaloTower* t) {
 			}
 			etaprop[4]              = etaprop[0];
 			phiprop[4]              = phiprop[0]; // closing the polycell    
-			linePropXY.SetFillColor(emColor);
+			linePropXY.SetFillColor(emColor_);
 			linePropXY.DrawPolyLine(5,etaprop,phiprop,"F");
 
 
@@ -568,17 +611,22 @@ void EventDisplay::displayCaloTower(View_t viewType, CaloTower* t) {
 		case  XY:
 		{
 			if(layer == BARREL) {
-				double rho = 180.;//cm barrel radius
+				double me                 = 50.;
+				double ampl               = 25.;
+				ampl *= (log(et + 1.)/log(me + 1.));
+
+				double rho = EBradius_;//cm barrel radius
 				double dphi = .05;
 				double xprop[5];
 				double yprop[5];
 
-				double rho1 = rho;
-				double rho2 = rho+5*ampl;
 				double sphic1 = sin(phi-dphi);
 				double cphic1 = cos(phi-dphi);
 				double sphic2 = sin(phi+dphi);
 				double cphic2 = cos(phi+dphi);
+				double rho1 = rho;
+				double rho2 = rho+5*ampl;
+
 				xprop[0] = rho1*cphic1;
 				yprop[0] = rho1*sphic1;
 				xprop[1] = rho2*cphic1;
@@ -590,12 +638,13 @@ void EventDisplay::displayCaloTower(View_t viewType, CaloTower* t) {
 				xprop[4] = xprop[0];
 				yprop[4] = yprop[0]; // closing the polycell    
 				
-				cout << "x,y " << xprop[0] << " " << yprop[0] <<  " " << xprop[1] << " " << yprop[1] << endl;
-
 				TPolyLine linePropXY;          
 				linePropXY.SetLineColor(kBlack);
-				linePropXY.SetFillColor(hadColor);
-				linePropXY.DrawPolyLine(5,xprop,yprop,"F");
+				linePropXY.SetLineWidth(1);
+				if(hlayer == BARREL) {
+					linePropXY.SetFillColor(hadColor_);
+					linePropXY.DrawPolyLine(5,xprop,yprop,"F");
+				}
 
 				rho2 = rho+5*ampl*emfrac;
 				xprop[0] = rho1*cphic1;
@@ -609,13 +658,20 @@ void EventDisplay::displayCaloTower(View_t viewType, CaloTower* t) {
 				xprop[4] = xprop[0];
 				yprop[4] = yprop[0]; // closing the polycell    
 
-				linePropXY.SetFillColor(emColor);
+				linePropXY.SetFillColor(emColor_);
 				linePropXY.DrawPolyLine(5,xprop,yprop,"F");
 
-			} else {
+			} else if (hlayer == ENDCAP) {
+				if (!XYshowEndcaps_) break;
+				
+				double me                 = 50.;
+				double ampl               = 25.;
+				ampl *= (log(et + 1.)/log(me + 1.));
+				if (layer==BARREL) ampl = ampl * (1.-emfrac); // correct overlap: only show HCAL in endcap
+
 				double the             = 2.*std::atan(std::exp(-eta));
-				double zec             = 300.; //cm endcap z position
-				double rho             = zec*tan(the);
+				double zec             = EEz_; //cm endcap z position
+				double rho             = abs(zec*tan(the));
 				double xx              = rho*cos(phi);
 				double yy              = rho*sin(phi);
 
@@ -628,19 +684,180 @@ void EventDisplay::displayCaloTower(View_t viewType, CaloTower* t) {
 				xprop[4]               = xprop[0];
 				yprop[4]               = yprop[0]; // closing the polycell    
 
-				TPolyLine linePropXY;          
+				TPolyLine linePropXY;    
 				linePropXY.SetLineColor(kBlack);
-				linePropXY.SetFillColor(hadColor);
+				linePropXY.SetLineWidth(1);
+				linePropXY.SetFillColor(hadColor_);
 				linePropXY.DrawPolyLine(5,xprop,yprop,"F");
 
-				for ( unsigned jc = 0; jc<4; ++jc ) { 	
-					xprop[jc]             = xx + rectx[jc]*ampl*emfrac;
-					yprop[jc]             = yy + recty[jc]*ampl*emfrac;
+				if (layer == ENDCAP) {
+					for ( unsigned jc = 0; jc<4; ++jc ) { 	
+						xprop[jc]             = xx + rectx[jc]*ampl*emfrac;
+						yprop[jc]             = yy + recty[jc]*ampl*emfrac;
+					}
+					xprop[4]                = xprop[0];
+					yprop[4]                = yprop[0]; // closing the polycell    
+					linePropXY.SetFillColor(emColor_);
+					linePropXY.DrawPolyLine(5,xprop,yprop,"F");
 				}
-				xprop[4]                = xprop[0];
-				yprop[4]                = yprop[0]; // closing the polycell    
-				linePropXY.SetFillColor(emColor);
-				linePropXY.DrawPolyLine(5,xprop,yprop,"F");
+			}else {
+				std::cout << "ERROR: CaloTower neither ENDCAP nor BARREL -- this can never happen!!!" << std::endl;
+			}
+			break;
+		}
+		case  RZ:
+		{
+			if(layer == BARREL) {
+				double me = 50.;
+				double ampl = 25.;
+				ampl *= (log(et + 1.)/log(me + 1.));
+
+				double rho = EBradius_;//cm barrel radius
+				double dz = 10.;
+				double zprop[5];
+				double rprop[5];
+
+				double the = 2.*std::atan(std::exp(-eta));
+				double tthe = tan(the);
+				double rho1 = rho;
+				double rho2 = rho+5*ampl;
+
+				if (RZprojective_) {
+					zprop[0] = rho1/tthe+dz;
+					rprop[0] = rho1;
+					zprop[1] = rho2/tthe+dz;
+					rprop[1] = rho2;
+					zprop[2] = rho2/tthe-dz;
+					rprop[2] = rho2;
+					zprop[3] = rho1/tthe-dz;
+					rprop[3] = rho1;
+				} else {
+					zprop[0] = rho1/tthe+dz;
+					rprop[0] = rho1;
+					zprop[1] = rho1/tthe+dz;
+					rprop[1] = rho2;
+					zprop[2] = rho1/tthe-dz;
+					rprop[2] = rho2;
+					zprop[3] = rho1/tthe-dz;
+					rprop[3] = rho1;
+				}
+				zprop[4] = zprop[0];
+				rprop[4] = rprop[0]; // closing the polycell    
+
+				TPolyLine linePropXY;          
+				linePropXY.SetLineColor(kBlack);
+				linePropXY.SetLineWidth(1);
+				if(hlayer == BARREL) {
+					linePropXY.SetFillColor(hadColor_);
+					linePropXY.DrawPolyLine(5,zprop,rprop,"F");
+				}
+
+				rho2 = rho+5*ampl*emfrac;
+				if (RZprojective_) {
+					zprop[0] = rho1/tthe+dz;
+					rprop[0] = rho1;
+					zprop[1] = rho2/tthe+dz;
+					rprop[1] = rho2;
+					zprop[2] = rho2/tthe-dz;
+					rprop[2] = rho2;
+					zprop[3] = rho1/tthe-dz;
+					rprop[3] = rho1;
+				} else {
+					zprop[0] = rho1/tthe+dz;
+					rprop[0] = rho1;
+					zprop[1] = rho1/tthe+dz;
+					rprop[1] = rho2;
+					zprop[2] = rho1/tthe-dz;
+					rprop[2] = rho2;
+					zprop[3] = rho1/tthe-dz;
+					rprop[3] = rho1;
+				}
+				zprop[4] = zprop[0];
+				rprop[4] = rprop[0]; // closing the polycell    
+
+				linePropXY.SetFillColor(emColor_);
+				linePropXY.DrawPolyLine(5,zprop,rprop,"F");
+
+			} else if (hlayer == ENDCAP) {
+				double me                 = 50.;
+				double ampl               = 25.;
+				ampl *= (log(et + 1.)/log(me + 1.));
+				if (layer==BARREL) ampl = ampl * (1.-emfrac); // correct overlap: only show HCAL in endcap
+
+				double zec = EEz_; //cm endcap z
+				double dr = 5.;
+				double zprop[5];
+				double rprop[5];
+
+				double the = 2.*std::atan(std::exp(-eta));
+				double tthe = tan(the);
+
+				double z1 = zec;
+				double z2 = z1+5*ampl;
+				if (eta < 0.) { 
+					z1 = -z1;
+					z2 = -z2;
+				}
+				if (RZprojective_) {
+					zprop[0] = z1;
+					rprop[0] = z1*tthe-dr;
+					zprop[1] = z2;
+					rprop[1] = z2*tthe-dr;
+					zprop[2] = z2;
+					rprop[2] = z2*tthe+dr;
+					zprop[3] = z1;
+					rprop[3] = z1*tthe+dr;
+				} else {
+					zprop[0] = z1;
+					rprop[0] = z1*tthe-dr;
+					zprop[1] = z2;
+					rprop[1] = z1*tthe-dr;
+					zprop[2] = z2;
+					rprop[2] = z1*tthe+dr;
+					zprop[3] = z1;
+					rprop[3] = z1*tthe+dr;
+				}
+				zprop[4] = zprop[0];
+				rprop[4] = rprop[0]; // closing the polycell    
+
+				TPolyLine linePropXY; 
+				linePropXY.SetLineColor(kBlack);
+				linePropXY.SetLineWidth(1);
+				linePropXY.SetFillColor(hadColor_);
+				linePropXY.DrawPolyLine(5,zprop,rprop,"F");
+
+				if (layer == ENDCAP) {
+					z2 = zec+5*ampl*emfrac;
+					if (eta < 0.) z2 = -z2;
+					if (RZprojective_) {
+						zprop[0] = z1;
+						rprop[0] = z1*tthe-dr;
+						zprop[1] = z2;
+						rprop[1] = z2*tthe-dr;
+						zprop[2] = z2;
+						rprop[2] = z2*tthe+dr;
+						zprop[3] = z1;
+						rprop[3] = z1*tthe+dr;
+					} else {
+						zprop[0] = z1;
+						rprop[0] = z1*tthe-dr;
+						zprop[1] = z2;
+						rprop[1] = z1*tthe-dr;
+						zprop[2] = z2;
+						rprop[2] = z1*tthe+dr;
+						zprop[3] = z1;
+						rprop[3] = z1*tthe+dr;	
+					}
+					zprop[4] = zprop[0];
+					rprop[4] = rprop[0]; // closing the polycell    
+
+					linePropXY.SetFillColor(emColor_);
+					linePropXY.DrawPolyLine(5,zprop,rprop,"F");
+					if (debug_) cout << "emfrac " << emfrac << " z,r " << zprop[0] << " " << rprop[0] <<  " " << zprop[1] << " " << rprop[1] << endl;
+
+				}	
+			}else {
+				std::cout << "ERROR: CaloTower neither ENDCAP nor BARREL -- this can never happen!!!" << std::endl;
 			}
 			break;
 		}
