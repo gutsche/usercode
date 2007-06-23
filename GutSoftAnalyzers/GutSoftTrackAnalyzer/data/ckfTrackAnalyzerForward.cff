@@ -1,9 +1,0 @@
-# include GutSoftHistogramFileService
-include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
-
-#include analyzer
-module  ckfTrackAnalyzerForward                    = gutSoftTrackAnalyzer from "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/gutSoftTrackAnalyzer.cfi"
-replace ckfTrackAnalyzerForward.TrackInputTag      = ctfWithMaterialTracks
-replace ckfTrackAnalyzerForward.BaseDirectoryName  = "ckfTracksForward"
-replace ckfTrackAnalyzerForward.MinimalAbsoluteEta = 1.1
-replace ckfTrackAnalyzerForward.MaximalAbsoluteEta = 2.5
