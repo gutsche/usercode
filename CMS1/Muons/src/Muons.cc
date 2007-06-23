@@ -8,8 +8,8 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/22 07:19:52 $
-// $Revision: 1.12 $
+// $Date: 2007/05/24 17:41:00 $
+// $Revision: 1.13 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
@@ -112,7 +112,7 @@ void cms1::Muons::registerEventUserData()
 void cms1::Muons::fillEventUserData()
 {
    std::vector<const reco::Candidate*> mus = getMuons(AllGlobalMuons,Cuts());
-   data_->refMuons = mus;
+   data_->addBBCollection("refMuons", mus);
    evtMuons.fill( getStreamerArguments(data_, mus) );
    nMuons->addData( mus.size() );
 }

@@ -1,6 +1,9 @@
 <use name=DataFormats/METReco>
 <use name=DataFormats/MuonReco>
 <use name=CMS1/Base>
+<use name=CMS1/CommonTools>
+# tmp
+<use name=TrackingTools/TrackAssociator>
 <export>
    <lib name=CMS1MET>
   <use name=DataFormats/METReco>

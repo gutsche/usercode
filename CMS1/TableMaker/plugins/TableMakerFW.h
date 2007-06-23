@@ -9,13 +9,14 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/05/11 04:20:12 $
-// $Revision: 1.2 $
+// $Author: kalavase $
+// $Date: 2007/06/13 18:14:38 $
+// $Revision: 1.3 $
 //
 #include <vector>
 #include "CMS1/TableMaker/interface/TableMaker.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
+
 
 namespace cms1 {
    class TableMakerFW: public TableMaker, public edm::EDAnalyzer
@@ -27,7 +28,18 @@ namespace cms1 {
 	     BaseAnalyzer::configure( iConfig );
 	     
 	     // user configuration
-	     configure( iConfig ); 
+	     configure( iConfig );
+	     
+	     theData.trackAssociator = new TrackDetectorAssociator();
+	     theData.trackAssociator->theEBRecHitCollectionLabel = edm::InputTag("ecalRecHit:EcalRecHitsEB");
+	     theData.trackAssociator->theEERecHitCollectionLabel = edm::InputTag("ecalRecHit:EcalRecHitsEE");
+	     theData.trackAssociator->theCaloTowerCollectionLabel = edm::InputTag("towerMaker");
+	     theData.trackAssociator->theHBHERecHitCollectionLabel = edm::InputTag("hbhereco");
+	     theData.trackAssociator->theHORecHitCollectionLabel = edm::InputTag("horeco");
+	     theData.trackAssociator->theDTRecSegment4DCollectionLabel = edm::InputTag("dt4DSegmets");
+	     theData.trackAssociator->theCSCSegmentCollectionLabel = edm::InputTag("cscSegments");
+	     theData.trackAssociator->useDefaultPropagator();
+
 	  }
        	virtual ~TableMakerFW(){}
       protected:
@@ -39,7 +51,8 @@ namespace cms1 {
 	     
 	     // run user code
 	     //Breaking FWLite for now by adding iSetup to fix MET for muons - PDK
-	     processEvent( iEvent, iSetup);
+	     theData.iSetup = &iSetup;
+	     processEvent( iEvent );
 	     finishEvent();
 	  }
 	virtual void endJob(){ finishProcessing(); }

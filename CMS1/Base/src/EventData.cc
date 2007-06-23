@@ -1,4 +1,31 @@
 #include "CMS1/Base/interface/EventData.h"
+
+const std::vector<const reco::Candidate*>& cms1::EventData::getBBCollection( const std::string& name )
+{
+   std::map<std::string, std::vector<const reco::Candidate*> >::const_iterator coll = collections.find(name);
+   if (coll == collections.end())
+     {
+	std::cout << "Cannot find collection with name: " << name << 
+	  "\nMake sure something puts this collection into event or that you spelled the name correctly. Abort";
+	assert(0);
+     }
+   return coll->second;
+   
+}
+
+void cms1::EventData::addBBCollection( const std::string& name, 
+				       const std::vector<const reco::Candidate*>& coll )
+{
+   collections[name] = coll;
+}
+
+void cms1::EventData::clearBBCollections()
+{
+   for (std::map<std::string, std::vector<const reco::Candidate*> >::iterator coll =
+	collections.begin(); coll != collections.end(); ++coll)
+     coll->second.clear();
+}
+
 void cms1::EventData::clearUserData()
 {
    for(std::vector<UserDataInt*>::iterator itr=intUserData.begin(); itr!=intUserData.end(); ++itr)
@@ -17,10 +44,8 @@ void cms1::EventData::clearUserData()
 
 void cms1::EventData::clearEventData()
 {
+   clearBBCollections();
    refTracks.clear();
-   refMuons.clear();
-   refElectrons.clear();
-   refJets.clear();
    mcInfo.clear();
    jetInfo.clear();
 }

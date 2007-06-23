@@ -19,7 +19,6 @@ namespace cms1 {
 
 	void registerBlock(EventData& event, const std::string& name_prefix, const std::string& alias_prefix="");
 	void fill(EventData& event, const DiLeptonCandidate& candidate);
-
 	bool usable();
       private:
 	ScalarUserBlock<TrackStreamer>   lTight;
@@ -29,8 +28,10 @@ namespace cms1 {
 	VectorUserBlock<JetStreamer>     otherJets;
 	
 	UserDataP4*         p4Hyp;
-	UserDataFloat*      met;
-	UserDataFloat*      metPhi;
+	UserDataFloat*      met;     // all corrections are applied
+	UserDataFloat*      metPhi;  // all corrections are applied
+        UserDataFloat*      metMuonCorr;
+        UserDataFloat*      metPhiMuonCorr;
 	UserDataFloat*      metDPhiJet10;
 	UserDataFloat*      metDPhiJet15;
 	UserDataFloat*      metDPhiJet20;

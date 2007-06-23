@@ -14,31 +14,25 @@
 #include "CMS1/EventHyp/interface/DiLeptonCandidate.h"
 
 namespace cms1 {
-	class EventHyp: public BlackBox {
-	public:
-		EventHyp(): BlackBox(){}
+   class EventHyp: public BlackBox {
+    public:
+      EventHyp(): BlackBox(){}
       
-		enum EventHypType { DiLeptonCandidate };
-     
+      void dump(std::ostream&, std::vector<const cms1::DiLeptonCandidate*>);
+      
       // This is the function that does all the work
-		std::vector<const cms1::DiLeptonCandidate*> getEventHyp (const EventHypType);
-	
-	   void dump(std::ostream&, std::vector<const cms1::DiLeptonCandidate*>);
-		
-		std::vector<const cms1::DiLeptonCandidate*> getEventHyp (
-			std::vector<const reco::Candidate*> tightElectrons,
-			std::vector<const reco::Candidate*> looseElectrons,
-			std::vector<const reco::Candidate*> tightMuons,
-			std::vector<const reco::Candidate*> looseMuons,
-			std::vector<const reco::Candidate*> jets,
-			double met,
-			double metPhi,
-			Cuts metCut,
-			Cuts metCutAroundZ);
+      std::vector<const cms1::DiLeptonCandidate*> 
+	getEventHyp ( std::vector<const reco::Candidate*> tightElectrons,
+		      std::vector<const reco::Candidate*> looseElectrons,
+		      std::vector<const reco::Candidate*> tightMuons,
+		      std::vector<const reco::Candidate*> looseMuons,
+		      std::vector<const reco::Candidate*> jets,
+		      double met,
+		      double metPhi,
+		      Cuts metCut,
+		      Cuts metCutAroundZ );
 
-protected:
-	cms1::DiLeptonCandidate* returnDiLeptonCandidate(reco::Candidate* lt,reco::Candidate* ll,std::vector<const reco::Candidate*> jets, double met);
-  };
+   };
 }
 
 #endif

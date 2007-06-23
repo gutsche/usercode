@@ -8,9 +8,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: mangano $
-// $Date: 2007/05/31 17:06:32 $
-// $Revision: 1.11 $
+// $Author: dmytro $
+// $Date: 2007/06/14 05:59:56 $
+// $Revision: 1.12 $
 //
 
 #include "CLHEP/HepMC/GenParticle.h"
@@ -19,25 +19,49 @@
 // #include "DataFormats/Common/interface/Handle.h"
 #include "FWCore/Framework/interface/Handle.h"
 #include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 #include "CMS1/Base/interface/UserData.h"
 #include "TTree.h"
 #include <vector>
+class TrackDetectorAssociator;
 namespace cms1 {
    struct EventData 
      {
-	EventData():mcInfo(0), jetInfo(0){}
+	EventData():iSetup(0), mcInfo(0), jetInfo(0){}
 	
 	// event data
 	const edm::Event* iEvent;
 	void setEvent( const edm::Event* iEvent );
 	
+	// GET RID OF ME !!!
+	//PDK - added temporary Event Setup for track associator 
+	const edm::EventSetup* iSetup; 
+	TrackDetectorAssociator* trackAssociator;
+
 	// reference collections
 	std::vector<const reco::Track*>     refTracks;
-	std::vector<const reco::Candidate*> refMuons;
-	std::vector<const reco::Candidate*> refElectrons;
 	std::vector<const reco::Candidate*> refJets;
 	
 	// ------------ DERIVED STUFF ----------------
+
+	// ------------ BLACK BOX COLLECTIONS ---------------
+      public:
+	const std::vector<const reco::Candidate*>&    getBBCollection( const std::string& name );
+	
+	// Add collection to the list of the blackbox collections.
+	// If a vector of candidates corresponding to a given name is found, 
+	// than this vector is assigned a new vector. If no entry with given 
+	// name is found, a new entry is added to the list.
+	void                                          addBBCollection( const std::string& name,
+								  const std::vector<const reco::Candidate*>& coll );
+	// clear all vectors in the list of collections
+	void                                          clearBBCollections();
+      private:
+	// container for BlackBox outputs
+	std::map<std::string, std::vector<const reco::Candidate*> > collections;
+	
+	// ------------ MC STUFF  ---------------
+      public:
 	// generator info 
 	std::vector<HepMC::GenParticle*>  mcInfo;
 	std::vector<reco::GenJet> jetInfo;

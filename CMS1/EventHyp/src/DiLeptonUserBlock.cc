@@ -7,6 +7,9 @@
 #include "CMS1/Base/interface/TrackStreamer.h"
 #include "CMS1/Base/interface/JetStreamer.h"
 #include "CMS1/CommonTools/interface/UserDataTools.h"
+#include "TrackingTools/TrackAssociator/interface/TrackDetectorAssociator.h"
+#include "TrackingTools/TrackAssociator/interface/TrackDetMatchInfo.h"
+
 
 cms1::DiLeptonUserBlock::DiLeptonUserBlock(): met(0),type(0)
 { 
@@ -23,15 +26,17 @@ void cms1::DiLeptonUserBlock::registerBlock(EventData& event, const std::string&
    jets.registerBlock(      event, name_prefix+"hyp_jets_", alias_prefix );
    otherJets.registerBlock( event, name_prefix+"hyp_other_jets_", alias_prefix );
    
-   addEntry(event.p4UserData,    p4Hyp,           "hyp_p4",           name_prefix, alias_prefix);
-   addEntry(event.floatUserData, met,             "hyp_met",          name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metPhi,          "hyp_metPhi",       name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metDPhiJet10,    "hyp_metDPhiJet10", name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metDPhiJet15,    "hyp_metDPhiJet15", name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metDPhiJet20,    "hyp_metDPhiJet20", name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metDPhiTrk10,    "hyp_metDPhiTrk10", name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metDPhiTrk25,    "hyp_metDPhiTrk25", name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metDPhiTrk50,    "hyp_metDPhiTrk50", name_prefix, alias_prefix);
+   addEntry(event.p4UserData,    p4Hyp,           "hyp_p4",             name_prefix, alias_prefix);
+   addEntry(event.floatUserData, met,             "hyp_met",            name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metPhi,          "hyp_metPhi",         name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metMuonCorr,     "hyp_metMuonCorr",    name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metPhiMuonCorr,  "hyp_metPhiMuonCorr", name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metDPhiJet10,    "hyp_metDPhiJet10",   name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metDPhiJet15,    "hyp_metDPhiJet15",   name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metDPhiJet20,    "hyp_metDPhiJet20",   name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metDPhiTrk10,    "hyp_metDPhiTrk10",   name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metDPhiTrk25,    "hyp_metDPhiTrk25",   name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metDPhiTrk50,    "hyp_metDPhiTrk50",   name_prefix, alias_prefix);
    
    addEntry(event.intUserData,   type,            "hyp_type",       name_prefix, alias_prefix);
    addEntry(event.intUserData,   nJets,           "hyp_njets",      name_prefix, alias_prefix);
@@ -56,6 +61,9 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
    type->addData( candidate.candidateType );
    met->addData( candidate.MET );
    metPhi->addData( candidate.METphi );
+   metMuonCorr->addData( candidate.MET_muon_corr );
+   metPhiMuonCorr->addData( candidate.METphi_muon_corr );
+
    p4Hyp->addData( candidate.lTight->p4()+candidate.lLoose->p4() );
    // fill a vector of jets that were not used
    std::vector<const reco::Candidate*> notUsedJets;
@@ -84,28 +92,30 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
    ltId->addData( candidate.lTight->pdgId() );
    llId->addData( candidate.lLoose->pdgId() );
    // fill index
+   const std::vector<const reco::Candidate*>& refMuons     = event.getBBCollection("refMuons");
+   const std::vector<const reco::Candidate*>& refElectrons = event.getBBCollection("refElectrons");
    if ( candidate.candidateType == DiLeptonCandidate::MuMu || candidate.candidateType == DiLeptonCandidate::MuEl ){
-      for (unsigned int i=0; i<event.refMuons.size(); ++i)
-	if (candidate.lTight == event.refMuons[i]) { 
+      for (unsigned int i=0; i<refMuons.size(); ++i)
+	if (candidate.lTight == refMuons[i]) { 
 	   ltIndex->addData( i );
 	   break;
 	}
    }else{
-      for (unsigned int i=0; i<event.refElectrons.size(); ++i)
-	if (candidate.lTight == event.refElectrons[i]) { 
+      for (unsigned int i=0; i<refElectrons.size(); ++i)
+	if (candidate.lTight == refElectrons[i]) { 
 	   ltIndex->addData( i );
 	   break;
 	}
    }
-   if ( candidate.candidateType == DiLeptonCandidate::MuEl || candidate.candidateType == DiLeptonCandidate::ElEl ){
-      for (unsigned int i=0; i<event.refElectrons.size(); ++i)
-	if (candidate.lLoose == event.refElectrons[i]) { 
+    if ( candidate.candidateType == DiLeptonCandidate::MuEl || candidate.candidateType == DiLeptonCandidate::ElEl ){
+      for (unsigned int i=0; i<refElectrons.size(); ++i)
+	if (candidate.lLoose == refElectrons[i]) { 
 	   llIndex->addData( i );
 	   break;
 	}
    }else{
-      for (unsigned int i=0; i<event.refMuons.size(); ++i)
-	if (candidate.lLoose == event.refMuons[i]) { 
+      for (unsigned int i=0; i<refMuons.size(); ++i)
+	if (candidate.lLoose == refMuons[i]) { 
 	   llIndex->addData( i );
 	   break;
 	}

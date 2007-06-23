@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: sani $
-// $Date: 2007/06/08 19:30:06 $
-// $Revision: 1.20 $
+// $Date: 2007/06/19 15:27:53 $
+// $Revision: 1.21 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -365,7 +365,7 @@ void cms1::Electrons::fillEventUserData() {
   double iso;
 
   std::vector<const reco::Candidate*> els = getElectrons(AllElectrons,Cuts());
-  data_->refElectrons = els;
+  data_->addBBCollection("refElectrons",els);
 
   evtElectrons.fill(getStreamerArguments(data_, els));
   nElectrons->addData(els.size());

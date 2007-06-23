@@ -11,9 +11,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/05/24 23:35:28 $
-// $Revision: 1.18 $
+// $Author: kalavase $
+// $Date: 2007/06/13 18:14:38 $
+// $Revision: 1.19 $
 //
 
 #include <vector>
@@ -48,8 +48,7 @@ namespace cms1 {
     virtual void configure(const edm::ParameterSet& iConfig);
 	
     // process event using EventData
-    // changed to add MET from mus - PDK 
-    virtual void processEvent(const edm::Event&, const edm::EventSetup& iSetup);
+    virtual void processEvent(const edm::Event& );
     
     // finish process
     virtual void finishProcessing();
@@ -68,38 +67,30 @@ namespace cms1 {
 
     Cuts          noCut_;
 
-   //added PDK - TrackAssociator
-   TrackDetectorAssociator trackAssociator_;
-   bool useEcal_;
-   bool useHcal_;
-   bool useMuon_;
-   bool useOldMuonMatching_;
+    
+    double        ZRangeMinMass_;
+    double        ZRangeMaxMass_;
+    
+    unsigned int  MaxEventDebug_;
    
-   
-
-   double        ZRangeMinMass_;
-   double        ZRangeMaxMass_;
-   
-   unsigned int  MaxEventDebug_;
-   
-   // Black boxes
-   // Muons         muons_;
+    // Black boxes
+    // Muons         muons_;
     // Electrons     electrons_;
     // Jets          jets_;
     // MET           MET_;
     
     // Event data container
     // EventData     data_;
-
+    
     unsigned int  events_;
     unsigned int  countedEEJets_[5];
     unsigned int  countedEMuJets_[5];
     unsigned int  countedMuEJets_[5];
     unsigned int  countedMuMuJets_[5];
-
+    
     //UCSD Grads
     std::string fileTag;  //Help differentiate files, input in cfg
-	
+    
     TFile *histogramFile;
     TH1I *hNJets;  //Number of events per jet binning
     TH2I *hTable;
@@ -111,7 +102,7 @@ namespace cms1 {
     std::vector<TH1F *> hPTTrailing; //Events vs. highest PT lepton  x5
     std::vector<TH1F *> hHT; //Events vs. temperature   x5
     std::vector<TH1F *> hMET; //events per missing et  x5
-
+    
     void FillHistograms(std::vector<const reco::Candidate*> jets, const reco::Candidate *,const reco::Candidate *, double);
      
     DiLeptonUserBlock diLeptonUserData;

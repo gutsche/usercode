@@ -7,20 +7,47 @@
  */
 
 #include "CMS1/EventHyp/interface/DiLeptonCandidate.h"
+#include "CMS1/MET/interface/MET.h"
 
-cms1::DiLeptonCandidate* cms1::DiLeptonCandidate::returnDiLeptonCandidate(
-	const reco::Candidate* lt, const reco::Candidate* ll,  std::vector<const reco::Candidate*> jets, double met, double metPhi, DiLeptonType t
-	) {
-	
-	cms1::DiLeptonCandidate*
-	dl=nextStore();
-	dl->lTight = lt;
-	dl->lLoose = ll;
-	dl->jets = jets;
-	dl->MET = met;
-	dl->METphi = metPhi;
-	dl->candidateType = t;
-	return dl;
+cms1::DiLeptonCandidate* cms1::DiLeptonCandidate::returnDiLeptonCandidate( EventData* event,
+									   const reco::Candidate* lt, 
+									   const reco::Candidate* ll,  
+									   std::vector<const reco::Candidate*> jets, 
+									   double met, double metPhi, DiLeptonType t )
+{
+   cms1::DiLeptonCandidate*  dl = nextStore();
+   dl->lTight = lt;
+   dl->lLoose = ll;
+   dl->jets = jets;
+   
+   // assuming that we get uncorrected MET, let's make corrections
+   
+   // MET correction for muons ( full correction ) 
+   MET::correctMETmuons( event, met, metPhi );
+   
+   dl->MET_muon_corr = met;
+   dl->METphi_muon_corr = metPhi;
+   
+   // jet scale energy correction
+   // get jets without electrons
+   std::vector<const reco::Candidate*> electrons;
+   if ( t == MuEl || t == ElEl ) electrons.push_back(ll);
+   if ( t == ElMu || t == ElEl ) electrons.push_back(lt);
+   
+   const std::vector<const reco::Candidate*>& allJets = event->getBBCollection("AllJets");
+   std::vector<const reco::Candidate*> jetsnoel;
+   for ( std::vector<const reco::Candidate*>::const_iterator jet = allJets.begin();
+	 jet != allJets.end(); ++jet )
+     if ( Cuts::testJetForElectrons(**jet, electrons ) ) jetsnoel.push_back(*jet);
+   
+   // do the correction
+   MET::correctedJetMET( event, &jetsnoel, met, metPhi );
+   
+   dl->MET = met;
+   dl->METphi = metPhi;
+   
+   dl->candidateType = t;
+   return dl;
 }
 
 std::string cms1::DiLeptonCandidate::candidateTypeString() const {

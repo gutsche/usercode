@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/05/24 23:35:27 $
-// $Revision: 1.13 $
+// $Author: kalavase $
+// $Date: 2007/06/05 01:07:25 $
+// $Revision: 1.14 $
 //
 
 #include "CMS1/Jets/interface/Jets.h"
@@ -177,7 +177,7 @@ void cms1::Jets::registerEventUserData()
 void cms1::Jets::fillEventUserData()
 {
    std::vector<const reco::Candidate*> jets = getJets(AllJets,Cuts());
-   data_->refJets = jets;
+   data_->addBBCollection("refJets", jets);
    /*
    evtJets.fill( getStreamerArguments(data_, jets) );
    nJets->addData( jets.size() );

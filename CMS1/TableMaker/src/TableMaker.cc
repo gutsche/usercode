@@ -8,9 +8,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: kalavase $
-// $Date: 2007/06/13 18:14:39 $
-// $Revision: 1.28 $
+// $Author: dmytro $
+// $Date: 2007/06/14 05:59:59 $
+// $Revision: 1.29 $
 //
 
 #include <vector>
@@ -52,25 +52,13 @@ unsigned int nJetsWithoutEl(std::vector<const reco::Candidate*> jets, const Cand
   unsigned int nJets = jets.size();
 
   for(std::vector<const reco::Candidate*>::const_iterator itJet = jets.begin(); itJet != jets.end(); ++itJet) {
-
-    if (e1 != 0) {
-      double dR = ROOT::Math::VectorUtil::DeltaR(e1->p4(), (*itJet)->p4());
-      if (dR < 0.4) {
-        nJets--;
-        continue;
-      }
-    }
-  
-    if (e2 != 0) {
-      double dR = ROOT::Math::VectorUtil::DeltaR(e2->p4(), (*itJet)->p4());
-      if (dR < 0.4)
-        nJets--;
-    } 
+     if (e1 != 0 && ROOT::Math::VectorUtil::DeltaR(e1->p4(), (*itJet)->p4()) < 0.4) 
+       --nJets;
+     else
+       if (e2 != 0 && ROOT::Math::VectorUtil::DeltaR(e2->p4(), (*itJet)->p4()) < 0.4) --nJets;
   }
 
-  if (nJets > 4) 
-    nJets = 4;
-
+  if (nJets > 4) nJets = 4;
   return nJets;
 } 
 
@@ -78,34 +66,6 @@ void cms1::TableMaker::finishProcessing()
 {
   // let the base analyzer finish its work
   BaseAnalyzer::finishProcessing();
-  //   hNJets->Write();
-  //   for(int i=0;i<5;++i)
-  //     {
-  //       hMll[i]->Write();
-  //       hPTLoose[i]->Write();
-  //       hPTTight[i]->Write();
-  //       hPTLeading[i]->Write();
-  //       hPTTrailing[i]->Write();
-  //       hHT[i]->Write();
-  //       hMET[i]->Write();
-  //       if(i<4)
-  // 	{
-  // 	  hPTJet[i]->Write();
-  // 	}
-  //     }
-
-  //   for (int table_index = 1; table_index < 6; ++table_index)
-  //     {
-
-  //       hTable->SetBinContent(table_index,1,countedEEJets_[table_index-1]);
-  //       hTable->SetBinContent(table_index,2,countedEMuJets_[table_index-1]);
-  //       hTable->SetBinContent(table_index,3,countedMuEJets_[table_index-1]);
-  //       hTable->SetBinContent(table_index,4,countedMuMuJets_[table_index-1]);
-	    
-  //     }//END table index
-
-  //   hTable->Write();
-
 	
   histogramFile->Write();
   histogramFile->Close();
@@ -143,17 +103,10 @@ void cms1::TableMaker::finishProcessing()
 
   std::cout << output.str() << std::endl; 
 
-  //   delete  hNJets;
-  //   for(int i=0;i<5;++i){
-  //     delete hMll[i];
-  //     delete hPTLeading[i];
-  //     delete hPTTrailing[i];
-  //     delete hHT[i];
-  //   }
-
 }
+
 void
-cms1::TableMaker::processEvent( const edm::Event& iEvent, const edm::EventSetup& iSetup )
+cms1::TableMaker::processEvent( const edm::Event& iEvent )
 {
   TimerStack timers;
   timers.push("TableMaker::processEvent");
@@ -164,6 +117,7 @@ cms1::TableMaker::processEvent( const edm::Event& iEvent, const edm::EventSetup&
   std::vector<const reco::Candidate*> tightMuons = theMuons.getMuons(Muons::TightGlobalMuons,tightMuon_);
   std::vector<const reco::Candidate*> looseMuons = theMuons.getMuons(Muons::LooseGlobalMuons,looseMuon_);
   std::vector<const reco::Candidate*> allMuons = theMuons.getMuons(Muons::AllGlobalMuons,allMuon_);
+  theData.addBBCollection("MuonsForMETCorrection", allMuons);
 
   // get vector of electrons
   tightElectron_.truthMatchingType = Cuts::Electron ; // require truth matching
@@ -176,58 +130,14 @@ cms1::TableMaker::processEvent( const edm::Event& iEvent, const edm::EventSetup&
   
   // get vector of Jets
   std::vector<const reco::Candidate*> jets = theJets.getJets(Jets::DefaultJets,jetCut_);
+  // add AllJets to EventData
+  theData.addBBCollection("AllJets",  theJets.getJets(Jets::AllJets, Cuts() ) );
 
-  timers.pop_and_push("TableMaker::processEvent::correctMET");
-   
   // get MET without cut and correct
   const reco::Candidate* metObj = theMET.getMET(MET::DefaultMET);
   double met = metObj->pt();
   double metphi = metObj->phi();
-  // ACHTUNG, Baby -- here we change met and metphi in situ!!
-  // but metObj is not changed 
-  MET::correctMETmuons(&allMuons, met, metphi);
 
-  //PDK now correct the MET for the muon deposits
-  double muEx = 0.0;
-  double muEy = 0.0;
-  for(std::vector<const reco::Candidate*>::const_iterator iter=allMuons.begin();
-      iter!=allMuons.end(); 
-      iter++) {
-    if( const reco::Muon* mu = dynamic_cast<const reco::Muon*>( *iter ) ) {
-      const reco::Track* mu_track = mu->track().get();
-      trackAssociator_.useDefaultPropagator();
-      TrackDetectorAssociator::AssociatorParameters trackparameters;
-      trackparameters.useEcal = false ;
-      trackparameters.useHcal = false ;
-      trackparameters.useHO = true ;
-      trackparameters.useCalo = true ;
-      trackparameters.useMuon = false ;
-      trackparameters.useOldMuonMatching = false;
-      //trackparameters.
-      TrackDetMatchInfo info = trackAssociator_.associate(iEvent,
-							  iSetup, 
-							  trackAssociator_.getFreeTrajectoryState(iSetup, *mu_track),
-							  trackparameters);
-      // use position at HCAL as the most resonable estimate
-      // where majority of energy was deposited in the calorimeter
-      double theta = info.trkGlobPosAtHcal.theta();
-      double phi = info.trkGlobPosAtHcal.phi();
-      //added PDK - fix MET for muon deposit in calo
-      
-      //there is a bug in the TrackDetMatchInfo class
-      //Asking for the HO tower energy returns the total energy in the tower
-      //so using the rechits for the HO will work better (hits and towers 
-      //should be the same for the HO anyway)
-      muEx += (info.ecalTowerEnergy() + info.hcalTowerEnergy() + info.hoCrossedEnergy())*sin(theta)*cos( phi );
-      muEy += (info.ecalTowerEnergy() + info.hcalTowerEnergy() + info.hoCrossedEnergy())*sin(theta)*sin( phi );
-    }
-  }
-  //added PDK - fix the MET for the muon deposit in calo
-  double metx = met*cos(metphi) + muEx;
-  double mety = met*sin(metphi) + muEy;
-  met = std::sqrt(metx*metx + mety*mety);
-  metphi = atan2(mety, metx);
-  
   timers.pop_and_push("TableMaker::processEvent::dumpEventContent");
 
   // Dump Event contents
@@ -388,13 +298,13 @@ void cms1::TableMaker::configure(const edm::ParameterSet& iConfig)
 
   
   // Fill data labels for TrackAssociator - PDK
-  trackAssociator_.theEBRecHitCollectionLabel = edm::InputTag("ecalRecHit:EcalRecHitsEB");
-  trackAssociator_.theEERecHitCollectionLabel = edm::InputTag("ecalRecHit:EcalRecHitsEE");
-  trackAssociator_.theCaloTowerCollectionLabel = edm::InputTag("towerMaker");
-  trackAssociator_.theHBHERecHitCollectionLabel = edm::InputTag("hbhereco");
-  trackAssociator_.theHORecHitCollectionLabel = edm::InputTag("horeco");
-  trackAssociator_.theDTRecSegment4DCollectionLabel = edm::InputTag("dt4DSegmets");
-  trackAssociator_.theCSCSegmentCollectionLabel = edm::InputTag("cscSegments");
+ //  trackAssociator_.theEBRecHitCollectionLabel = edm::InputTag("ecalRecHit:EcalRecHitsEB");
+//   trackAssociator_.theEERecHitCollectionLabel = edm::InputTag("ecalRecHit:EcalRecHitsEE");
+//   trackAssociator_.theCaloTowerCollectionLabel = edm::InputTag("towerMaker");
+//   trackAssociator_.theHBHERecHitCollectionLabel = edm::InputTag("hbhereco");
+//   trackAssociator_.theHORecHitCollectionLabel = edm::InputTag("horeco");
+//   trackAssociator_.theDTRecSegment4DCollectionLabel = edm::InputTag("dt4DSegmets");
+//   trackAssociator_.theCSCSegmentCollectionLabel = edm::InputTag("cscSegments");
 
   
   fileTag 					= iConfig.getUntrackedParameter<std::string>("fileTag");
