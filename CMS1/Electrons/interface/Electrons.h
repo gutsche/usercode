@@ -11,8 +11,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: sani $
-// $Date: 2007/06/07 13:23:32 $
-// $Revision: 1.15 $
+// $Date: 2007/06/19 15:27:45 $
+// $Revision: 1.16 $
 //
 
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
@@ -66,7 +66,7 @@ namespace cms1 {
     UserDataInt *nElectrons;
 
     UserDataInt1D *nSeed, *cms_class;
-    UserDataFloat1D *hOverE, *fBrem, *dEtaIn, *dEtaOut, *dPhiIn, *dPhiOut, *vareMax, *vare3x3, *vare5x5;
+    UserDataFloat1D *hOverE, *fBrem, *dEtaIn, *dEtaOut, *dPhiIn, *dPhiOut, *varEsc, *varRawEsc, *vare3x3, *vare5x5;
     UserDataFloat1D *eOverPIn, *eOverPOut, *eSeed, *sPhiPhi, *sEtaEta, *tkIso;
   };
 }

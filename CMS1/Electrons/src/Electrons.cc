@@ -272,6 +272,7 @@ void cms1::Electrons::R9_25(const reco::PixelMatchGsfElectron* electron,
   e3x3 = seedShapeRef->e3x3();
   e5x5 = seedShapeRef->e5x5();
   spp = seedShapeRef->covPhiPhi();
+  std::cout << spp << std::endl;
   see = seedShapeRef->covEtaEta();
 }
 
@@ -344,7 +345,9 @@ void cms1::Electrons::registerEventUserData() {
   data_->floatUserData1D.push_back(new UserDataFloat1D("dPhiOut", "elid_", "cms1_elid_", false) );
   dPhiOut = data_->floatUserData1D.back();
   data_->floatUserData1D.push_back(new UserDataFloat1D("ESc", "elid_", "cms1_elid_", false));
-  vareMax = data_->floatUserData1D.back(); 
+  varEsc = data_->floatUserData1D.back(); 
+  data_->floatUserData1D.push_back(new UserDataFloat1D("ESc_raw", "elid_", "cms1_elid_", false));
+  varRawEsc = data_->floatUserData1D.back(); 
   data_->floatUserData1D.push_back(new UserDataFloat1D("e3x3", "elid_", "cms1_elid_", false));
   vare3x3 = data_->floatUserData1D.back();
   data_->floatUserData1D.push_back(new UserDataFloat1D("e5x5", "elid_", "cms1_elid_", false));
@@ -373,7 +376,7 @@ void cms1::Electrons::fillEventUserData() {
   std::vector<int> vint0, vint1;
   std::vector<float> vfloat0,vfloat1,vfloat2,vfloat3;
   std::vector<float> vfloat4,vfloat5,vfloat6,vfloat7,vfloat8;
-  std::vector<float> vfloat9,vfloat10, vfloat11, vfloat12, vfloat13, vfloat14;
+  std::vector<float> vfloat9,vfloat10, vfloat11, vfloat12, vfloat13, vfloat14, vfloat15;
   std::vector<const reco::Candidate*>::const_iterator it;
 
   // add isolation info
@@ -392,6 +395,7 @@ void cms1::Electrons::fillEventUserData() {
     float pout = el->trackMomentumOut().R();
 
     R9_25(el, eMax, e3x3, e5x5, spp, see);
+    std::cout << spp << std::endl;
 
     vint0.push_back(el->numberOfClusters()-1);
     vint1.push_back(el->classification());
@@ -406,6 +410,7 @@ void cms1::Electrons::fillEventUserData() {
     vfloat6.push_back(el->deltaPhiSuperClusterTrackAtVtx());
     vfloat7.push_back(el->deltaPhiSeedClusterTrackAtCalo());  
     vfloat8.push_back(eMax);
+    vfloat15.push_back(el->superCluster()->rawEnergy());
     vfloat9.push_back(e3x3);
     vfloat10.push_back(e5x5);
     vfloat11.push_back(el->superCluster()->seed()->energy());
@@ -426,7 +431,8 @@ void cms1::Electrons::fillEventUserData() {
   dEtaOut->addData(vfloat5);
   dPhiIn->addData(vfloat6);
   dPhiOut->addData(vfloat7);
-  vareMax->addData(vfloat8);
+  varEsc->addData(vfloat8);
+  varRawEsc->addData(vfloat15);
   vare3x3->addData(vfloat9);
   vare5x5->addData(vfloat10);
   eSeed->addData(vfloat11);
