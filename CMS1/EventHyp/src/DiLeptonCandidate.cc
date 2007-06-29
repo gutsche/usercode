@@ -24,7 +24,7 @@ cms1::DiLeptonCandidate* cms1::DiLeptonCandidate::returnDiLeptonCandidate( Event
    
    // MET correction for muons ( full correction ) 
    MET::correctMETmuons( event, met, metPhi );
-   
+ /*  
    dl->MET_muon_corr = met;
    dl->METphi_muon_corr = metPhi;
    
@@ -42,7 +42,7 @@ cms1::DiLeptonCandidate* cms1::DiLeptonCandidate::returnDiLeptonCandidate( Event
    
    // do the correction
    MET::correctedJetMET( event, &jetsnoel, met, metPhi );
-   
+   */
    dl->MET = met;
    dl->METphi = metPhi;
    
