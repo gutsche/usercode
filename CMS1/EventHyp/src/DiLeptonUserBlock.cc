@@ -29,8 +29,16 @@ void cms1::DiLeptonUserBlock::registerBlock(EventData& event, const std::string&
    addEntry(event.p4UserData,    p4Hyp,           "hyp_p4",             name_prefix, alias_prefix);
    addEntry(event.floatUserData, met,             "hyp_met",            name_prefix, alias_prefix);
    addEntry(event.floatUserData, metPhi,          "hyp_metPhi",         name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metMuonCorr,     "hyp_metMuonCorr",    name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metPhiMuonCorr,  "hyp_metPhiMuonCorr", name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metJes5,         "hyp_metJes5",        name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metPhiJes5,      "hyp_metPhiJes5",     name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metJes15,        "hyp_metJes15",       name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metPhiJes15,     "hyp_metPhiJes15",    name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metJes30,        "hyp_metJes30",       name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metPhiJes30,     "hyp_metPhiJes30",    name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metJes50,        "hyp_metJes50",       name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metPhiJes50,     "hyp_metPhiJes50",    name_prefix, alias_prefix);
+   // addEntry(event.floatUserData, metMuonCorr,     "hyp_metMuonCorr",    name_prefix, alias_prefix);
+   // addEntry(event.floatUserData, metPhiMuonCorr,  "hyp_metPhiMuonCorr", name_prefix, alias_prefix);
    addEntry(event.floatUserData, metDPhiJet10,    "hyp_metDPhiJet10",   name_prefix, alias_prefix);
    addEntry(event.floatUserData, metDPhiJet15,    "hyp_metDPhiJet15",   name_prefix, alias_prefix);
    addEntry(event.floatUserData, metDPhiJet20,    "hyp_metDPhiJet20",   name_prefix, alias_prefix);
@@ -61,8 +69,8 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
    type->addData( candidate.candidateType );
    met->addData( candidate.MET );
    metPhi->addData( candidate.METphi );
-   metMuonCorr->addData( candidate.MET_muon_corr );
-   metPhiMuonCorr->addData( candidate.METphi_muon_corr );
+   // metMuonCorr->addData( candidate.MET_muon_corr );
+   // metPhiMuonCorr->addData( candidate.METphi_muon_corr );
 
    p4Hyp->addData( candidate.lTight->p4()+candidate.lLoose->p4() );
    // fill a vector of jets that were not used
@@ -121,7 +129,50 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
 	}
    }
    
-	
+   
+   // jet scale energy correction for MET
+   // get jets without electrons
+   std::vector<const reco::Candidate*> electrons;
+   if ( candidate.candidateType == DiLeptonCandidate::MuEl || 
+	candidate.candidateType == DiLeptonCandidate::ElEl ) electrons.push_back(candidate.lLoose);
+   if ( candidate.candidateType == DiLeptonCandidate::ElMu || 
+	candidate.candidateType == DiLeptonCandidate::ElEl ) electrons.push_back(candidate.lTight);
+   
+   const std::vector<const reco::Candidate*>& allJets = event.getBBCollection("AllJets");
+   std::vector<const reco::Candidate*> jetsnoel;
+   for ( std::vector<const reco::Candidate*>::const_iterator jet = allJets.begin();
+	 jet != allJets.end(); ++jet )
+     if ( Cuts::testJetForElectrons(**jet, electrons ) ) jetsnoel.push_back(*jet);
+
+     {
+	double tmpMet = candidate.MET;
+	double tmpMetPhi = candidate.METphi;
+	MET::correctedJetMET( &event, &jetsnoel, tmpMet, tmpMetPhi, 5 );
+	metJes5->addData( tmpMet );
+	metPhiJes5->addData( tmpMetPhi );
+     }
+     {
+	double tmpMet = candidate.MET;
+	double tmpMetPhi = candidate.METphi;
+	MET::correctedJetMET( &event, &jetsnoel, tmpMet, tmpMetPhi, 15 );
+	metJes15->addData( tmpMet );
+	metPhiJes15->addData( tmpMetPhi );
+     }
+     {
+	double tmpMet = candidate.MET;
+	double tmpMetPhi = candidate.METphi;
+	MET::correctedJetMET( &event, &jetsnoel, tmpMet, tmpMetPhi, 30 );
+	metJes30->addData( tmpMet );
+	metPhiJes30->addData( tmpMetPhi );
+     }
+     {
+	double tmpMet = candidate.MET;
+	double tmpMetPhi = candidate.METphi;
+	MET::correctedJetMET( &event, &jetsnoel, tmpMet, tmpMetPhi, 50 );
+	metJes50->addData( tmpMet );
+	metPhiJes50->addData( tmpMetPhi );
+     }
+
    // MET dPhi wrt various things
    // compute dPhi with respect to jets
      {

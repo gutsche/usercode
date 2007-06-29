@@ -11,8 +11,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/06/14 05:59:58 $
-// $Revision: 1.8 $
+// $Date: 2007/06/23 05:36:35 $
+// $Revision: 1.9 $
 //
 #include <iostream>
 
@@ -36,7 +36,9 @@ namespace cms1 {
       
       // here should be all corrections
       static void correctMETmuons(EventData* event, double& et, double& phi);
-      static void correctedJetMET(EventData* event, const std::vector<const reco::Candidate*>* , double& , double&);
+      static void correctedJetMET(EventData* event, const std::vector<const reco::Candidate*>* , 
+				  double& , double&,
+				  const double min_pt=30);
       void dump(std::ostream&, const reco::Candidate*);
       void registerEventUserData();
       void fillEventUserData();

@@ -28,10 +28,19 @@ namespace cms1 {
 	VectorUserBlock<JetStreamer>     otherJets;
 	
 	UserDataP4*         p4Hyp;
-	UserDataFloat*      met;     // all corrections are applied
-	UserDataFloat*      metPhi;  // all corrections are applied
-        UserDataFloat*      metMuonCorr;
-        UserDataFloat*      metPhiMuonCorr;
+	UserDataFloat*      met;     // default met
+	UserDataFloat*      metPhi;  // default met
+	UserDataFloat*      metJes5;     // jet energy scale correction applied for jets with p_t>5 GeV
+	UserDataFloat*      metPhiJes5;  // jet energy scale correction applied for jets with p_t>5 GeV
+	UserDataFloat*      metJes15;    // jet energy scale correction applied for jets with p_t>15 GeV
+	UserDataFloat*      metPhiJes15; // jet energy scale correction applied for jets with p_t>15 GeV
+	UserDataFloat*      metJes30;    // jet energy scale correction applied for jets with p_t>30 GeV
+	UserDataFloat*      metPhiJes30;  // jet energy scale correction applied for jets with p_t>30 GeV
+	UserDataFloat*      metJes50;    // jet energy scale correction applied for jets with p_t>30 GeV
+	UserDataFloat*      metPhiJes50;  // jet energy scale correction applied for jets with p_t>30 GeV
+	
+        // UserDataFloat*      metMuonCorr;
+        // UserDataFloat*      metPhiMuonCorr;
 	UserDataFloat*      metDPhiJet10;
 	UserDataFloat*      metDPhiJet15;
 	UserDataFloat*      metDPhiJet20;

@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/24 17:41:00 $
-// $Revision: 1.9 $
+// $Date: 2007/06/23 05:36:36 $
+// $Revision: 1.10 $
 //
 
 #include <iostream>
@@ -111,9 +111,10 @@ void cms1::MET::correctMETmuons(EventData* event, double& met, double& phi)
 }
 
 // list of jets must be supplied
-void cms1::MET::correctedJetMET(EventData* event, 
+void cms1::MET::correctedJetMET(EventData* event,
 				const std::vector<const reco::Candidate*>* jets,
-				double& met, double& phi) 
+				double& met, double& phi, 
+				const double min_pt) 
 {
    //iterate over candidates, cast them to calojets and then correct for the energy
    double METX_uncorr = met*cos(phi);
@@ -124,7 +125,7 @@ void cms1::MET::correctedJetMET(EventData* event,
    for(cand_iter = jets->begin() ; cand_iter != jets->end(); ++cand_iter) {
       if(const reco::CaloJet* jet = dynamic_cast<const reco::CaloJet*>(*cand_iter) ) {
 	 //jet correction doesn't do so well for recoJet pt < 30.0
-	 if(jet->pt() > 30.0 ) {
+	 if(jet->pt() > min_pt ) {
 	    StreamerArguments args = getStreamerArguments(event, *cand_iter);
 	    double corr_factor = args.jetcorrection;
 	    if(corr_factor > 0 ) { //args.jetcorrection is -999 in case of an error

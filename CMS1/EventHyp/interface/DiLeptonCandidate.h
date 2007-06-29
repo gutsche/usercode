@@ -24,9 +24,9 @@ namespace cms1 {
       std::vector<const reco::Candidate*> jets; // sorted by energy
       
       // MET
-      double MET_muon_corr;
-      double METphi_muon_corr;
-      // best MET (all corrections are applied)
+      // double MET_muon_corr;
+      // double METphi_muon_corr;
+      // best MET (only muon correction)
       double MET;    
       double METphi; 
       
