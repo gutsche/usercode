@@ -73,8 +73,8 @@ void compareTwoHistograms(std::string name, TH1 *histo1, TH1* histo2) {
   histo2Name += name;
   histo2->SetName(histo2Name.c_str());
 
-  histo1->Draw();
-  histo2->Draw("SAMES");
+  histo1->Draw("HIST");
+  histo2->Draw("HIST,SAMES");
 
   canvas->Update();
 
@@ -96,8 +96,8 @@ void compareTwoHistograms(std::string name, TH1 *histo1, TH1* histo2) {
   stats2->SetLineColor(4);
   stats2->SetTextColor(4);
 
-  histo1->Draw();
-  histo2->Draw("SAMES");
+  histo1->Draw("HIST");
+  histo2->Draw("HIST,SAMES");
 
   // clean name for picture filename
   TString filename(name.c_str());
