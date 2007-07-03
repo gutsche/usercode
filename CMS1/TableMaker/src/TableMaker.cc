@@ -9,8 +9,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/06/14 05:59:59 $
-// $Revision: 1.29 $
+// $Date: 2007/06/23 05:36:37 $
+// $Revision: 1.30 $
 //
 
 #include <vector>
@@ -36,7 +36,6 @@
 #include <Math/VectorUtil.h>
 
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
-#include "CMS1/TableMaker/src/UtilFunctions_isolation.h"
 
 #include "Utilities/Timing/interface/TimingReport.h"
 #include "TrackingTools/TrackAssociator/interface/TimerStack.h" 

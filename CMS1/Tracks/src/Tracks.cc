@@ -8,8 +8,8 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/24 17:41:01 $
-// $Revision: 1.8 $
+// $Date: 2007/06/14 05:59:59 $
+// $Revision: 1.9 $
 //
 
 #include "CMS1/Tracks/interface/Tracks.h"
@@ -74,7 +74,8 @@ void cms1::Tracks::registerEventUserData()
 
 void cms1::Tracks::fillEventUserData()
 {
-   std::vector<const reco::Track*> trks = getTracks(LooseTracks,Cuts());
+   // std::vector<const reco::Track*> trks = getTracks(LooseTracks,Cuts());
+   std::vector<const reco::Track*> trks = getTracks(AllTracks,Cuts());
    data_->refTracks = trks;
    tracks.fill( getStreamerArguments(data_, trks) );
    runNumber->addData( data_->iEvent->id().run() );

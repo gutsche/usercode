@@ -25,6 +25,8 @@ namespace cms1 {
       DiLeptonType candidateType;
       const reco::Candidate* lTight;
       const reco::Candidate* lLoose;
+      double lTightIso;
+      double lLooseIso;
       std::vector<const reco::Candidate*> jets; // sorted by energy
       // MET (uncorrected)
       double MET_uncorr;

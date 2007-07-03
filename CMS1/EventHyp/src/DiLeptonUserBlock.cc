@@ -47,6 +47,8 @@ void cms1::DiLeptonUserBlock::registerBlock(EventData& event, const std::string&
    addEntry(event.floatUserData, metDPhiTrk10,    "hyp_metDPhiTrk10",   name_prefix, alias_prefix);
    addEntry(event.floatUserData, metDPhiTrk25,    "hyp_metDPhiTrk25",   name_prefix, alias_prefix);
    addEntry(event.floatUserData, metDPhiTrk50,    "hyp_metDPhiTrk50",   name_prefix, alias_prefix);
+   addEntry(event.floatUserData, ltIso,           "hyp_lt_iso",         name_prefix, alias_prefix);
+   addEntry(event.floatUserData, llIso,           "hyp_ll_iso",         name_prefix, alias_prefix);
    
    addEntry(event.intUserData,   type,            "hyp_type",       name_prefix, alias_prefix);
    addEntry(event.intUserData,   nJets,           "hyp_njets",      name_prefix, alias_prefix);
@@ -67,6 +69,8 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
 
    lTight.fill( getStreamerArguments(&event, candidate.lTight) );
    lLoose.fill( getStreamerArguments(&event, candidate.lLoose) );
+   ltIso->addData( candidate.lTightIso );
+   llIso->addData( candidate.lLooseIso );
    jets.fill( getStreamerArguments(&event, candidate.jets) );
    type->addData( candidate.candidateType );
    met->addData( candidate.MET );

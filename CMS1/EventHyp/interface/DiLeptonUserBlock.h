@@ -40,6 +40,8 @@ namespace cms1 {
 	UserDataFloat*      metPhiJes30;  // jet energy scale correction applied for jets with p_t>30 GeV
 	UserDataFloat*      metJes50;    // jet energy scale correction applied for jets with p_t>30 GeV
 	UserDataFloat*      metPhiJes50;  // jet energy scale correction applied for jets with p_t>30 GeV
+	UserDataFloat*      ltIso;
+	UserDataFloat*      llIso;
 	
         // UserDataFloat*      metMuonCorr;
         // UserDataFloat*      metPhiMuonCorr;

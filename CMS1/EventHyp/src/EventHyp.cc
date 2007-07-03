@@ -31,7 +31,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 /////////////////////////////////////////////////////////
 	double ZRangeMinMass_ = 80.;
 	double ZRangeMaxMass_ = 100.;
-	double isoCut_ = 0.1;
+        // double isoCut_ = 0.1;
 	candidateStore.clear(); // resets all previously allocated DiLeptonCandidates
 ////////////////////////////////////////////////////////
 
@@ -51,7 +51,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 	++tightElectron ) {
 		double isoRelTight = cms1::Cuts::trackRelIsolation((*tightElectron)->momentum(), (*tightElectron)->vertex(), tracks,
 			0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-		if (isoRelTight > isoCut_) continue;
+	        // if (isoRelTight > isoCut_) continue;
 
 			// loop over loose electrons
 		for ( std::vector<const reco::Candidate*>::iterator looseElectron = looseElectrons.begin(),
@@ -60,7 +60,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 		++looseElectron ) {
 			double isoRelLoose = cms1::Cuts::trackRelIsolation((*looseElectron)->momentum(), (*looseElectron)->vertex(), tracks,
 				0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-			if (isoRelLoose > isoCut_) continue;
+			// if (isoRelLoose > isoCut_) continue;
 
 				// check if the same electron has been selected
 			if ( *tightElectron != *looseElectron ) {
@@ -96,6 +96,8 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 									
 // do it: jetsnoel, tightElectron, looseElectron, met
 							   candidateStore.push_back(DiLeptonCandidate(data_, *tightElectron, *looseElectron, jetsnoel, met, metPhi, cms1::DiLeptonCandidate::ElEl));
+							   candidateStore.back().lTightIso = isoRelTight;
+							   candidateStore.back().lLooseIso = isoRelLoose;
 							}
 						} else {
 							takenEE.push_back(std::make_pair(*tightElectron,*looseElectron));
@@ -109,6 +111,9 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 																	
 // do it: jetsnoel, tightElectron, looseElectron, met
 						   candidateStore.push_back(DiLeptonCandidate(data_, *tightElectron, *looseElectron, jetsnoel, met, metPhi, cms1::DiLeptonCandidate::ElEl));
+						   candidateStore.back().lTightIso = isoRelTight;
+						   candidateStore.back().lLooseIso = isoRelLoose;
+
 						}
 					}
 				}
@@ -121,7 +126,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 		++looseMuon ) {
 			double isoRelLoose = cms1::Cuts::trackRelIsolation((*looseMuon)->momentum(), (*looseMuon)->vertex(), tracks,
 				0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-			if (isoRelLoose > isoCut_) continue;
+			// if (isoRelLoose > isoCut_) continue;
 				// check if candidate passes MET cut
 			if ( met > metCut.pt_min) {
 				takenEMu.push_back(std::make_pair(*tightElectron,*looseMuon));
@@ -134,6 +139,9 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 					
 // do it: jetsnoel, tightElectron, looseMuon, met
 			   candidateStore.push_back(DiLeptonCandidate(data_, *tightElectron, *looseMuon, jetsnoel, met, metPhi, cms1::DiLeptonCandidate::ElMu));
+			   candidateStore.back().lTightIso = isoRelTight;
+			   candidateStore.back().lLooseIso = isoRelLoose;
+
 			}
 		}  //End loop over loose muons
 	}  //End tight electrons loop
@@ -145,7 +153,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 	++tightMuon ) {
 		double isoRelTight = cms1::Cuts::trackRelIsolation((*tightMuon)->momentum(), (*tightMuon)->vertex(), tracks,
 			0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-		if (isoRelTight > isoCut_) continue;
+		// if (isoRelTight > isoCut_) continue;
 
 			// loop over loose electrons
 		for ( std::vector<const reco::Candidate*>::iterator looseElectron = looseElectrons.begin(),
@@ -154,7 +162,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 		++looseElectron ) {
 			double isoRelLoose = cms1::Cuts::trackRelIsolation((*looseElectron)->momentum(), (*looseElectron)->vertex(), tracks,
 				0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-			if (isoRelLoose > isoCut_) continue;
+			// if (isoRelLoose > isoCut_) continue;
 
 				// exclude combinations from both tight electron and muon which have already been counted in EMu
 			bool passed = false;
@@ -183,6 +191,9 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 																	
 // do it: jetsnoel, tightMuon, looseElectron, met
 				   candidateStore.push_back(DiLeptonCandidate(data_, *tightMuon, *looseElectron, jetsnoel, met, metPhi, cms1::DiLeptonCandidate::MuEl));
+				   candidateStore.back().lTightIso = isoRelTight;
+				   candidateStore.back().lLooseIso = isoRelLoose;
+
 				}
 			}
 		}
@@ -194,7 +205,7 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 
 			double isoRelLoose = cms1::Cuts::trackRelIsolation((*looseMuon)->momentum(), (*looseMuon)->vertex(), tracks,
 				0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-			if (isoRelLoose > isoCut_) continue;
+			// if (isoRelLoose > isoCut_) continue;
 				// check if the same muon has been selected
 			if ( *tightMuon != *looseMuon ) {
 			// check if pair already passed cuts
@@ -223,12 +234,18 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 
 // do it: jets, tightMuon, looseMuon, met
 							   candidateStore.push_back(DiLeptonCandidate(data_, *tightMuon, *looseMuon, jets, met, metPhi, cms1::DiLeptonCandidate::MuMu));
+							   candidateStore.back().lTightIso = isoRelTight;
+							   candidateStore.back().lLooseIso = isoRelLoose;
+
 							}
 						} else {
 							takenMuMu.push_back(std::make_pair(*tightMuon,*looseMuon));
 																	
 // do it: jets, tightMuon, looseMuon, met
 						   candidateStore.push_back(DiLeptonCandidate(data_, *tightMuon, *looseMuon, jets, met, metPhi, cms1::DiLeptonCandidate::MuMu));
+						   candidateStore.back().lTightIso = isoRelTight;
+						   candidateStore.back().lLooseIso = isoRelLoose;
+
 						}
 					}
 				}
