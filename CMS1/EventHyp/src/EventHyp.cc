@@ -35,8 +35,6 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 	candidateStore.clear(); // resets all previously allocated DiLeptonCandidates
 ////////////////////////////////////////////////////////
 
-	std::vector<const cms1::DiLeptonCandidate*> output_list;
-
    const  std::vector<reco::Track>* tracks = data_->getData< std::vector<reco::Track> >("ctfWithMaterialTracks");
 	
 // logic
@@ -98,7 +96,6 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 									
 // do it: jetsnoel, tightElectron, looseElectron, met
 							   candidateStore.push_back(DiLeptonCandidate(data_, *tightElectron, *looseElectron, jetsnoel, met, metPhi, cms1::DiLeptonCandidate::ElEl));
-							   output_list.push_back( &candidateStore.back() );
 							}
 						} else {
 							takenEE.push_back(std::make_pair(*tightElectron,*looseElectron));
@@ -112,7 +109,6 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 																	
 // do it: jetsnoel, tightElectron, looseElectron, met
 						   candidateStore.push_back(DiLeptonCandidate(data_, *tightElectron, *looseElectron, jetsnoel, met, metPhi, cms1::DiLeptonCandidate::ElEl));
-						   output_list.push_back( &candidateStore.back() );
 						}
 					}
 				}
@@ -138,7 +134,6 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 					
 // do it: jetsnoel, tightElectron, looseMuon, met
 			   candidateStore.push_back(DiLeptonCandidate(data_, *tightElectron, *looseMuon, jetsnoel, met, metPhi, cms1::DiLeptonCandidate::ElMu));
-			   output_list.push_back( &candidateStore.back() );
 			}
 		}  //End loop over loose muons
 	}  //End tight electrons loop
@@ -188,7 +183,6 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 																	
 // do it: jetsnoel, tightMuon, looseElectron, met
 				   candidateStore.push_back(DiLeptonCandidate(data_, *tightMuon, *looseElectron, jetsnoel, met, metPhi, cms1::DiLeptonCandidate::MuEl));
-				   output_list.push_back( &candidateStore.back() );
 				}
 			}
 		}
@@ -229,21 +223,22 @@ std::vector<const cms1::DiLeptonCandidate*> cms1::EventHyp::getEventHyp (
 
 // do it: jets, tightMuon, looseMuon, met
 							   candidateStore.push_back(DiLeptonCandidate(data_, *tightMuon, *looseMuon, jets, met, metPhi, cms1::DiLeptonCandidate::MuMu));
-							   output_list.push_back( &candidateStore.back() );
 							}
 						} else {
 							takenMuMu.push_back(std::make_pair(*tightMuon,*looseMuon));
 																	
 // do it: jets, tightMuon, looseMuon, met
 						   candidateStore.push_back(DiLeptonCandidate(data_, *tightMuon, *looseMuon, jets, met, metPhi, cms1::DiLeptonCandidate::MuMu));
-						   output_list.push_back( &candidateStore.back() );
 						}
 					}
 				}
 			}
 		}
 	}
-	return output_list;
+   std::vector<const cms1::DiLeptonCandidate*> output_list;
+   for(std::vector<DiLeptonCandidate>::const_iterator cand = candidateStore.begin(); cand != candidateStore.end(); ++cand)
+     output_list.push_back(&(*cand));
+   return output_list;
 }
 
 void cms1::EventHyp::dump(std::ostream& o, std::vector<const cms1::DiLeptonCandidate*> cl) {
