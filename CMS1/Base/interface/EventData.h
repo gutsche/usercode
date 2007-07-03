@@ -9,8 +9,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/06/14 05:59:56 $
-// $Revision: 1.12 $
+// $Date: 2007/06/23 05:36:32 $
+// $Revision: 1.13 $
 //
 
 #include "CLHEP/HepMC/GenParticle.h"
@@ -40,7 +40,6 @@ namespace cms1 {
 
 	// reference collections
 	std::vector<const reco::Track*>     refTracks;
-	std::vector<const reco::Candidate*> refJets;
 	
 	// ------------ DERIVED STUFF ----------------
 

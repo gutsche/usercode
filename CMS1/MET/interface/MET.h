@@ -11,8 +11,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/06/23 05:36:35 $
-// $Revision: 1.9 $
+// $Date: 2007/06/29 01:48:51 $
+// $Revision: 1.10 $
 //
 #include <iostream>
 
@@ -35,7 +35,7 @@ namespace cms1 {
       const reco::CaloMET* getMET (const METType );
       
       // here should be all corrections
-      static void correctMETmuons(EventData* event, double& et, double& phi);
+      static void correctMETmuons(EventData* event, double& et, double& phi, bool caloCorr = true);
       static void correctedJetMET(EventData* event, const std::vector<const reco::Candidate*>* , 
 				  double& , double&,
 				  const double min_pt=30);

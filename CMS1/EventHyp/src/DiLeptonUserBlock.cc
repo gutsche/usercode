@@ -29,6 +29,8 @@ void cms1::DiLeptonUserBlock::registerBlock(EventData& event, const std::string&
    addEntry(event.p4UserData,    p4Hyp,           "hyp_p4",             name_prefix, alias_prefix);
    addEntry(event.floatUserData, met,             "hyp_met",            name_prefix, alias_prefix);
    addEntry(event.floatUserData, metPhi,          "hyp_metPhi",         name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metNoCalo,       "hyp_metNoCalo",      name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metPhiNoCalo,    "hyp_metPhiNoCalo",   name_prefix, alias_prefix);
    addEntry(event.floatUserData, metJes5,         "hyp_metJes5",        name_prefix, alias_prefix);
    addEntry(event.floatUserData, metPhiJes5,      "hyp_metPhiJes5",     name_prefix, alias_prefix);
    addEntry(event.floatUserData, metJes15,        "hyp_metJes15",       name_prefix, alias_prefix);
@@ -69,13 +71,24 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
    type->addData( candidate.candidateType );
    met->addData( candidate.MET );
    metPhi->addData( candidate.METphi );
+   
+   // calculate simple muon correction (no calo MIP correction)
+     {
+	double tmpMet = candidate.MET_uncorr;
+	double tmpMetPhi = candidate.METphi_uncorr;
+	MET::correctMETmuons( &event, tmpMet, tmpMetPhi, false );
+	metNoCalo->addData( tmpMet );
+	metPhiNoCalo->addData( tmpMetPhi );
+     }
+
    // metMuonCorr->addData( candidate.MET_muon_corr );
    // metPhiMuonCorr->addData( candidate.METphi_muon_corr );
 
    p4Hyp->addData( candidate.lTight->p4()+candidate.lLoose->p4() );
    // fill a vector of jets that were not used
    std::vector<const reco::Candidate*> notUsedJets;
-   for (std::vector<const reco::Candidate*>::const_iterator itr = event.refJets.begin(); itr != event.refJets.end(); ++itr)
+   const std::vector<const reco::Candidate*>& refJets     = event.getBBCollection("refJets");
+   for (std::vector<const reco::Candidate*>::const_iterator itr = refJets.begin(); itr != refJets.end(); ++itr)
      {
 	bool notUsed = true;
 	bool electron = true;
@@ -182,8 +195,8 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
 	float dPhi10 = 9999;
 	float dPhi15 = 9999;
 	float dPhi20 = 9999;
-	for (std::vector<const reco::Candidate*>::const_iterator cand = event.refJets.begin();
-	     cand != event.refJets.end(); ++cand)
+	for (std::vector<const reco::Candidate*>::const_iterator cand = refJets.begin();
+	     cand != refJets.end(); ++cand)
 	  {
 	     // dphi units are not radians in the search for a minimum,
 	     // but they are radians for the output

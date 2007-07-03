@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/06/23 05:36:36 $
-// $Revision: 1.10 $
+// $Date: 2007/06/29 01:48:51 $
+// $Revision: 1.11 $
 //
 
 #include <iostream>
@@ -53,12 +53,12 @@ const reco::CaloMET* cms1::MET::getMET(const METType type)
 
 // correct MET energies for Muons
 // (input parameters are corrected by the algorithm)
-void cms1::MET::correctMETmuons(EventData* event, double& met, double& phi) 
+void cms1::MET::correctMETmuons(EventData* event, double& met, double& metPhi, bool caloCorr )
 {
    // first, account for muon momentum
    const std::vector<const reco::Candidate*>& metMuons = event->getBBCollection("MuonsForMETCorrection");
-   double metx =  met*std::cos(phi);
-   double mety =  met*std::sin(phi);
+   double metx =  met*std::cos(metPhi);
+   double mety =  met*std::sin(metPhi);
    for ( std::vector<const reco::Candidate*>::const_iterator cand = metMuons.begin(); 
 	 cand != metMuons.end(); ++cand ) {
       double pt0 = (*cand)->pt(); 
@@ -67,7 +67,9 @@ void cms1::MET::correctMETmuons(EventData* event, double& met, double& phi)
       mety -= pt0*std::sin(phi0);
    }
    met = std::sqrt(metx*metx+mety*mety);
-   phi = std::atan2(mety, metx);
+   metPhi = std::atan2(mety, metx);
+   
+   if (! caloCorr) return;
    
    // second, subtract calorimeter muon energy
    //PDK now correct the ET for the muon deposits
@@ -104,21 +106,21 @@ void cms1::MET::correctMETmuons(EventData* event, double& met, double& phi)
 	 muEy += ( info.towerCrossedEnergy() )*sin(theta)*sin( phi );
       }
    }
-   metx = met*cos(phi) + muEx;
-   mety = met*sin(phi) + muEy;
+   metx = met*cos(metPhi) + muEx;
+   mety = met*sin(metPhi) + muEy;
    met   = std::sqrt(metx*metx + mety*mety);
-   phi = atan2(mety, metx);
+   metPhi = atan2(mety, metx);
 }
 
 // list of jets must be supplied
 void cms1::MET::correctedJetMET(EventData* event,
 				const std::vector<const reco::Candidate*>* jets,
-				double& met, double& phi, 
+				double& met, double& metPhi, 
 				const double min_pt) 
 {
    //iterate over candidates, cast them to calojets and then correct for the energy
-   double METX_uncorr = met*cos(phi);
-   double METY_uncorr = met*sin(phi);  
+   double METX_uncorr = met*cos(metPhi);
+   double METY_uncorr = met*sin(metPhi);  
    double Ex = 0.0;
    double Ey = 0.0;
    std::vector<const reco::Candidate*>::const_iterator cand_iter;
@@ -129,6 +131,7 @@ void cms1::MET::correctedJetMET(EventData* event,
 	    StreamerArguments args = getStreamerArguments(event, *cand_iter);
 	    double corr_factor = args.jetcorrection;
 	    if(corr_factor > 0 ) { //args.jetcorrection is -999 in case of an error
+	       std::cout << "Jet Pt: " << jet->pt() << "\t Jet phi: " << jet->phi() << "\tcorr: " << corr_factor <<std::endl;
 	       Ex = Ex + (corr_factor-1)*(jet->et())*cos(jet->phi());
 	       Ey = Ey + (corr_factor-1)*(jet->et())*sin(jet->phi());
 	    }
@@ -138,12 +141,12 @@ void cms1::MET::correctedJetMET(EventData* event,
    double metx = METX_uncorr - Ex;
    double mety = METY_uncorr - Ey;
    std::cout << "Before correcting, MET, METPhi, METx, METy: " 
-     << met << "   " << phi << "   " << METX_uncorr 
+     << met << "   " << metPhi << "   " << METX_uncorr 
      << "   " << METY_uncorr <<std::endl;
    met = sqrt(metx*metx+mety*mety);
-   phi = atan2(mety, metx);
+   metPhi = atan2(mety, metx);
    std::cout << "After correcting, MET, METPhi, METx, METy: " 
-     << met << "   " << phi << "   " << metx << "    " 
+     << met << "   " << metPhi << "   " << metx << "    " 
      << mety << std::endl;
 }
 

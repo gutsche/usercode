@@ -19,20 +19,20 @@
 namespace cms1 {
    class DiLeptonCandidate {
     public:
+      // should probably add commonPrimaryVertex
+      enum DiLeptonType { MuMu, MuEl, ElMu, ElEl };
+      
+      DiLeptonType candidateType;
       const reco::Candidate* lTight;
       const reco::Candidate* lLoose;
       std::vector<const reco::Candidate*> jets; // sorted by energy
-      
-      // MET
-      // double MET_muon_corr;
-      // double METphi_muon_corr;
+      // MET (uncorrected)
+      double MET_uncorr;
+      double METphi_uncorr;
       // best MET (only muon correction)
       double MET;    
       double METphi; 
-      
-      //		should probably add commonPrimaryVertex
-      enum DiLeptonType { MuMu, MuEl, ElMu, ElEl };
-      DiLeptonType candidateType;
+
 
       int nJets() const { return jets.size(); };
 
@@ -40,17 +40,12 @@ namespace cms1 {
       std::string tightLeptonTypeString() const;
       std::string looseLeptonTypeString() const;
 
-      static DiLeptonCandidate* returnDiLeptonCandidate( EventData* event,
-							 const reco::Candidate* lt, 
-							 const reco::Candidate* ll,  
-							 std::vector<const reco::Candidate*> jets, 
-							 double met, double metPhi, DiLeptonType t
-							 );
-      static void resetStore();		
-    protected:
-      static int iStore;
-      static std::vector<DiLeptonCandidate> dlStore;
-      static DiLeptonCandidate* nextStore();
+      DiLeptonCandidate( EventData* event,
+			 const reco::Candidate* lt, 
+			 const reco::Candidate* ll,  
+			 std::vector<const reco::Candidate*> jets, 
+			 double met, double metPhi, DiLeptonType t
+			 );
    };
 }
 

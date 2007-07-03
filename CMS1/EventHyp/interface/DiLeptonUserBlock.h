@@ -30,6 +30,8 @@ namespace cms1 {
 	UserDataP4*         p4Hyp;
 	UserDataFloat*      met;     // default met
 	UserDataFloat*      metPhi;  // default met
+	UserDataFloat*      metNoCalo;     // met with partial muon correction (no calo MIP)
+	UserDataFloat*      metPhiNoCalo;  // default met
 	UserDataFloat*      metJes5;     // jet energy scale correction applied for jets with p_t>5 GeV
 	UserDataFloat*      metPhiJes5;  // jet energy scale correction applied for jets with p_t>5 GeV
 	UserDataFloat*      metJes15;    // jet energy scale correction applied for jets with p_t>15 GeV

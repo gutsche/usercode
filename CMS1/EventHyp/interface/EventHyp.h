@@ -31,6 +31,8 @@ namespace cms1 {
 		      double metPhi,
 		      Cuts metCut,
 		      Cuts metCutAroundZ );
+    private:
+      std::vector<cms1::DiLeptonCandidate> candidateStore;
 
    };
 }

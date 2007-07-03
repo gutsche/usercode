@@ -9,18 +9,20 @@
 #include "CMS1/EventHyp/interface/DiLeptonCandidate.h"
 #include "CMS1/MET/interface/MET.h"
 
-cms1::DiLeptonCandidate* cms1::DiLeptonCandidate::returnDiLeptonCandidate( EventData* event,
-									   const reco::Candidate* lt, 
-									   const reco::Candidate* ll,  
-									   std::vector<const reco::Candidate*> jets, 
-									   double met, double metPhi, DiLeptonType t )
+cms1::DiLeptonCandidate::DiLeptonCandidate( EventData* event,
+					    const reco::Candidate* lt, 
+					    const reco::Candidate* ll,  
+					    std::vector<const reco::Candidate*> iJets,
+					    double met, double metPhi, DiLeptonType t )
 {
-   cms1::DiLeptonCandidate*  dl = nextStore();
-   dl->lTight = lt;
-   dl->lLoose = ll;
-   dl->jets = jets;
+   lTight = lt;
+   lLoose = ll;
+   jets = iJets;
    
    // assuming that we get uncorrected MET, let's make corrections
+   
+   MET_uncorr = met;
+   METphi_uncorr = metPhi;
    
    // MET correction for muons ( full correction ) 
    MET::correctMETmuons( event, met, metPhi );
@@ -43,11 +45,10 @@ cms1::DiLeptonCandidate* cms1::DiLeptonCandidate::returnDiLeptonCandidate( Event
    // do the correction
    MET::correctedJetMET( event, &jetsnoel, met, metPhi );
    */
-   dl->MET = met;
-   dl->METphi = metPhi;
+   MET = met;
+   METphi = metPhi;
    
-   dl->candidateType = t;
-   return dl;
+   candidateType = t;
 }
 
 std::string cms1::DiLeptonCandidate::candidateTypeString() const {
@@ -80,24 +81,3 @@ std::string cms1::DiLeptonCandidate::looseLeptonTypeString() const {
 	return "ERR!"; // this can never happen...
 }
 
-//////////////////////////////////////////
-// ACHTUNG Baby, storage management for DiLeptonCandidates:
-// need to call resetStore before each new event
-// currently call this in EventHyp
-/////////////////////////////////////////
-
-int cms1::DiLeptonCandidate::iStore = -1;
-std::vector<cms1::DiLeptonCandidate> cms1::DiLeptonCandidate::dlStore(4); 
-void cms1::DiLeptonCandidate::resetStore() {
-	iStore = -1; 
-}
-
-cms1::DiLeptonCandidate* cms1::DiLeptonCandidate::nextStore() {
-	
-	iStore++; 
-	if (iStore > int(dlStore.size())-1) {
-		std::cout << "Ooops: ran out of storage for DiLeptonCandidates, extending DiLeptonCandidate Store" << std::endl;
-		dlStore.push_back(DiLeptonCandidate());
-	}
-	return &dlStore[iStore];
-}
