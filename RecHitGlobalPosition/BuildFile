@@ -1,5 +1,0 @@
-<use name=DataFormats/Common>
-<export>
- <lib name=GutscheRecHitGlobalPosition>
- <use name=DataFormats/Common>
-</export>
