@@ -2,9 +2,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/06/02 18:03:49 $
-// $Revision: 1.3 $
+// $Author: kalavase $
+// $Date: 2007/06/05 01:07:18 $
+// $Revision: 1.4 $
 //
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
@@ -15,6 +15,7 @@ cms1::TrackStreamer::TrackStreamer()
    p4Names_.push_back("p4");            p4s_.push_back( LorentzVector(0,0,0,0) );
    floatNames_.push_back("d0");         floats_.push_back(0);
    floatNames_.push_back("z0");         floats_.push_back(0);
+   floatNames_.push_back("vertexphi");  floats_.push_back(0);
    floatNames_.push_back("chi2");       floats_.push_back(0);
    floatNames_.push_back("ndof");       floats_.push_back(0);
    intNames_.push_back("validHits");    ints_.push_back(0);
@@ -37,6 +38,7 @@ void cms1::TrackStreamer::setDefaults()
    p4s_[varMCP4] = LorentzVector(0,0,0,0);
    floats_[varD0] = -999. ;
    floats_[varZ0] = -999. ;
+   floats_[varVertexPhi] = -999. ;
    floats_[varChi2] = -999. ;
    ints_[varValidHits] = -999 ;
    ints_[varlostHits] = -999 ;
@@ -75,6 +77,7 @@ void cms1::TrackStreamer::fill( const reco::Track* track )
    p4s_[varP4] = LorentzVector( track->px(), track->py(), track->pz(), sqrt(track->p()*track->p()+mass_*mass_) );
    floats_[varD0] = track->d0() ;
    floats_[varZ0] = track->dz() ;
+   floats_[varVertexPhi] = atan2(track->vy(), track->vx());
    floats_[varD0Err] = track->d0Error() ;
    floats_[varZ0Err] = track->dzError() ;
    floats_[varChi2] = track->chi2() ;
