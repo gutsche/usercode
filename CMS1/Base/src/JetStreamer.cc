@@ -2,9 +2,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/05/23 02:23:23 $
-// $Revision: 1.2 $
+// $Author: kalavase $
+// $Date: 2007/06/05 01:07:18 $
+// $Revision: 1.3 $
 //
 #include "CMS1/Base/interface/JetStreamer.h"
 cms1::JetStreamer::JetStreamer() 
@@ -43,10 +43,7 @@ void cms1::JetStreamer::fill( const reco::Candidate* candidate )
       setDefaults();
       return;
    }
-   if ( const reco::CaloJet* jet = dynamic_cast<const reco::CaloJet*>(candidate) ) {
-     fill(jet);
-      return;
-   }
+   if ( const reco::CaloJet* jet = dynamic_cast<const reco::CaloJet*>(candidate) ) fill(jet);
    p4s_[varP4] = candidate->p4();
 }
 
@@ -79,8 +76,5 @@ void cms1::JetStreamer::fill( const StreamerArguments args )
       p4s_[varMCparticleP4] = LorentzVector(p.px(),p.py(),p.pz(),p.e());
    }
    floats_[varCor]=args.jetcorrection;
-   if ( args.candidate ) {
-     fill(args.candidate);
-      return;
-   }
+   if ( args.candidate ) fill(args.candidate);
 }
