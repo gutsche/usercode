@@ -5,8 +5,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/05/23 02:23:23 $
-// $Revision: 1.2 $
+// $Date: 2007/07/03 22:44:25 $
+// $Revision: 1.3 $
 //
 #include "CMS1/Base/interface/BaseStreamer.h"
 namespace cms1 {
@@ -16,7 +16,7 @@ namespace cms1 {
 	enum IntVars   { varValidHits, varlostHits, varPdgId };
 	//added varVertPhi - PDK
 	enum FloatVars { varD0, varZ0, varVertexPhi, varChi2, varNdof, varD0Err, varZ0Err, varPtErr, varEtaErr, varPhiErr };
-	enum P4Vars    { varP4, varMCP4 };
+	enum P4Vars    { varP4, varTrkP4, varMCP4 };
 	     
 	TrackStreamer();
 	void setMass( float m ){ mass_ = m; }

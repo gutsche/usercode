@@ -2,9 +2,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: kalavase $
-// $Date: 2007/06/05 01:07:18 $
-// $Revision: 1.4 $
+// $Author: dmytro $
+// $Date: 2007/07/03 22:44:26 $
+// $Revision: 1.5 $
 //
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
@@ -13,6 +13,7 @@ cms1::TrackStreamer::TrackStreamer()
 {
    // ORDER IS CRITICAL !
    p4Names_.push_back("p4");            p4s_.push_back( LorentzVector(0,0,0,0) );
+   p4Names_.push_back("trk_p4");        p4s_.push_back( LorentzVector(0,0,0,0) );
    floatNames_.push_back("d0");         floats_.push_back(0);
    floatNames_.push_back("z0");         floats_.push_back(0);
    floatNames_.push_back("vertexphi");  floats_.push_back(0);
@@ -34,8 +35,9 @@ cms1::TrackStreamer::TrackStreamer()
 
 void cms1::TrackStreamer::setDefaults()
 {
-   p4s_[varP4]   = LorentzVector(0,0,0,0);
-   p4s_[varMCP4] = LorentzVector(0,0,0,0);
+   p4s_[varP4]    = LorentzVector(0,0,0,0);
+   p4s_[varTrkP4] = LorentzVector(0,0,0,0);
+   p4s_[varMCP4]  = LorentzVector(0,0,0,0);
    floats_[varD0] = -999. ;
    floats_[varZ0] = -999. ;
    floats_[varVertexPhi] = -999. ;
@@ -74,7 +76,7 @@ void cms1::TrackStreamer::fill( const reco::Track* track )
       setDefaults();
       return;
    }
-   p4s_[varP4] = LorentzVector( track->px(), track->py(), track->pz(), sqrt(track->p()*track->p()+mass_*mass_) );
+   p4s_[varTrkP4] = LorentzVector( track->px(), track->py(), track->pz(), sqrt(track->p()*track->p()+mass_*mass_) );
    floats_[varD0] = track->d0() ;
    floats_[varZ0] = track->dz() ;
    floats_[varVertexPhi] = atan2(track->vy(), track->vx());
@@ -108,14 +110,7 @@ void cms1::TrackStreamer::fill( const StreamerArguments& args )
       p4s_[varMCP4] = LorentzVector(p.px(),p.py(),p.pz(),p.e());
       ints_[varPdgId] = args.genParticle->pdg_id();
    }
-   // reco::Track has priority over reco::Candidate
-   if ( args.track ) {
-      fill(args.track);
-      return;
-   }
-   if ( args.candidate ) {
-      fill(args.candidate);
-      return;
-   }
+   if ( args.track ) fill(args.track);
+   if ( args.candidate ) fill(args.candidate);
 }
 
