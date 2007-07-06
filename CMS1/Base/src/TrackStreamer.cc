@@ -3,8 +3,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/07/03 22:44:26 $
-// $Revision: 1.5 $
+// $Date: 2007/07/06 07:56:11 $
+// $Revision: 1.6 $
 //
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
@@ -58,15 +58,9 @@ void cms1::TrackStreamer::fill( const reco::Candidate* candidate )
       setDefaults();
       return;
    }
-   if ( const reco::Muon* muon = dynamic_cast<const reco::Muon*>(candidate) ) {
-      fill(muon->track().get());
-      return;
-   }
-   if ( const reco::PixelMatchGsfElectron* elec = dynamic_cast<const reco::PixelMatchGsfElectron*>(candidate) ) {
-      fill((const reco::Track*)elec->gsfTrack().get());
-      p4s_[varP4] = candidate->p4(); // Candidate has a proper mix of calorimeter and tracker information (energy from ECAL, direction from tracker)
-      return;
-   }
+   if ( const reco::Muon* muon = dynamic_cast<const reco::Muon*>(candidate) ) fill(muon->track().get());
+   if ( const reco::PixelMatchGsfElectron* elec = dynamic_cast<const reco::PixelMatchGsfElectron*>(candidate) ) 
+     fill( (const reco::Track*)elec->gsfTrack().get() );
    p4s_[varP4] = candidate->p4();
 }
 
@@ -102,6 +96,7 @@ void cms1::TrackStreamer::fill( const reco::Track* track )
 
 void cms1::TrackStreamer::fill( const StreamerArguments& args )
 {
+   // it's not expected that fill with this type can be used by any other fill methods
    setDefaults();
    
    // fill MC
