@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/06/29 01:48:51 $
-// $Revision: 1.11 $
+// $Date: 2007/07/03 05:23:07 $
+// $Revision: 1.12 $
 //
 
 #include <iostream>
@@ -53,7 +53,7 @@ const reco::CaloMET* cms1::MET::getMET(const METType type)
 
 // correct MET energies for Muons
 // (input parameters are corrected by the algorithm)
-void cms1::MET::correctMETmuons(EventData* event, double& met, double& metPhi, bool caloCorr )
+void cms1::MET::correctMETmuons(EventData* event, double& met, double& metPhi, bool caloCorr, bool crossedEnergy )
 {
    // first, account for muon momentum
    const std::vector<const reco::Candidate*>& metMuons = event->getBBCollection("MuonsForMETCorrection");
@@ -102,8 +102,13 @@ void cms1::MET::correctMETmuons(EventData* event, double& met, double& metPhi, b
 	 //Asking for the HO tower energy returns the total energy in the tower
 	 //so using the rechits for the HO will work better (hits and towers 
 	 //should be the same for the HO anyway)
-	 muEx += ( info.towerCrossedEnergy() )*sin(theta)*cos( phi );
-	 muEy += ( info.towerCrossedEnergy() )*sin(theta)*sin( phi );
+	 if (crossedEnergy) {
+	    muEx += ( info.towerCrossedEnergy() )*sin(theta)*cos( phi );
+	    muEy += ( info.towerCrossedEnergy() )*sin(theta)*sin( phi );
+	 }else{
+	    muEx += ( info.towerConeEnergy() )*sin(theta)*cos( phi );
+	    muEy += ( info.towerConeEnergy() )*sin(theta)*sin( phi );
+	 }
       }
    }
    metx = met*cos(metPhi) + muEx;

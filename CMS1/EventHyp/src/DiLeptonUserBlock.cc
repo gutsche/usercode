@@ -29,6 +29,8 @@ void cms1::DiLeptonUserBlock::registerBlock(EventData& event, const std::string&
    addEntry(event.p4UserData,    p4Hyp,           "hyp_p4",             name_prefix, alias_prefix);
    addEntry(event.floatUserData, met,             "hyp_met",            name_prefix, alias_prefix);
    addEntry(event.floatUserData, metPhi,          "hyp_metPhi",         name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metCone,         "hyp_metCone",        name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metPhiCone,      "hyp_metPhiCone",     name_prefix, alias_prefix);
    addEntry(event.floatUserData, metNoCalo,       "hyp_metNoCalo",      name_prefix, alias_prefix);
    addEntry(event.floatUserData, metPhiNoCalo,    "hyp_metPhiNoCalo",   name_prefix, alias_prefix);
    addEntry(event.floatUserData, metJes5,         "hyp_metJes5",        name_prefix, alias_prefix);
@@ -83,6 +85,15 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
 	MET::correctMETmuons( &event, tmpMet, tmpMetPhi, false );
 	metNoCalo->addData( tmpMet );
 	metPhiNoCalo->addData( tmpMetPhi );
+     }
+
+      // calculate cone energy corrected MET
+     {
+	double tmpMet = candidate.MET_uncorr;
+	double tmpMetPhi = candidate.METphi_uncorr;
+	MET::correctMETmuons( &event, tmpMet, tmpMetPhi, true, false );
+	metCone->addData( tmpMet );
+	metPhiCone->addData( tmpMetPhi );
      }
 
    // metMuonCorr->addData( candidate.MET_muon_corr );
