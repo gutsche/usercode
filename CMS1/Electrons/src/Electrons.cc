@@ -102,40 +102,32 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
       // set the default cuts for this type
       Cuts cuts;
       cuts.pt_min = 19;
-      cuts.eta_min = -2.5;
-      cuts.eta_max = +2.5;
+      cuts.eta_min = -2.4;
+      cuts.eta_max = +2.4;
       cuts.AND(userCuts);
       cuts.setEventData(data_);
 
-      temp = getElectrons(AllElectrons, userCuts, isolated); 
-
-      for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
-        const reco::PixelMatchGsfElectron* ele = ( const reco::PixelMatchGsfElectron*)*electron;
-        if (identify(ele, 0))
-          output_list.push_back(*electron);
-      }
+      return getElectrons(AllElectrons, cuts, isolated);
     }
     break;
   case TightElectrons:
     {
+      // This type is based on LooseElectrons
+      // set the default cuts for this type and merge them with user Cuts
       Cuts cuts;
       cuts.pt_min = 20;
-      cuts.eta_min = -2.5;
-      cuts.eta_max = +2.5;
+      cuts.eta_min = -2.4;
+      cuts.eta_max = +2.4;
       cuts.AND(userCuts);
       cuts.setEventData(data_);
-      temp = getElectrons(AllElectrons, userCuts, isolated); 
       
-      for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
-        const reco::PixelMatchGsfElectron* ele = ( const reco::PixelMatchGsfElectron*)*electron;
-        if (identify(ele, 1))
-          output_list.push_back(*electron);
-      }
+      return getElectrons(AllElectrons, cuts, isolated);
     }
-
     break;
   case TruthMatchedElectrons:
     {
+      // This type is based on LooseElectrons
+      // test that all inputs are set correctly
       if (!data_) {
 	      std::cout << "ERROR: event data is not provided to the electron black box" << std::endl;
 	      return output_list;
@@ -152,6 +144,8 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
     break;
   case Golden:
     {
+      // This type is based on LooseElectrons
+      // test that all inputs are set correctly
       if (!data_) {
 	      std::cout << "ERROR: event data is not provided to the electron black box" << std::endl;
 	      return output_list;
@@ -167,6 +161,8 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
     break;
   case BigBrem:
     {
+      // This type is based on LooseElectrons
+      // test that all inputs are set correctly
       if (!data_) {
 	      std::cout << "ERROR: event data is not provided to the electron black box" << std::endl;
 	      return output_list;
@@ -182,6 +178,8 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
     break;
   case Narrow:
     {
+      // This type is based on LooseElectrons
+      // test that all inputs are set correctly
       if (!data_) {
 	      std::cout << "ERROR: event data is not provided to the electron black box" << std::endl;
 	      return output_list;
@@ -197,6 +195,8 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
     break;
   case Showering:
     {
+      // This type is based on LooseElectrons
+      // test that all inputs are set correctly
       if (!data_) {
 	      std::cout << "ERROR: event data is not provided to the electron black box" << std::endl;
 	      return output_list;
@@ -212,6 +212,8 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
     }
   case Custom:
     {
+      // This type is based on LooseElectrons
+      // test that all inputs are set correctly
       if (!data_) {
 	      std::cout << "ERROR: event data is not provided to the electron black box" << std::endl;
 	      return output_list;
@@ -270,109 +272,9 @@ void cms1::Electrons::R9_25(const reco::PixelMatchGsfElectron* electron,
   e3x3 = seedShapeRef->e3x3();
   e5x5 = seedShapeRef->e5x5();
   spp = seedShapeRef->covPhiPhi();
+  std::cout << spp << std::endl;
   see = seedShapeRef->covEtaEta();
 }
-
-bool cms1::Electrons::identify(const reco::PixelMatchGsfElectron* electron, int type) {
-  
-  const double Isolation[]      = { 0.01,  0.01 };
-  const double EoverPInMax[]    = { 999.,  999., 999.,   999.,  999.,  999.,  999.,  999.,     // first row loose  
-                                    1.3,   1.2,   1.3,   999.,  999.,  999.,  999.,  999. };   // second row tight
-  const double EoverPInMin[]    = { 0.,    0.,    0.,    0.,    0.,    0.,    0.,    0.,   
-                                    0.9,   0.9,   0.9,   0.6,   0.9,   0.9,   0.9,   0.7 };
-  const double deltaEtaIn[]     = { 999.,  999.,  999.,  999.,  999.,  999.,  999.,  999., 
-                                    0.004, 0.006, 0.005, 0.007, 0.007, 0.008, 0.007, 0.008 };
-  const double deltaPhiIn[]     = { 999.,  999.,  999.,  999.,  999.,  999.,  999.,  999.,  
-                                    0.04,  0.07,  0.04,  0.08,  0.06,  0.07,  0.06,  0.07 };
-  const double HoverE[]         = { 999.,  999.,  999.,  999.,  999.,  999.,  999.,  999.,  
-                                    0.06,  0.05,  0.06,  0.14,  0.1,   0.1,   0.1,   0.12 };
-  const double E9overE25[]      = { 0.,    0.,    0.,    0.,    0.,    0.,    0.,    0.,
-                                    0.7,   0.75,  0.8,   0.,    0.85,  0.75,  0.8,   0. };
-  const double EoverPOutMax[]   = { 999.,  999.,  999.,  999.,  999.,  999.,  999.,  999.,
-                                    2.5,   999.,  999.,  999.,  2.,    999.,  999.,  999. };
-  const double EoverPOutMin[]   = { 0.,    0.,    0.,    0.,    0.,    0.,   0.,     0.,  
-                                    0.6,   1.8,   1.,    0.75,  0.6,   1.5,   1.,    0.8 };  
-  const double deltaPhiOut[]    = { 999.,  999.,  999.,  999., 999.,   999.,  999.,  999.,
-                                    0.011, 999.,  999.,  999.,  0.02,  999.,  999.,  999.};
-  const double sigmaEtaEtaMax[] = { 999.,  999.,  999.,  999.,  999.,  999.,  999.,  999.,
-                                    0.011, 0.011, 0.011, 0.011, 0.022, 0.022, 0.022, 0.3 };
-  const double sigmaEtaEtaMin[] = { 0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   00.,
-                                    0.005, 0.005, 0.005, 0.005, 0.008, 0.008, 0.008, 00. };
-  const double sigmaPhiPhiMax[] = { 999.,  999.,  999.,  999.,  999.,  999.,  999.,  999.,
-                                    0.015, 999.,  999.,  999.,  0.02,  999.,  999.,  999. };
-  const double sigmaPhiPhiMin[] = { 0.,    0.,    0.,    0.,    0.,    0.,    0.,    0.,  
-                                    0.005, 0.,    0.,    0.,    0.,    0.,    0.,    0. };
-
-  int icut;
-  float dummy, e3x3, e5x5, i, l;
-  R9_25(electron, dummy, e3x3, e5x5, l, i);
-  const  std::vector<reco::Track>* tracks = data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks");
-  float iso = cms1::Cuts::trackRelIsolation(electron->trackMomentumAtVtx(), electron->vertex(), tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-
-  if (iso > Isolation[type])
-    return false;
-
-  float b = electron->eSuperClusterOverP();
-  float c = electron->deltaEtaSuperClusterTrackAtVtx();
-  float d = electron->deltaPhiSuperClusterTrackAtVtx();
-  float e = electron->hadronicOverEm();
-  float f = e3x3/e5x5;
-  float g = electron->eSeedClusterOverPout();
-  float h = electron->deltaPhiSeedClusterTrackAtCalo();
-
- 
-  
-  switch (electron->classification()) {
-  case 0: icut=0;  break;
-  case 10: icut=1; break;
-  case 20: icut=2; break;
-  case 30: icut=3; break;
-  case 31: icut=3; break;
-  case 32: icut=3; break;
-  case 33: icut=3; break;
-  case 34: icut=3; break;
-  case 100: icut=4; break;
-  case 110: icut=5; break;
-  case 120: icut=6; break;
-  case 130: icut=7; break;
-  case 131: icut=7; break;
-  case 132: icut=7; break;
-  case 133: icut=7; break;
-  case 134: icut=7; break;
-  default:
-    return false;
-  }
-  
-  if (b < EoverPInMin[icut+type*8] || b > EoverPInMax[icut+type*8]) 
-    return false;
-  
-  if (c > deltaEtaIn[icut+type*8]) 
-    return false;
-  
-  if (d > deltaPhiIn[icut+type*8]) 
-    return false;
-  
-  if (e > HoverE[icut+type*8]) 
-    return false;
-  
-  if (f < E9overE25[icut+type*8]) 
-    return false;
-  
-  if (g < EoverPOutMin[icut+type*8] || g > EoverPOutMax[icut+type*8]) 
-    return false;
-  
-  if (h > deltaPhiOut[icut+type*8]) 
-    return false;
-  
-  if (sqrt(i) < sigmaEtaEtaMin[icut+type*8] || sqrt(i) > sigmaEtaEtaMax[icut+type*8]) 
-    return false;
-  
-  if (sqrt(l) < sigmaPhiPhiMin[icut+type*8] || sqrt(l) > sigmaPhiPhiMax[icut+type*8]) 
-    return false;
-  
-  return true;
-}
-
 
 bool cms1::Electrons::classify(ElectronDef def, const reco::PixelMatchGsfElectron* electron) {
 
@@ -467,7 +369,6 @@ void cms1::Electrons::fillEventUserData() {
 
   std::vector<const reco::Candidate*> els = getElectrons(AllElectrons,Cuts());
   data_->addBBCollection("refElectrons",els);
-  //data_->refElectrons = els;
 
   evtElectrons.fill(getStreamerArguments(data_, els));
   nElectrons->addData(els.size());
@@ -494,6 +395,7 @@ void cms1::Electrons::fillEventUserData() {
     float pout = el->trackMomentumOut().R();
 
     R9_25(el, eMax, e3x3, e5x5, spp, see);
+    std::cout << spp << std::endl;
 
     vint0.push_back(el->numberOfClusters()-1);
     vint1.push_back(el->classification());
