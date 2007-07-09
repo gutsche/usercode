@@ -15,7 +15,9 @@ service = MessageLogger
 
   untracked vstring debugModules = 
   { 
-    "*" 
+    "roadSearchSeeds",
+    "roadSearchClouds",
+    "roadSearchTrackCandidates" 
   }
 
   untracked PSet cout = 

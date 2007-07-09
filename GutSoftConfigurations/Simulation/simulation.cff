@@ -42,10 +42,8 @@
   { 
      	using FEVTSIMEventContent
 	untracked string fileName = "Wen_pythia.root"
-	untracked PSet datasets ={
-	    untracked PSet dataset1 = {
-		untracked string dataTier = "FEVT"
-	    }
+	untracked PSet dataset ={
+          untracked string dataTier = "GEN-SIM-DIGI"
 	}
   }
 
