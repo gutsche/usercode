@@ -8,8 +8,8 @@
 // Created:         Tue Oct 17 02:41:12 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2007/01/23 15:20:27 $
-// $Revision: 1.7 $
+// $Date: 2007/03/28 20:16:15 $
+// $Revision: 1.8 $
 //
 
 #include <string>
@@ -93,11 +93,11 @@ GutSoftRoadSearchCloudAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
     unsigned int nPXBHit   = 0;
     unsigned int nPXFHit   = 0;
     
-    for ( RoadSearchCloud::RecHitOwnVector::const_iterator recHit = cloud->begin_hits();
+    for ( RoadSearchCloud::RecHitVector::const_iterator recHit = cloud->begin_hits();
 	  recHit != cloud->end_hits();
 	  ++recHit ) {
       ++nHit;
-      DetId id(recHit->geographicalId());
+      DetId id((*recHit)->geographicalId());
       
       if ( (unsigned int)id.subdetId() == StripSubdetector::TIB ) {
 	++nStripHit;
@@ -120,8 +120,8 @@ GutSoftRoadSearchCloudAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
       }
     }
     
-    // take eta of last seed hit
-    const TrackingRecHit *outerSeedHit = &(*(--((*cloud->begin_seeds())->recHits().second)));
+    // take eta of last cloud hit
+    const TrackingRecHit *outerSeedHit = *(--cloud->end_hits());
     double eta = trackerGeometry_->idToDet(outerSeedHit->geographicalId())->surface().toGlobal(outerSeedHit->localPosition()).eta();
 
     histograms_->fill("nHitPerCloudVsEta",eta,nHit);
