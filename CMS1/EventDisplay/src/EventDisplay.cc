@@ -8,8 +8,8 @@
 // Created:         Tue Apr  3 21:47:43 UTC 2007
 //
 // $Author: latb $
-// $Date: 2007/06/20 15:45:05 $
-// $Revision: 1.2 $
+// $Date: 2007/06/21 20:55:03 $
+// $Revision: 1.3 $
 //
 #include "CMS1/EventDisplay/interface/EventDisplay.h"
 
@@ -548,6 +548,10 @@ void EventDisplay::displayCaloTowers(View_t viewType, const edm::Event& iEvent) 
 			<< std::endl;
 	}
 
+// show scale indicator
+	
+//	displayCaloTowerScale(viewType);	
+
 }
 
 void EventDisplay::displayCaloTower(View_t viewType, CaloTower* t) {
@@ -852,6 +856,317 @@ void EventDisplay::displayCaloTower(View_t viewType, CaloTower* t) {
 					rprop[4] = rprop[0]; // closing the polycell    
 
 					linePropXY.SetFillColor(emColor_);
+					linePropXY.DrawPolyLine(5,zprop,rprop,"F");
+					if (debug_) cout << "emfrac " << emfrac << " z,r " << zprop[0] << " " << rprop[0] <<  " " << zprop[1] << " " << rprop[1] << endl;
+
+				}	
+			}else {
+				std::cout << "ERROR: CaloTower neither ENDCAP nor BARREL -- this can never happen!!!" << std::endl;
+			}
+			break;
+		}
+		default:
+		break;
+	}
+
+	return;
+}
+
+void EventDisplay::displayCaloTowerScale(View_t viewType) {
+
+	double eta                = -4.;
+	double phi                = -3.8;
+	double et                 = 50.;
+	double emfrac             = 0.2;
+
+
+	double rectx[5]           = {-1., 1., 1., -1., -1.};
+	double recty[5]           = {-1., -1., 1., 1., -1.};
+
+	Layer_t layer = BARREL;
+	Layer_t hlayer = BARREL;
+	
+	switch( viewType ) {
+		case EPH:
+		{
+			double me                 = 50.;
+			double ampl               = .5;
+			ampl *= (log(et + 1.)/log(me + 1.));
+			double etaprop[5];
+			double phiprop[5];
+			for ( unsigned jc = 0; jc<4; ++jc ) { 	
+				etaprop[jc]            = eta + rectx[jc]*ampl;
+				phiprop[jc]            = phi + recty[jc]*ampl;
+			}
+
+			etaprop[4]              = etaprop[0];
+			phiprop[4]              = phiprop[0]; // closing the polycell    
+
+			if (debug_) cout << "e,p " << eta << " " << phi <<  " " << etaprop[0] << " " << phiprop[0] << endl;
+
+			TPolyLine linePropXY;          
+			linePropXY.SetLineColor(kBlack);
+			linePropXY.SetLineWidth(1);
+			linePropXY.SetFillColor(kRed);
+			linePropXY.DrawPolyLine(5,etaprop,phiprop,"F");
+
+			for ( unsigned jc = 0; jc<4; ++jc ) { 	
+				etaprop[jc]            = eta + rectx[jc]*ampl*emfrac;
+				phiprop[jc]            = phi + recty[jc]*ampl*emfrac;
+			}
+			etaprop[4]              = etaprop[0];
+			phiprop[4]              = phiprop[0]; // closing the polycell    
+			linePropXY.SetFillColor(kYellow);
+			linePropXY.DrawPolyLine(5,etaprop,phiprop,"F");
+
+
+
+			break;
+		}
+		case  XY:
+		{
+			if(layer == BARREL) {
+				double me                 = 50.;
+				double ampl               = 25.;
+				ampl *= (log(et + 1.)/log(me + 1.));
+
+				double rho = EBradius_;//cm barrel radius
+				double dphi = .05;
+				double xprop[5];
+				double yprop[5];
+
+				double sphic1 = sin(phi-dphi);
+				double cphic1 = cos(phi-dphi);
+				double sphic2 = sin(phi+dphi);
+				double cphic2 = cos(phi+dphi);
+				double rho1 = rho;
+				double rho2 = rho+5*ampl;
+
+				xprop[0] = rho1*cphic1;
+				yprop[0] = rho1*sphic1;
+				xprop[1] = rho2*cphic1;
+				yprop[1] = rho2*sphic1;
+				xprop[2] = rho2*cphic2;
+				yprop[2] = rho2*sphic2;
+				xprop[3] = rho1*cphic2;
+				yprop[3] = rho1*sphic2;
+				xprop[4] = xprop[0];
+				yprop[4] = yprop[0]; // closing the polycell    
+				
+				TPolyLine linePropXY;          
+				linePropXY.SetLineColor(kBlack);
+				linePropXY.SetLineWidth(1);
+				if(hlayer == BARREL) {
+					linePropXY.SetFillColor(kRed);
+					linePropXY.DrawPolyLine(5,xprop,yprop,"F");
+				}
+
+				rho2 = rho+5*ampl*emfrac;
+				xprop[0] = rho1*cphic1;
+				yprop[0] = rho1*sphic1;
+				xprop[1] = rho2*cphic1;
+				yprop[1] = rho2*sphic1;
+				xprop[2] = rho2*cphic2;
+				yprop[2] = rho2*sphic2;
+				xprop[3] = rho1*cphic2;
+				yprop[3] = rho1*sphic2;
+				xprop[4] = xprop[0];
+				yprop[4] = yprop[0]; // closing the polycell    
+
+				linePropXY.SetFillColor(kYellow);
+				linePropXY.DrawPolyLine(5,xprop,yprop,"F");
+
+			} else if (hlayer == ENDCAP) {
+				if (!XYshowEndcaps_) break;
+				
+				double me                 = 50.;
+				double ampl               = 25.;
+				ampl *= (log(et + 1.)/log(me + 1.));
+				if (layer==BARREL) ampl = ampl * (1.-emfrac); // correct overlap: only show HCAL in endcap
+
+				double the             = 2.*std::atan(std::exp(-eta));
+				double zec             = EEz_; //cm endcap z position
+				double rho             = abs(zec*tan(the));
+				double xx              = rho*cos(phi);
+				double yy              = rho*sin(phi);
+
+				double xprop[5];
+				double yprop[5];
+				for ( unsigned jc = 0; jc<4; ++jc ) { 	
+					xprop[jc]             = xx + rectx[jc]*ampl;
+					yprop[jc]             = yy + recty[jc]*ampl;
+				}
+				xprop[4]               = xprop[0];
+				yprop[4]               = yprop[0]; // closing the polycell    
+
+				TPolyLine linePropXY;    
+				linePropXY.SetLineColor(kBlack);
+				linePropXY.SetLineWidth(1);
+				linePropXY.SetFillColor(kRed);
+				linePropXY.DrawPolyLine(5,xprop,yprop,"F");
+
+				if (layer == ENDCAP) {
+					for ( unsigned jc = 0; jc<4; ++jc ) { 	
+						xprop[jc]             = xx + rectx[jc]*ampl*emfrac;
+						yprop[jc]             = yy + recty[jc]*ampl*emfrac;
+					}
+					xprop[4]                = xprop[0];
+					yprop[4]                = yprop[0]; // closing the polycell    
+					linePropXY.SetFillColor(kYellow);
+					linePropXY.DrawPolyLine(5,xprop,yprop,"F");
+				}
+			}else {
+				std::cout << "ERROR: CaloTower neither ENDCAP nor BARREL -- this can never happen!!!" << std::endl;
+			}
+			break;
+		}
+		case  RZ:
+		{
+			if(layer == BARREL) {
+				double me = 50.;
+				double ampl = 25.;
+				ampl *= (log(et + 1.)/log(me + 1.));
+
+				double rho = EBradius_;//cm barrel radius
+				double dz = 10.;
+				double zprop[5];
+				double rprop[5];
+
+				double the = 2.*std::atan(std::exp(-eta));
+				double tthe = tan(the);
+				double rho1 = rho;
+				double rho2 = rho+5*ampl;
+
+				if (RZprojective_) {
+					zprop[0] = rho1/tthe+dz;
+					rprop[0] = rho1;
+					zprop[1] = rho2/tthe+dz;
+					rprop[1] = rho2;
+					zprop[2] = rho2/tthe-dz;
+					rprop[2] = rho2;
+					zprop[3] = rho1/tthe-dz;
+					rprop[3] = rho1;
+				} else {
+					zprop[0] = rho1/tthe+dz;
+					rprop[0] = rho1;
+					zprop[1] = rho1/tthe+dz;
+					rprop[1] = rho2;
+					zprop[2] = rho1/tthe-dz;
+					rprop[2] = rho2;
+					zprop[3] = rho1/tthe-dz;
+					rprop[3] = rho1;
+				}
+				zprop[4] = zprop[0];
+				rprop[4] = rprop[0]; // closing the polycell    
+
+				TPolyLine linePropXY;          
+				linePropXY.SetLineColor(kBlack);
+				linePropXY.SetLineWidth(1);
+				if(hlayer == BARREL) {
+					linePropXY.SetFillColor(kRed);
+					linePropXY.DrawPolyLine(5,zprop,rprop,"F");
+				}
+
+				rho2 = rho+5*ampl*emfrac;
+				if (RZprojective_) {
+					zprop[0] = rho1/tthe+dz;
+					rprop[0] = rho1;
+					zprop[1] = rho2/tthe+dz;
+					rprop[1] = rho2;
+					zprop[2] = rho2/tthe-dz;
+					rprop[2] = rho2;
+					zprop[3] = rho1/tthe-dz;
+					rprop[3] = rho1;
+				} else {
+					zprop[0] = rho1/tthe+dz;
+					rprop[0] = rho1;
+					zprop[1] = rho1/tthe+dz;
+					rprop[1] = rho2;
+					zprop[2] = rho1/tthe-dz;
+					rprop[2] = rho2;
+					zprop[3] = rho1/tthe-dz;
+					rprop[3] = rho1;
+				}
+				zprop[4] = zprop[0];
+				rprop[4] = rprop[0]; // closing the polycell    
+
+				linePropXY.SetFillColor(kYellow);
+				linePropXY.DrawPolyLine(5,zprop,rprop,"F");
+
+			} else if (hlayer == ENDCAP) {
+				double me                 = 50.;
+				double ampl               = 25.;
+				ampl *= (log(et + 1.)/log(me + 1.));
+				if (layer==BARREL) ampl = ampl * (1.-emfrac); // correct overlap: only show HCAL in endcap
+
+				double zec = EEz_; //cm endcap z
+				double dr = 5.;
+				double zprop[5];
+				double rprop[5];
+
+				double the = 2.*std::atan(std::exp(-eta));
+				double tthe = tan(the);
+
+				double z1 = zec;
+				double z2 = z1+5*ampl;
+				if (eta < 0.) { 
+					z1 = -z1;
+					z2 = -z2;
+				}
+				if (RZprojective_) {
+					zprop[0] = z1;
+					rprop[0] = z1*tthe-dr;
+					zprop[1] = z2;
+					rprop[1] = z2*tthe-dr;
+					zprop[2] = z2;
+					rprop[2] = z2*tthe+dr;
+					zprop[3] = z1;
+					rprop[3] = z1*tthe+dr;
+				} else {
+					zprop[0] = z1;
+					rprop[0] = z1*tthe-dr;
+					zprop[1] = z2;
+					rprop[1] = z1*tthe-dr;
+					zprop[2] = z2;
+					rprop[2] = z1*tthe+dr;
+					zprop[3] = z1;
+					rprop[3] = z1*tthe+dr;
+				}
+				zprop[4] = zprop[0];
+				rprop[4] = rprop[0]; // closing the polycell    
+
+				TPolyLine linePropXY; 
+				linePropXY.SetLineColor(kBlack);
+				linePropXY.SetLineWidth(1);
+				linePropXY.SetFillColor(kRed);
+				linePropXY.DrawPolyLine(5,zprop,rprop,"F");
+
+				if (layer == ENDCAP) {
+					z2 = zec+5*ampl*emfrac;
+					if (eta < 0.) z2 = -z2;
+					if (RZprojective_) {
+						zprop[0] = z1;
+						rprop[0] = z1*tthe-dr;
+						zprop[1] = z2;
+						rprop[1] = z2*tthe-dr;
+						zprop[2] = z2;
+						rprop[2] = z2*tthe+dr;
+						zprop[3] = z1;
+						rprop[3] = z1*tthe+dr;
+					} else {
+						zprop[0] = z1;
+						rprop[0] = z1*tthe-dr;
+						zprop[1] = z2;
+						rprop[1] = z1*tthe-dr;
+						zprop[2] = z2;
+						rprop[2] = z1*tthe+dr;
+						zprop[3] = z1;
+						rprop[3] = z1*tthe+dr;	
+					}
+					zprop[4] = zprop[0];
+					rprop[4] = rprop[0]; // closing the polycell    
+
+					linePropXY.SetFillColor(kYellow);
 					linePropXY.DrawPolyLine(5,zprop,rprop,"F");
 					if (debug_) cout << "emfrac " << emfrac << " z,r " << zprop[0] << " " << rprop[0] <<  " " << zprop[1] << " " << rprop[1] << endl;
 

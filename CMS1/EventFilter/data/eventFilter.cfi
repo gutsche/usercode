@@ -1,12 +1,28 @@
 module eventFilter = EventFilter
 {
 
-# EventFilter: only display events that pass the filter on run-event numbers
-# provide a list of them as 1000000*runNumber + eventNumber (e.g. from a root selection...)
 
-   untracked vuint32 RunEventList = {
-	101000012, 
-	101000014
+# EventFilter: switch on or off
+
+untracked bool FilterDebug = false
+untracked bool FilterOn = true
+
+# specify which Filters to run
+# in this version, only RunEventList filter exists
+
+	untracked vstring Filters = { 
+		'RunEventList' ,
+		'noOtherFilterDoesExistYet...'
+	}
+
+
+# provide a list of run/event numbers that should pass the filter
+# this list could e.g. come from a root session event selection...
+# give list encoded as 1000000*runNumber + eventNumber 
+
+	untracked vuint32 RunEventList = {
+		111000012, 
+		111000014
    }
 
 }

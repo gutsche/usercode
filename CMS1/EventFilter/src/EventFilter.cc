@@ -13,7 +13,7 @@
 //
 // Original Author:  Lothar Bauerdick
 //         Created:  Fri Jul  6 15:36:57 CDT 2007
-// $Id$
+// $Id: EventFilter.cc,v 1.1 2007/07/09 23:20:23 latb Exp $
 //
 //
 
@@ -46,7 +46,12 @@ class EventFilter : public edm::EDFilter {
 
       // ----------member data ---------------------------
 
+		bool filterDebug_;
+		bool filterOn_;
+		std::vector<std::string> filters_;
 		std::vector<unsigned int> runEventList_;
+		bool filterRunEventList_;
+		int nFiltered_;
 };
 
 //
@@ -62,10 +67,29 @@ class EventFilter : public edm::EDFilter {
 //
 EventFilter::EventFilter(const edm::ParameterSet& iConfig)
 {
-	//now do what ever initialization is needed
-	runEventList_  = iConfig.getUntrackedParameter<std::vector<unsigned int> >("RunEventList");
 
-	if (false) {
+//now do what ever initialization is needed
+
+	nFiltered_ = 0;
+	filterDebug_ = iConfig.getUntrackedParameter<bool>("FilterDebug");
+	
+	filterOn_ = iConfig.getUntrackedParameter<bool>("FilterOn");
+	std::cout << "---->> EventFilter is "; filterOn_ ? std::cout << "ON" : std::cout << "OFF"; std::cout << std::endl;
+
+	filters_ = iConfig.getUntrackedParameter<std::vector<std::string> >("Filters");
+	
+	filterRunEventList_ = false;
+	for(std::vector<std::string>::const_iterator iter=filters_.begin();
+		iter != filters_.end(); 
+		++iter) {
+			if (*iter == "RunEventList") {
+				std::cout << "---->> EventFilter is filtering for " << *iter << std::endl;
+				filterRunEventList_ = true;
+			}
+	}
+
+	runEventList_  = iConfig.getUntrackedParameter<std::vector<unsigned int> >("RunEventList");
+	if (filterDebug_) {
 		for(std::vector<unsigned int>::const_iterator iter=runEventList_.begin();
 		iter != runEventList_.end(); 
 		++iter) {
@@ -109,7 +133,9 @@ bool
 		unsigned int ren = *iter;		
 		if ( ren == thisRen ) { 
 			result = true;
-			std::cout << "--> EventFilter - run: " << r << " event: " << e <<	" passed." << std::endl;
+			++nFiltered_;
+			if (filterDebug_)
+				std::cout << "--> EventFilter: " << nFiltered_ << " - run: " << r << " event: " << e <<	" passed." << std::endl;
 			break; 
 		}
 	}
@@ -125,6 +151,7 @@ EventFilter::beginJob(const edm::EventSetup&)
 // ------------ method called once each job just after ending the event loop  ------------
 void 
 EventFilter::endJob() {
+	std::cout << "--> EventFilter: " << nFiltered_ << " events filtered." << std::endl;
 }
 
 //define this as a plug-in

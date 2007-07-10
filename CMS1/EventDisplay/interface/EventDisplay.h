@@ -11,8 +11,8 @@
 // Created:         Tue Apr  3 21:47:43 UTC 2007
 //
 // $Author: latb $
-// $Date: 2007/06/20 15:45:04 $
-// $Revision: 1.2 $
+// $Date: 2007/06/21 20:55:03 $
+// $Revision: 1.3 $
 //
 
 #include <string>
@@ -66,7 +66,7 @@ class EventDisplay : public edm::EDAnalyzer {
   enum Layer_t { BARREL = 0, ENDCAP = 1 };
 	virtual void displayCaloTowers(View_t viewType, const edm::Event& iEvent);
 	virtual void displayCaloTower(View_t viewType, CaloTower* t);
-
+	virtual void displayCaloTowerScale(View_t viewType);
 
   std::string  outputFileNameBegin_;
   std::string  outputFileName_;
