@@ -36,6 +36,8 @@ namespace cms1 {
 	UserDataFloat*      metPhiNoCalo;  // default met
 	UserDataFloat*      metJes5;     // jet energy scale correction applied for jets with p_t>5 GeV
 	UserDataFloat*      metPhiJes5;  // jet energy scale correction applied for jets with p_t>5 GeV
+	UserDataFloat*      metJes10;    // jet energy scale correction applied for jets with p_t>15 GeV
+	UserDataFloat*      metPhiJes10; // jet energy scale correction applied for jets with p_t>15 GeV
 	UserDataFloat*      metJes15;    // jet energy scale correction applied for jets with p_t>15 GeV
 	UserDataFloat*      metPhiJes15; // jet energy scale correction applied for jets with p_t>15 GeV
 	UserDataFloat*      metJes30;    // jet energy scale correction applied for jets with p_t>30 GeV

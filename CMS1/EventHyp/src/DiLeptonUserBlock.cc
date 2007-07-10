@@ -35,6 +35,8 @@ void cms1::DiLeptonUserBlock::registerBlock(EventData& event, const std::string&
    addEntry(event.floatUserData, metPhiNoCalo,    "hyp_metPhiNoCalo",   name_prefix, alias_prefix);
    addEntry(event.floatUserData, metJes5,         "hyp_metJes5",        name_prefix, alias_prefix);
    addEntry(event.floatUserData, metPhiJes5,      "hyp_metPhiJes5",     name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metJes10,        "hyp_metJes10",       name_prefix, alias_prefix);
+   addEntry(event.floatUserData, metPhiJes10,     "hyp_metPhiJes10",    name_prefix, alias_prefix);
    addEntry(event.floatUserData, metJes15,        "hyp_metJes15",       name_prefix, alias_prefix);
    addEntry(event.floatUserData, metPhiJes15,     "hyp_metPhiJes15",    name_prefix, alias_prefix);
    addEntry(event.floatUserData, metJes30,        "hyp_metJes30",       name_prefix, alias_prefix);
@@ -178,6 +180,13 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
 	MET::correctedJetMET( &event, &jetsnoel, tmpMet, tmpMetPhi, 5 );
 	metJes5->addData( tmpMet );
 	metPhiJes5->addData( tmpMetPhi );
+     }
+     {
+	double tmpMet = candidate.MET;
+	double tmpMetPhi = candidate.METphi;
+	MET::correctedJetMET( &event, &jetsnoel, tmpMet, tmpMetPhi, 10 );
+	metJes10->addData( tmpMet );
+	metPhiJes10->addData( tmpMetPhi );
      }
      {
 	double tmpMet = candidate.MET;
