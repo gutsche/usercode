@@ -3,18 +3,18 @@
 #
 # list of files (format: file events):
 #
-# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070303_26/610_4.root 1000
-# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070303_26/610_0.root 1000
-# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070303_26/610_3.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070303_26/610_4.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070303_26/610_0.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070303_26/610_3.root 1000
 #
 # list of corrupt files (format: file events):
 #
-# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070303_26/610_1.root -1
-# dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070303_26/610_2.root -1
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070303_26/610_1.root -1
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070303_26/610_2.root -1
 #
 replace PoolSource.fileNames = {
-  "dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070303_26/610_4.root",
-  "dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070303_26/610_0.root",
-  "dcache:/pnfs/cms/WAX/resilient/gutsche/condor/070303_26/610_3.root"
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070303_26/610_4.root",
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070303_26/610_0.root",
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070303_26/610_3.root"
 }
 

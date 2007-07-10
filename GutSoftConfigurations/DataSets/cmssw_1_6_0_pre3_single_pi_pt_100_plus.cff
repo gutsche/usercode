@@ -1,0 +1,59 @@
+#
+# 25 file(s) containing 25000 events
+#
+# list of files (format: file events):
+#
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_2.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_1.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_6.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_15.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_22.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_21.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_18.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_23.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_9.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_4.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_19.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_5.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_24.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_10.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_12.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_20.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_17.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_8.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_14.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_13.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_16.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_3.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_11.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_0.root 1000
+# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_7.root 1000
+#
+replace PoolSource.fileNames = {
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_2.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_1.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_6.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_15.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_22.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_21.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_18.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_23.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_9.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_4.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_19.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_5.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_24.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_10.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_12.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_20.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_17.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_8.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_14.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_13.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_16.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_3.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_11.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_0.root",
+  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070709_03_56/537_7.root"
+}
+

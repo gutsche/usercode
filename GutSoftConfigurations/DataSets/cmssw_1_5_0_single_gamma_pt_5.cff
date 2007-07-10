@@ -3,27 +3,27 @@
 #
 # list of files (format: file events):
 #
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_9.root 1000
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_2.root 1000
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_5.root 1000
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_0.root 1000
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_8.root 1000
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_3.root 1000
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_6.root 1000
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_4.root 1000
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_1.root 1000
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_7.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_9.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_2.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_5.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_0.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_8.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_3.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_6.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_4.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_1.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_7.root 1000
 #
 replace PoolSource.fileNames = {
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_9.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_2.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_5.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_0.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_8.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_3.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_6.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_4.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_1.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070622_01_81/106_7.root"
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_9.root",
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_2.root",
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_5.root",
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_0.root",
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_8.root",
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_3.root",
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_6.root",
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_4.root",
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_1.root",
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070622_01_81/106_7.root"
 }
 
