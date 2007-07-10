@@ -22,6 +22,7 @@
 #include "CMS1/Base/interface/BlackBox.h"
 #include "CMS1/Base/interface/UserDataBlocks.h"
 #include "CMS1/Base/interface/TrackStreamer.h"
+//#include "CMS1/Base/interface/ElIdStreamer.h"
 
 namespace cms1 {
   struct ElectronDef {
@@ -61,8 +62,6 @@ namespace cms1 {
 
   private:
     void R9_25(const reco::PixelMatchGsfElectron*, float&, float&, float&, float&, float&);
-    bool identify(const reco::PixelMatchGsfElectron*, int);
-
     VectorUserBlock<TrackStreamer> evtElectrons;
     UserDataInt *nElectrons;
 
