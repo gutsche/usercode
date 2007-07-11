@@ -17,5 +17,28 @@ module eventDisplay = EventDisplay
   untracked bool RZprojective = false
   untracked bool XYshowEndcaps = false
 
+# EventFilter: switch on or off
+
+  untracked bool FilterOn = false
+
+# specify which Filters to run
+# in this version, only RunEventList filter exists
+
+  untracked vstring Filters = { 
+		'RunEventList' ,
+		'noOtherFilterDoesExistYet...'
+  }
+
+
+# provide a list of run/event numbers that should pass the filter
+# this list could e.g. come from a root session event selection...
+# give list encoded as 1000000*runNumber + eventNumber 
+
+  untracked vuint32 RunEventList = {
+		111000012, 
+		111000014
+  }
+
+
   untracked bool Debug = false
 }

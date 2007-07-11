@@ -8,8 +8,8 @@
 // Created:         Tue Apr  3 21:47:43 UTC 2007
 //
 // $Author: latb $
-// $Date: 2007/06/21 20:55:03 $
-// $Revision: 1.3 $
+// $Date: 2007/07/10 23:55:43 $
+// $Revision: 1.4 $
 //
 #include "CMS1/EventDisplay/interface/EventDisplay.h"
 
@@ -76,6 +76,37 @@ EventDisplay::EventDisplay(const edm::ParameterSet& iConfig)
 	EEz_ = 320.;
 
 	debug_ = iConfig.getUntrackedParameter<bool>("Debug");
+	
+	
+	nFiltered_ = 0;
+	
+	filterOn_ = iConfig.getUntrackedParameter<bool>("FilterOn");
+	std::cout << "---->> EventFilter is "; filterOn_ ? std::cout << "ON" : std::cout << "OFF"; std::cout << std::endl;
+
+	filters_ = iConfig.getUntrackedParameter<std::vector<std::string> >("Filters");
+	
+	filterRunEventList_ = false;
+	for(std::vector<std::string>::const_iterator iter=filters_.begin();
+		iter != filters_.end(); 
+		++iter) {
+			if (*iter == "RunEventList") {
+				std::cout << "---->> EventFilter is filtering for " << *iter << std::endl;
+				filterRunEventList_ = true;
+			}
+	}
+
+	runEventList_  = iConfig.getUntrackedParameter<std::vector<unsigned int> >("RunEventList");
+	if (debug_) {
+		for(std::vector<unsigned int>::const_iterator iter=runEventList_.begin();
+		iter != runEventList_.end(); 
+		++iter) {
+			unsigned int ren = *iter;		
+			unsigned int e = ren%1000000;
+			unsigned int r = ren/1000000;
+			std::cout << "---->> Will filter run: " << r << " event: " << e <<	std::endl;
+		}
+	}
+	
 }
 
 
@@ -88,6 +119,31 @@ EventDisplay::~EventDisplay()
 void
 	EventDisplay::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
+	
+	if (filterOn_) {
+		bool skip = true;
+
+		if (filterRunEventList_) {
+
+			unsigned int r = iEvent.id().run();
+			unsigned int e = iEvent.id().event();
+			unsigned int thisRen = 1000000*r+e;
+
+			for(std::vector<unsigned int>::const_iterator iter=runEventList_.begin();
+			iter!= runEventList_.end(); 
+			iter++) {
+				unsigned int ren = *iter;		
+				if ( ren == thisRen ) { 
+					skip = false;
+					++nFiltered_;
+					if (debug_)
+						std::cout << "--> EventFilter: " << nFiltered_ << " - run: " << r << " event: " << e <<	" passed." << std::endl;
+					break; 
+				}
+			}
+		}
+		if (skip) return;
+	}	
 
 	// get tracking particle collection for true information
 	edm::Handle<TrackingParticleCollection>  trackingParticleCollectionHandle;
@@ -123,7 +179,7 @@ void
 
 	// draw run and event number, EPH view
 	ef_pad_left_->cd();
-  ef_histo_->Draw();
+   ef_histo_->Draw();
 //	ef_histo_axis_right_->Draw("SAME");
 //	ef_histo_axis_top_->Draw("SAME");
 ////??????????????????????????????????????????????????????

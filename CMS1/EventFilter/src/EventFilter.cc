@@ -13,7 +13,7 @@
 //
 // Original Author:  Lothar Bauerdick
 //         Created:  Fri Jul  6 15:36:57 CDT 2007
-// $Id: EventFilter.cc,v 1.1 2007/07/09 23:20:23 latb Exp $
+// $Id: EventFilter.cc,v 1.2 2007/07/10 23:55:44 latb Exp $
 //
 //
 
@@ -121,22 +121,28 @@ bool
 {
 	using namespace edm;
 
-	unsigned int r = iEvent.id().run();
-	unsigned int e = iEvent.id().event();
-
-	unsigned int thisRen = 1000000*r+e;
+	if (!filterOn_) return true;
 	bool result = false;
 
-	for(std::vector<unsigned int>::const_iterator iter=runEventList_.begin();
+	if (filterRunEventList_) {
+
+		unsigned int r = iEvent.id().run();
+		unsigned int e = iEvent.id().event();
+
+
+		unsigned int thisRen = 1000000*r+e;
+
+		for(std::vector<unsigned int>::const_iterator iter=runEventList_.begin();
 		iter!= runEventList_.end(); 
 		iter++) {
-		unsigned int ren = *iter;		
-		if ( ren == thisRen ) { 
-			result = true;
-			++nFiltered_;
-			if (filterDebug_)
-				std::cout << "--> EventFilter: " << nFiltered_ << " - run: " << r << " event: " << e <<	" passed." << std::endl;
-			break; 
+			unsigned int ren = *iter;		
+			if ( ren == thisRen ) { 
+				result = true;
+				++nFiltered_;
+				if (filterDebug_)
+					std::cout << "--> EventFilter: " << nFiltered_ << " - run: " << r << " event: " << e <<	" passed." << std::endl;
+				break; 
+			}
 		}
 	}
 	return result;

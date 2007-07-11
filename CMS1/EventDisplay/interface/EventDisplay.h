@@ -11,8 +11,8 @@
 // Created:         Tue Apr  3 21:47:43 UTC 2007
 //
 // $Author: latb $
-// $Date: 2007/06/21 20:55:03 $
-// $Revision: 1.3 $
+// $Date: 2007/07/10 23:55:43 $
+// $Revision: 1.4 $
 //
 
 #include <string>
@@ -119,6 +119,13 @@ class EventDisplay : public edm::EDAnalyzer {
 	int XYshowEndcaps_;
 
 	int debug_;
+	
+	bool filterOn_;
+	std::vector<std::string> filters_;
+	std::vector<unsigned int> runEventList_;
+	bool filterRunEventList_;
+	int nFiltered_;
+	
 };
 
 #endif
