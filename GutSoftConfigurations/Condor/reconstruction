@@ -67,6 +67,8 @@ def main(argv) :
     script.write('echo "run: time cmsRun ' + cluster + '_' + process + '.cfg > ' + cluster + '_' + process + '.log 2>&1"\n')
     script.write('cmsRun ' + cluster + '_' + process + '.cfg > ' + cluster + '_' + process + '.log 2>&1\n')
     script.write('exitcode=$?\n')
+    script.write('# zip logfile\n')
+    script.write('gzip -9 ' + cluster + '_' + process + '.log\n')
     script.write('END_TIME=`/bin/date`\n')
     script.write('echo "ended at $END_TIME"\n')
     script.write('exit $exitcode\n')
