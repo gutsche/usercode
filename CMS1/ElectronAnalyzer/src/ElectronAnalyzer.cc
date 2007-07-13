@@ -124,13 +124,13 @@ void cms1::ElectronAnalyzer::processEvent(const Event & event) {
   el[0] = theElectrons.getElectrons(Electrons::Golden, cuts);
   el[1] = theElectrons.getElectrons(Electrons::BigBrem, cuts);
   el[2] = theElectrons.getElectrons(Electrons::Narrow, cuts);
-  //el[3] = electrons.getElectrons(Electrons::Showering, cuts);
+  el[3] = theElectrons.getElectrons(Electrons::Showering, cuts);
   
   // to define a Custom electron you must define an object ElectronDef setting the cuts (default values are those for "Golden")
-  ElectronDef def;
+  //ElectronDef def;
   //ElectronDef def(numberOfSCSeed, eOverP, deltaPhi, fBrem, hOverE, R9);
   // Then ask for Custom electrons...
-  el[3] = theElectrons.getElectrons(Electrons::Custom, cuts, Cuts::NotIsolated, def);
+  //el[3] = theElectrons.getElectrons(Electrons::Custom, cuts, Cuts::NotIsolated, def);
 
   for(int j=0; j<4; j++) {
     for(it = el[j].begin(); it != el[j].end(); ++it) {
