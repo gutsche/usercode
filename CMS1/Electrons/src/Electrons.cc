@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: sani $
-// $Date: 2007/06/19 15:27:53 $
-// $Revision: 1.21 $
+// $Date: 2007/07/06 16:43:59 $
+// $Revision: 1.24 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -55,7 +55,7 @@ void cms1::Electrons::removeElectrons(const std::vector<reco::PixelMatchGsfElect
 }
 
 std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const ElectronType electronType,
-                                                                  const Cuts& userCuts, Cuts::IsolationType isolated, ElectronDef def) {
+                                                                  const Cuts& userCuts, Cuts::IsolationType isolated) {
 
   // define output collection
   std::vector<const reco::Candidate*> output_list, temp;
@@ -210,21 +210,6 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
           output_list.push_back(*electron);
       }
     }
-  case Custom:
-    {
-      if (!data_) {
-	      std::cout << "ERROR: event data is not provided to the electron black box" << std::endl;
-	      return output_list;
-      }
-      
-      temp = getElectrons(AllElectrons, userCuts, isolated);
-      for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
-        const reco::PixelMatchGsfElectron* ele = ( const reco::PixelMatchGsfElectron*)*electron; 
-        if (classify(def, ele))
-            output_list.push_back(*electron);
-      }
-    }
-    break;
   default:
     std::cout << "Unkown or not implemented type" << std::endl;
   }
@@ -274,8 +259,12 @@ void cms1::Electrons::R9_25(const reco::PixelMatchGsfElectron* electron,
 }
 
 bool cms1::Electrons::identify(const reco::PixelMatchGsfElectron* electron, int type) {
+
+  float dummy, e3x3, e5x5, i, l;
+  R9_25(electron, dummy, e3x3, e5x5, l, i);
+ 
+  if (type == 1) {
   
-  const double Isolation[]      = { 0.01,  0.01 };
   const double EoverPInMax[]    = { 999.,  999., 999.,   999.,  999.,  999.,  999.,  999.,     // first row loose  
                                     1.3,   1.2,   1.3,   999.,  999.,  999.,  999.,  999. };   // second row tight
   const double EoverPInMin[]    = { 0.,    0.,    0.,    0.,    0.,    0.,    0.,    0.,   
@@ -304,13 +293,6 @@ bool cms1::Electrons::identify(const reco::PixelMatchGsfElectron* electron, int 
                                     0.005, 0.,    0.,    0.,    0.,    0.,    0.,    0. };
 
   int icut;
-  float dummy, e3x3, e5x5, i, l;
-  R9_25(electron, dummy, e3x3, e5x5, l, i);
-  const  std::vector<reco::Track>* tracks = data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks");
-  float iso = cms1::Cuts::trackRelIsolation(electron->trackMomentumAtVtx(), electron->vertex(), tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
-
-  if (iso > Isolation[type])
-    return false;
 
   float b = electron->eSuperClusterOverP();
   float c = electron->deltaEtaSuperClusterTrackAtVtx();
@@ -319,8 +301,6 @@ bool cms1::Electrons::identify(const reco::PixelMatchGsfElectron* electron, int 
   float f = e3x3/e5x5;
   float g = electron->eSeedClusterOverPout();
   float h = electron->deltaPhiSeedClusterTrackAtCalo();
-
- 
   
   switch (electron->classification()) {
   case 0: icut=0;  break;
@@ -371,47 +351,63 @@ bool cms1::Electrons::identify(const reco::PixelMatchGsfElectron* electron, int 
     return false;
   
   return true;
-}
+  }
 
+  if (type == 0) { 
+    int eb;	 
+    float cutsee[] = {0.018, 0.015, 0.0125,0.0115, 0.010, 0.010,  0., 0.,
+		      0.020, 0.020, 0.020, 0.020 , 0.020, 0.020,  0., 0.};  // first row barrel, second endcap
+    float cutdeta[] = {0.010, 0.010, 0.010, 0.007,  0.009, 0.004,  0., 0.,
+                       0.010, 0.010, 0.010, 0.007,  0.009, 0.004,  0., 0.};
+    float cuteop2[] = {0.6,   0.8,   0.7,   0.5,   0.5,    0.9,    0., 0.,
+                       0.6,   0.8,   0.7,   0.5,   0.5,    0.9,    0., 0.};
 
-bool cms1::Electrons::classify(ElectronDef def, const reco::PixelMatchGsfElectron* electron) {
+    int cat = classify(electron);
+    if(fabs(electron->p4().Eta()) < 1.45) 
+      eb = 0;
+    else 
+      eb = 1;
 
-  bool result = false;
-  reco::SuperClusterRef sclRef = electron->superCluster();
-
-  float eMax, e3x3, e5x5, spp, see;
-  R9_25(electron, eMax, e3x3, e5x5, spp, see);
-  float ratio = eMax/e3x3;
-  
-  // use supercluster energy including f(Ncry) correction
-  float scEnergy=sclRef->energy();
-  
-  // then decide to which class it belongs
-  float p0 = 7.20583e-04;
-  float p1 = 9.20913e-02;
-  float p2 = 8.97269e+00;
-  
-  float pin  = electron->trackMomentumAtVtx().R(); 
-  float pout = electron->trackMomentumOut().R(); 
-  float peak = p0 + p1/(pin-p2);
-  int nbrem = electron->numberOfClusters()-1;
- 
-  if (nbrem < def.numberOfSCSeed) {
-    if ((pin - scEnergy)/pin < def.eOverP) {
-      if (fabs(electron->caloPosition().phi() -
-               electron->gsfTrack()->outerMomentum().phi() - peak) < def.deltaPhi) {
-        if ((pin - pout)/pin < def.fBrem) {
-          if (electron->hadronicOverEm() < def.hOverE) {
-            if (ratio < def.R9) {
-              return true;
-            }
-          }
+    if(cat < 6) {
+      if(pow(i, 0.5) < cutsee[cat+eb*8]) {
+        if(electron->deltaEtaSuperClusterTrackAtVtx() < cutdeta[cat+eb*8]) {
+          if(electron->eSeedClusterOverPout() > cuteop2[cat+eb*8]) {
+	    return true;
+	  }
         }
       }
     }
+    return false;
   }
+  return false;
+}
 
-  return result;
+int cms1::Electrons::classify(const reco::PixelMatchGsfElectron* electron) {
+
+  double eOverP = electron->eSuperClusterOverP();
+  double pin  = electron->trackMomentumAtVtx().R(); 
+  double pout = electron->trackMomentumOut().R(); 
+  double fBrem = (pin-pout)/pin;
+ 
+  int cat=6;
+  if(eOverP > 0.9*(1-fBrem)) {
+    if(fBrem > 0.06) {
+      if(eOverP > 1.5) 
+	cat=2;
+      else if(eOverP > 1.2) 
+	cat=1;
+      else if(eOverP > 0.8) 
+	cat=0;
+      else 
+	cat=4;
+    }
+    else if(eOverP > 1.5) 
+      cat=5;
+    else 
+      cat=3;
+  } 
+ 
+  return cat;
 }
 
 void cms1::Electrons::registerEventUserData() {
