@@ -106,7 +106,8 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
       cuts.eta_max = +2.5;
       cuts.AND(userCuts);
       cuts.setEventData(data_);
-
+      return getElectrons(AllElectrons, cuts, isolated);
+      /*
       temp = getElectrons(AllElectrons, userCuts, isolated); 
 
       for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
@@ -114,6 +115,7 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
         if (identify(ele, 0))
           output_list.push_back(*electron);
       }
+      */
     }
     break;
   case TightElectrons:
@@ -124,6 +126,8 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
       cuts.eta_max = +2.5;
       cuts.AND(userCuts);
       cuts.setEventData(data_);
+      return getElectrons(AllElectrons, cuts, isolated);
+      /*
       temp = getElectrons(AllElectrons, userCuts, isolated); 
       
       for(std::vector<const reco::Candidate*>::const_iterator electron = temp.begin(); electron != temp.end(); ++electron) { 
@@ -131,6 +135,7 @@ std::vector<const reco::Candidate*> cms1::Electrons::getElectrons(const Electron
         if (identify(ele, 1))
           output_list.push_back(*electron);
       }
+      */
     }
 
     break;
@@ -420,7 +425,11 @@ void cms1::Electrons::registerEventUserData() {
   nSeed = data_->intUserData1D.back(); 
   data_->intUserData1D.push_back( new UserDataInt1D("class", "elid_", "cms1_elid_", false) );
   cms_class = data_->intUserData1D.back(); 
-  
+  data_->intUserData1D.push_back( new UserDataInt1D("looseId", " elid_", "cms1_elid_", false));
+  looseId = data_->intUserData1D.back();
+  data_->intUserData1D.push_back( new UserDataInt1D("tightId", " elid_", "cms1_elid_", false));
+  tightId = data_->intUserData1D.back();
+   
   data_->floatUserData1D.push_back( new UserDataFloat1D("hOverE", "elid_", "cms1_elid_", false) );
   hOverE = data_->floatUserData1D.back(); 
   data_->floatUserData1D.push_back( new UserDataFloat1D("eOverPIn", "elid_", "cms1_elid_", false) );
@@ -429,7 +438,6 @@ void cms1::Electrons::registerEventUserData() {
   eOverPOut = data_->floatUserData1D.back();
   data_->floatUserData1D.push_back( new UserDataFloat1D("fBrem", "elid_", "cms1_elid_", false) );
   fBrem = data_->floatUserData1D.back(); 
-  
   data_->floatUserData1D.push_back(new UserDataFloat1D("dEtaIn", "elid_", "cms1_elid_", false));
   dEtaIn = data_->floatUserData1D.back();
   data_->floatUserData1D.push_back(new UserDataFloat1D("dEtaOut", "elid_", "cms1_elid_", false) );
@@ -468,7 +476,7 @@ void cms1::Electrons::fillEventUserData() {
   evtElectrons.fill(getStreamerArguments(data_, els));
   nElectrons->addData(els.size());
   
-  std::vector<int> vint0, vint1;
+  std::vector<int> vint0, vint1, vint2, vint3;
   std::vector<float> vfloat0,vfloat1,vfloat2,vfloat3;
   std::vector<float> vfloat4,vfloat5,vfloat6,vfloat7,vfloat8;
   std::vector<float> vfloat9,vfloat10, vfloat11, vfloat12, vfloat13, vfloat14, vfloat15;
@@ -493,7 +501,15 @@ void cms1::Electrons::fillEventUserData() {
 
     vint0.push_back(el->numberOfClusters()-1);
     vint1.push_back(el->classification());
-    
+    int id1=0, id2=0;
+    if (identify(el, 0))
+      id1 = 1;
+    if (identify(el, 1))
+      id2 = 1;
+
+    vint2.push_back(id1);
+    vint3.push_back(id2);
+
     vfloat0.push_back(el->hadronicOverEm());                  
     vfloat1.push_back(el->eSuperClusterOverP());                  
     vfloat2.push_back(el->eSeedClusterOverPout());                
@@ -515,7 +531,9 @@ void cms1::Electrons::fillEventUserData() {
 
   nSeed->addData(vint0);
   cms_class->addData(vint1);
-  
+  looseId->addData(vint2);
+  tightId->addData(vint3);
+
   hOverE->addData(vfloat0);
   eOverPIn->addData(vfloat1);
   eOverPOut->addData(vfloat2);

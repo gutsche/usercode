@@ -48,7 +48,7 @@ namespace cms1 {
     VectorUserBlock<TrackStreamer> evtElectrons;
     UserDataInt *nElectrons;
 
-    UserDataInt1D *nSeed, *cms_class;
+    UserDataInt1D *nSeed, *cms_class, *looseId, *tightId;
     UserDataFloat1D *hOverE, *fBrem, *dEtaIn, *dEtaOut, *dPhiIn, *dPhiOut, *varEsc, *varRawEsc, *vare3x3, *vare5x5;
     UserDataFloat1D *eOverPIn, *eOverPOut, *eSeed, *sPhiPhi, *sEtaEta, *tkIso;
   };
