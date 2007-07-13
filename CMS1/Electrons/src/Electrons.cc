@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: sani $
-// $Date: 2007/07/06 16:43:59 $
-// $Revision: 1.24 $
+// $Date: 2007/07/13 20:31:08 $
+// $Revision: 1.26 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -230,7 +230,7 @@ void cms1::Electrons::dump(std::ostream& o, std::vector<const reco::Candidate*> 
 		o << ", Phi = " << cp->phi();
     const  std::vector<reco::Track>* tracks = data_->getData<std::vector<reco::Track> >("ctfWithMaterialTracks");
     if (tracks) {
-      double isoRel = cms1::Cuts::trackRelIsolation(cp->momentum(), cp->vertex(), tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
+      double isoRel = cms1::Cuts::trackRelIsolation(cp->momentum(), cp->vertex(), tracks, 0.3, 0.01, 0.1, 999.9, 0.5, 1.5, 7);
       o << ", isol = " << isoRel;
     }
     o << std::endl; 
@@ -490,7 +490,7 @@ void cms1::Electrons::fillEventUserData() {
     const reco::PixelMatchGsfElectron* el = dynamic_cast<const reco::PixelMatchGsfElectron*>(*it);
     
     if (tracks) {
-      iso = cms1::Cuts::trackRelIsolation(el->trackMomentumAtVtx(), el->vertex(), tracks, 0.3, 0.01, 0.1, 0.1, 0.2, 1.5);
+      iso = cms1::Cuts::trackRelIsolation(el->trackMomentumAtVtx(), el->vertex(), tracks, 0.3, 0.01, 0.1, 999.9, 0.5, 1.5, 7);
     } else 
       iso = 0.;
 

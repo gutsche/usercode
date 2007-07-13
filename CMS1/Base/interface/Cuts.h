@@ -10,8 +10,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: mangano $
-// $Date: 2007/05/21 16:51:30 $
-// $Revision: 1.6 $
+// $Date: 2007/05/31 17:06:32 $
+// $Revision: 1.7 $
 //
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
@@ -66,11 +66,11 @@ namespace cms1 {
 	static double trackRelIsolation(const math::XYZVector momentum, 
 					const math::XYZPoint vertex,
 					const std::vector<reco::Track>* tracks = 0, 
-					double dRConeMax = 0.3, double dRConeMin = 0.1, 
+					double dRConeMax = 0.3, double dRConeMin = 0.01, 
 					double tkVtxDMax = 0.1,
-					double vtxDiffDMax = 9999., double vtxDiffZMax = 9999., 
-					double ptMin = 1.5, bool debug = false);
-	
+					double vtxDiffDMax = 999.9, double vtxDiffZMax = 0.5, 
+					double ptMin = 1.5, unsigned int nHits = 7, bool debug = false);
+
 	// this class can only read event data
 	void setEventData( const EventData* data ){ data_ = data; }
 	const EventData* getEventData(){ return data_; }

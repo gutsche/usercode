@@ -7,8 +7,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: mangano $
-// $Date: 2007/05/21 16:51:30 $
-// $Revision: 1.9 $
+// $Date: 2007/05/31 17:06:33 $
+// $Revision: 1.10 $
 //
 
 #include "CMS1/Base/interface/Cuts.h"
@@ -35,7 +35,7 @@ bool cms1::Cuts::testTrack(const reco::Track& track) const
 	 std::cout << "Configuration Error: isolation requested, but tracks not found in the event" << std::endl;
 	 return false;
       }
-      if ( trackRelIsolation(track.momentum(),track.vertex(), tracks ) > 0.1 ) return false;
+      if ( trackRelIsolation(track.momentum(),track.vertex(), tracks ) > 5. ) return false;
    }
    
    return true;
@@ -57,7 +57,7 @@ bool cms1::Cuts::testCandidate(const reco::Candidate& candidate) const
 	 std::cout << "Configuration Error: isolation requested, but tracks not found in the event" << std::endl;
 	 return false;
       }
-      if ( trackRelIsolation(candidate.momentum(),candidate.vertex(), tracks ) > 0.1 ) return false;
+      if ( trackRelIsolation(candidate.momentum(),candidate.vertex(), tracks ) > 5. ) return false;
    }
    
    return true;
@@ -87,7 +87,7 @@ double cms1::Cuts::trackRelIsolation(const math::XYZVector momentum,
 				     const  std::vector<reco::Track>* tracks, 
 				     double dRConeMax, double dRConeMin, 
 				     double tkVtxDMax,
-				     double vtxDiffDMax, double vtxDiffZMax, double ptMin, bool debug)
+				     double vtxDiffDMax, double vtxDiffZMax, double ptMin, unsigned int nHits, bool debug)
 {
     double isoResult = -10.;
     if ( tracks == 0 ) {
@@ -106,21 +106,25 @@ double cms1::Cuts::trackRelIsolation(const math::XYZVector momentum,
       double d0 = sqrt(iTk->vertex().perp2());
       double dD0 = sqrt((iTk->vertex() - vertex).perp2());
       if (debug) std::cout<<"Track: "
-	       <<" pt: "<< iTk->pt()
-	       <<", dZ: "<<dZ
-	       <<", d0: "<<d0
-	       <<", dD0: "<< dD0
+			  <<" pt: "<< iTk->pt()
+			  <<", dZ: "<<dZ
+			  <<", d0: "<<d0
+			  <<", dD0: "<< dD0
+			  <<", hHits: "<< iTk->found()
 	       <<std::endl;
       if (dR < dRConeMin) continue;
       if ( dR < dRConeMax 
 	   && dZ < vtxDiffZMax
 	   && d0 < tkVtxDMax
-	   && dD0 < vtxDiffDMax ){
+	   && dD0 < vtxDiffDMax 
+	   && iTk->pt() >= ptMin
+	   && iTk->found() > nHits){
 	sumPt += iTk->pt();
       }
     }
 
-    isoResult = sumPt/sqrt(momentum.perp2());
+    isoResult = sumPt;
+    if ( debug) std::cout << "isoResult: " << isoResult << std::endl;
     return isoResult;
 
 }
