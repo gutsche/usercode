@@ -19,6 +19,8 @@ source = PoolSource
 # timer
 include "GutSoftConfigurations/Timing/timing.cff"
 
+include "Configuration/StandardSequences/data/FakeConditions.cff"
+
 # include tracker local reconstruction
 include "RecoLocalTracker/Configuration/data/RecoLocalTracker.cff"
 
