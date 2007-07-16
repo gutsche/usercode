@@ -8,8 +8,8 @@
 // Created:         Wed Oct 18 01:25:17 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2007/03/27 23:40:44 $
-// $Revision: 1.4 $
+// $Date: 2007/03/28 20:16:17 $
+// $Revision: 1.5 $
 //
 
 #include <string>
@@ -160,6 +160,8 @@ GutSoftTrackingEfficiencyAnalyzer::analyze(const edm::Event& iEvent, const edm::
     }
   }
 
+  unsigned int counter = 0;
+
   // fill true histograms
   for ( TrackingParticleCollection::size_type trackingParticleNumber = 0;
 	trackingParticleNumber < trackingParticleCollection->size();
@@ -170,6 +172,7 @@ GutSoftTrackingEfficiencyAnalyzer::analyze(const edm::Event& iEvent, const edm::
 
       if ( trackingParticleSelectorForEfficiencies_(*trackingParticleRef) ) {
 	if ( trackingParticleRef->charge() != 0 ) {
+	  ++counter;
 
 	  histograms_->fill("eff_eta_true",trackingParticleRef->momentum().eta());
 	  histograms_->fill("eff_pt_true",std::sqrt(trackingParticleRef->momentum().perp2()));
@@ -212,6 +215,9 @@ GutSoftTrackingEfficiencyAnalyzer::analyze(const edm::Event& iEvent, const edm::
       }
     }
   }
+
+  edm::LogInfo("GutSoftTrackingEfficiencyAnalyzer") << "number of valid TrackingParticles: " << counter;
+
 }
 
 

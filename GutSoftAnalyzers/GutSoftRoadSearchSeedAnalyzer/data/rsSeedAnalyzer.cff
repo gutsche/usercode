@@ -1,0 +1,7 @@
+# include GutSoftHistogramFileService
+include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
+
+#include analyzer
+module rsSeedAnalyzer = gutSoftRoadSearchSeedAnalyzer from "GutSoftAnalyzers/GutSoftRoadSearchSeedAnalyzer/data/gutSoftRoadSearchSeedAnalyzer.cfi"
+replace rsSeedAnalyzer.RoadSearchSeedInputTag = roadSearchSeeds
+replace rsSeedAnalyzer.BaseDirectoryName      = "rsSeeds"

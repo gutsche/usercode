@@ -11,8 +11,8 @@
 // Created:         Thu Feb  8 19:03:24 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/02/27 08:35:43 $
-// $Revision: 1.2 $
+// $Date: 2007/05/25 00:03:00 $
+// $Revision: 1.3 $
 //
 
 #include <string>
@@ -90,7 +90,7 @@ public:
 
   GutSoftHistogramFactory *histograms_;
 
-  edm::InputTag trajectorySeedInputTag_;
+  edm::InputTag roadSearchSeedInputTag_;
   edm::InputTag trackingTruthInputTag_;
   edm::InputTag simTracksInputTag_;
   std::string   baseDirectoryName_;

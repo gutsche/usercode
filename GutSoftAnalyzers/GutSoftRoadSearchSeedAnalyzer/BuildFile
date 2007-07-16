@@ -1,0 +1,22 @@
+<flags EDM_PLUGIN=1>
+<use name=FWCore/Framework>
+<use name=Foundation/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=FWCore/ServiceRegistry>>
+<use name=DataFormats/RoadSearchSeed>
+<use name=GutSoftTools/GutSoftHistogramFactory>
+<use name=Geometry/Records>
+<use name=Geometry/CommonDetUnit>
+<use name=Geometry/TrackerGeometryBuilder>
+<export>
+   <lib name=GutSoftAnalyzersGutSoftRoadSearchSeedAnalyzer>
+   <use name=FWCore/Framework>
+   <use name=Foundation/PluginManager>
+   <use name=FWCore/ParameterSet>
+   <use name=FWCore/ServiceRegistry>>
+   <use name=DataFormats/RoadSearchSeed>
+   <use name=GutSoftTools/GutSoftHistogramFactory>
+   <use name=Geometry/Records>
+   <use name=Geometry/CommonDetUnit>
+   <use name=Geometry/TrackerGeometryBuilder>
+</export>

@@ -1,0 +1,5 @@
+# include GutSoftHistogramFileService
+include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
+
+#include analyzer
+include "GutSoftAnalyzers/GutSoftRoadSearchSeedAnalyzer/data/gutSoftRoadSearchSeedAnalyzer.cfi"

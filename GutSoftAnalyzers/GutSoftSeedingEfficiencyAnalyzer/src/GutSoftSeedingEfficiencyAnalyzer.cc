@@ -8,8 +8,8 @@
 // Created:         Thu Feb  8 19:03:24 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/05/25 00:03:00 $
-// $Revision: 1.5 $
+// $Date: 2007/06/16 07:37:40 $
+// $Revision: 1.6 $
 //
 
 #include <string>
@@ -22,8 +22,8 @@
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
-#include "DataFormats/TrajectorySeed/interface/TrajectorySeed.h"
-#include "DataFormats/TrajectorySeed/interface/TrajectorySeedCollection.h"
+#include "DataFormats/RoadSearchSeed/interface/RoadSearchSeed.h"
+#include "DataFormats/RoadSearchSeed/interface/RoadSearchSeedCollection.h"
 
 #include "SimDataFormats/TrackingAnalysis/interface/TrackingParticleFwd.h"
 
@@ -53,7 +53,7 @@ conf_(conf),
 trackingParticleSelector_(conf.getParameter<edm::ParameterSet>("TrackingParticleCuts"))
 {
   
-  trajectorySeedInputTag_      = conf_.getUntrackedParameter<edm::InputTag>("TrajectorySeedInputTag");
+  roadSearchSeedInputTag_      = conf_.getUntrackedParameter<edm::InputTag>("RoadSearchSeedInputTag");
   trackingTruthInputTag_       = conf_.getUntrackedParameter<edm::InputTag>("TrackingTruthInputTag");
   simTracksInputTag_           = conf_.getUntrackedParameter<edm::InputTag>("SimTracksInputTag");
   
@@ -93,18 +93,18 @@ GutSoftSeedingEfficiencyAnalyzer::analyze(const edm::Event& iEvent, const edm::E
   const TrackingParticleCollection *trackingParticleCollection = trackingParticleCollectionHandle.product();
   
   // get seed collection
-  const TrajectorySeedCollection *seedCollection = 0;
+  const RoadSearchSeedCollection *seedCollection = 0;
   try {
-    edm::Handle<TrajectorySeedCollection> seedCollectionHandle;
-    iEvent.getByLabel(trajectorySeedInputTag_,seedCollectionHandle);
+    edm::Handle<RoadSearchSeedCollection> seedCollectionHandle;
+    iEvent.getByLabel(roadSearchSeedInputTag_,seedCollectionHandle);
     seedCollection = seedCollectionHandle.product();
   }
   catch (edm::Exception const& x) {
     if ( x.categoryCode() == edm::errors::ProductNotFound ) {
       if ( x.history().size() == 1 ) {
-        static const TrajectorySeedCollection s_empty;
+        static const RoadSearchSeedCollection s_empty;
         seedCollection = &s_empty;
-        edm::LogWarning("GutSoftSeedingEfficiencyAnalyzer") << "Collection TrajectorySeedCollection with label " << trajectorySeedInputTag_ << " cannot be found, using empty collection of same type";
+        edm::LogWarning("GutSoftSeedingEfficiencyAnalyzer") << "Collection RoadSearchSeedCollection with label " << roadSearchSeedInputTag_ << " cannot be found, using empty collection of same type";
       }
     }
   }
@@ -174,7 +174,7 @@ GutSoftSeedingEfficiencyAnalyzer::analyze(const edm::Event& iEvent, const edm::E
 
   // determine barCodes corresponding to a seed (a seed has three hits belonging to the same barCode)
   std::vector<int> foundBarCodes;
-  for ( TrajectorySeedCollection::const_iterator seed = seedCollection->begin(), 
+  for ( RoadSearchSeedCollection::const_iterator seed = seedCollection->begin(), 
 	  seedsEnd = seedCollection->end();
 	seed != seedsEnd; 
 	++seed ) {
@@ -183,14 +183,14 @@ GutSoftSeedingEfficiencyAnalyzer::analyze(const edm::Event& iEvent, const edm::E
     std::vector<GlobalPoint>           recHitGlobalPoints;
     std::vector<const Ring*>           recHitRings;
     std::vector<std::vector<int> >     recHitBarCodes;
-    for ( TrajectorySeed::const_iterator hit = seed->recHits().first , hitEnd = seed->recHits().second;
+    for ( RoadSearchSeed::HitVector::const_iterator hit = seed->begin() , hitEnd = seed->end();
 	  hit != hitEnd;
 	  ++hit ) {
-      recHits.push_back(&*hit);
-      DetId id = hit->geographicalId();
-      recHitGlobalPoints.push_back(tracker_->idToDet(id)->surface().toGlobal(hit->localPosition()));
+      recHits.push_back(*hit);
+      DetId id = (*hit)->geographicalId();
+      recHitGlobalPoints.push_back(tracker_->idToDet(id)->surface().toGlobal((*hit)->localPosition()));
       recHitRings.push_back(rings_->getRing(RoadSearchDetIdHelper::ReturnRPhiId(id)));
-      recHitBarCodes.push_back(GenParticleBarCodeFromRecHit(associator,simTracks,&*hit));
+      recHitBarCodes.push_back(GenParticleBarCodeFromRecHit(associator,simTracks,*hit));
     }
 
     bool firstInLoop = true;
@@ -395,7 +395,7 @@ GutSoftSeedingEfficiencyAnalyzer::beginJob(const edm::EventSetup &es)
                              directory,pt_nbins,pt_low,pt_high,
                              "p_{T} [GeV]","Events");
 
-  histograms_->bookHistogram("eff_eta_rec","TrajectorySeed #eta",
+  histograms_->bookHistogram("eff_eta_rec","RoadSearchSeed #eta",
                              directory,eta_nbins,eta_low,eta_high,
                              "#eta","Events");
   histograms_->bookHistogram("eta_multiplicity","Number of Seeds per TrackingParticle in #eta",
