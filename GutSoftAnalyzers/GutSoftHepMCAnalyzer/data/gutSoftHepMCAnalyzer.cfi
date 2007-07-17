@@ -1,20 +1,17 @@
 module gutSoftHepMCAnalyzer = GutSoftHepMCAnalyzer 
 {
   untracked InputTag HepMCInputTag          = source
-  untracked InputTag TrackingTruthInputTag  = trackingParticles
 
   untracked string BaseDirectoryName = "HepMC"
 
   untracked double MinPt     = 0.
-  untracked double MaxPt     = 10000.
-  untracked double MinEta    = -10.
-  untracked double MaxEta    = 10.
+  untracked double MaxPt     = 999999999.
+  untracked double MinEta    = -2.5
+  untracked double MaxEta    =  2.5
   untracked double MinPhi    = -3.5
-  untracked double MaxPhi    = 3.5
+  untracked double MaxPhi    =  3.5
+  untracked uint32 AbsCharge = 1
   untracked int32  Status    = 1
   untracked int32  ProcessID = 0
-
-  string RingsLabel                = ""
-  string RoadsLabel                = ""
 
 }

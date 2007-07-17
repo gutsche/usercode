@@ -8,8 +8,8 @@
 // Created:         Thu Feb 15 21:09:04 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/05/23 17:04:10 $
-// $Revision: 1.5 $
+// $Date: 2007/05/25 00:02:59 $
+// $Revision: 1.6 $
 //
 
 #include <string>
@@ -26,31 +26,11 @@
 
 #include "SimDataFormats/HepMCProduct/interface/HepMCProduct.h"
 
-#include "SimDataFormats/TrackingAnalysis/interface/TrackingParticle.h"
-
-#include "SimDataFormats/TrackingHit/interface/PSimHit.h"
-
-#include "TrackingTools/RoadSearchHitAccess/interface/RoadSearchDetIdHelper.h"
-
-#include "Geometry/CommonDetUnit/interface/GeomDetUnit.h"
-#include "Geometry/Records/interface/TrackerDigiGeometryRecord.h"
-#include "DataFormats/GeometryVector/interface/GlobalPoint.h"
-
-#include "DataFormats/TrackerRecHit2D/interface/SiStripRecHit2D.h"
-
-#include "RecoTracker/RingRecord/interface/RingRecord.h"
-#include "RecoTracker/RoadMapRecord/interface/RoadMapRecord.h"
-
-#include "DataFormats/DetId/interface/DetId.h"
-
-#include "RecoTracker/RoadSearchSeedFinder/interface/RoadSearchCircleSeed.h"
-
 GutSoftHepMCAnalyzer::GutSoftHepMCAnalyzer(const edm::ParameterSet& iConfig)
 {
 
   // input tags
   hepMCInputTag_                = iConfig.getUntrackedParameter<edm::InputTag>("HepMCInputTag");
-  trackingTruthInputTag_        = iConfig.getUntrackedParameter<edm::InputTag>("TrackingTruthInputTag");
 
   // base directory for histograms
   baseDirectoryName_            = iConfig.getUntrackedParameter<std::string>("BaseDirectoryName");
@@ -64,14 +44,9 @@ GutSoftHepMCAnalyzer::GutSoftHepMCAnalyzer(const edm::ParameterSet& iConfig)
   maxeta_    = iConfig.getUntrackedParameter<double>("MaxEta", 10.);
   minphi_    = iConfig.getUntrackedParameter<double>("MinPhi", -3.5);
   maxphi_    = iConfig.getUntrackedParameter<double>("MaxPhi", 3.5);
-  status_    = iConfig.getUntrackedParameter<int>("Status", 0);
+  absCharge_ = iConfig.getUntrackedParameter<unsigned int>("AbsCharge", 1);
+  status_    = iConfig.getUntrackedParameter<int>("Status", 1);
   processID_ = iConfig.getUntrackedParameter<int>("ProcessID", 0);
-
-  // ring label
-  ringsLabel_ = iConfig.getParameter<std::string>("RingsLabel");
-
-  // road label
-  roadsLabel_ = iConfig.getParameter<std::string>("RoadsLabel");
 
 }
 
@@ -94,11 +69,7 @@ GutSoftHepMCAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   iEvent.getByLabel(hepMCInputTag_, hepMCProductHandle);
   const HepMC::GenEvent *genEvent = hepMCProductHandle->GetEvent();
 
-  // get tracking particle collection for true information
-  edm::Handle<TrackingParticleCollection>  trackingParticleCollectionHandle;
-  iEvent.getByLabel(trackingTruthInputTag_,trackingParticleCollectionHandle);
-  const TrackingParticleCollection *trackingParticleCollection = trackingParticleCollectionHandle.product();
-    
+  unsigned int counter = 0;
   if(processID_ == 0 || processID_ == genEvent->signal_process_id()) {
     
     for ( HepMC::GenEvent::particle_const_iterator p = genEvent->particles_begin(),
@@ -113,14 +84,19 @@ GutSoftHepMCAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 	   && (*p)->momentum().phi() >= minphi_
 	   && (*p)->momentum().phi() <= maxphi_ 
 	   && (*p)->status() == status_ ) {
-	histograms_->fill("eta",(*p)->momentum().eta());
+	if ( pdt_->particle((*p)->pdg_id()) != 0 ) {
+	  if ( std::abs(pdt_->particle(std::abs((*p)->pdg_id()))->charge()) == absCharge_ ) {
+	    ++counter;
+	    histograms_->fill("eta",(*p)->momentum().eta());
+	  }
+	} else {
+	  edm::LogWarning("GutSoftHepMCAnalyzer") << "Particle of pdg_id: " << (*p)->pdg_id() << " cannot be found in PDT!";
+	}
       }
     }
   }
 
-  std::string particleDump = dumpTrackingParticles(trackingParticleCollection);
-
-  edm::LogInfo("GutSoftHepMCAnalyzer") << particleDump;
+  edm::LogInfo("GutSoftHepMCAnalyzer") << "Number of selected HepMC particles: " << counter;
 
 }
 
@@ -128,36 +104,11 @@ void
 GutSoftHepMCAnalyzer::beginJob(const edm::EventSetup& es)
 {
 
-  // get tracker geometry
-  edm::ESHandle<TrackerGeometry> trackerHandle;
-  es.get<TrackerDigiGeometryRecord>().get(trackerHandle);
-  tracker_ = trackerHandle.product();
+  // PDT
+  edm::ESHandle<ParticleDataTable> pdtHandle;
+  es.getData( pdtHandle );
+  pdt_ = pdtHandle.product();
 
-   // get rings
-  edm::ESHandle<Rings> ringsHandle;
-  es.get<RingRecord>().get(ringsLabel_, ringsHandle);
-  rings_ = ringsHandle.product();
-
-  // get roads
-  edm::ESHandle<Roads> roads;
-  es.get<RoadMapRecord>().get(roadsLabel_, roads);
-  roads_ = roads.product();
-  
-  // fill vectors of inner and outer seed rings from roads
-  for ( Roads::const_iterator road = roads_->begin(); road != roads_->end(); ++road ) {
-    Roads::RoadSeed seed = (*road).first;
-    for ( std::vector<const Ring*>::const_iterator innerSeedRing = seed.first.begin();
-          innerSeedRing != seed.first.end();
-          ++innerSeedRing) {
-      innerSeedRings_.push_back(*innerSeedRing);
-    }
-    for ( std::vector<const Ring*>::const_iterator outerSeedRing = seed.second.begin();
-          outerSeedRing != seed.second.end();
-          ++outerSeedRing) {
-      outerSeedRings_.push_back(*outerSeedRing);
-    }
-  }
-  
   // binning for histograms
   std::string  directory = baseDirectoryName_;
 
@@ -173,75 +124,4 @@ GutSoftHepMCAnalyzer::beginJob(const edm::EventSetup& es)
 void 
 GutSoftHepMCAnalyzer::endJob() {
 
-}
-
-std::string
-GutSoftHepMCAnalyzer::dumpTrackingParticles(const TrackingParticleCollection *trackingParticleCollection) {
-  //
-  // dump trackingParticles
-  //
-
-  // return value
-  std::ostringstream result;
-
-  for ( TrackingParticleCollection::const_iterator trackingParticle = trackingParticleCollection->begin(),
-	  trackingParticleEnd = trackingParticleCollection->end();
-        trackingParticle != trackingParticleEnd;
-        ++trackingParticle ) {
-    if ( trackingParticle->charge() != 0 ) {
-      result << "----------" << std::endl
-	     << "TrackingParticle PDG ID: " << trackingParticle->pdgId() << std::endl
-	     << "pt: " << std::sqrt(trackingParticle->momentum().perp2()) << " eta: " << trackingParticle->momentum().eta() << " number of hits: " << trackingParticle->trackPSimHit().size() << std::endl;
-      TrackingParticle::GenParticleRefVector genParticles = trackingParticle->genParticle();
-      int barCode = 0;
-      for ( TrackingParticle::GenParticleRefVector::const_iterator hepMCParticle = genParticles.begin(),
-	      hepMCParticleEnd = genParticles.end();
-	    hepMCParticle != hepMCParticleEnd;
-	    ++hepMCParticle ) {
-	result << "barcode: " << (*hepMCParticle)->barcode() << std::endl;
-	if ( barCode == 0 ) {
-	  barCode = (*hepMCParticle)->barcode();
-	}
-      }
-
-//       std::vector<GlobalPoint> globalPositions;
-
-      for ( std::vector<PSimHit>::const_iterator simHit = trackingParticle->pSimHit_begin(),
-	      simHitEnd = trackingParticle->pSimHit_end();
-	    simHit != simHitEnd;
-	    ++simHit ) {
-	const Ring *ring = rings_->getRing(RoadSearchDetIdHelper::ReturnRPhiId(DetId(simHit->detUnitId())));
-	std::vector<const Ring*>::iterator innerSeedRingIterator = std::find(innerSeedRings_.begin(),innerSeedRings_.end(),ring);
-	std::vector<const Ring*>::iterator outerSeedRingIterator = std::find(outerSeedRings_.begin(),outerSeedRings_.end(),ring);
-
-	if ( innerSeedRingIterator != innerSeedRings_.end() ||
-	     outerSeedRingIterator != outerSeedRings_.end() ) {
-
-	  GlobalPoint globalPosition = tracker_->idToDet(DetId(simHit->detUnitId()))->surface().toGlobal(simHit->localPosition());
-// 	  globalPositions.push_back(globalPosition);
-
-	  if ( ring != 0 ) {
-	    result << "Hit DetId: " << simHit->detUnitId() << " ring: " << ring->getindex() << " " << globalPosition.perp() << " " << globalPosition.phi() 
-		   << " " << globalPosition.x() << " " << globalPosition.y() << " " << globalPosition.z() << std::endl;
-	  } else {
-	    result << "Hit DetId: " << simHit->detUnitId() << " ring: NAN " << globalPosition.perp() << " " << globalPosition.phi() 
-		   << " " << globalPosition.x() << " " << globalPosition.y() << " " << globalPosition.z() << std::endl;
-	  }
-	}
-      } // loop over sim hits
-
-//       if ( barCode == 341 ) {
-// 	const SiStripRecHit2D hit;
-// 	RoadSearchCircleSeed circle(&hit,
-// 				    &hit,
-// 				    &hit,
-// 				    globalPositions[0],
-// 				    globalPositions[1],
-// 				    globalPositions[globalPositions.size()-1]);
-// 	edm::LogInfo("OLI") << "OLI: " << circle.print();
-//       }
-    }
-  } // loop over tracking particles
-  
-  return result.str();
 }

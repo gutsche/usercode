@@ -11,8 +11,8 @@
 // Created:         Thu Feb 15 21:09:04 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/04/04 01:21:57 $
-// $Revision: 1.2 $
+// $Date: 2007/04/08 16:47:49 $
+// $Revision: 1.3 $
 //
 
 #include <string>
@@ -21,6 +21,7 @@
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/ParameterSet/interface/InputTag.h"
@@ -33,12 +34,12 @@
 #include "RecoTracker/RoadMapRecord/interface/Roads.h"
 #include "Geometry/TrackerGeometryBuilder/interface/TrackerGeometry.h"
 
+#include "SimGeneral/HepPDTRecord/interface/ParticleDataTable.h"
+
 class GutSoftHepMCAnalyzer : public edm::EDAnalyzer {
  public:
   explicit GutSoftHepMCAnalyzer(const edm::ParameterSet&);
   ~GutSoftHepMCAnalyzer();
-
-  std::string dumpTrackingParticles(const TrackingParticleCollection *trackingParticleCollection);
 
  private:
   virtual void beginJob(const edm::EventSetup& setup) ;
@@ -47,8 +48,9 @@ class GutSoftHepMCAnalyzer : public edm::EDAnalyzer {
 
   GutSoftHistogramFactory *histograms_;
 
+  const ParticleDataTable *pdt_;
+
   edm::InputTag hepMCInputTag_;
-  edm::InputTag trackingTruthInputTag_;
 
   std::string baseDirectoryName_;
 
@@ -58,18 +60,9 @@ class GutSoftHepMCAnalyzer : public edm::EDAnalyzer {
   double maxeta_;
   double minphi_;
   double maxphi_;
+  unsigned int absCharge_;
   int status_; 
   int processID_;    
-
-  std::string ringsLabel_;
-  std::string roadsLabel_;
-
-  const TrackerGeometry *tracker_;
-  const Rings *rings_;
-  const Roads *roads_;
-
-  std::vector<const Ring*> innerSeedRings_;
-  std::vector<const Ring*> outerSeedRings_;
 
 };
 

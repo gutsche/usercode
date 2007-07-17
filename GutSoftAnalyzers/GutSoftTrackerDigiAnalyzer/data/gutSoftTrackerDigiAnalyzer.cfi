@@ -1,0 +1,8 @@
+module gutSoftTrackerDigiAnalyzer = GutSoftTrackerDigiAnalyzer 
+{
+  untracked InputTag PixelDigiInputTag  = siPixelDigis
+  untracked InputTag StripDigiInputTag  = siStripDigis
+
+  untracked string BaseDirectoryName = "TrackerDigi"
+
+}
