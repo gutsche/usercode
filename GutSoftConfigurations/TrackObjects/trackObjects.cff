@@ -1,3 +1,12 @@
+# digi analyzer
+include "GutSoftAnalyzers/GutSoftTrackerDigiAnalyzer/data/gutSoftTrackerDigiAnalyzer.cff" 
+
+# cluster analyzer
+include "GutSoftAnalyzers/GutSoftTrackerClusterAnalyzer/data/gutSoftTrackerClusterAnalyzer.cff" 
+
+# RecHit analyzer
+include "GutSoftAnalyzers/GutSoftTrackerRecHitAnalyzer/data/gutSoftTrackerRecHitAnalyzer.cff" 
+
 # seed analyzers
 include "GutSoftAnalyzers/GutSoftRoadSearchSeedAnalyzer/data/rsSeedAnalyzer.cff" 
 include "GutSoftAnalyzers/GutSoftTrajectorySeedAnalyzer/data/ckfSeedAnalyzer.cff" 
@@ -18,6 +27,9 @@ include "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/ckfTrackAnalyzerForward.cff"
 include "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/ckfTrackAnalyzerBarrel.cff" 
 
 sequence trackObjects = {
+  gutSoftTrackerDigiAnalyzer,
+  gutSoftTrackerClusterAnalyzer,
+  gutSoftTrackerRecHitAnalyzer,
   rsSeedAnalyzer,
   ckfSeedAnalyzer, 
   roadSearchCloudAnalyzer, 
