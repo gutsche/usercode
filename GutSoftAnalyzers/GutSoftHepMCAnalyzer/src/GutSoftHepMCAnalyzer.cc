@@ -8,8 +8,8 @@
 // Created:         Thu Feb 15 21:09:04 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/05/25 00:02:59 $
-// $Revision: 1.6 $
+// $Date: 2007/07/17 22:53:42 $
+// $Revision: 1.7 $
 //
 
 #include <string>
@@ -84,13 +84,13 @@ GutSoftHepMCAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 	   && (*p)->momentum().phi() >= minphi_
 	   && (*p)->momentum().phi() <= maxphi_ 
 	   && (*p)->status() == status_ ) {
-	if ( pdt_->particle((*p)->pdg_id()) != 0 ) {
+	if ( pdt_->particle(std::abs((*p)->pdg_id())) != 0 ) {
 	  if ( std::abs(pdt_->particle(std::abs((*p)->pdg_id()))->charge()) == absCharge_ ) {
 	    ++counter;
 	    histograms_->fill("eta",(*p)->momentum().eta());
 	  }
 	} else {
-	  edm::LogWarning("GutSoftHepMCAnalyzer") << "Particle of pdg_id: " << (*p)->pdg_id() << " cannot be found in PDT!";
+	  edm::LogWarning("GutSoftHepMCAnalyzer") << "Particle of pdg_id: " << std::abs((*p)->pdg_id()) << " cannot be found in PDT!";
 	}
       }
     }
