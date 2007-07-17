@@ -1,4 +1,5 @@
 # initialize  MessageLogger
+#include "FWCore/MessageService/data/MessageLogger.cfi"
 include "GutSoftConfigurations/MessageLogger/messageLogger.cff"
 
 untracked PSet maxEvents = 
