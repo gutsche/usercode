@@ -23,7 +23,7 @@ include "GutSoftConfigurations/Timing/timing.cff"
 include "Configuration/StandardSequences/data/FakeConditions.cff"
 
 # include tracker local reconstruction
-include "RecoLocalTracker/Configuration/data/RecoLocalTracker.cff"
+#include "RecoLocalTracker/Configuration/data/RecoLocalTracker.cff"
 
 # include track reconstruction
 include "RecoTracker/Configuration/data/RecoTracker.cff"
@@ -34,12 +34,8 @@ include "GutSoftConfigurations/TrackObjects/trackObjects.cff"
 # trackEfficiencyObjects
 include "GutSoftConfigurations/TrackObjects/trackEfficiencyObjects.cff"
 
-# timing analyzer
-#include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/ckfGutSoftTimingAnalyzer.cff"
-#include "GutSoftAnalyzers/GutSoftTimingAnalyzer/data/rsGutSoftTimingAnalyzer.cff"
-#include "GutSoftAnalyzers/GutSoftHepMCAnalyzer/data/gutSoftHepMCAnalyzer.cff"
-#include "GutSoftConfigurations/TrackObjects/dumpObjects.cff"
-#include "GutSoftAnalyzers/GutSoftTrackingEventDisplay/data/gutSoftTrackingEventDisplay.cff"
+# true information analyzer
+include "GutSoftConfigurations/TrueInformation/trueInformation.cff"
 
 # output
 module out = PoolOutputModule 
@@ -49,7 +45,7 @@ module out = PoolOutputModule
 
 
 path pR = {
-  trackerlocalreco,
+#  trackerlocalreco,
   ckftracks,
   rstracks
 }
@@ -60,18 +56,10 @@ path pT = {
 
 path p1 = 
 {
-#  gutSoftTrackingEventDisplay,
-#  gutSoftHepMCAnalyzer,
-#  dumpObjects,
   trackObjects,
-  trackEfficiencyObjects
+  trackEfficiencyObjects,
+  trueInformation
 }
-
-#path p3 =
-#{
-#  ckfGutSoftTimingAnalyzer,
-#  rsGutSoftTimingAnalyzer
-#}
 
 schedule = {pR,pT,p1,e}
 
