@@ -191,7 +191,7 @@ void compareTwoHistograms(std::string name1,
   filename.Append("_");
   filename += name2.c_str();
   filename.ReplaceAll("/","_");
-  filename.Append(".png");
+  filename.Append(".gif");
 
   canvas->SaveAs(filename);
 

@@ -1,5 +1,5 @@
 # seed analyzers
-include "GutSoftAnalyzers/GutSoftTrajectorySeedAnalyzer/data/rsSeedAnalyzer.cff" 
+include "GutSoftAnalyzers/GutSoftRoadSearchSeedAnalyzer/data/rsSeedAnalyzer.cff" 
 include "GutSoftAnalyzers/GutSoftTrajectorySeedAnalyzer/data/ckfSeedAnalyzer.cff" 
 
 # cloud analyzers

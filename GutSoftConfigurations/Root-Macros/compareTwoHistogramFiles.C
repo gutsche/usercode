@@ -62,6 +62,14 @@ void compareTwoHistograms(std::string name, TH1 *histo1, TH1* histo2) {
     histo2->GetXaxis()->SetRange(0,100);
   }
 
+  if ( histo1->GetMaximum() > histo2->GetMaximum() ) {
+    histo2->SetMaximum(histo1->GetMaximum()*1.1);
+    histo1->SetMaximum(histo1->GetMaximum()*1.1);
+  } else {
+    histo2->SetMaximum(histo2->GetMaximum()*1.1);
+    histo1->SetMaximum(histo2->GetMaximum()*1.1);
+  }
+
   histo1->SetLineColor(2);
   histo1->SetLineWidth(2);
   std::string histo1Name = "File 1 ";
@@ -102,7 +110,7 @@ void compareTwoHistograms(std::string name, TH1 *histo1, TH1* histo2) {
   // clean name for picture filename
   TString filename(name.c_str());
   filename.ReplaceAll("/","_");
-  filename.Append(".png");
+  filename.Append(".gif");
 
   canvas->SaveAs(filename);
 
