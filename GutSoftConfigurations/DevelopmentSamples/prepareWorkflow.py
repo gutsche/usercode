@@ -47,7 +47,7 @@ def prepareWorkflow(parameter_set,events,speed_category,version) :
     TotalEventsElement.setAttribute("Value", str(events))
     element.appendChild(TotalEventsElement)
 
-    pickle_file = os.path.join(os.getcwd(), parameter_set.replace("cfg","pkl"))
+    pickle_file = os.path.join(os.getcwd(), addCMSSWVersionToName(parameter_set,version)+".pkl")
 
     PickleFileElement = Element("PickleFile")
     PickleFileElement.setAttribute("Value", pickle_file)
@@ -85,7 +85,7 @@ def main(argv) :
     required parameters
     --parameter-set  <name>     : name and path of input parameter-set
     --events         <number>   : number of events to generate
-    --cmssw-version  <version>  : CMSSW version string (format: CMSS_X_Y_Z)
+    --cmssw-version  <version>  : CMSSW version string (format: CMSSW_X_Y_Z)
 
     optional parameters         :
     --speed-category <category> : speed category: Fast, Medium, Slow (default: Fast)
