@@ -1,0 +1,17 @@
+# include GutSoftHistogramFileService
+include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
+
+# Rings
+include "RecoTracker/RingMakerESProducer/data/RingMakerESProducer.cff"
+
+# cms geometry
+include "Geometry/CMSCommonData/data/cmsIdealGeometryXML.cfi"
+
+# tracker geometry
+include "Geometry/TrackerGeometryBuilder/data/trackerGeometry.cfi"
+
+# tracker numbering
+include "Geometry/TrackerNumberingBuilder/data/trackerNumberingGeometry.cfi"
+
+# include analyzer
+include "GutSoftAnalyzers/GutSoftTrackingParticleAnalyzer/data/gutSoftTrackingParticleAnalyzer.cfi"
