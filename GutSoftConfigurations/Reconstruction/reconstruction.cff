@@ -23,7 +23,7 @@ include "GutSoftConfigurations/Timing/timing.cff"
 include "Configuration/StandardSequences/data/FakeConditions.cff"
 
 # include tracker local reconstruction
-#include "RecoLocalTracker/Configuration/data/RecoLocalTracker.cff"
+include "RecoLocalTracker/Configuration/data/RecoLocalTracker.cff"
 
 # include track reconstruction
 include "RecoTracker/Configuration/data/RecoTracker.cff"
@@ -45,7 +45,7 @@ module out = PoolOutputModule
 
 
 path pR = {
-#  trackerlocalreco,
+  trackerlocalreco,
   ckftracks,
   rstracks
 }

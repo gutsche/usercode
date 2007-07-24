@@ -32,7 +32,6 @@
   include "Configuration/StandardSequences/data/MixingLowLumiPileUp.cff" 
   include "Configuration/StandardSequences/data/VtxSmearedGauss.cff" 
   include "Configuration/StandardSequences/data/FakeConditions.cff"
-  #include "Geometry/MuonNumbering/data/muonNumberingInitialization.cfi"
 
   path p = {simulation} # simulation
 
@@ -40,13 +39,11 @@
   include "Configuration/EventContent/data/EventContent.cff"
   module FEVT = PoolOutputModule 
   { 
-     	using FEVTSIMEventContent
-	untracked string fileName = "Wen_pythia.root"
-	untracked PSet datasets ={
-	    untracked PSet dataset1 = {
-		untracked string dataTier = "FEVT"
-	    }
-	}
+    using FEVTSIMEventContent
+    untracked string fileName = "Wen_pythia.root"
+    untracked PSet dataset ={
+      untracked string dataTier = "GEN-SIM-DIGI"
+    }
   }
 
   endpath out = {FEVT}

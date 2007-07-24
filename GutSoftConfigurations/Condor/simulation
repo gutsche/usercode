@@ -55,7 +55,7 @@ def main(argv) :
 
     # manipulate parameter-set
     input = file(parameter_set)
-    output = file(run_dir + '/' + cluster + '_' + process + '.cfg','w')
+    output = file(cluster + '_' + process + '.cfg','w')
     for line in input.readlines() :
         line = line.replace('CONDORMAXEVENTS',num_events_per_job)
         line = line.replace('CONDORGENERATIONCFF',generator_cff)
@@ -69,14 +69,14 @@ def main(argv) :
     output.close()
 
     # create execution script
-    script = file(run_dir + '/' + cluster + '_' + process + '.sh','w')
+    script = file(cluster + '_' + process + '.sh','w')
     script.write('#/bin/bash\n')
     script.write('START_TIME=`/bin/date`\n')
     script.write('echo "started at $START_TIME"\n')
     script.write('source /uscmst1/prod/sw/cms/shrc uaf\n')
     script.write('cd ' + cmssw_dir + '\n')
     script.write('eval `scramv1 runtime -sh`\n')
-    script.write('cd ' + run_dir + '\n')
+    script.write('cd -\n')
     script.write('echo "run: time cmsRun ' + cluster + '_' + process + '.cfg > ' + cluster + '_' + process + '.log 2>&1"\n')
     script.write('cmsRun ' + cluster + '_' + process + '.cfg > ' + cluster + '_' + process + '.log 2>&1\n')
     script.write('exitcode=$?\n')
@@ -88,10 +88,10 @@ def main(argv) :
     script.close()
 
     # change script permission to executable
-    os.chmod(run_dir + '/' + cluster + '_' + process + '.sh',0755)
+    os.chmod(cluster + '_' + process + '.sh',0755)
 
     # execute script
-    cmd = 'cd ' + run_dir + ' && ./' + cluster + '_' + process + '.sh'
+    cmd = './' + cluster + '_' + process + '.sh'
     process = popen2.Popen4(cmd)
     # process.tochild.close()
     errcode = os.WEXITSTATUS(process.wait())
