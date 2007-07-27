@@ -11,9 +11,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
-// $Author: kalavase $
-// $Date: 2007/06/13 18:14:38 $
-// $Revision: 1.19 $
+// $Author: dmytro $
+// $Date: 2007/06/23 05:36:36 $
+// $Revision: 1.20 $
 //
 
 #include <vector>
@@ -60,7 +60,7 @@ namespace cms1 {
     Cuts          tightElectron_;
     Cuts          looseElectron_;
 
-    Cuts          jetCut_;
+    //Cuts          jetCut_;
 
     Cuts          metCut_;
     Cuts          metCutAroundZ_;

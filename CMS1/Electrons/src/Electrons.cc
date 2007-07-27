@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: sani $
-// $Date: 2007/07/13 20:31:08 $
-// $Revision: 1.26 $
+// $Author: gutsche $
+// $Date: 2007/07/13 21:14:26 $
+// $Revision: 1.27 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -425,9 +425,9 @@ void cms1::Electrons::registerEventUserData() {
   nSeed = data_->intUserData1D.back(); 
   data_->intUserData1D.push_back( new UserDataInt1D("class", "elid_", "cms1_elid_", false) );
   cms_class = data_->intUserData1D.back(); 
-  data_->intUserData1D.push_back( new UserDataInt1D("looseId", " elid_", "cms1_elid_", false));
+  data_->intUserData1D.push_back( new UserDataInt1D("looseId", "elid_", "cms1_elid_", false));
   looseId = data_->intUserData1D.back();
-  data_->intUserData1D.push_back( new UserDataInt1D("tightId", " elid_", "cms1_elid_", false));
+  data_->intUserData1D.push_back( new UserDataInt1D("tightId", "elid_", "cms1_elid_", false));
   tightId = data_->intUserData1D.back();
    
   data_->floatUserData1D.push_back( new UserDataFloat1D("hOverE", "elid_", "cms1_elid_", false) );

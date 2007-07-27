@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/05/24 23:35:27 $
-// $Revision: 1.10 $
+// $Author: kalavase $
+// $Date: 2007/06/05 01:07:24 $
+// $Revision: 1.11 $
 //
 
 #include "DataFormats/JetReco/interface/CaloJet.h"
@@ -30,7 +30,7 @@ namespace cms1 {
   public:
       Jets():BlackBox(){}
       
-      enum JetType { DefaultJets, JetsWithoutElectrons, AllJets, AllCorrectedJets };
+      enum JetType { DefaultJets, LooseJets, JetsWithoutElectrons, AllJets, AllCorrectedJets };
      
       std::vector<const reco::Candidate*> getJets ( const JetType, const Cuts& );
       void dump(std::ostream& o, std::vector<const reco::Candidate*>);

@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
-// $Author: kalavase $
-// $Date: 2007/06/05 01:07:25 $
-// $Revision: 1.14 $
+// $Author: dmytro $
+// $Date: 2007/06/23 05:36:35 $
+// $Revision: 1.15 $
 //
 
 #include "CMS1/Jets/interface/Jets.h"
@@ -42,6 +42,33 @@ std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
 	   cuts.pt_min = 20;
 	   cuts.eta_min = -2.5;
 	   cuts.eta_max = +2.5;
+	   cuts.AND(userCuts);
+       
+	   for ( std::vector<reco::CaloJet>::const_iterator jet = collection->begin();
+		 jet != collection->end();
+		 ++jet ) 
+	     {
+		if ( cuts.testCandidate(*jet) ) output_list.push_back(&*jet);
+	     }
+	}
+      break;
+    case LooseJets:
+	{
+	   if (! data_ ) {
+	      std::cout << "ERROR: jet black box doesn't know where to find EvenData." << std::endl;
+	      return output_list;
+	   }
+	   const std::vector<reco::CaloJet>* collection = data_->getData<std::vector<reco::CaloJet> >("midPointCone5CaloJets");
+	   if ( ! collection ) {
+	      std::cout << "ERROR: jet collection is not found in the event. Return nothing." << std::endl;
+	      return output_list;
+	   }
+       
+	   // set the default cuts for this type
+	   Cuts cuts;
+	   cuts.pt_min = 15;
+	   cuts.eta_min = -3.0;
+	   cuts.eta_max = +3.0;
 	   cuts.AND(userCuts);
        
 	   for ( std::vector<reco::CaloJet>::const_iterator jet = collection->begin();

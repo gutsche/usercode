@@ -9,8 +9,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/06/23 05:36:37 $
-// $Revision: 1.30 $
+// $Date: 2007/07/03 22:31:57 $
+// $Revision: 1.31 $
 //
 
 #include <vector>
@@ -128,7 +128,7 @@ cms1::TableMaker::processEvent( const edm::Event& iEvent )
   std::vector<const reco::Candidate*> looseElectrons = theElectrons.getElectrons(Electrons::LooseElectrons,looseElectron_);
   
   // get vector of Jets
-  std::vector<const reco::Candidate*> jets = theJets.getJets(Jets::DefaultJets,jetCut_);
+  std::vector<const reco::Candidate*> jets = theJets.getJets(Jets::LooseJets, Cuts());
   // add AllJets to EventData
   theData.addBBCollection("AllJets",  theJets.getJets(Jets::AllJets, Cuts() ) );
 
@@ -283,9 +283,9 @@ void cms1::TableMaker::configure(const edm::ParameterSet& iConfig)
   looseElectron_.eta_max  = iConfig.getUntrackedParameter<double>("LooseElectronMaxEta");
 
   // jet cuts
-  jetCut_.pt_min             = iConfig.getUntrackedParameter<double>("JetPt");
-  jetCut_.eta_min            = iConfig.getUntrackedParameter<double>("JetMinEta");
-  jetCut_.eta_max            = iConfig.getUntrackedParameter<double>("JetMaxEta");
+  //jetCut_.pt_min             = iConfig.getUntrackedParameter<double>("JetPt");
+  //jetCut_.eta_min            = iConfig.getUntrackedParameter<double>("JetMinEta");
+  //jetCut_.eta_max            = iConfig.getUntrackedParameter<double>("JetMaxEta");
 
   // MET cuts
   metCut_.pt_min             = iConfig.getUntrackedParameter<double>("MET");
