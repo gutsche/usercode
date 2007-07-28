@@ -26,7 +26,11 @@ include "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/ckfTrackAnalyzer.cff"
 include "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/ckfTrackAnalyzerForward.cff" 
 include "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/ckfTrackAnalyzerBarrel.cff" 
 
+# event display
+#include "GutSoftAnalyzers/GutSoftTrackingEventDisplay/data/gutSoftTrackingEventDisplay.cff"
+
 sequence trackObjects = {
+#  gutSoftTrackingEventDisplay,
   gutSoftTrackerDigiAnalyzer,
   gutSoftTrackerClusterAnalyzer,
   gutSoftTrackerRecHitAnalyzer,
