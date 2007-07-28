@@ -25,7 +25,7 @@ def pickleParameterSet(parameter_set,version):
     file = open(addCMSSWVersionToName(parameter_set,version)+".pkl",'w')
     pickle.dump(process,file)
 
-def prepareWorkflow(parameter_set,events,speed_category,version) :
+def prepareWorkflow(parameter_set,events,speed_category,version,cms_path,cmssw_architecture,cmssw_version) :
     """
 
     prepareWorkflow for parameter-set
@@ -51,6 +51,18 @@ def prepareWorkflow(parameter_set,events,speed_category,version) :
 
     PickleFileElement = Element("PickleFile")
     PickleFileElement.setAttribute("Value", pickle_file)
+    element.appendChild(PickleFileElement)
+
+    PickleFileElement = Element("CMSPath")
+    PickleFileElement.setAttribute("Value", cms_path)
+    element.appendChild(PickleFileElement)
+
+    PickleFileElement = Element("CMSSWArchitecture")
+    PickleFileElement.setAttribute("Value", cmssw_architecture)
+    element.appendChild(PickleFileElement)
+
+    PickleFileElement = Element("CMSSWVersion")
+    PickleFileElement.setAttribute("Value", cmssw_version)
     element.appendChild(PickleFileElement)
 
     topNode.appendChild(element)
@@ -96,11 +108,14 @@ def main(argv) :
     """
 
     # default
-    cmssw_version  = ''
-    parameter_set  = ''
-    events         = 0
-    speed_category = "Fast"
-    debug          = 0
+    cmssw_version      = ''
+    parameter_set      = ''
+    events             = 0
+    speed_category     = "Slow"
+    debug              = 0
+    cms_path           = '/uscmst1/prod/sw/cms'
+    cmssw_architecture = 'slc4_ia32_gcc345'
+    
 
     import getopt
 
@@ -160,12 +175,12 @@ def main(argv) :
         sys.exit(2)
 
     # prepare version tag
-    cmssw_version = cmssw_version.replace("CMSSW","").replace("_","")
+    version = cmssw_version.replace("CMSSW","").replace("_","")
 
 
     # pickle parameter_set
     try:
-        pickleParameterSet(parameter_set,cmssw_version)
+        pickleParameterSet(parameter_set,version)
     except:
         print ''
         print 'Parameter-Set:',parameter_set,'could not be converted into a python dictionary and pickled!'
@@ -174,9 +189,8 @@ def main(argv) :
         sys.exit(1)
         
     # prepare workflow
-    prepareWorkflow(parameter_set,events,speed_category,cmssw_version)
     try:
-        prepareWorkflow(parameter_set,events,speed_category,cmssw_version)
+        prepareWorkflow(parameter_set,events,speed_category,version,cms_path,cmssw_architecture,cmssw_version)
     except:
         print ''
         print 'Workflow for parameter-set:',parameter_set,'could not be created!'
@@ -184,7 +198,7 @@ def main(argv) :
         print main.__doc__
         sys.exit(1)
 
-    print 'Workflow:',addCMSSWVersionToName(parameter_set,cmssw_version)+".xml",'created!'
+    print 'Workflow:',addCMSSWVersionToName(parameter_set,version)+".xml",'created!'
     
 if __name__ == '__main__' :
     main(sys.argv[1:])
