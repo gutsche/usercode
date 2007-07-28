@@ -26,6 +26,15 @@ void compareTwoHistogramFiles(std::string fileName1,
   histos.push_back("rsTrackingEfficiency_Hits/efficiencyEta");
   histos.push_back("rsTrackingEfficiency_Hits/purityEta");
 
+  histos.push_back("ckfTracks/eta");
+  histos.push_back("ckfTracks/nTracks");
+  histos.push_back("ckfTracks/chi2");
+  histos.push_back("ckfTracks/nhit");
+  histos.push_back("ckfTracks/phi");
+  histos.push_back("ckfTracks/pt");
+  histos.push_back("ckfTrackingEfficiency_Hits/efficiencyEta");
+  histos.push_back("ckfTrackingEfficiency_Hits/purityEta");
+
   for ( unsigned int i = 0;
 	i < histos.size();
 	++i ) {
