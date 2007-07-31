@@ -3,17 +3,17 @@
 #
 # list of files (format: file events):
 #
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070729_01_52/669_4.root 1000
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070729_01_52/669_2.root 1000
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070729_01_52/669_0.root 1000
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070729_01_52/669_3.root 1000
-# file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070729_01_52/669_1.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070729_01_52/669_4.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070729_01_52/669_2.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070729_01_52/669_0.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070729_01_52/669_3.root 1000
+# dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070729_01_52/669_1.root 1000
 #
 replace PoolSource.fileNames = {
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070729_01_52/669_4.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070729_01_52/669_2.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070729_01_52/669_0.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070729_01_52/669_3.root",
-  "file:/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070729_01_52/669_1.root"
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070729_01_52/669_4.root",
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070729_01_52/669_2.root",
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070729_01_52/669_0.root",
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070729_01_52/669_3.root",
+  "dcap://cmsdca.fnal.gov:24136/pnfs/fnal.gov/usr/cms/WAX/resilient/gutsche/condor/070729_01_52/669_1.root"
 }
 
