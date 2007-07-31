@@ -9,5 +9,5 @@ include "SimTracker/TrackAssociation/data/TrackAssociatorByHits.cfi"
 #include analyzer
 module ckfTrackingEfficiencyAnalyzerHits                     = gutSoftTrackingEfficiencyAnalyzer from "GutSoftAnalyzers/GutSoftTrackingEfficiencyAnalyzer/data/gutSoftTrackingEfficiencyAnalyzer.cfi"
 replace ckfTrackingEfficiencyAnalyzerHits.TrackInputTag      = ctfWithMaterialTracks
-replace ckfTrackingEfficiencyAnalyzerHits.Associator         = TrackAssociatorByHits
+replace ckfTrackingEfficiencyAnalyzerHits.Associator         = "TrackAssociatorByHits"
 replace ckfTrackingEfficiencyAnalyzerHits.BaseDirectoryName  = "ckfTrackingEfficiency_Hits"
