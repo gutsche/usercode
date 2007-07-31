@@ -97,7 +97,6 @@ def main(argv) :
     required parameters
     --parameter-set  <name>     : name and path of input parameter-set
     --events         <number>   : number of events to generate
-    --cmssw-version  <version>  : CMSSW version string (format: CMSSW_X_Y_Z)
 
     optional parameters         :
     --speed-category <category> : speed category: Fast, Medium, Slow (default: Fast)
@@ -108,7 +107,12 @@ def main(argv) :
     """
 
     # default
-    cmssw_version      = ''
+    try:
+        cmssw_version = os.environ.get("CMSSW_VERSION")
+    except:
+        print ''
+        print 'CMSSW version cannot be determined from $CMSSW_VERSION'
+        sys.exit(2)
     parameter_set      = ''
     events             = 0
     speed_category     = "Slow"
@@ -120,7 +124,7 @@ def main(argv) :
     import getopt
 
     try:
-        opts, args = getopt.getopt(argv, "", ["help", "debug", "parameter-set=", "events=", "speed-category=","cmssw-version="])
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "parameter-set=", "events=", "speed-category="])
     except getopt.GetoptError:
         print main.__doc__
         sys.exit(2)
@@ -136,8 +140,6 @@ def main(argv) :
             parameter_set = arg
         elif opt == "--speed-category" :
             speed_category = arg
-        elif opt == "--cmssw-version" :
-            cmssw_version = arg
         elif opt == "--events" :
             try:
                 events = int(arg)
@@ -147,10 +149,6 @@ def main(argv) :
                 print ''
                 print main.__doc__
                 sys.exit(2)
-
-    if cmssw_version == "" :
-        print main.__doc__
-        sys.exit(2)
 
     if parameter_set == '' :
         print main.__doc__
