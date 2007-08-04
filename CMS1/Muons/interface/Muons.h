@@ -11,14 +11,13 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/22 07:19:52 $
-// $Revision: 1.8 $
+// $Date: 2007/05/24 17:41:00 $
+// $Revision: 1.9 $
 //
 #include <iostream>
 
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/MuonReco/interface/MuIsoDeposit.h"
-#include "DataFormats/MuonReco/interface/MuonWithMatchInfo.h"
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "CMS1/Base/interface/Cuts.h"
 #include "CMS1/Base/interface/BlackBox.h"

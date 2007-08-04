@@ -7,16 +7,16 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/06/02 18:03:49 $
-// $Revision: 1.11 $
+// $Date: 2007/06/14 05:59:57 $
+// $Revision: 1.12 $
 //
 #include "CMS1/BaseAnalyzer/interface/BaseAnalyzer.h"
-#include "FWCore/Framework/interface/Handle.h"
+#include "DataFormats/Common/interface/Handle.h"
 #include "FWCore/Framework/interface/Event.h"
 
 #include "SimDataFormats/HepMCProduct/interface/HepMCProduct.h"
 #include "Utilities/Timing/interface/TimingReport.h"
-#include "TrackingTools/TrackAssociator/interface/TimerStack.h"
+#include "Utilities/Timing/interface/TimerStack.h"
 
 void cms1::BaseAnalyzer::configure(const edm::ParameterSet& iConfig)
 {
@@ -75,7 +75,7 @@ void cms1::BaseAnalyzer::processEvent(const edm::Event& iEvent)
    timers.pop_and_push("BaseAnalyzer::processEvent::getMCInfo");
    // get MC Event
    edm::Handle<edm::HepMCProduct> mcCollectionHandle;
-   iEvent.getByLabel("VtxSmeared", mcCollectionHandle);
+   iEvent.getByLabel("source", mcCollectionHandle);
    const HepMC::GenEvent* genEvent = mcCollectionHandle->GetEvent();
    theData.mcInfo.clear();
    for (HepMC::GenEvent::particle_const_iterator p = genEvent->particles_begin(); p != genEvent->particles_end(); ++p)

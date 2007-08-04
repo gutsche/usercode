@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
-// $Author: dmytro $
-// $Date: 2007/06/23 05:36:36 $
-// $Revision: 1.14 $
+// $Author: gutsche $
+// $Date: 2007/07/13 21:14:26 $
+// $Revision: 1.15 $
 //
 
 #include "CMS1/Muons/interface/Muons.h"
@@ -32,7 +32,7 @@ std::vector<const reco::Candidate*> cms1::Muons::getMuons(const MuonType muonTyp
 	      std::cout << "ERROR: muon black box doesn't know where to find EvenData." << std::endl;
 	      return output_list;
 	   }
-	   const std::vector<reco::Muon>* collection = data_->getData<std::vector<reco::Muon> >("globalMuons");
+	   const std::vector<reco::Muon>* collection = data_->getData<std::vector<reco::Muon> >("muons");
 	   if ( ! collection ) {
 	      std::cout << "ERROR: global muon collection is not found in the event. Return nothing." << std::endl;
 	      return output_list;

@@ -9,15 +9,14 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/06/23 05:36:32 $
-// $Revision: 1.13 $
+// $Date: 2007/07/03 05:23:03 $
+// $Revision: 1.14 $
 //
 
 #include "CLHEP/HepMC/GenParticle.h"
 #include "DataFormats/JetReco/interface/GenJet.h"
 #include "DataFormats/TrackReco/interface/Track.h"
-// #include "DataFormats/Common/interface/Handle.h"
-#include "FWCore/Framework/interface/Handle.h"
+#include "DataFormats/Common/interface/Handle.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "CMS1/Base/interface/UserData.h"

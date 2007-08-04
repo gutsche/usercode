@@ -9,9 +9,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: kalavase $
-// $Date: 2007/06/13 18:14:38 $
-// $Revision: 1.3 $
+// $Author: dmytro $
+// $Date: 2007/06/23 05:36:37 $
+// $Revision: 1.4 $
 //
 #include <vector>
 #include "CMS1/TableMaker/interface/TableMaker.h"
@@ -29,17 +29,6 @@ namespace cms1 {
 	     
 	     // user configuration
 	     configure( iConfig );
-	     
-	     theData.trackAssociator = new TrackDetectorAssociator();
-	     theData.trackAssociator->theEBRecHitCollectionLabel = edm::InputTag("ecalRecHit:EcalRecHitsEB");
-	     theData.trackAssociator->theEERecHitCollectionLabel = edm::InputTag("ecalRecHit:EcalRecHitsEE");
-	     theData.trackAssociator->theCaloTowerCollectionLabel = edm::InputTag("towerMaker");
-	     theData.trackAssociator->theHBHERecHitCollectionLabel = edm::InputTag("hbhereco");
-	     theData.trackAssociator->theHORecHitCollectionLabel = edm::InputTag("horeco");
-	     theData.trackAssociator->theDTRecSegment4DCollectionLabel = edm::InputTag("dt4DSegmets");
-	     theData.trackAssociator->theCSCSegmentCollectionLabel = edm::InputTag("cscSegments");
-	     theData.trackAssociator->useDefaultPropagator();
-
 	  }
        	virtual ~TableMakerFW(){}
       protected:

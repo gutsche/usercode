@@ -12,8 +12,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/06/23 05:36:36 $
-// $Revision: 1.20 $
+// $Date: 2007/07/27 06:59:59 $
+// $Revision: 1.21 $
 //
 
 #include <vector>
@@ -26,8 +26,6 @@
 #include "CMS1/EventHyp/interface/DiLeptonCandidate.h"
 #include "CMS1/EventHyp/interface/DiLeptonUserBlock.h"
 #include "CMS1/Base/interface/Cuts.h"
-#include "TrackingTools/TrackAssociator/interface/TrackDetectorAssociator.h"
-#include "TrackingTools/TrackAssociator/interface/TrackDetMatchInfo.h"
 
 #include <TH1.h>
 #include <TH2.h>

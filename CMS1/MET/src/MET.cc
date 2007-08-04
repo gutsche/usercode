@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/07/03 05:23:07 $
-// $Revision: 1.12 $
+// $Date: 2007/07/07 17:52:07 $
+// $Revision: 1.13 $
 //
 
 #include <iostream>
@@ -17,9 +17,6 @@
 #include "CMS1/CommonTools/interface/UserDataTools.h"
 #include "DataFormats/JetReco/interface/CaloJet.h"
 #include "DataFormats/CaloTowers/interface/CaloTower.h"
-
-// tmp
-#include "TrackingTools/TrackAssociator/interface/TrackDetectorAssociator.h"
 
 const reco::CaloMET* cms1::MET::getMET(const METType type)
 {
@@ -71,15 +68,6 @@ void cms1::MET::correctMETmuons(EventData* event, double& met, double& metPhi, b
    
    if (! caloCorr) return;
    
-   // second, subtract calorimeter muon energy
-   //PDK now correct the ET for the muon deposits
-   TrackDetectorAssociator::AssociatorParameters trackparameters;
-   trackparameters.useEcal = false ;
-   trackparameters.useHcal = false ;
-   trackparameters.useHO = true ;
-   trackparameters.useCalo = true ;
-   trackparameters.useMuon = false ;
-   trackparameters.useOldMuonMatching = false;
    double muEx = 0.0;
    double muEy = 0.0;
    
@@ -87,30 +75,30 @@ void cms1::MET::correctMETmuons(EventData* event, double& met, double& metPhi, b
        cand != metMuons.end();  ++cand) {
       if( const reco::Muon* mu = dynamic_cast<const reco::Muon*>( *cand ) ) {
 	 const reco::Track* mu_track = mu->track().get();
-	 //trackparameters.
-	 TrackDetMatchInfo info = event->trackAssociator->associate( *(event->iEvent),
-								     *(event->iSetup), 
-								     event->trackAssociator->getFreeTrajectoryState( *(event->iSetup), *mu_track),
-								     trackparameters );
-	 // use position at HCAL as the most resonable estimate
-	 // where majority of energy was deposited in the calorimeter
-	 double theta = info.trkGlobPosAtHcal.theta();
-	 double phi = info.trkGlobPosAtHcal.phi();
-	 //added PDK - fix MET for muon deposit in calo
-      
-	 //there is a bug in the TrackDetMatchInfo class
-	 //Asking for the HO tower energy returns the total energy in the tower
-	 //so using the rechits for the HO will work better (hits and towers 
-	 //should be the same for the HO anyway)
+	 // use muon position at the outer most state of the silicon track if 
+	 // TrackExtra is available and momentum direction at the origin 
+	 // otherwise. Both should be fine.
+	 // NOTICE: MET is built out of towers, which are 5x5 ECAL crystals + one 
+	 // element of HCAL and HO. Muon energy is reported for individual crossed 
+	 // elements of all the detectors and 3x3 elements of each time as an 
+	 // alternative way of energy calculation.
+	 double theta = mu_track->theta();
+	 double phi = mu_track->phi();
+	 if ( ! mu_track->extra().isNull() ) {
+	    theta = mu_track->extra()->outerPosition().theta();
+	    phi = mu_track->extra()->outerPosition().phi();
+	 }
+	 
 	 if (crossedEnergy) {
-	    muEx += ( info.towerCrossedEnergy() )*sin(theta)*cos( phi );
-	    muEy += ( info.towerCrossedEnergy() )*sin(theta)*sin( phi );
+	    muEx += ( mu->getCalEnergy().em + mu->getCalEnergy().had + mu->getCalEnergy().ho )*sin(theta)*cos( phi );
+	    muEy += ( mu->getCalEnergy().em + mu->getCalEnergy().had + mu->getCalEnergy().ho )*sin(theta)*sin( phi );
 	 }else{
-	    muEx += ( info.towerConeEnergy() )*sin(theta)*cos( phi );
-	    muEy += ( info.towerConeEnergy() )*sin(theta)*sin( phi );
+	    muEx += ( mu->getCalEnergy().emS9 + mu->getCalEnergy().hadS9 + mu->getCalEnergy().hoS9 )*sin(theta)*cos( phi );
+	    muEy += ( mu->getCalEnergy().emS9 + mu->getCalEnergy().hadS9 + mu->getCalEnergy().hoS9 )*sin(theta)*sin( phi );
 	 }
       }
    }
+   
    metx = met*cos(metPhi) + muEx;
    mety = met*sin(metPhi) + muEy;
    met   = std::sqrt(metx*metx + mety*mety);

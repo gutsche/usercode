@@ -7,9 +7,6 @@
 #include "CMS1/Base/interface/TrackStreamer.h"
 #include "CMS1/Base/interface/JetStreamer.h"
 #include "CMS1/CommonTools/interface/UserDataTools.h"
-#include "TrackingTools/TrackAssociator/interface/TrackDetectorAssociator.h"
-#include "TrackingTools/TrackAssociator/interface/TrackDetMatchInfo.h"
-
 
 cms1::DiLeptonUserBlock::DiLeptonUserBlock(): met(0),type(0)
 { 
