@@ -1,9 +1,0 @@
-# include GutSoftHistogramFileService
-include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
-
-#include analyzer
-module  rsTrackAnalyzerBarrel                    = gutSoftTrackAnalyzer from "GutSoftAnalyzers/GutSoftTrackAnalyzer/data/gutSoftTrackAnalyzer.cfi"
-replace rsTrackAnalyzerBarrel.TrackInputTag      = rsWithMaterialTracks
-replace rsTrackAnalyzerBarrel.BaseDirectoryName  = "rsTracksBarrel"
-replace rsTrackAnalyzerBarrel.MinimalAbsoluteEta = 0.
-replace rsTrackAnalyzerBarrel.MaximalAbsoluteEta = 1.1
