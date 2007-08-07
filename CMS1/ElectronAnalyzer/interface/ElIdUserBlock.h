@@ -12,7 +12,7 @@ namespace cms1 {
   struct ElIdUserBlock: public BaseUserBlock {
     ElIdUserBlock();
     
-    void registerBlock(EventData& event, const std::string& name_prefix, const std::string& alias_prefix="");
+    void registerBlock(EventData& event, const std::string& name_prefix, const std::string& title_prefix);
     void fill(EventData&, std::vector<const reco::Candidate*>, std::vector<const HepMC::GenParticle*>);
     
     void R9_25(EventData&, const reco::PixelMatchGsfElectron*, float&, float&, float&, float&, float&);

@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/07/07 17:52:07 $
-// $Revision: 1.13 $
+// $Date: 2007/08/04 22:13:06 $
+// $Revision: 1.14 $
 //
 
 #include <iostream>
@@ -133,14 +133,14 @@ void cms1::MET::correctedJetMET(EventData* event,
    }
    double metx = METX_uncorr - Ex;
    double mety = METY_uncorr - Ey;
-   std::cout << "Before correcting, MET, METPhi, METx, METy: " 
+   /* std::cout << "Before correcting, MET, METPhi, METx, METy: " 
      << met << "   " << metPhi << "   " << METX_uncorr 
-     << "   " << METY_uncorr <<std::endl;
+     << "   " << METY_uncorr <<std::endl; */
    met = sqrt(metx*metx+mety*mety);
    metPhi = atan2(mety, metx);
-   std::cout << "After correcting, MET, METPhi, METx, METy: " 
+   /* std::cout << "After correcting, MET, METPhi, METx, METy: " 
      << met << "   " << metPhi << "   " << metx << "    " 
-     << mety << std::endl;
+     << mety << std::endl; */
 }
 
 void cms1::MET::dump(std::ostream& o, const reco::Candidate* mo) {
@@ -154,17 +154,17 @@ void cms1::MET::dump(std::ostream& o, const reco::Candidate* mo) {
 
 void cms1::MET::registerEventUserData()
 {
-   data_->floatUserData.push_back( new UserData<float>("met", "evt_", "cms1_evt_", false) );
+   data_->floatUserData.push_back( new UserData<float>("evt_met", "uncorrected MET", false) );
    evtMet = data_->floatUserData.back();
-   data_->floatUserData.push_back( new UserData<float>("metPhi", "evt_", "cms1_evt_", false) );
+   data_->floatUserData.push_back( new UserData<float>("evt_metPhi", "uncorrected MET phi", false) );
    evtMetPhi = data_->floatUserData.back();
-   data_->floatUserData.push_back( new UserData<float>("sumEt", "evt_", "cms1_evt_", false) );
+   data_->floatUserData.push_back( new UserData<float>("evt_sumEt", "uncorrected sum Et ", false) );
    evtSumEt = data_->floatUserData.back();
-   data_->floatUserData.push_back( new UserData<float>("metSig", "evt_", "cms1_evt_", false) );
+   data_->floatUserData.push_back( new UserData<float>("evt_metSig", "uncorrected relative MET - MET significance", false) );
    evtMetSig = data_->floatUserData.back();
-   data_->floatUserData.push_back( new UserData<float>("met_jetcorr", "evt_", "cms1_evt_", false) );
+   data_->floatUserData.push_back( new UserData<float>("evt_met_jetcorr", "jet energy scale corrected MET (no other corrections)", false) );
    evtMet_corr = data_->floatUserData.back();
-   data_->floatUserData.push_back( new UserData<float>("metphi_jetcorr", "evt_", "cms1_evt_", false) );
+   data_->floatUserData.push_back( new UserData<float>("metphi_jetcorr", "jet energy scale corrected MET phi (no other corrections)",  false) );
    evtMetPhi_corr = data_->floatUserData.back();
 }
 

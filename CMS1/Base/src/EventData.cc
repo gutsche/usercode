@@ -61,42 +61,54 @@ void cms1::EventData::addBranches( TTree& tree, bool candidateBased )
 {
    for(std::vector<UserDataInt*>::iterator itr=intUserData.begin(); itr!=intUserData.end(); ++itr)
      if ( ! candidateBased && (*itr)->isCandidate() ){
-	tree.Branch((*itr)->name().c_str(),"std::vector<int>",(*itr)->getVectorAddress());
+	TBranch* branch = tree.Branch((*itr)->name().c_str(),"std::vector<int>",(*itr)->getVectorAddress());
+	branch->SetTitle((*itr)->title().c_str());
      }else{
-	tree.Branch((*itr)->name().c_str(),(*itr)->get(),((*itr)->name()+"/I").c_str());
+	TBranch* branch = tree.Branch((*itr)->name().c_str(),(*itr)->get(),((*itr)->name()+"/I").c_str());
+	branch->SetTitle((*itr)->title().c_str());
      }
 	
    for(std::vector<UserDataInt1D*>::iterator itr=intUserData1D.begin(); itr!=intUserData1D.end(); ++itr)
      if ( ! candidateBased && (*itr)->isCandidate() ){
-	tree.Branch((*itr)->name().c_str(),"std::vector<std::vector<int> >",(*itr)->getVectorAddress());
+	TBranch* branch = tree.Branch((*itr)->name().c_str(),"std::vector<std::vector<int> >",(*itr)->getVectorAddress());
+	branch->SetTitle((*itr)->title().c_str());
      }else{
-	tree.Branch((*itr)->name().c_str(),"std::vector<int>",(*itr)->getAddress());
+	TBranch* branch = tree.Branch((*itr)->name().c_str(),"std::vector<int>",(*itr)->getAddress());
+	branch->SetTitle((*itr)->title().c_str());
      }
       
    for(std::vector<UserDataFloat*>::iterator itr=floatUserData.begin(); itr!=floatUserData.end(); ++itr)
      if ( ! candidateBased && (*itr)->isCandidate() ){
-	tree.Branch((*itr)->name().c_str(),"std::vector<float>",(*itr)->getVectorAddress());
+	TBranch* branch = tree.Branch((*itr)->name().c_str(),"std::vector<float>",(*itr)->getVectorAddress());
+	branch->SetTitle((*itr)->title().c_str());
      }else{
-	tree.Branch((*itr)->name().c_str(),(*itr)->get(),((*itr)->name()+"/F").c_str());
+	TBranch* branch = tree.Branch((*itr)->name().c_str(),(*itr)->get(),((*itr)->name()+"/F").c_str());
+	branch->SetTitle((*itr)->title().c_str());
      }
    for(std::vector<UserDataFloat1D*>::iterator itr=floatUserData1D.begin(); itr!=floatUserData1D.end(); ++itr)
      if ( ! candidateBased && (*itr)->isCandidate() ){
-	tree.Branch((*itr)->name().c_str(),"std::vector<std::vector<float> >",(*itr)->getVectorAddress());
+	TBranch* branch = tree.Branch((*itr)->name().c_str(),"std::vector<std::vector<float> >",(*itr)->getVectorAddress());
+	branch->SetTitle((*itr)->title().c_str());
      }else{
-	tree.Branch((*itr)->name().c_str(),"std::vector<float>",(*itr)->getAddress());
+	TBranch* branch = tree.Branch((*itr)->name().c_str(),"std::vector<float>",(*itr)->getAddress());
+	branch->SetTitle((*itr)->title().c_str());
      }
    
    for(std::vector<UserDataP4*>::iterator itr=p4UserData.begin(); itr!=p4UserData.end(); ++itr)
      if ( ! candidateBased && (*itr)->isCandidate() ){
-	tree.Branch((*itr)->name().c_str(),"std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",(*itr)->getVectorAddress());
+	TBranch* branch = tree.Branch((*itr)->name().c_str(),"std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",(*itr)->getVectorAddress());
+	branch->SetTitle((*itr)->title().c_str());
      }else{
-	tree.Branch((*itr)->name().c_str(),"ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >",(*itr)->getAddress());
+	TBranch* branch = tree.Branch((*itr)->name().c_str(),"ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >",(*itr)->getAddress());
+	branch->SetTitle((*itr)->title().c_str());
      }
    for(std::vector<UserDataP41D*>::const_iterator itr=p4UserData1D.begin(); itr!=p4UserData1D.end(); ++itr)
      if ( ! candidateBased && (*itr)->isCandidate() ){
-	tree.Branch((*itr)->name().c_str(),"std::vector<std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > > >",(*itr)->getVectorAddress());
+	TBranch* branch = tree.Branch((*itr)->name().c_str(),"std::vector<std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > > >",(*itr)->getVectorAddress());
+     	branch->SetTitle((*itr)->title().c_str());
      }else{
-	tree.Branch((*itr)->name().c_str(),"std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",(*itr)->getAddress());
+	TBranch* branch = tree.Branch((*itr)->name().c_str(),"std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",(*itr)->getAddress());
+	branch->SetTitle((*itr)->title().c_str());
      }
 }
 

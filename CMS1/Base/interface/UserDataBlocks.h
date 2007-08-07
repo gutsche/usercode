@@ -5,8 +5,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/05/11 04:08:51 $
-// $Revision: 1.1 $
+// $Date: 2007/05/22 07:12:39 $
+// $Revision: 1.2 $
 //
 #include "CMS1/Base/interface/UserData.h"
 #include "CMS1/Base/interface/EventData.h"
@@ -20,10 +20,9 @@ namespace cms1 {
 	template <class T> void addEntry(std::vector<UserData<T>* >& container, 
 					 UserData<T>*& var,
 					 const std::string& name,
-					 const std::string& name_prefix,
-					 const std::string& alias_prefix)
+					 const std::string& title )
 	  {
-	     container.push_back( new UserData<T>(name, name_prefix, alias_prefix, isCandidate_) );
+	     container.push_back( new UserData<T>(name, title, isCandidate_) );
 	     var = container.back();
 	  }
 	BaseUserBlock():isCandidate_(false){}
@@ -35,26 +34,27 @@ namespace cms1 {
    
    template <class T> struct ScalarUserBlock: public BaseUserBlock
      {
-	void registerBlock(EventData& event, const std::string& name_prefix, const std::string& alias_prefix="")
+	typedef std::pair<std::string,std::string> VarName;
+	void registerBlock(EventData& event, const std::string& name, const std::string& title)
 	  {
 	     // get names from the streamer
-	     std::vector<std::string> ints   = streamer.getIntNames();
-	     std::vector<std::string> floats = streamer.getFloatNames();
-	     std::vector<std::string> p4s    = streamer.getP4Names();
+	     std::vector<VarName> ints   = streamer.getIntNames();
+	     std::vector<VarName> floats = streamer.getFloatNames();
+	     std::vector<VarName> p4s    = streamer.getP4Names();
 	     
-	     for(std::vector<std::string>::const_iterator str = ints.begin(); str != ints.end(); ++str) {
+	     for(std::vector<VarName>::const_iterator str = ints.begin(); str != ints.end(); ++str) {
 		UserDataInt* var(0);
-	        addEntry(event.intUserData, var,  *str, name_prefix, alias_prefix );
+	        addEntry(event.intUserData, var, name + str->first, title + str->second );
 		intUserData.push_back(var);
 	     }
-	     for(std::vector<std::string>::const_iterator str = floats.begin(); str != floats.end(); ++str) {
+	     for(std::vector<VarName>::const_iterator str = floats.begin(); str != floats.end(); ++str) {
 		UserDataFloat* var(0);
-	        addEntry(event.floatUserData, var,  *str, name_prefix, alias_prefix );
+	        addEntry(event.floatUserData, var, name + str->first, title + str->second );
 		floatUserData.push_back(var);
 	     }
-	     for(std::vector<std::string>::const_iterator str = p4s.begin(); str != p4s.end(); ++str) {
+	     for(std::vector<VarName>::const_iterator str = p4s.begin(); str != p4s.end(); ++str) {
 		UserDataP4* var(0);
-	        addEntry(event.p4UserData, var,  *str, name_prefix, alias_prefix );
+	        addEntry(event.p4UserData, var, name + str->first, title + str->second );
 		p4UserData.push_back(var);
 	     }
 	  }
@@ -78,26 +78,27 @@ namespace cms1 {
    
    template <class T> struct VectorUserBlock: public BaseUserBlock
      {
-	void registerBlock(EventData& event, const std::string& name_prefix, const std::string& alias_prefix="")
+	typedef std::pair<std::string,std::string> VarName;
+	void registerBlock(EventData& event, const std::string& name, const std::string& title)
 	  {
 	     // get names from the streamer
-	     std::vector<std::string> ints   = streamer.getIntNames();
-	     std::vector<std::string> floats = streamer.getFloatNames();
-	     std::vector<std::string> p4s    = streamer.getP4Names();
+	     std::vector<VarName> ints   = streamer.getIntNames();
+	     std::vector<VarName> floats = streamer.getFloatNames();
+	     std::vector<VarName> p4s    = streamer.getP4Names();
 	     
-	     for(std::vector<std::string>::const_iterator str = ints.begin(); str != ints.end(); ++str) {
+	     for(std::vector<VarName>::const_iterator str = ints.begin(); str != ints.end(); ++str) {
 		UserDataInt1D* var(0);
-	        addEntry(event.intUserData1D, var,  *str, name_prefix, alias_prefix );
+	        addEntry(event.intUserData1D, var, name + str->first, title + str->second );
 		intUserData1D.push_back(var);
 	     }
-	     for(std::vector<std::string>::const_iterator str = floats.begin(); str != floats.end(); ++str) {
+	     for(std::vector<VarName>::const_iterator str = floats.begin(); str != floats.end(); ++str) {
 		UserDataFloat1D* var(0);
-	        addEntry(event.floatUserData1D, var,  *str, name_prefix, alias_prefix );
+	        addEntry(event.floatUserData1D, var, name + str->first, title + str->second );
 		floatUserData1D.push_back(var);
 	     }
-	     for(std::vector<std::string>::const_iterator str = p4s.begin(); str != p4s.end(); ++str) {
+	     for(std::vector<VarName>::const_iterator str = p4s.begin(); str != p4s.end(); ++str) {
 		UserDataP41D* var(0);
-	        addEntry(event.p4UserData1D, var,  *str, name_prefix, alias_prefix );
+	        addEntry(event.p4UserData1D, var, name + str->first, title + str->second );
 		p4UserData1D.push_back(var);
 	     }
 	  }

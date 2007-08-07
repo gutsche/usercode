@@ -7,9 +7,9 @@
 // Original Author: Matteo Sani, matteo.sani@cern.ch
 // Created:         Thu Mar 1 20:27:42 UTC 2007
 //
-// $Author: kalavase $
-// $Date: 2007/06/08 19:23:02 $
-// $Revision: 1.9 $
+// $Author: dmytro $
+// $Date: 2007/06/14 05:59:58 $
+// $Revision: 1.10 $
 //
 
 #include "CMS1/MCInfo/interface/MCInfo.h"
@@ -157,11 +157,11 @@ math::XYZTLorentzVector cms1::MCInfo::getGenMET()
 
 void cms1::MCInfo::registerEventUserData()
 {
-   evtGenParticles.registerBlock( *data_, "genps_", "cms1_genps_");
-   evtGenJets.registerBlock( *data_, "genjs_", "cms1_genjs_");
-   data_->floatUserData.push_back( new UserData<float>("met", "gen_", "cms1_gen_", false) );
+   evtGenParticles.registerBlock( *data_, "genps_", "MC paticle block,");
+   evtGenJets.registerBlock( *data_, "genjs_", "GenJet block,");
+   data_->floatUserData.push_back( new UserData<float>("gen_met", "generated MET", false) );
    evtGenMET = data_->floatUserData.back();
-   data_->floatUserData.push_back( new UserData<float>("metPhi", "gen_", "cms1_gen_", false) );
+   data_->floatUserData.push_back( new UserData<float>("gen_metPhi", "generated MET phi", false) );
    evtGenMETPhi = data_->floatUserData.back();
 }
 

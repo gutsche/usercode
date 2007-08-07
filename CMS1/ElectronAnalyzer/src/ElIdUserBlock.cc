@@ -14,46 +14,46 @@ cms1::ElIdUserBlock::ElIdUserBlock() {
   el.setCandidateFlag(true);
 }
 
-void cms1::ElIdUserBlock::registerBlock(EventData& event, const std::string& name_prefix, const std::string& alias_prefix) {
+void cms1::ElIdUserBlock::registerBlock(EventData& event, const std::string& name_prefix, const std::string& title_prefix) {
 
-  el.registerBlock(event, name_prefix+"elid_", alias_prefix);
-  gp.registerBlock(event, name_prefix+"other_mc_el_", alias_prefix);
+  el.registerBlock(event, name_prefix + "elid_", title_prefix + "???");
+  gp.registerBlock(event, name_prefix + "other_mc_el_", title_prefix + "???");
   
-  event.intUserData1D.push_back( new UserDataInt1D("nSeed", "elid_", "cms1_els_", false) );
+  event.intUserData1D.push_back( new UserDataInt1D("elid_nSeed", "???", false) );
   nSeed = event.intUserData1D.back(); 
-  event.intUserData1D.push_back( new UserDataInt1D("class", "elid_", "cms1_els_", false) );
+  event.intUserData1D.push_back( new UserDataInt1D("elid_class", "???", false) );
   cms_class = event.intUserData1D.back(); 
 
-  event.floatUserData1D.push_back( new UserDataFloat1D("hOverE", "elid_", "cms1_els_", false) );
+  event.floatUserData1D.push_back( new UserDataFloat1D("elid_hOverE", "???", false) );
   hOverE = event.floatUserData1D.back(); 
-  event.floatUserData1D.push_back( new UserDataFloat1D("eOverPIn", "elid_", "cms1_els_", false) );
+  event.floatUserData1D.push_back( new UserDataFloat1D("elid_eOverPIn", "???", false) );
   eOverPIn = event.floatUserData1D.back();
-  event.floatUserData1D.push_back( new UserDataFloat1D("eSeedOverPOut", "elid_", "cms1_els_", false) );
+  event.floatUserData1D.push_back( new UserDataFloat1D("elid_eSeedOverPOut", "???", false) );
   eOverPOut = event.floatUserData1D.back();
-  event.floatUserData1D.push_back( new UserDataFloat1D("fBrem", "elid_", "cms1_els_", false) );
+  event.floatUserData1D.push_back( new UserDataFloat1D("elid_fBrem", "???", false) );
   fBrem = event.floatUserData1D.back(); 
 
-  event.floatUserData1D.push_back(new UserDataFloat1D("dEtaIn", "elid_", "cms1_els_", false));
+  event.floatUserData1D.push_back(new UserDataFloat1D("elid_dEtaIn", "???", false));
   dEtaIn = event.floatUserData1D.back();
-  event.floatUserData1D.push_back(new UserDataFloat1D("dEtaOut", "elid_", "cms1_els_", false) );
+  event.floatUserData1D.push_back(new UserDataFloat1D("elid_dEtaOut", "???", false) );
   dEtaOut = event.floatUserData1D.back();
-  event.floatUserData1D.push_back(new UserDataFloat1D("dPhiIn", "elid_", "cms1_els_", false) );
+  event.floatUserData1D.push_back(new UserDataFloat1D("elid_dPhiIn", "???", false) );
   dPhiIn = event.floatUserData1D.back();
-  event.floatUserData1D.push_back(new UserDataFloat1D("dPhiOut", "elid_", "cms1_els_", false) );
+  event.floatUserData1D.push_back(new UserDataFloat1D("elid_dPhiOut", "???", false) );
   dPhiOut = event.floatUserData1D.back();
-  event.floatUserData1D.push_back(new UserDataFloat1D("ESc", "elid_", "cms1_els_", false));
+  event.floatUserData1D.push_back(new UserDataFloat1D("elid_ESc", "???", false));
   vareMax = event.floatUserData1D.back(); 
-  event.floatUserData1D.push_back(new UserDataFloat1D("e3x3", "elid_", "cms1_els_", false));
+  event.floatUserData1D.push_back(new UserDataFloat1D("elid_e3x3", "???", false));
   vare3x3 = event.floatUserData1D.back();
-  event.floatUserData1D.push_back(new UserDataFloat1D("e5x5", "elid_", "cms1_els_", false));
+  event.floatUserData1D.push_back(new UserDataFloat1D("elid_e5x5", "???", false));
   vare5x5 = event.floatUserData1D.back(); 
-  event.floatUserData1D.push_back(new UserDataFloat1D("ESeed", "elid_", "cms1_els_", false));
+  event.floatUserData1D.push_back(new UserDataFloat1D("elid_ESeed", "???", false));
   eSeed = event.floatUserData1D.back();  
-  event.floatUserData1D.push_back(new UserDataFloat1D("sigmaPhiPhi", "elid_", "cms1_els_", false));
+  event.floatUserData1D.push_back(new UserDataFloat1D("elid_sigmaPhiPhi", "???", false));
   sPhiPhi = event.floatUserData1D.back();  
-  event.floatUserData1D.push_back(new UserDataFloat1D("sigmaEtaEta", "elid_", "cms1_els_", false));
+  event.floatUserData1D.push_back(new UserDataFloat1D("elid_sigmaEtaEta", "???", false));
   sEtaEta = event.floatUserData1D.back(); 
-  event.floatUserData1D.push_back(new UserDataFloat1D("tkIso", "elid_", "cms1_els_", false));
+  event.floatUserData1D.push_back(new UserDataFloat1D("elid_tkIso", "???", false));
   tkIso = event.floatUserData1D.back(); 
 }
 

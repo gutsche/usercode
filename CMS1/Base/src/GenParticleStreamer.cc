@@ -3,40 +3,28 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/05/23 02:23:23 $
-// $Revision: 1.2 $
+// $Date: 2007/06/02 18:03:49 $
+// $Revision: 1.1 $
 //
 #include "CLHEP/HepMC/GenVertex.h"
 #include "CMS1/Base/interface/GenParticleStreamer.h"
 cms1::GenParticleStreamer::GenParticleStreamer() 
 {
-   // ORDER IS CRITICAL !
-   p4Names_.push_back("p4");            p4s_.push_back( LorentzVector(0,0,0,0) );
+   varP4 = addP4("p4", "p4", LorentzVector(0,0,0,0) );
    // p4Names_.push_back("prod_vtx");      p4s_.push_back( LorentzVector(0,0,0,0) );
    // p4Names_.push_back("end_vtx");       p4s_.push_back( LorentzVector(0,0,0,0) );
-   intNames_.push_back("id");           ints_.push_back(0);
+   varPdgId = addInt("id", " PDG id", 0);
 }
 
-void cms1::GenParticleStreamer::setDefaults()
+void cms1::GenParticleStreamer::fill( const HepMC::GenParticle* p, bool reset )
 {
-   p4s_[varP4]   = LorentzVector(0,0,0,0);
-   // p4s_[varProdVertex] = LorentzVector(0,0,0,0);
-   // p4s_[varEndVertex] = LorentzVector(0,0,0,0);
-   ints_[varPdgId] = 0 ; 
-}
-
-void cms1::GenParticleStreamer::fill( const HepMC::GenParticle* p )
-{
-   if (! p) {
-      setDefaults();
-      return;
-   }
-
-   p4s_[varP4] = LorentzVector(p->momentum().px(), 
-			       p->momentum().py(), 
-			       p->momentum().pz(), 
-			       p->momentum().e());
-   ints_[varPdgId] = p->pdg_id();
+   if (reset) setDefaults();
+   if (! p) return;
+   *varP4 = LorentzVector(p->momentum().px(), 
+			  p->momentum().py(), 
+			  p->momentum().pz(), 
+			  p->momentum().e());
+   *varPdgId = p->pdg_id();
    
    /*
    HepMC::GenVertex* pVertex = p->production_vertex();

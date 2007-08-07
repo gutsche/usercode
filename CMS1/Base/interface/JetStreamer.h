@@ -4,24 +4,24 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/05/22 07:12:39 $
-// $Revision: 1.1 $
+// $Author: kalavase $
+// $Date: 2007/06/05 01:07:14 $
+// $Revision: 1.2 $
 //
 #include "CMS1/Base/interface/BaseStreamer.h"
 namespace cms1 {
    class JetStreamer: public BaseStreamer
      {
       public:
-	enum IntVars   { varMCId };
-	enum FloatVars { varEmFrac, varChFrac, varMCEmEnergy, varMCHadEnergy, varMCInvEnergy, varMCOtherEnergy, varCor };
-	enum P4Vars    { varP4, varMCP4, varMCparticleP4 };
+	int *varMCId;
+	float *varEmFrac, *varChFrac, *varMCEmEnergy, *varMCHadEnergy, 
+	  *varMCInvEnergy, *varMCOtherEnergy, *varCor;
+	LorentzVector *varP4, *varMCP4, *varMCparticleP4;
 	
 	JetStreamer();
-	void setDefaults();
-	void fill( const reco::Candidate* candidate);
-	void fill( const reco::CaloJet* jet);
-	void fill( const StreamerArguments args);
+	void fill( const reco::Candidate* candidate, bool reset = true);
+	void fill( const reco::CaloJet* jet, bool reset = true);
+	void fill( const StreamerArguments args, bool reset = true);
      };
 }
 

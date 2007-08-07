@@ -8,8 +8,8 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/06/14 05:59:59 $
-// $Revision: 1.9 $
+// $Date: 2007/07/03 22:31:58 $
+// $Revision: 1.10 $
 //
 
 #include "CMS1/Tracks/interface/Tracks.h"
@@ -63,12 +63,12 @@ std::vector<const reco::Track*> cms1::Tracks::getTracks(const TrackType trackTyp
 }
 void cms1::Tracks::registerEventUserData()
 {
-   tracks.registerBlock( *data_, "trks_", "cms1_trks_");
-   data_->intUserData.push_back( new UserData<int>("ntrks", "evt_", "cms1_evt_", false) );
+   tracks.registerBlock( *data_, "trks_", "reference tracks,");
+   data_->intUserData.push_back( new UserData<int>("evt_ntrks", "number of tracks in the reference collection", false) );
    nTracks = data_->intUserData.back();
-   data_->intUserData.push_back( new UserData<int>("run", "evt_", "cms1_evt_", false) );
+   data_->intUserData.push_back( new UserData<int>("evt_run", "run number", false) );
    runNumber = data_->intUserData.back();
-   data_->intUserData.push_back( new UserData<int>("event", "evt_", "cms1_evt_", false) );
+   data_->intUserData.push_back( new UserData<int>("evt_event", "event number", false) );
    eventNumber = data_->intUserData.back();
 }
 

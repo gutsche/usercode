@@ -157,7 +157,40 @@ namespace cms1 {
       }
     return output;
   }
+  
+   std::vector<int> getBlackBoxMap( const std::vector<const reco::Candidate*>& refCollection,
+				    const std::vector<const reco::Candidate*>& testCollection )
+     {
+	std::vector<int> map;
+	for(unsigned int i=0; i<refCollection.size(); ++i)
+	  {
+	     bool found = false;
+	     for(unsigned int j=0; j<testCollection.size(); ++j)
+	       {
+		  if (refCollection[i] == testCollection[j]) {
+		     found = true;
+		     break;
+		  }
+		  const reco::Muon* refMuon = 0;
+		  const reco::Muon* testMuon = 0;
+		  if ( (refMuon = dynamic_cast<const reco::Muon*>(refCollection[i])) &&
+		       (testMuon = dynamic_cast<const reco::Muon*>(testCollection[j])) &&
+		       (refMuon->track() == testMuon->track()) )
+		    {
+		       found = true;
+		       break;
+		    }
+	       }
+	     if (found) 
+	       map.push_back(1);
+	     else 
+	       map.push_back(0);
+	  }
+	return map;
+     }
+   
 }
+   
 
 #endif
 

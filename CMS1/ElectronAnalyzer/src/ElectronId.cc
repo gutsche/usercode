@@ -34,9 +34,9 @@ void cms1::ElectronId::processEvent(const edm::Event& iEvent) {
 }
 
 void cms1::ElectronId::configure(const edm::ParameterSet& iConfig) {
-  elidUserData.registerBlock(theData, "", "cms1_");
-  theData.intUserData.push_back( new UserData<int>("nCand", "elid_", "cms1_elid_", false) );
+  elidUserData.registerBlock(theData, "", "");
+  theData.intUserData.push_back( new UserData<int>("elid_nCand", "???", false) );
   nCandidates = theData.intUserData.back();
-  theData.intUserData.push_back( new UserData<int>("nPythia", "elid_", "cms1_elid_", false) );
+  theData.intUserData.push_back( new UserData<int>("elid_nPythia", "???", false) );
   nPythiaEl = theData.intUserData.back();
 }

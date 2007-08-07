@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: gutsche $
-// $Date: 2007/07/13 21:14:26 $
-// $Revision: 1.27 $
+// $Author: dmytro $
+// $Date: 2007/07/27 06:59:57 $
+// $Revision: 1.28 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -417,50 +417,50 @@ int cms1::Electrons::classify(const reco::PixelMatchGsfElectron* electron) {
 
 void cms1::Electrons::registerEventUserData() {
   
-  evtElectrons.registerBlock( *data_, "els_", "cms1_els_");
-  data_->intUserData.push_back( new UserData<int>("nels", "evt_", "cms1_evt_", false) );
+  evtElectrons.registerBlock( *data_, "els_", "reference electrons,");
+  data_->intUserData.push_back( new UserData<int>("evt_nels", "number of electrons in the reference collection", false) );
   nElectrons = data_->intUserData.back();
   
-  data_->intUserData1D.push_back( new UserDataInt1D("nSeed", "elid_", "cms1_elid_", false) );
+  data_->intUserData1D.push_back( new UserDataInt1D("elid_nSeed", "???", false) );
   nSeed = data_->intUserData1D.back(); 
-  data_->intUserData1D.push_back( new UserDataInt1D("class", "elid_", "cms1_elid_", false) );
+  data_->intUserData1D.push_back( new UserDataInt1D("elid_class", "???", false) );
   cms_class = data_->intUserData1D.back(); 
-  data_->intUserData1D.push_back( new UserDataInt1D("looseId", "elid_", "cms1_elid_", false));
+  data_->intUserData1D.push_back( new UserDataInt1D("elid_looseId", "???", false));
   looseId = data_->intUserData1D.back();
-  data_->intUserData1D.push_back( new UserDataInt1D("tightId", "elid_", "cms1_elid_", false));
+  data_->intUserData1D.push_back( new UserDataInt1D("elid_tightId", "???", false));
   tightId = data_->intUserData1D.back();
    
-  data_->floatUserData1D.push_back( new UserDataFloat1D("hOverE", "elid_", "cms1_elid_", false) );
+  data_->floatUserData1D.push_back( new UserDataFloat1D("elid_hOverE", "???", false) );
   hOverE = data_->floatUserData1D.back(); 
-  data_->floatUserData1D.push_back( new UserDataFloat1D("eOverPIn", "elid_", "cms1_elid_", false) );
+  data_->floatUserData1D.push_back( new UserDataFloat1D("elid_eOverPIn", "???", false) );
   eOverPIn = data_->floatUserData1D.back();
-  data_->floatUserData1D.push_back( new UserDataFloat1D("eSeedOverPOut", "elid_", "cms1_elid_", false) );
+  data_->floatUserData1D.push_back( new UserDataFloat1D("elid_eSeedOverPOut", "???", false) );
   eOverPOut = data_->floatUserData1D.back();
-  data_->floatUserData1D.push_back( new UserDataFloat1D("fBrem", "elid_", "cms1_elid_", false) );
+  data_->floatUserData1D.push_back( new UserDataFloat1D("elid_fBrem", "???", false) );
   fBrem = data_->floatUserData1D.back(); 
-  data_->floatUserData1D.push_back(new UserDataFloat1D("dEtaIn", "elid_", "cms1_elid_", false));
+  data_->floatUserData1D.push_back(new UserDataFloat1D("elid_dEtaIn", "???", false));
   dEtaIn = data_->floatUserData1D.back();
-  data_->floatUserData1D.push_back(new UserDataFloat1D("dEtaOut", "elid_", "cms1_elid_", false) );
+  data_->floatUserData1D.push_back(new UserDataFloat1D("elid_dEtaOut", "???", false) );
   dEtaOut = data_->floatUserData1D.back();
-  data_->floatUserData1D.push_back(new UserDataFloat1D("dPhiIn", "elid_", "cms1_elid_", false) );
+  data_->floatUserData1D.push_back(new UserDataFloat1D("elid_dPhiIn", "???", false) );
   dPhiIn = data_->floatUserData1D.back();
-  data_->floatUserData1D.push_back(new UserDataFloat1D("dPhiOut", "elid_", "cms1_elid_", false) );
+  data_->floatUserData1D.push_back(new UserDataFloat1D("elid_dPhiOut", "???", false) );
   dPhiOut = data_->floatUserData1D.back();
-  data_->floatUserData1D.push_back(new UserDataFloat1D("ESc", "elid_", "cms1_elid_", false));
+  data_->floatUserData1D.push_back(new UserDataFloat1D("elid_ESc", "???", false));
   varEsc = data_->floatUserData1D.back(); 
-  data_->floatUserData1D.push_back(new UserDataFloat1D("ESc_raw", "elid_", "cms1_elid_", false));
+  data_->floatUserData1D.push_back(new UserDataFloat1D("elid_ESc_raw", "???", false));
   varRawEsc = data_->floatUserData1D.back(); 
-  data_->floatUserData1D.push_back(new UserDataFloat1D("e3x3", "elid_", "cms1_elid_", false));
+  data_->floatUserData1D.push_back(new UserDataFloat1D("elid_e3x3", "???", false));
   vare3x3 = data_->floatUserData1D.back();
-  data_->floatUserData1D.push_back(new UserDataFloat1D("e5x5", "elid_", "cms1_elid_", false));
+  data_->floatUserData1D.push_back(new UserDataFloat1D("elid_e5x5", "???", false));
   vare5x5 = data_->floatUserData1D.back(); 
-  data_->floatUserData1D.push_back(new UserDataFloat1D("ESeed", "elid_", "cms1_elid_", false));
+  data_->floatUserData1D.push_back(new UserDataFloat1D("elid_ESeed", "???", false));
   eSeed = data_->floatUserData1D.back();  
-  data_->floatUserData1D.push_back(new UserDataFloat1D("sigmaPhiPhi", "elid_", "cms1_elid_", false));
+  data_->floatUserData1D.push_back(new UserDataFloat1D("elid_sigmaPhiPhi", "???", false));
   sPhiPhi = data_->floatUserData1D.back();  
-  data_->floatUserData1D.push_back(new UserDataFloat1D("sigmaEtaEta", "elid_", "cms1_elid_", false));
+  data_->floatUserData1D.push_back(new UserDataFloat1D("elid_sigmaEtaEta", "???", false));
   sEtaEta = data_->floatUserData1D.back(); 
-  data_->floatUserData1D.push_back(new UserDataFloat1D("tkIso", "elid_", "cms1_elid_", false));
+  data_->floatUserData1D.push_back(new UserDataFloat1D("elid_tkIso", "???", false));
   tkIso = data_->floatUserData1D.back(); 
 }
 

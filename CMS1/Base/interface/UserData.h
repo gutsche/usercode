@@ -14,8 +14,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/05/11 04:08:51 $
-// $Revision: 1.1 $
+// $Date: 2007/05/22 07:12:39 $
+// $Revision: 1.2 $
 //
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include <string>
@@ -27,18 +27,15 @@ namespace cms1 {
    template <class T> class UserData
      {
       public:
-	// If alias prefix is not set, no alias is created
 	UserData(const std::string& name, 
-		 const std::string& name_prefix, 
-		 const std::string& alias_prefix, 
+		 const std::string& title,
 		 bool candidate = false)
 	  {
 	     isCandidate_ = candidate;
-	     theName = name_prefix+name;
+	     theName = name;
 	     thePtrToData = &theData;
 	     thePtrToDataVector = &theDataVector;
-	     theAlias = alias_prefix;
-	     if (theAlias.length()>0) theAlias += name;
+	     theTitle = title;
 	  }
 	
 	T*                   get()                      { return thePtrToData; }     // get access to data
@@ -46,7 +43,7 @@ namespace cms1 {
 	std::vector<T>*      getVector()                { return thePtrToDataVector; }     // get access to data
 	std::vector<T>**     getVectorAddress()         { return &thePtrToDataVector; }     // ROOT needs something like that
 	const std::string&   name()                     { return theName; }
-	const std::string&   alias()                    { return theAlias; }
+	const std::string&   title()                    { return theTitle; }
 	bool                 isCandidate()              { return isCandidate_; }
 	void                 addData( const T& data )   { theData = data; theDataVector.push_back( data ); } 
 	void                 clearData()                { theData = T(); theDataVector.clear(); }
@@ -59,7 +56,7 @@ namespace cms1 {
 	std::vector<T> theDataVector;
 	std::vector<T>* thePtrToDataVector;
 	std::string theName;
-	std::string theAlias;
+	std::string theTitle;
 	bool isCandidate_;
      };
    

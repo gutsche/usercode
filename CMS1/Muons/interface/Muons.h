@@ -11,8 +11,8 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/05/24 17:41:00 $
-// $Revision: 1.9 $
+// $Date: 2007/08/04 22:13:06 $
+// $Revision: 1.10 $
 //
 #include <iostream>
 
@@ -22,7 +22,7 @@
 #include "CMS1/Base/interface/Cuts.h"
 #include "CMS1/Base/interface/BlackBox.h"
 #include "CMS1/Base/interface/UserDataBlocks.h"
-#include "CMS1/Base/interface/TrackStreamer.h"
+#include "CMS1/Base/interface/MuonStreamer.h"
 
 namespace cms1 {
    class Muons: public BlackBox {
@@ -31,7 +31,7 @@ namespace cms1 {
       
       // These are "types of muons" that we define.  We can add as amany as we want as
       // people invent new muon requirements
-      enum MuonType { AllTracks, AllGlobalMuons, TightGlobalMuons, LooseGlobalMuons, AllMuonWithDetectorInfos };
+      enum MuonType { AllGlobalMuons, TightGlobalMuons, LooseGlobalMuons, AllTrackerMuons, LooseTrackerMuons, RefMuons };
      
       // This is the function that does all the work
       std::vector<const reco::Candidate*> getMuons (const MuonType, 
@@ -46,8 +46,9 @@ namespace cms1 {
       void registerEventUserData();
       void fillEventUserData();
     private:
-      VectorUserBlock<TrackStreamer> evtMuons;
+      VectorUserBlock<MuonStreamer> evtMuons;
       UserDataInt*        nMuons;
+      UserDataInt1D*      map_LooseTrackerMuons;
   };
 }
 

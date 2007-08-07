@@ -9,8 +9,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/07/27 06:59:59 $
-// $Revision: 1.32 $
+// $Date: 2007/08/04 22:13:07 $
+// $Revision: 1.33 $
 //
 
 #include <vector>
@@ -253,8 +253,8 @@ void cms1::TableMaker::FillHistograms(std::vector<const reco::Candidate*> jets,c
 void cms1::TableMaker::configure(const edm::ParameterSet& iConfig)
 {
   if (makeNtuples) {
-    diLeptonUserData.registerBlock(theData, "", "cms1_");
-    theData.intUserData.push_back( new UserData<int>("nCand", "evt_", "cms1_evt_", false) );
+    diLeptonUserData.registerBlock(theData, "hyp_", "hypothesis");
+    theData.intUserData.push_back( new UserData<int>("evt_nCand", "number of dilepton hypotheses in the event", false) );
     nCandidates = theData.intUserData.back();
   }
   // tight muon cuts

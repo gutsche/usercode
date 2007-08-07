@@ -16,48 +16,48 @@ cms1::DiLeptonUserBlock::DiLeptonUserBlock(): met(0),type(0)
    jets.setCandidateFlag( true );
 }
 
-void cms1::DiLeptonUserBlock::registerBlock(EventData& event, const std::string& name_prefix, const std::string& alias_prefix)
+void cms1::DiLeptonUserBlock::registerBlock(EventData& event, const std::string& name_prefix, const std::string& title_prefix)
 {
-   lTight.registerBlock(    event, name_prefix+"hyp_lt_", alias_prefix );
-   lLoose.registerBlock(    event, name_prefix+"hyp_ll_", alias_prefix );
-   jets.registerBlock(      event, name_prefix+"hyp_jets_", alias_prefix );
-   otherJets.registerBlock( event, name_prefix+"hyp_other_jets_", alias_prefix );
+   lTight.registerBlock(    event, name_prefix + "lt_",         title_prefix + " tight lepton," );
+   lLoose.registerBlock(    event, name_prefix + "ll_",         title_prefix + " loose lepton," );
+   jets.registerBlock(      event, name_prefix + "jets_",       title_prefix + " accepted jets," );
+   otherJets.registerBlock( event, name_prefix + "other_jets_", title_prefix + " other jets," );
    
-   addEntry(event.p4UserData,    p4Hyp,           "hyp_p4",             name_prefix, alias_prefix);
-   addEntry(event.floatUserData, met,             "hyp_met",            name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metPhi,          "hyp_metPhi",         name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metCone,         "hyp_metCone",        name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metPhiCone,      "hyp_metPhiCone",     name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metNoCalo,       "hyp_metNoCalo",      name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metPhiNoCalo,    "hyp_metPhiNoCalo",   name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metJes5,         "hyp_metJes5",        name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metPhiJes5,      "hyp_metPhiJes5",     name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metJes10,        "hyp_metJes10",       name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metPhiJes10,     "hyp_metPhiJes10",    name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metJes15,        "hyp_metJes15",       name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metPhiJes15,     "hyp_metPhiJes15",    name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metJes30,        "hyp_metJes30",       name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metPhiJes30,     "hyp_metPhiJes30",    name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metJes50,        "hyp_metJes50",       name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metPhiJes50,     "hyp_metPhiJes50",    name_prefix, alias_prefix);
-   // addEntry(event.floatUserData, metMuonCorr,     "hyp_metMuonCorr",    name_prefix, alias_prefix);
-   // addEntry(event.floatUserData, metPhiMuonCorr,  "hyp_metPhiMuonCorr", name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metDPhiJet10,    "hyp_metDPhiJet10",   name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metDPhiJet15,    "hyp_metDPhiJet15",   name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metDPhiJet20,    "hyp_metDPhiJet20",   name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metDPhiTrk10,    "hyp_metDPhiTrk10",   name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metDPhiTrk25,    "hyp_metDPhiTrk25",   name_prefix, alias_prefix);
-   addEntry(event.floatUserData, metDPhiTrk50,    "hyp_metDPhiTrk50",   name_prefix, alias_prefix);
-   addEntry(event.floatUserData, ltIso,           "hyp_lt_iso",         name_prefix, alias_prefix);
-   addEntry(event.floatUserData, llIso,           "hyp_ll_iso",         name_prefix, alias_prefix);
+   addEntry(event.p4UserData,    p4Hyp,           name_prefix + "p4",             title_prefix + " p4");
+   addEntry(event.floatUserData, met,             name_prefix + "met",            title_prefix + " MET with full muon correction");
+   addEntry(event.floatUserData, metPhi,          name_prefix + "metPhi",         title_prefix + " phi of the MET with full muon correction");
+   addEntry(event.floatUserData, metCone,         name_prefix + "metCone",        title_prefix + " MET with calo correction in a large area");
+   addEntry(event.floatUserData, metPhiCone,      name_prefix + "metPhiCone",     title_prefix + " MET phi with calo correction in a large area");
+   addEntry(event.floatUserData, metNoCalo,       name_prefix + "metNoCalo",      title_prefix + " MET corrected only for muon momentum");
+   addEntry(event.floatUserData, metPhiNoCalo,    name_prefix + "metPhiNoCalo",   title_prefix + " phi of MET corrected only for muon momentum");
+   addEntry(event.floatUserData, metJes5,         name_prefix + "metJes5",        title_prefix + " MET, muon + jet energy scale correction (jet pt>5)");
+   addEntry(event.floatUserData, metPhiJes5,      name_prefix + "metPhiJes5",     title_prefix + " MET phi, muon + jet energy scale correction (jet pt>5)");
+   addEntry(event.floatUserData, metJes10,        name_prefix + "metJes10",       title_prefix + " MET, muon + jet energy scale correction (jet pt>10)");
+   addEntry(event.floatUserData, metPhiJes10,     name_prefix + "metPhiJes10",    title_prefix + " MET phi, muon + jet energy scale correction (jet pt>10)");
+   addEntry(event.floatUserData, metJes15,        name_prefix + "metJes15",       title_prefix + " MET, muon + jet energy scale correction (jet pt>15)");
+   addEntry(event.floatUserData, metPhiJes15,     name_prefix + "metPhiJes15",    title_prefix + " MET phi, muon + jet energy scale correction (jet pt>15)");
+   addEntry(event.floatUserData, metJes30,        name_prefix + "metJes30",       title_prefix + " MET, muon + jet energy scale correction (jet pt>30)");
+   addEntry(event.floatUserData, metPhiJes30,     name_prefix + "metPhiJes30",    title_prefix + " MET phi, muon + jet energy scale correction (jet pt>30)");
+   addEntry(event.floatUserData, metJes50,        name_prefix + "metJes50",       title_prefix + " MET, muon + jet energy scale correction (jet pt>50)");
+   addEntry(event.floatUserData, metPhiJes50,     name_prefix + "metPhiJes50",    title_prefix + " MET phi, muon + jet energy scale correction (jet pt>50)");
+   // addEntry(event.floatUserData, metMuonCorr,     name_prefix + "metMuonCorr",    title_prefix + " ");
+   // addEntry(event.floatUserData, metPhiMuonCorr,  name_prefix + "metPhiMuonCorr", title_prefix + " ");
+   addEntry(event.floatUserData, metDPhiJet10,    name_prefix + "metDPhiJet10",   title_prefix + " MET dPhi wrt closest jet with pt>10 (muon corrected)");
+   addEntry(event.floatUserData, metDPhiJet15,    name_prefix + "metDPhiJet15",   title_prefix + " MET dPhi wrt closest jet with pt>15 (muon corrected)");
+   addEntry(event.floatUserData, metDPhiJet20,    name_prefix + "metDPhiJet20",   title_prefix + " MET dPhi wrt closest jet with pt>20 (muon corrected)");
+   addEntry(event.floatUserData, metDPhiTrk10,    name_prefix + "metDPhiTrk10",   title_prefix + " MET dPhi wrt closest track with pt>10 (muon corrected)");
+   addEntry(event.floatUserData, metDPhiTrk25,    name_prefix + "metDPhiTrk25",   title_prefix + " MET dPhi wrt closest track with pt>25 (muon corrected)");
+   addEntry(event.floatUserData, metDPhiTrk50,    name_prefix + "metDPhiTrk50",   title_prefix + " MET dPhi wrt closest track with pt>50 (muon corrected)");
+   addEntry(event.floatUserData, ltIso,           name_prefix + "lt_iso",         title_prefix + " tight lepton track isolation (sumPt)");
+   addEntry(event.floatUserData, llIso,           name_prefix + "ll_iso",         title_prefix + " loose lepton track isolation (sumPt)");
    
-   addEntry(event.intUserData,   type,            "hyp_type",       name_prefix, alias_prefix);
-   addEntry(event.intUserData,   nJets,           "hyp_njets",      name_prefix, alias_prefix);
-   addEntry(event.intUserData,   nOtherJets,      "hyp_nojets",     name_prefix, alias_prefix);
-   addEntry(event.intUserData,   ltIndex,         "hyp_lt_index",   name_prefix, alias_prefix);
-   addEntry(event.intUserData,   llIndex,         "hyp_ll_index",   name_prefix, alias_prefix);
-   addEntry(event.intUserData,   ltId,            "hyp_lt_id",      name_prefix, alias_prefix);  // PDG id
-   addEntry(event.intUserData,   llId,            "hyp_ll_id",      name_prefix, alias_prefix);  // PDG id
+   addEntry(event.intUserData,   type,            name_prefix + "type",       title_prefix + " dilepton type");
+   addEntry(event.intUserData,   nJets,           name_prefix + "njets",      title_prefix + " number of accepted jets");
+   addEntry(event.intUserData,   nOtherJets,      name_prefix + "nojets",     title_prefix + " number of other jets in the event");
+   addEntry(event.intUserData,   ltIndex,         name_prefix + "lt_index",   title_prefix + " tight lepton index in the reference collection");
+   addEntry(event.intUserData,   llIndex,         name_prefix + "ll_index",   title_prefix + " loose lepton index in the reference collection");
+   addEntry(event.intUserData,   ltId,            name_prefix + "lt_id",      title_prefix + " tight lepton PDG id");
+   addEntry(event.intUserData,   llId,            name_prefix + "ll_id",      title_prefix + " loose lepton PDG id");
 }
 
 void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& candidate)

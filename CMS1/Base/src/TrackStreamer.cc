@@ -3,85 +3,61 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/07/06 07:56:11 $
-// $Revision: 1.6 $
+// $Date: 2007/07/06 19:22:54 $
+// $Revision: 1.7 $
 //
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
 #include "CMS1/Base/interface/TrackStreamer.h"
 cms1::TrackStreamer::TrackStreamer() 
 {
-   // ORDER IS CRITICAL !
-   p4Names_.push_back("p4");            p4s_.push_back( LorentzVector(0,0,0,0) );
-   p4Names_.push_back("trk_p4");        p4s_.push_back( LorentzVector(0,0,0,0) );
-   floatNames_.push_back("d0");         floats_.push_back(0);
-   floatNames_.push_back("z0");         floats_.push_back(0);
-   floatNames_.push_back("vertexphi");  floats_.push_back(0);
-   floatNames_.push_back("chi2");       floats_.push_back(0);
-   floatNames_.push_back("ndof");       floats_.push_back(0);
-   intNames_.push_back("validHits");    ints_.push_back(0);
-   intNames_.push_back("lostHits");     ints_.push_back(0);
-   floatNames_.push_back("d0Err");      floats_.push_back(0);
-   floatNames_.push_back("z0Err");      floats_.push_back(0);
-   floatNames_.push_back("ptErr");      floats_.push_back(0);
-   floatNames_.push_back("etaErr");      floats_.push_back(0);
-   floatNames_.push_back("phiErr");      floats_.push_back(0);
+   varP4        = addP4("p4",           " candidate p4", LorentzVector(0,0,0,0) );
+   varTrkP4     = addP4("trk_p4",       " track p4", LorentzVector(0,0,0,0) );
+   varD0        = addFloat("d0",        " impact parameter at the point of closest approach", -999);
+   varZ0        = addFloat("z0",        " z position of the point of closest approach", -999);
+   varVertexPhi = addFloat("vertexphi", " phi angle of the point of closest approach", -999);
+   varChi2      = addFloat("chi2",      " chi2 of the silicon tracker fit", -999);
+   varNdof      = addFloat("ndof",      " number of degrees of freedom of the fit", -999);
+   varValidHits = addInt("validHits",   " number of used hits in the fit", -999);
+   varlostHits  = addInt("lostHits",    " number of lost hits in the fit", -999);
+   varD0Err     = addFloat("d0Err",     " error on the impact parameter", -999);
+   varZ0Err     = addFloat("z0Err",     " error on z position of the point of closest approach", -999);
+   varPtErr     = addFloat("ptErr",     " track Pt error", -999);
+   varEtaErr    = addFloat("etaErr",    " track eta error", -999);
+   varPhiErr    = addFloat("phiErr",    " track phi error", -999);
    // truth matching
-   p4Names_.push_back("mc_p4");         p4s_.push_back( LorentzVector(0,0,0,0) );
-   intNames_.push_back("mc_id");        ints_.push_back(0);
+   varMCP4      = addP4("mc_p4", " p4 of matched MC particle", LorentzVector(0,0,0,0) );
+   varPdgId     = addInt("mc_id", " PDG id of matched MC particle", 0 );
    
    mass_ = 0;
 }
 
-void cms1::TrackStreamer::setDefaults()
+void cms1::TrackStreamer::fill( const reco::Candidate* candidate, bool reset )
 {
-   p4s_[varP4]    = LorentzVector(0,0,0,0);
-   p4s_[varTrkP4] = LorentzVector(0,0,0,0);
-   p4s_[varMCP4]  = LorentzVector(0,0,0,0);
-   floats_[varD0] = -999. ;
-   floats_[varZ0] = -999. ;
-   floats_[varVertexPhi] = -999. ;
-   floats_[varChi2] = -999. ;
-   ints_[varValidHits] = -999 ;
-   ints_[varlostHits] = -999 ;
-   ints_[varPdgId] = 0 ; 
-   floats_[varD0Err] = -999. ;
-   floats_[varZ0Err] = -999. ;
-   floats_[varPtErr] = -999. ;
-   floats_[varEtaErr] = -999. ;
-   floats_[varPhiErr] = -999. ;
-}
-
-void cms1::TrackStreamer::fill( const reco::Candidate* candidate ) 
-{
-   if (! candidate) {
-      setDefaults();
-      return;
-   }
-   if ( const reco::Muon* muon = dynamic_cast<const reco::Muon*>(candidate) ) fill(muon->track().get());
+   if ( reset ) setDefaults();
+   if (! candidate) return;
+   if ( const reco::Muon* muon = dynamic_cast<const reco::Muon*>(candidate) ) fill(muon->track().get(),false);
    if ( const reco::PixelMatchGsfElectron* elec = dynamic_cast<const reco::PixelMatchGsfElectron*>(candidate) ) 
-     fill( (const reco::Track*)elec->gsfTrack().get() );
-   p4s_[varP4] = candidate->p4();
+     fill( (const reco::Track*)elec->gsfTrack().get(), false );
+   *varP4 = candidate->p4();
 }
 
-void cms1::TrackStreamer::fill( const reco::Track* track ) 
+void cms1::TrackStreamer::fill( const reco::Track* track, bool reset ) 
 {
-   if ( ! track ) {
-      setDefaults();
-      return;
-   }
-   p4s_[varTrkP4] = LorentzVector( track->px(), track->py(), track->pz(), sqrt(track->p()*track->p()+mass_*mass_) );
-   floats_[varD0] = track->d0() ;
-   floats_[varZ0] = track->dz() ;
-   floats_[varVertexPhi] = atan2(track->vy(), track->vx());
-   floats_[varD0Err] = track->d0Error() ;
-   floats_[varZ0Err] = track->dzError() ;
-   floats_[varChi2] = track->chi2() ;
-   floats_[varNdof] = track->ndof();
-   ints_[varValidHits] = track->numberOfValidHits() ;
-   ints_[varlostHits] = track->numberOfLostHits() ;
-   floats_[varEtaErr] = track->etaError() ;
-   floats_[varPhiErr] = track->phiError() ;
+   if ( reset ) setDefaults();
+   if ( ! track ) return;
+   *varTrkP4 = LorentzVector( track->px(), track->py(), track->pz(), sqrt(track->p()*track->p()+mass_*mass_) );
+   *varD0 = track->d0() ;
+   *varZ0 = track->dz() ;
+   *varVertexPhi = atan2(track->vy(), track->vx());
+   *varD0Err = track->d0Error() ;
+   *varZ0Err = track->dzError() ;
+   *varChi2 = track->chi2() ;
+   *varNdof = track->ndof();
+   *varValidHits = track->numberOfValidHits() ;
+   *varlostHits = track->numberOfLostHits() ;
+   *varEtaErr = track->etaError() ;
+   *varPhiErr = track->phiError() ;
 
    float pt = track->pt();
    float p = track->p();
@@ -91,21 +67,19 @@ void cms1::TrackStreamer::fill( const reco::Track* track )
 					   +2*pt*p/q*pz*(track->covariance(0,1))
 					   + pz*pz*(track->covariance(1,1) ) )
                                            : -999.;
-   floats_[varPtErr]=err;
+   *varPtErr = err;
 }
 
-void cms1::TrackStreamer::fill( const StreamerArguments& args )
+void cms1::TrackStreamer::fill( const StreamerArguments& args, bool reset )
 {
-   // it's not expected that fill with this type can be used by any other fill methods
-   setDefaults();
-   
+   if ( reset ) setDefaults();
    // fill MC
    if ( args.genParticle ) {
       HepLorentzVector p = args.genParticle->momentum();
-      p4s_[varMCP4] = LorentzVector(p.px(),p.py(),p.pz(),p.e());
-      ints_[varPdgId] = args.genParticle->pdg_id();
+      *varMCP4 = LorentzVector(p.px(),p.py(),p.pz(),p.e());
+      *varPdgId = args.genParticle->pdg_id();
    }
-   if ( args.track ) fill(args.track);
-   if ( args.candidate ) fill(args.candidate);
+   if ( args.track ) fill( args.track, false );
+   if ( args.candidate ) fill( args.candidate, false );
 }
 

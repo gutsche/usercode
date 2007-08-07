@@ -2,79 +2,59 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: kalavase $
-// $Date: 2007/06/05 01:07:18 $
-// $Revision: 1.3 $
+// $Author: dmytro $
+// $Date: 2007/07/06 19:22:54 $
+// $Revision: 1.4 $
 //
 #include "CMS1/Base/interface/JetStreamer.h"
 cms1::JetStreamer::JetStreamer() 
 {
-   p4Names_.push_back("p4");                 p4s_.push_back( LorentzVector(0,0,0,0) );
-   p4Names_.push_back("mc_p4");              p4s_.push_back( LorentzVector(0,0,0,0) );
-   p4Names_.push_back("mc_gp_p4");           p4s_.push_back( LorentzVector(0,0,0,0) );
-   floatNames_.push_back("emFrac");          floats_.push_back(0);
-   floatNames_.push_back("chFrac");          floats_.push_back(0);
-   floatNames_.push_back("mc_emEnergy");     floats_.push_back(0);
-   floatNames_.push_back("mc_hadEnergy");    floats_.push_back(0);
-   floatNames_.push_back("mc_invEnergy");    floats_.push_back(0);
-   floatNames_.push_back("mc_otherEnergy");  floats_.push_back(0);
-   floatNames_.push_back("cor");             floats_.push_back(0);
-   intNames_.push_back("mc_id");             ints_.push_back(0);
+   varP4            = addP4( "p4", "", LorentzVector(0,0,0,0) );
+   varMCP4          = addP4( "mc_p4", " p4 of the matched GenJet", LorentzVector(0,0,0,0) );
+   varMCparticleP4  = addP4( "mc_gp_p4", " p4 of the matched MC particle", LorentzVector(0,0,0,0) );
+   varEmFrac        = addFloat("emFrac", " electromagnetic energy fraction", -999);
+   varChFrac        = addFloat("chFrac", " charged track energy fraction", -999);
+   varMCEmEnergy    = addFloat("mc_emEnergy",    " energy of electromagnetic particles of the matched GenJet", -999);
+   varMCHadEnergy   = addFloat("mc_hadEnergy",   " energy of hadronic particles of the matched GenJet", -999);
+   varMCInvEnergy   = addFloat("mc_invEnergy",   " invisible energy of the matched GenJet", -999);
+   varMCOtherEnergy = addFloat("mc_otherEnergy", " other energy (undecayed Sigmas etc.) of the matched GenJet", -999);
+   varCor           = addFloat("cor", " energy scale correction", -999);
+   varMCId          = addInt("mc_id", " PDG id of the matched MC particle", 0);
 }
 
-void cms1::JetStreamer::setDefaults()
+void cms1::JetStreamer::fill( const reco::Candidate* candidate, bool reset )
 {
-   p4s_[varP4] = LorentzVector(0,0,0,0);
-   p4s_[varMCP4] = LorentzVector(0,0,0,0);
-   p4s_[varMCparticleP4] = LorentzVector(0,0,0,0);
-   floats_[varEmFrac] = -999. ;
-   floats_[varChFrac] = -999. ;
-   floats_[varMCEmEnergy] = -999. ;
-   floats_[varMCHadEnergy] = -999. ;
-   floats_[varMCInvEnergy] = -999. ;
-   floats_[varMCOtherEnergy] = -999. ;
-   floats_[varCor] = -999. ;
-   ints_[varMCId] = -999;
+   if ( reset ) setDefaults();
+   if (! candidate) return;
+   if ( const reco::CaloJet* jet = dynamic_cast<const reco::CaloJet*>(candidate) ) fill(jet,false);
+   *varP4 = candidate->p4();
 }
 
-void cms1::JetStreamer::fill( const reco::Candidate* candidate ) 
+void cms1::JetStreamer::fill( const reco::CaloJet* jet, bool reset )
 {
-   if (! candidate) {
-      setDefaults();
-      return;
-   }
-   if ( const reco::CaloJet* jet = dynamic_cast<const reco::CaloJet*>(candidate) ) fill(jet);
-   p4s_[varP4] = candidate->p4();
+   if ( reset ) setDefaults();
+   if ( ! jet ) return;
+   *varP4 = jet->p4();
+   *varEmFrac = jet->emEnergyFraction() ;
+   *varChFrac = -999.;
 }
 
-void cms1::JetStreamer::fill( const reco::CaloJet* jet )
+void cms1::JetStreamer::fill( const StreamerArguments args, bool reset )
 {
-   if ( ! jet ){
-      setDefaults();
-      return;
-   }
-   p4s_[varP4] = jet->p4();
-   floats_[varEmFrac] = jet->emEnergyFraction() ;
-   floats_[varChFrac] = -999.;
-}
-
-void cms1::JetStreamer::fill( const StreamerArguments args )
-{
-   setDefaults();
-   
+   if ( reset ) setDefaults();
    // fill MC
    if ( args.genJet ) {
-      p4s_[varMCP4] = args.genJet->p4();
-      floats_[varMCEmEnergy] = args.genJet->emEnergy();
-      floats_[varMCHadEnergy] = args.genJet->hadEnergy();
-      floats_[varMCInvEnergy] = args.genJet->invisibleEnergy();
-      floats_[varMCOtherEnergy] = args.genJet->auxiliaryEnergy();
+      *varMCP4 = args.genJet->p4();
+      *varMCEmEnergy = args.genJet->emEnergy();
+      *varMCHadEnergy = args.genJet->hadEnergy();
+      *varMCInvEnergy = args.genJet->invisibleEnergy();
+      *varMCOtherEnergy = args.genJet->auxiliaryEnergy();
    }
    if ( args.genParticle ) {
-      ints_[varMCId] = args.genParticle->pdg_id();
+      *varMCId = args.genParticle->pdg_id();
       HepLorentzVector p = args.genParticle->momentum();
-      p4s_[varMCparticleP4] = LorentzVector(p.px(),p.py(),p.pz(),p.e());
+      *varMCparticleP4 = LorentzVector(p.px(),p.py(),p.pz(),p.e());
    }
-   floats_[varCor]=args.jetcorrection;
-   if ( args.candidate ) fill(args.candidate);
+   *varCor=args.jetcorrection;
+   if ( args.candidate ) fill(args.candidate, false);
 }
