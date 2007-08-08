@@ -6,6 +6,7 @@
 ./prepareWorkflow.py --events 10000 --speed-category Slow --parameter-set DevelopmentSampleTTBar_LowLumiPileup.cfg
 ./prepareWorkflow.py --events 10000 --speed-category Slow --parameter-set DevelopmentSampleMinBias.cfg
 ./prepareWorkflow.py --events 10000 --speed-category Slow --parameter-set DevelopmentSampleZMuMu.cfg
+./prepareWorkflow.py --events 10000 --speed-category Slow --parameter-set DevelopmentSampleZMuMu_LowLumiPileup.cfg
 ./prepareWorkflow.py --events 25000 --speed-category Fast --parameter-set DevelopmentSampleSingleEPt100Minus.cfg
 ./prepareWorkflow.py --events 25000 --speed-category Fast --parameter-set DevelopmentSampleSingleEPt100Plus.cfg
 ./prepareWorkflow.py --events 25000 --speed-category Fast --parameter-set DevelopmentSampleSingleEPt10Minus.cfg
