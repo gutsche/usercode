@@ -3,12 +3,14 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/07/06 19:22:54 $
-// $Revision: 1.7 $
+// $Date: 2007/08/07 11:13:31 $
+// $Revision: 1.8 $
 //
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
 #include "CMS1/Base/interface/TrackStreamer.h"
+#include "SimDataFormats/HepMCProduct/interface/HepMCProduct.h"
+
 cms1::TrackStreamer::TrackStreamer() 
 {
    varP4        = addP4("p4",           " candidate p4", LorentzVector(0,0,0,0) );
@@ -28,6 +30,7 @@ cms1::TrackStreamer::TrackStreamer()
    // truth matching
    varMCP4      = addP4("mc_p4", " p4 of matched MC particle", LorentzVector(0,0,0,0) );
    varPdgId     = addInt("mc_id", " PDG id of matched MC particle", 0 );
+   varMotherId  = addInt("mc_motherid", " PDG id of the mother of the particle", -1);
    
    mass_ = 0;
 }
@@ -72,14 +75,37 @@ void cms1::TrackStreamer::fill( const reco::Track* track, bool reset )
 
 void cms1::TrackStreamer::fill( const StreamerArguments& args, bool reset )
 {
-   if ( reset ) setDefaults();
+   if (reset) 
+     setDefaults();
    // fill MC
    if ( args.genParticle ) {
-      HepLorentzVector p = args.genParticle->momentum();
-      *varMCP4 = LorentzVector(p.px(),p.py(),p.pz(),p.e());
-      *varPdgId = args.genParticle->pdg_id();
+     HepLorentzVector m = args.genParticle->momentum();
+     *varMCP4 = LorentzVector(m.px(), m.py(), m.pz(), m.e());
+     *varPdgId = args.genParticle->pdg_id();
+
+     const HepMC::GenParticle* p = args.genParticle;
+     int motherid = -1;
+
+     while ((p->production_vertex()) && (motherid == -1)) {
+       HepMC::GenVertex* inVertex = p->production_vertex();
+       for(std::set<HepMC::GenParticle*>::const_iterator iter = inVertex->particles_in_const_begin();
+           iter != inVertex->particles_in_const_end(); ++iter) {
+         if ((*iter)->pdg_id() != p->pdg_id()) {
+           motherid = (*iter)->pdg_id();
+           break;
+         } else {
+           p = *iter;
+           break;
+         }
+       }
+     }
+
+     *varMotherId = motherid;
    }
-   if ( args.track ) fill( args.track, false );
-   if ( args.candidate ) fill( args.candidate, false );
+
+   if ( args.track ) 
+     fill( args.track, false );
+   if ( args.candidate ) 
+     fill( args.candidate, false );
 }
 

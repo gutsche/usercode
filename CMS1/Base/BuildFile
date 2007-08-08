@@ -4,7 +4,8 @@
 <use name=DataFormats/TrackReco>
 <use name=DataFormats/MuonReco>
 <use name=DataFormats/EgammaCandidates>
-<use name=clhep>
+<use name=hepmc>
+<use name=SimDataFormats/HepMCProduct>
 <export>
    <lib name=CMS1Base>
    <use name=DataFormats/TrackReco>
@@ -12,5 +13,7 @@
    <use name=clhep>
    <use name=FWCore/ParameterSet>
    <use name=FWCore/Framework>
+   <use name=hepmc>
+   <use name=SimDataFormats/HepMCProduct>
 </export>
 # <Flags CXXFLAGS=-g>
