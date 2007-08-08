@@ -3,7 +3,7 @@
 // Original Author: Matteo Sani
 //
 // $Author: sani $
-// $Date: 2007/08/08 11:13:30 $
+// $Date: 2007/08/08 15:51:09 $
 // $Revision: 1.1 $
 //
 
@@ -18,27 +18,27 @@
 
 cms1::ElectronStreamer::ElectronStreamer() {
 
-  nSeed = addInt("elid_nSeed", " Number of basic clusters in the super cluster  ", -999);
-  cms_class = addInt("elid_class", " CMSSW electron classification", -999);
-  looseId = addInt("elid_looseId", " Loose identification result", -999);
-  tightId = addInt("elid_tightId", " Tight identification result", -999);
+  nSeed = addInt("nSeed", " Number of basic clusters in the super cluster  ", -999);
+  cms_class = addInt("class", " CMSSW electron classification", -999);
+  looseId = addInt("looseId", " Loose identification result", -999);
+  tightId = addInt("tightId", " Tight identification result", -999);
    
-  hOverE = addFloat("elid_hOverE", " Hadronic over Electromagnetic energy", -999);
-  eOverPIn = addFloat("elid_eOverPIn", " Super cluster energy over momentum at vertex", -999);
-  eOverPOut = addFloat("elid_eSeedOverPOut", " Super cluster seed energy over momentum at calo", -999);
-  fBrem = addFloat("elid_fBrem", " Fraction of brem energy according to tracker", -999); 
-  dEtaIn = addFloat("elid_dEtaIn", " Delta Eta between SC and momentum at vertex", -999);
-  dEtaOut = addFloat("elid_dEtaOut", " Delta Eta between SC and momentum at calo", -999);
-  dPhiIn = addFloat("elid_dPhiIn", " Delta Phi between SC and momentum at vertex", -999);
-  dPhiOut = addFloat("elid_dPhiOut", " Delta Phi between SC and momentum at calo", -999);
-  varEsc = addFloat("elid_ESc", " Super cluster corrected energy", -999);
-  varRawEsc = addFloat("elid_ESc_raw", " Super cluster raw energy", -999);
-  vare3x3 = addFloat("elid_e3x3", " Super cluster energy in a 3x3 crystal matrix", -999);
-  vare5x5 = addFloat("elid_e5x5", " Super cluster energy in a 5x5 crystal matrix", -999);
-  eSeed = addFloat("elid_ESeed", " Energy of the super cluster seed", -999);
-  sPhiPhi = addFloat("elid_sigmaPhiPhi", " Sigma Eta of the super cluster energy distribution", -999);
-  sEtaEta = addFloat("elid_sigmaEtaEta", " Sigma Phi of the super cluster energy distribution", -999);
-  tkIso = addFloat("elid_tkIso", " Tracker electron isolation", -999);
+  hOverE = addFloat("hOverE", " Hadronic over Electromagnetic energy", -999);
+  eOverPIn = addFloat("eOverPIn", " Super cluster energy over momentum at vertex", -999);
+  eOverPOut = addFloat("eSeedOverPOut", " Super cluster seed energy over momentum at calo", -999);
+  fBrem = addFloat("fBrem", " Fraction of brem energy according to tracker", -999); 
+  dEtaIn = addFloat("dEtaIn", " Delta Eta between SC and momentum at vertex", -999);
+  dEtaOut = addFloat("dEtaOut", " Delta Eta between SC and momentum at calo", -999);
+  dPhiIn = addFloat("dPhiIn", " Delta Phi between SC and momentum at vertex", -999);
+  dPhiOut = addFloat("dPhiOut", " Delta Phi between SC and momentum at calo", -999);
+  varEsc = addFloat("ESc", " Super cluster corrected energy", -999);
+  varRawEsc = addFloat("ESc_raw", " Super cluster raw energy", -999);
+  vare3x3 = addFloat("e3x3", " Super cluster energy in a 3x3 crystal matrix", -999);
+  vare5x5 = addFloat("e5x5", " Super cluster energy in a 5x5 crystal matrix", -999);
+  eSeed = addFloat("ESeed", " Energy of the super cluster seed", -999);
+  sPhiPhi = addFloat("sigmaPhiPhi", " Sigma Eta of the super cluster energy distribution", -999);
+  sEtaEta = addFloat("sigmaEtaEta", " Sigma Phi of the super cluster energy distribution", -999);
+  tkIso = addFloat("tkIso", " Tracker electron isolation", -999);
 }
 
 void cms1::ElectronStreamer::fill(const reco::Candidate* candidate, bool reset) {
