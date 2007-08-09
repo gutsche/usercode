@@ -20,8 +20,8 @@ void cms1::R9_25(const reco::BasicClusterShapeAssociationCollection* barrelClShp
   eMax = sclRef->energy();
   e3x3 = seedShapeRef->e3x3();
   e5x5 = seedShapeRef->e5x5();
-  spp = seedShapeRef->covPhiPhi();
-  see = seedShapeRef->covEtaEta();
+  spp = sqrt(seedShapeRef->covPhiPhi());
+  see = sqrt(seedShapeRef->covEtaEta());
 }
 
 bool cms1::identify(const reco::PixelMatchGsfElectron* electron, const reco::BasicClusterShapeAssociationCollection* barrelClShp,
