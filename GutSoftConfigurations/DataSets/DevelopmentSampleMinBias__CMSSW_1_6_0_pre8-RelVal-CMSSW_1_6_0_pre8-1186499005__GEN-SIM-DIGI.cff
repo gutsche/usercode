@@ -1,0 +1,12 @@
+#
+# datasetpath: /DevelopmentSampleMinBias/CMSSW_1_6_0_pre8-RelVal-CMSSW_1_6_0_pre8-1186499005/GEN-SIM-DIGI
+# events     : 10100
+# size       :  6.36 GB
+#
+replace PoolSource.fileNames = {
+  "/store/mc/2007/8/7/RelVal-DevelopmentSampleMinBias-CMSSW_1_6_0_pre8-1186499005/0000/FA8070F4-2945-DC11-94FF-003048769FED.root",
+  "/store/mc/2007/8/7/RelVal-DevelopmentSampleMinBias-CMSSW_1_6_0_pre8-1186499005/0000/C0A84438-1A45-DC11-A310-003048727681.root",
+  "/store/mc/2007/8/7/RelVal-DevelopmentSampleMinBias-CMSSW_1_6_0_pre8-1186499005/0000/C0973116-2E45-DC11-9FE3-003048767C73.root",
+  "/store/mc/2007/8/7/RelVal-DevelopmentSampleMinBias-CMSSW_1_6_0_pre8-1186499005/0000/481BF2F2-3945-DC11-B020-001731AF6727.root",
+  "/store/mc/2007/8/7/RelVal-DevelopmentSampleMinBias-CMSSW_1_6_0_pre8-1186499005/0000/40866428-2F45-DC11-BA45-0017319EB92B.root"
+}

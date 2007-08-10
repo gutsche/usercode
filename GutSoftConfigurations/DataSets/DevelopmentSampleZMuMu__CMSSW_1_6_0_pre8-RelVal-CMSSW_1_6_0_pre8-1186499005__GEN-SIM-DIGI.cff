@@ -1,0 +1,15 @@
+#
+# datasetpath: /DevelopmentSampleZMuMu/CMSSW_1_6_0_pre8-RelVal-CMSSW_1_6_0_pre8-1186499005/GEN-SIM-DIGI
+# events     : 10100
+# size       : 11.07 GB
+#
+replace PoolSource.fileNames = {
+  "/store/mc/2007/8/7/RelVal-DevelopmentSampleZMuMu-CMSSW_1_6_0_pre8-1186499005/0000/EA977854-2E45-DC11-8FE3-0017312B5E1D.root",
+  "/store/mc/2007/8/7/RelVal-DevelopmentSampleZMuMu-CMSSW_1_6_0_pre8-1186499005/0000/C6DF005F-4A45-DC11-A8CB-001731AF67E1.root",
+  "/store/mc/2007/8/7/RelVal-DevelopmentSampleZMuMu-CMSSW_1_6_0_pre8-1186499005/0000/BCBBBB6A-2F45-DC11-8EAE-001731AF66B3.root",
+  "/store/mc/2007/8/7/RelVal-DevelopmentSampleZMuMu-CMSSW_1_6_0_pre8-1186499005/0000/B03DCF34-3145-DC11-A26F-001731AF678D.root",
+  "/store/mc/2007/8/7/RelVal-DevelopmentSampleZMuMu-CMSSW_1_6_0_pre8-1186499005/0000/92C9959D-2F45-DC11-AB8C-001731AF68B9.root",
+  "/store/mc/2007/8/7/RelVal-DevelopmentSampleZMuMu-CMSSW_1_6_0_pre8-1186499005/0000/90C8D53C-3045-DC11-A584-00304876A153.root",
+  "/store/mc/2007/8/7/RelVal-DevelopmentSampleZMuMu-CMSSW_1_6_0_pre8-1186499005/0000/76FD1EAC-2F45-DC11-84A8-003048767EF5.root",
+  "/store/mc/2007/8/7/RelVal-DevelopmentSampleZMuMu-CMSSW_1_6_0_pre8-1186499005/0000/20E1F034-3345-DC11-B05B-003048767C73.root"
+}
