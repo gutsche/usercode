@@ -1,7 +1,7 @@
 <use name=FWCore/Framework>
 <use name=Foundation/PluginManager>
 <use name=FWCore/ParameterSet>
-<flags SEAL_PLUGIN_NAME="CMS1EventFilter">
+<flags EDM_PLUGIN=1>
 <export>
    <lib name=CMS1EventFilter>
    <use name=FWCore/Framework>

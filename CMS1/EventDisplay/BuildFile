@@ -13,7 +13,7 @@
 <use name=RecoTracker/RoadMapRecord>
 <use name=TrackingTools/RoadSearchHitAccess>
 <use name=DataFormats/CaloTowers>
-<flags SEAL_PLUGIN_NAME="CMS1EventDisplay">
+<flags EDM_PLUGIN=1>
 <export>
    <lib name=CMS1EventDisplay>
    <use name=FWCore/Framework>
