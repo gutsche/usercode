@@ -8,8 +8,8 @@
 // Created:         Wed Oct 11 02:40:58 UTC 2006
 //
 // $Author: gutsche $
-// $Date: 2006/11/27 23:51:38 $
-// $Revision: 1.1 $
+// $Date: 2006/11/30 22:49:17 $
+// $Revision: 1.2 $
 //
 
 #include <iostream>
@@ -40,7 +40,14 @@ GutSoftHistogramFileMerger::GutSoftHistogramFileMerger(std::string outputFileNam
   for ( std::vector<std::string>::const_iterator inputFileName = inputFileNames_.begin();
 	inputFileName != inputFileNames_.end();
 	++inputFileName ) {
-    TFile *file = new TFile(inputFileName->c_str());
+    TFile *file = 0;
+    std::string fullpath = realpath(inputFileName->c_str(),NULL);
+    if ( fullpath.find("pnfs") != std::string::npos ) {
+      fullpath = "dcache:" + fullpath;
+      file = TFile::Open(fullpath.c_str());
+    } else {
+      file = new TFile(fullpath.c_str());
+    }
     if ( !file->IsZombie() ) {
       std::cout << "Reading in file: " << file->GetName() << std::endl;
       readFile(outputFileContent_,file);
