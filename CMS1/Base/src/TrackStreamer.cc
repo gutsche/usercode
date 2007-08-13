@@ -2,9 +2,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/08/07 11:13:31 $
-// $Revision: 1.8 $
+// $Author: sani $
+// $Date: 2007/08/08 15:48:11 $
+// $Revision: 1.9 $
 //
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
@@ -84,9 +84,9 @@ void cms1::TrackStreamer::fill( const StreamerArguments& args, bool reset )
      *varPdgId = args.genParticle->pdg_id();
 
      const HepMC::GenParticle* p = args.genParticle;
-     int motherid = -1;
+     int motherid = 0;
 
-     while ((p->production_vertex()) && (motherid == -1)) {
+     while ((p->production_vertex()) && (motherid == 0)) {
        HepMC::GenVertex* inVertex = p->production_vertex();
        for(std::set<HepMC::GenParticle*>::const_iterator iter = inVertex->particles_in_const_begin();
            iter != inVertex->particles_in_const_end(); ++iter) {
