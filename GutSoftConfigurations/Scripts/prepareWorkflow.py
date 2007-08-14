@@ -25,7 +25,7 @@ def pickleParameterSet(parameter_set,version):
     file = open(addCMSSWVersionToName(parameter_set,version)+".pkl",'w')
     pickle.dump(process,file)
 
-def prepareWorkflow(parameter_set,events,speed_category,version,cms_path,cmssw_architecture,cmssw_version) :
+def prepareWorkflow(parameter_set,events,speed_category,version,cms_path,cmssw_architecture,cmssw_version,name) :
     """
 
     prepareWorkflow for parameter-set
@@ -37,7 +37,7 @@ def prepareWorkflow(parameter_set,events,speed_category,version,cms_path,cmssw_a
     topNode = Element("RelValSpec")
 
     element = Element("RelValTest")
-    element.setAttribute("Name", parameter_set.replace(".cfg",""))
+    element.setAttribute("Name", name)
 
     SpeedCategoryElement = Element("SpeedCategory")
     SpeedCategoryElement.setAttribute("Value", speed_category)
@@ -99,6 +99,7 @@ def main(argv) :
     --events         <number>   : number of events to generate
 
     optional parameters         :
+    --name                      : primary datasetname (default from parameter-set name)
     --speed-category <category> : speed category: Fast, Medium, Slow (default: Fast)
     --help (-h)                 : help
     --debug (-d)                : debug statements
@@ -119,12 +120,13 @@ def main(argv) :
     debug              = 0
     cms_path           = '/uscmst1/prod/sw/cms'
     cmssw_architecture = 'slc4_ia32_gcc345'
+    name               = ''
     
 
     import getopt
 
     try:
-        opts, args = getopt.getopt(argv, "", ["help", "debug", "parameter-set=", "events=", "speed-category="])
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "parameter-set=", "events=", "speed-category=","name="])
     except getopt.GetoptError:
         print main.__doc__
         sys.exit(2)
@@ -140,6 +142,8 @@ def main(argv) :
             parameter_set = arg
         elif opt == "--speed-category" :
             speed_category = arg
+        elif opt == "--name" :
+            name = arg
         elif opt == "--events" :
             try:
                 events = int(arg)
@@ -175,6 +179,9 @@ def main(argv) :
     # prepare version tag
     version = cmssw_version.replace("CMSSW","").replace("_","")
 
+    # prepare name
+    if name == '':
+        name = parameter_set.replace(".cfg","")
 
     # pickle parameter_set
     try:
@@ -188,7 +195,7 @@ def main(argv) :
         
     # prepare workflow
     try:
-        prepareWorkflow(parameter_set,events,speed_category,version,cms_path,cmssw_architecture,cmssw_version)
+        prepareWorkflow(parameter_set,events,speed_category,version,cms_path,cmssw_architecture,cmssw_version,name)
     except:
         print ''
         print 'Workflow for parameter-set:',parameter_set,'could not be created!'

@@ -5,8 +5,8 @@ source = FlatRandomPtGunSource
   untracked PSet PGunParameters =
   {
     untracked vint32  PartID = {13}
-    untracked double MinEta = -2.5
-    untracked double MaxEta =  2.5
+    untracked double MinEta =  0.9
+    untracked double MaxEta =  1.5
     untracked double MinPhi = -3.14159265358979323846 # in radians
     untracked double MaxPhi =  3.14159265358979323846
     untracked double MinPt  =  9.999

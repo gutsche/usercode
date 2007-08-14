@@ -8,8 +8,6 @@
     cout << histo->GetBinContent(index) << " ";
   }
 
-  TH1D *histo2 = (TH1D*)gFile->Get("rsSeeds/nSeed");
-
-  cout << histo2->GetMean() << endl;
+  cout << endl;
 
 }
