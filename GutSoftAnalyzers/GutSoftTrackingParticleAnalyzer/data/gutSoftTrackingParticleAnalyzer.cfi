@@ -4,7 +4,7 @@ module gutSoftTrackingParticleAnalyzer = GutSoftTrackingParticleAnalyzer
 
   untracked string BaseDirectoryName = "TrackingParticle"
 
-  untracked double MinPt     = 0.
+  untracked double MinPt     = 1.5
   untracked double MaxPt     = 999999.
   untracked double MinEta    = -2.5
   untracked double MaxEta    =  2.5

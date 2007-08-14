@@ -8,8 +8,8 @@
 // Created:         Thu Feb 15 21:09:04 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/05/25 00:02:59 $
-// $Revision: 1.6 $
+// $Date: 2007/07/17 21:36:52 $
+// $Revision: 1.1 $
 //
 
 #include <string>
@@ -105,6 +105,7 @@ GutSoftTrackingParticleAnalyzer::analyze(const edm::Event& iEvent, const edm::Ev
 	 && std::abs(trackingParticle->charge()) == absCharge_ ) {
       ++counter;
       histograms_->fill("eta",trackingParticle->momentum().eta());
+      histograms_->fill("tip",std::sqrt(trackingParticle->vertex().perp2()));
     }
   }
   
@@ -161,6 +162,13 @@ GutSoftTrackingParticleAnalyzer::beginJob(const edm::EventSetup& es)
   histograms_->bookHistogram("eta","TrackingParticle #eta",
 			     directory,eta_nbins,eta_low,eta_high,
 			     "#eta","Events");
+  unsigned int tip_nbins = 3000;
+  double       tip_low   = 0.;
+  double       tip_high  = 3.;
+
+  histograms_->bookHistogram("tip","Transverse impact parameter",
+			     directory,tip_nbins,tip_low,tip_high,
+			     "ip_{T} [cm]","Events");
 }
 
 void 

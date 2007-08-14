@@ -8,8 +8,8 @@
 // Created:         Thu Feb 15 21:09:04 UTC 2007
 //
 // $Author: gutsche $
-// $Date: 2007/07/17 22:53:42 $
-// $Revision: 1.7 $
+// $Date: 2007/07/17 23:01:39 $
+// $Revision: 1.8 $
 //
 
 #include <string>
@@ -88,6 +88,7 @@ GutSoftHepMCAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 	  if ( std::abs(pdt_->particle(std::abs((*p)->pdg_id()))->charge()) == absCharge_ ) {
 	    ++counter;
 	    histograms_->fill("eta",(*p)->momentum().eta());
+	    histograms_->fill("tip",std::sqrt((*p)->production_vertex()->position().perp2()));
 	  }
 	} else {
 	  edm::LogWarning("GutSoftHepMCAnalyzer") << "Particle of pdg_id: " << std::abs((*p)->pdg_id()) << " cannot be found in PDT!";
@@ -116,9 +117,16 @@ GutSoftHepMCAnalyzer::beginJob(const edm::EventSetup& es)
   double       eta_low   = -3.;
   double       eta_high  =  3.;
 
+  unsigned int tip_nbins = 3000;
+  double       tip_low   = 0.;
+  double       tip_high  = 3.;
+
   histograms_->bookHistogram("eta","HepMC #eta",
 			     directory,eta_nbins,eta_low,eta_high,
 			     "#eta","Events");
+  histograms_->bookHistogram("tip","Transverse impact parameter",
+			     directory,tip_nbins,tip_low,tip_high,
+			     "ip_{T} [cm]","Events");
 }
 
 void 
