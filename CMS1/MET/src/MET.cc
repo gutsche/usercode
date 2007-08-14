@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/08/04 22:13:06 $
-// $Revision: 1.14 $
+// $Date: 2007/08/07 11:13:36 $
+// $Revision: 1.15 $
 //
 
 #include <iostream>
@@ -84,11 +84,13 @@ void cms1::MET::correctMETmuons(EventData* event, double& met, double& metPhi, b
 	 // alternative way of energy calculation.
 	 double theta = mu_track->theta();
 	 double phi = mu_track->phi();
+	 /*  BROKEN
 	 if ( ! mu_track->extra().isNull() ) {
 	    theta = mu_track->extra()->outerPosition().theta();
 	    phi = mu_track->extra()->outerPosition().phi();
 	 }
-	 
+	 */
+	   
 	 if (crossedEnergy) {
 	    muEx += ( mu->getCalEnergy().em + mu->getCalEnergy().had + mu->getCalEnergy().ho )*sin(theta)*cos( phi );
 	    muEy += ( mu->getCalEnergy().em + mu->getCalEnergy().had + mu->getCalEnergy().ho )*sin(theta)*sin( phi );
