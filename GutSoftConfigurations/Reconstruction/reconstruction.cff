@@ -2,6 +2,11 @@
 #include "FWCore/MessageService/data/MessageLogger.cfi"
 include "GutSoftConfigurations/MessageLogger/messageLogger.cff"
 
+untracked PSet options = {
+  untracked bool wantSummary = true
+  untracked bool makeTriggerResults = false 
+}
+
 untracked PSet maxEvents = 
 {
   untracked int32 input = -1
