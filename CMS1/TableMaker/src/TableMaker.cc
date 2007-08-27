@@ -9,8 +9,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/07/03 22:31:57 $
-// $Revision: 1.31 $
+// $Date: 2007/07/27 06:59:59 $
+// $Revision: 1.32 $
 //
 
 #include <vector>
@@ -118,12 +118,14 @@ cms1::TableMaker::processEvent( const edm::Event& iEvent )
   std::vector<const reco::Candidate*> allMuons = theMuons.getMuons(Muons::AllGlobalMuons,allMuon_);
   theData.addBBCollection("MuonsForMETCorrection", allMuons);
 
-  // get vector of electrons
+  /* 
+   // get vector of electrons
   tightElectron_.truthMatchingType = Cuts::Electron ; // require truth matching
   tightElectron_.setEventData(&theData);                // let the Cuts know where to get event info (mcInfo in this case)
   looseElectron_.truthMatchingType = Cuts::Electron;  // require truth matching
   looseElectron_.setEventData(&theData);                // let the Cuts know where to get event info (mcInfo in this case)
-
+  */
+   
   std::vector<const reco::Candidate*> tightElectrons = theElectrons.getElectrons(Electrons::TightElectrons,tightElectron_);
   std::vector<const reco::Candidate*> looseElectrons = theElectrons.getElectrons(Electrons::LooseElectrons,looseElectron_);
   
