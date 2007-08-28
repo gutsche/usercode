@@ -1,0 +1,12 @@
+#
+# datasetpath: /DevelopmentSampleSinglePiPt10Minus/CMSSW_1_6_0_pre11-RelVal-1188159527/GEN-SIM-DIGI
+# events     : 25250
+# size       :  6.39 GB
+#
+replace PoolSource.fileNames = {
+  "/store/mc/2007/8/26/RelVal-DevelopmentSampleSinglePiPt10Minus-1188159527/0000/F4A3A87D-3254-DC11-9B6A-001731AF6A49.root",
+  "/store/mc/2007/8/26/RelVal-DevelopmentSampleSinglePiPt10Minus-1188159527/0000/B0F1B5FD-3B54-DC11-A239-0018F3D096FE.root",
+  "/store/mc/2007/8/26/RelVal-DevelopmentSampleSinglePiPt10Minus-1188159527/0000/308E4A7E-3254-DC11-AD7E-0018F3D0965E.root",
+  "/store/mc/2007/8/26/RelVal-DevelopmentSampleSinglePiPt10Minus-1188159527/0000/285C727C-3254-DC11-9098-001731AF6B79.root",
+  "/store/mc/2007/8/26/RelVal-DevelopmentSampleSinglePiPt10Minus-1188159527/0000/10C7ED80-3254-DC11-944A-0018F3D095F2.root"
+}

@@ -1,0 +1,37 @@
+#
+# datasetpath: /DevelopmentSampleBJets120_170_LowLumiPileup/CMSSW_1_6_0_pre13-RelVal-1188257706/GEN-SIM-DIGI
+# events     : 9924
+# size       : 42.23 GB
+#
+replace PoolSource.fileNames = {
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/F6EF7EF2-3855-DC11-9F85-0018F3D09620.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/E4E0EB83-3855-DC11-AE7B-001731AF6981.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/E2202B4D-3855-DC11-8457-001731AF67E7.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/DC54E2FD-3855-DC11-99AF-001731AF67E9.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/DA8492FC-3855-DC11-89EE-001731AF6B85.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/C0D17E74-3855-DC11-AEA7-0018F3D09660.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/C0A80516-3955-DC11-969E-001731AF68B7.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/BE7655FA-3855-DC11-B6DE-001731AF6BCB.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/BE069459-3855-DC11-B08C-0018F3D096AA.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/BC31EDEF-3855-DC11-82FA-001731AF6845.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/BA6B2651-3955-DC11-850A-001731AF671D.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/B258141A-3955-DC11-B2C1-001731AF6931.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/AA03B8F1-3855-DC11-9769-001731AF6B73.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/909D24B5-3855-DC11-A129-001731AF66F9.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/64FB976A-3855-DC11-8E60-001731AF692F.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/56736D8A-3855-DC11-9684-001731AF6845.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/388C8298-3855-DC11-A910-0018F3D09630.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/3671716C-3855-DC11-BB53-001731AF67B7.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/30052E6D-3855-DC11-9AD9-0018F3D095FE.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/2CB67258-3855-DC11-B480-001731AF68CB.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/2AD8323C-3855-DC11-BAF7-0018F3D09620.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/26050A8C-3855-DC11-8E4A-00173199E924.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/22BB080D-3955-DC11-819D-0018F3D096CA.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/14350928-3955-DC11-9C51-0018F3D09654.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/107488EB-3855-DC11-9EA7-001731AF68C3.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/0EE92A80-3955-DC11-91CF-001731EF61B4.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/0A044A18-3955-DC11-8491-001731A28691.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/04AB2588-3855-DC11-B9AF-0018F3D09658.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/04092C3D-3855-DC11-9290-001731AF6B7F.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleBJets120_170_LowLumiPileup-1188257706/0000/04020740-5255-DC11-97E1-001731AF6A87.root"
+}

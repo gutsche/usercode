@@ -1,0 +1,8 @@
+#
+# datasetpath: /DevelopmentSampleSingleEPt25Minus/CMSSW_1_6_0_pre11-RelVal-1188159527/GEN-SIM-DIGI
+# events     : 5250
+# size       :  1.39 GB
+#
+replace PoolSource.fileNames = {
+  "/store/mc/2007/8/26/RelVal-DevelopmentSampleSingleEPt25Minus-1188159527/0000/5C1FF620-9554-DC11-8764-001731EF61B4.root"
+}

@@ -1,0 +1,9 @@
+#
+# datasetpath: /DevelopmentSampleSinglegamma_pt_10/CMSSW_1_6_0_pre11-RelVal-1188159527/GEN-SIM-DIGI
+# events     : 10250
+# size       :  2.57 GB
+#
+replace PoolSource.fileNames = {
+  "/store/mc/2007/8/26/RelVal-DevelopmentSampleSinglegamma_pt_10-1188159527/0000/DC54134F-4E54-DC11-ADE3-001731AF65F5.root",
+  "/store/mc/2007/8/26/RelVal-DevelopmentSampleSinglegamma_pt_10-1188159527/0000/1C4ED72C-3C54-DC11-A7D3-001731AF68CB.root"
+}

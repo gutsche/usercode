@@ -1,0 +1,31 @@
+#
+# datasetpath: /DevelopmentSampleZMuMu_LowLumiPileup/CMSSW_1_6_0_pre13-RelVal-1188257952/GEN-SIM-DIGI
+# events     : 9100
+# size       : 34.32 GB
+#
+replace PoolSource.fileNames = {
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/EE8FA474-3F55-DC11-9E98-001731AF65F9.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/EC1C693A-3E55-DC11-90BE-001731AF66AB.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/E8F91A77-3F55-DC11-80EE-001731AF6B89.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/E64C6761-3F55-DC11-BB07-0018F3D0970A.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/E26723BC-3E55-DC11-ADFA-001731AF65F5.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/DECC887C-3F55-DC11-830A-0018F3D09648.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/DE680B63-3F55-DC11-A01A-001731AF6A7B.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/DAAB5778-3F55-DC11-8CA7-001731AF6B79.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/CC1B7A4E-3F55-DC11-A7B0-0018F3D095EC.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/AE2FB568-3F55-DC11-B53E-0018F3D09670.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/A8850F5F-3F55-DC11-84CA-001731AF6931.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/96033C58-3F55-DC11-AC9B-0018F3D096FE.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/8266D367-3F55-DC11-A6E1-001731AF67E9.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/80090473-3F55-DC11-94BF-001731AF6993.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/4631433C-3F55-DC11-B52E-0018F3D0961E.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/4607C7BA-3E55-DC11-AB05-001731AF68ED.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/2A47FC74-3F55-DC11-9A69-0018F3D095F2.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/267D7754-3F55-DC11-BC07-001731AF66B5.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/16B20759-3F55-DC11-8CC6-0018F3D095FE.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/12E2043A-3F55-DC11-BC5D-001731AF692F.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/124EAF69-3F55-DC11-9942-0018F3D09630.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/1200405E-3F55-DC11-9839-001731AF6B79.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/021A0D55-3F55-DC11-9CF1-001731AF6BCF.root",
+  "/store/mc/2007/8/27/RelVal-DevelopmentSampleZMuMu_LowLumiPileup-1188257952/0000/00898330-3F55-DC11-9B76-001731AF6A7B.root"
+}
