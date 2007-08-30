@@ -11,8 +11,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/07/03 05:23:06 $
-// $Revision: 1.11 $
+// $Date: 2007/07/07 17:52:07 $
+// $Revision: 1.12 $
 //
 #include <iostream>
 
@@ -28,16 +28,15 @@ namespace cms1 {
    class MET: public BlackBox  {
   public:
       MET(): BlackBox()	{}
-      
-      enum METType { DefaultMET };
-     
-      // This is the function that does all the work
-      const reco::CaloMET* getMET (const METType );
+
+      const reco::CaloMET* getMET ( const std::string& metType );
       
       // here should be all corrections
-      static void correctMETmuons(EventData* event, double& et, double& phi, bool caloCorr = true, bool crossedEnergy = true);
-      static void correctedJetMET(EventData* event, const std::vector<const reco::Candidate*>* , 
-				  double& , double&,
+      static void correctMETmuons(EventData& event, const std::vector<const reco::Candidate*>& muons,
+				  double& met, double& metPhi, 
+				  bool caloCorr = true, bool crossedEnergy = true);
+      static void correctedJetMET(EventData& event, const std::vector<const reco::Candidate*>& jets,
+				  double& met, double& metPhi,
 				  const double min_pt=30);
       void dump(std::ostream&, const reco::Candidate*);
       void registerEventUserData();

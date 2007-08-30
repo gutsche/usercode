@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/08/07 11:13:36 $
-// $Revision: 1.15 $
+// $Date: 2007/08/14 21:36:43 $
+// $Revision: 1.16 $
 //
 
 #include <iostream>
@@ -18,16 +18,15 @@
 #include "DataFormats/JetReco/interface/CaloJet.h"
 #include "DataFormats/CaloTowers/interface/CaloTower.h"
 
-const reco::CaloMET* cms1::MET::getMET(const METType type)
+const reco::CaloMET* cms1::MET::getMET(const std::string& type)
 {
+   if (! data_ ) {
+      std::cout << "ERROR: MET black box doesn't know where to find EvenData." << std::endl;
+      assert(0);
+   }
    
-   switch (type) {
-    case DefaultMET:
+   if ( type.compare("DefaultMET")==0 )
     {
-       if (! data_ ) {
-	  std::cout << "ERROR: MET black box doesn't know where to find EvenData." << std::endl;
-	  return 0;
-       }
        const std::vector<reco::CaloMET>* collection = data_->getData<std::vector<reco::CaloMET> >("met");
        
        if ( ! collection ) {
@@ -40,20 +39,18 @@ const reco::CaloMET* cms1::MET::getMET(const METType type)
        else
 	 return 0;
     }
-    break;
-    // You get here if you have requested a "METType" that is not implemented
-  default:
-    std::cout << "Unkown or not implemented type" << std::endl;
-  }
+   std::cout << "Unkown or not implemented MET type: " << type << "\nAbort" << std::endl;
+   assert(0);
    return 0;
 }
 
 // correct MET energies for Muons
 // (input parameters are corrected by the algorithm)
-void cms1::MET::correctMETmuons(EventData* event, double& met, double& metPhi, bool caloCorr, bool crossedEnergy )
+void cms1::MET::correctMETmuons(EventData& event, const std::vector<const reco::Candidate*>& metMuons, 
+				double& met, double& metPhi, bool caloCorr, bool crossedEnergy )
 {
    // first, account for muon momentum
-   const std::vector<const reco::Candidate*>& metMuons = event->getBBCollection("MuonsForMETCorrection");
+   // const std::vector<const reco::Candidate*>& metMuons = event->getBBCollection("MuonsForMETCorrection");
    double metx =  met*std::cos(metPhi);
    double mety =  met*std::sin(metPhi);
    for ( std::vector<const reco::Candidate*>::const_iterator cand = metMuons.begin(); 
@@ -108,8 +105,8 @@ void cms1::MET::correctMETmuons(EventData* event, double& met, double& metPhi, b
 }
 
 // list of jets must be supplied
-void cms1::MET::correctedJetMET(EventData* event,
-				const std::vector<const reco::Candidate*>* jets,
+void cms1::MET::correctedJetMET(EventData& event,
+				const std::vector<const reco::Candidate*>& jets,
 				double& met, double& metPhi, 
 				const double min_pt) 
 {
@@ -119,14 +116,14 @@ void cms1::MET::correctedJetMET(EventData* event,
    double Ex = 0.0;
    double Ey = 0.0;
    std::vector<const reco::Candidate*>::const_iterator cand_iter;
-   for(cand_iter = jets->begin() ; cand_iter != jets->end(); ++cand_iter) {
+   for(cand_iter = jets.begin() ; cand_iter != jets.end(); ++cand_iter) {
       if(const reco::CaloJet* jet = dynamic_cast<const reco::CaloJet*>(*cand_iter) ) {
 	 //jet correction doesn't do so well for recoJet pt < 30.0
 	 if(jet->pt() > min_pt ) {
-	    StreamerArguments args = getStreamerArguments(event, *cand_iter);
+	    StreamerArguments args = getStreamerArguments(&event, *cand_iter);
 	    double corr_factor = args.jetcorrection;
 	    if(corr_factor > 0 ) { //args.jetcorrection is -999 in case of an error
-	       std::cout << "Jet Pt: " << jet->pt() << "\t Jet phi: " << jet->phi() << "\tcorr: " << corr_factor <<std::endl;
+	       // std::cout << "Jet Pt: " << jet->pt() << "\t Jet phi: " << jet->phi() << "\tcorr: " << corr_factor <<std::endl;
 	       Ex = Ex + (corr_factor-1)*(jet->et())*cos(jet->phi());
 	       Ey = Ey + (corr_factor-1)*(jet->et())*sin(jet->phi());
 	    }
@@ -172,7 +169,7 @@ void cms1::MET::registerEventUserData()
 
 void cms1::MET::fillEventUserData()
 {
-   const reco::CaloMET* met = getMET(DefaultMET);
+   const reco::CaloMET* met = getMET("DefaultMET");
    evtMet->addData( met->et() );
    evtMetPhi->addData( met->phi() );
    evtSumEt->addData( met->sumEt() );
