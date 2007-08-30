@@ -11,8 +11,8 @@
 // Created:         Mon Jan 29 16:40:39 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/08/04 22:13:06 $
-// $Revision: 1.10 $
+// $Date: 2007/08/07 11:13:36 $
+// $Revision: 1.11 $
 //
 #include <iostream>
 
@@ -29,19 +29,9 @@ namespace cms1 {
     public:
       Muons(): BlackBox(){}
       
-      // These are "types of muons" that we define.  We can add as amany as we want as
-      // people invent new muon requirements
-      enum MuonType { AllGlobalMuons, TightGlobalMuons, LooseGlobalMuons, AllTrackerMuons, LooseTrackerMuons, RefMuons };
-     
-      // This is the function that does all the work
-      std::vector<const reco::Candidate*> getMuons (const MuonType, 
-					       const Cuts&,
-					       Cuts::IsolationType isolated = Cuts::NotIsolated);
-      // a trivial function that uses getMuons to return number of 
-      //  muons of a given type in the event
-      int numberOfMuons(const MuonType type, const Cuts& cuts) {
-	 return getMuons(type,cuts).size();
-      }
+      std::vector<const reco::Candidate*> getMuons (const std::string& muonType,
+						    const Cuts& = Cuts(),
+						    Cuts::IsolationType isolated = Cuts::NotIsolated);
       void dump(std::ostream& o, std::vector<const reco::Candidate*>);
       void registerEventUserData();
       void fillEventUserData();
@@ -49,6 +39,7 @@ namespace cms1 {
       VectorUserBlock<MuonStreamer> evtMuons;
       UserDataInt*        nMuons;
       UserDataInt1D*      map_LooseTrackerMuons;
+      UserDataInt1D*      map_TightTrackerMuons;
   };
 }
 
