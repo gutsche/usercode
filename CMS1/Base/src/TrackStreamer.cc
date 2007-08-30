@@ -2,9 +2,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: sani $
-// $Date: 2007/08/08 15:48:11 $
-// $Revision: 1.9 $
+// $Author: dmytro $
+// $Date: 2007/08/13 08:39:26 $
+// $Revision: 1.10 $
 //
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
@@ -31,7 +31,8 @@ cms1::TrackStreamer::TrackStreamer()
    varMCP4      = addP4("mc_p4", " p4 of matched MC particle", LorentzVector(0,0,0,0) );
    varPdgId     = addInt("mc_id", " PDG id of matched MC particle", 0 );
    varMotherId  = addInt("mc_motherid", " PDG id of the mother of the particle", -1);
-   
+   // var_sim_energy_em = addFloat("sim_em", " Simulated ECAL energy", 0);
+   // var_sim_energy_had = addFloat("sim_had", " Simulated HCAL energy (corrected for sampling nature of the detector)", 0);
    mass_ = 0;
 }
 
@@ -75,8 +76,8 @@ void cms1::TrackStreamer::fill( const reco::Track* track, bool reset )
 
 void cms1::TrackStreamer::fill( const StreamerArguments& args, bool reset )
 {
-   if (reset) 
-     setDefaults();
+   if (reset) setDefaults();
+
    // fill MC
    if ( args.genParticle ) {
      HepLorentzVector m = args.genParticle->momentum();
@@ -88,6 +89,7 @@ void cms1::TrackStreamer::fill( const StreamerArguments& args, bool reset )
 
      while ((p->production_vertex()) && (motherid == 0)) {
        HepMC::GenVertex* inVertex = p->production_vertex();
+       if (inVertex->particles_in_size()<1) break;
        for(std::set<HepMC::GenParticle*>::const_iterator iter = inVertex->particles_in_const_begin();
            iter != inVertex->particles_in_const_end(); ++iter) {
          if ((*iter)->pdg_id() != p->pdg_id()) {
@@ -102,10 +104,11 @@ void cms1::TrackStreamer::fill( const StreamerArguments& args, bool reset )
 
      *varMotherId = motherid;
    }
+   
+   // *var_sim_energy_em = args.ecalTrueEnergy;
+   // *var_sim_energy_had = args.hcalTrueEnergyCorrected;
 
-   if ( args.track ) 
-     fill( args.track, false );
-   if ( args.candidate ) 
-     fill( args.candidate, false );
+   if ( args.track ) fill( args.track, false );
+   if ( args.candidate ) fill( args.candidate, false );
 }
 

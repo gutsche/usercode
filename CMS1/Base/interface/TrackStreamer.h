@@ -4,9 +4,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/08/07 11:13:29 $
-// $Revision: 1.5 $
+// $Author: sani $
+// $Date: 2007/08/08 15:48:19 $
+// $Revision: 1.6 $
 //
 #include "CMS1/Base/interface/BaseStreamer.h"
 namespace cms1 {
@@ -24,6 +24,7 @@ namespace cms1 {
 	float *varD0, *varZ0, *varVertexPhi, *varChi2, *varNdof, *varD0Err, *varZ0Err, 
 	  *varPtErr, *varEtaErr, *varPhiErr;
 	LorentzVector *varP4, *varTrkP4, *varMCP4;
+	float *var_sim_energy_em, *var_sim_energy_had;
      };
 }
 
