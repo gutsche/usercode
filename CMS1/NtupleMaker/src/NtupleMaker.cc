@@ -92,7 +92,8 @@ cms1::NtupleMaker::processEvent( const edm::Event& iEvent )
    
    timers.pop_and_push("NtupleMaker::processEvent::storeHypothesisInfo");
    nCandidates->addData(dlCandidates.size());
-   crossSection->addData(crossSectionValue);
+   inclusiveCrossSection->addData(inclusiveCrossSectionValue);
+   exclusiveCrossSection->addData(exclusiveCrossSectionValue);
    
    for ( std::vector<const cms1::DiLeptonCandidate*>::iterator cand = dlCandidates.begin(); cand != dlCandidates.end(); ++cand )
      diLeptonUserData.fill(theData,**cand);
@@ -111,11 +112,14 @@ void cms1::NtupleMaker::configure(const edm::ParameterSet& iConfig)
    correctedJetType =  iConfig.getUntrackedParameter<string>("correctedJetType");
    referenceJetType =  iConfig.getUntrackedParameter<string>("referenceJetType");
    
-   crossSectionValue = iConfig.getUntrackedParameter<double>("crossSection");
+   inclusiveCrossSectionValue = iConfig.getUntrackedParameter<double>("inclusiveCrossSection");
+   exclusiveCrossSectionValue = iConfig.getUntrackedParameter<double>("exclusiveCrossSection");
       
    diLeptonUserData.registerBlock(theData, "hyp_", "hypothesis");
    theData.intUserData.push_back( new UserData<int>("evt_nCand", "number of dilepton hypotheses in the event", false) );
    nCandidates = theData.intUserData.back();
-   theData.floatUserData.push_back( new UserData<float>("evt_xsec", "Best estimate of the process crossection", false) );
-   crossSection = theData.floatUserData.back();
+   theData.floatUserData.push_back( new UserData<float>("evt_xsec_incl", "Best estimate of the process inclusive crossection to all standard model final states", false) );
+   inclusiveCrossSection = theData.floatUserData.back();
+   theData.floatUserData.push_back( new UserData<float>("evt_xsec_excl", "Best estimate of the process exclusve crossection (inslusive x branching ratio)", false) );
+   exclusiveCrossSection = theData.floatUserData.back();
 }

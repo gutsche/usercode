@@ -16,7 +16,8 @@ module ntupleMaker = NtupleMakerFW
   untracked string referenceJetType  = "AllIterativeCone5CaloJets"
   untracked string correctedJetType  = "MCJetCorJetIcone5"
 
-  untracked double crossSection = 0
+  untracked double inclusiveCrossSection = 0
+  untracked double exclusiveCrossSection = 0
 
   # ntuples stuff
   untracked bool   makeNtuples          = true

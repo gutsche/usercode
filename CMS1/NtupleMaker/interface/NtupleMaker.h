@@ -44,8 +44,10 @@ namespace cms1 {
     
      DiLeptonUserBlock diLeptonUserData;
      UserDataInt* nCandidates;
-     UserDataFloat* crossSection;
-     double crossSectionValue;
+     UserDataFloat* inclusiveCrossSection;
+     UserDataFloat* exclusiveCrossSection;
+     double inclusiveCrossSectionValue;
+     double exclusiveCrossSectionValue;
      
      // input types
      std::string  tightMuonType;
