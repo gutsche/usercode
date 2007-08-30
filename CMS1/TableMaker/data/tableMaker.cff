@@ -2,6 +2,7 @@
 include "CMS1/TableMaker/data/tableMaker.cfi"
 include "JetMETCorrections/MCJet/data/MCJetCorrections.cff"
 es_prefer MCJetCorrectorMcone5 = MCJetCorrectionService {}
+# es_prefer MCJetCorrectorIcone5 = MCJetCorrectionService {}
 
 # files required for TrackAssociator
 include "Geometry/CMSCommonData/data/cmsIdealGeometryXML.cfi"	

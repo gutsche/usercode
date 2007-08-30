@@ -9,8 +9,8 @@
 // Created:         Tue Feb 20 23:00:01 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/08/04 22:13:07 $
-// $Revision: 1.33 $
+// $Date: 2007/08/07 11:13:37 $
+// $Revision: 1.34 $
 //
 
 #include <vector>
@@ -113,27 +113,34 @@ cms1::TableMaker::processEvent( const edm::Event& iEvent )
   
   timers.push("TableMaker::processEvent::getInfoFromBlackBoxes");
   // get vector of muons
-  std::vector<const reco::Candidate*> tightMuons = theMuons.getMuons(Muons::TightGlobalMuons,tightMuon_);
-  std::vector<const reco::Candidate*> looseMuons = theMuons.getMuons(Muons::LooseGlobalMuons,looseMuon_);
-  std::vector<const reco::Candidate*> allMuons = theMuons.getMuons(Muons::AllGlobalMuons,allMuon_);
+  std::vector<const reco::Candidate*> tightMuons = theMuons.getMuons("VeryLooseGlobalMuons",tightMuon_);
+  std::vector<const reco::Candidate*> looseMuons = theMuons.getMuons("VeryLooseGlobalMuons",looseMuon_);
+  std::vector<const reco::Candidate*> allMuons = theMuons.getMuons("AllGlobalMuons",allMuon_);
   theData.addBBCollection("MuonsForMETCorrection", allMuons);
+  
 
   // get vector of electrons
-  tightElectron_.truthMatchingType = Cuts::Electron ; // require truth matching
-  tightElectron_.setEventData(&theData);                // let the Cuts know where to get event info (mcInfo in this case)
-  looseElectron_.truthMatchingType = Cuts::Electron;  // require truth matching
-  looseElectron_.setEventData(&theData);                // let the Cuts know where to get event info (mcInfo in this case)
+  
+   // tightElectron_.truthMatchingType = Cuts::Electron ; // require truth matching
+   // tightElectron_.setEventData(&theData);                // let the Cuts know where to get event info (mcInfo in this case)
+   // looseElectron_.truthMatchingType = Cuts::Electron;  // require truth matching
+   // looseElectron_.setEventData(&theData);                // let the Cuts know where to get event info (mcInfo in this case)
 
-  std::vector<const reco::Candidate*> tightElectrons = theElectrons.getElectrons(Electrons::TightElectrons,tightElectron_);
-  std::vector<const reco::Candidate*> looseElectrons = theElectrons.getElectrons(Electrons::LooseElectrons,looseElectron_);
+   
+  std::vector<const reco::Candidate*> tightElectrons = theElectrons.getElectrons("TightElectrons",tightElectron_);
+  std::vector<const reco::Candidate*> looseElectrons = theElectrons.getElectrons("LooseElectrons",looseElectron_);
   
   // get vector of Jets
-  std::vector<const reco::Candidate*> jets = theJets.getJets(Jets::LooseJets, Cuts());
+  // std::vector<const reco::Candidate*> jets = theJets.getJets("LooseMidPointCone5CaloJets", Cuts());
+  std::vector<const reco::Candidate*> jets = theJets.getJets("LooseIterativeCone5CaloJets", Cuts());
   // add AllJets to EventData
-  theData.addBBCollection("AllJets",  theJets.getJets(Jets::AllJets, Cuts() ) );
+  // theData.addBBCollection("AllJets",  theJets.getJets("AllMidPointCone5CaloJets", Cuts() ) );
+  theData.addBBCollection("AllJets",  theJets.getJets("AllIterativeCone5CaloJets", Cuts() ) );
+  // theData.addBBCollection("CorrectedJets",  theJets.getJets( "MCJetCorJetMcone5" ) );
+  theData.addBBCollection("CorrectedJets",  theJets.getJets( "MCJetCorJetIcone5" ) );
 
   // get MET without cut and correct
-  const reco::Candidate* metObj = theMET.getMET(MET::DefaultMET);
+  const reco::Candidate* metObj = theMET.getMET("DefaultMET");
   double met = metObj->pt();
   double metphi = metObj->phi();
 
@@ -295,17 +302,6 @@ void cms1::TableMaker::configure(const edm::ParameterSet& iConfig)
   ZRangeMinMass_             = iConfig.getUntrackedParameter<double>("ZRangeMinMass");
   ZRangeMaxMass_             = iConfig.getUntrackedParameter<double>("ZRangeMaxMass");
 
-  
-  // Fill data labels for TrackAssociator - PDK
- //  trackAssociator_.theEBRecHitCollectionLabel = edm::InputTag("ecalRecHit:EcalRecHitsEB");
-//   trackAssociator_.theEERecHitCollectionLabel = edm::InputTag("ecalRecHit:EcalRecHitsEE");
-//   trackAssociator_.theCaloTowerCollectionLabel = edm::InputTag("towerMaker");
-//   trackAssociator_.theHBHERecHitCollectionLabel = edm::InputTag("hbhereco");
-//   trackAssociator_.theHORecHitCollectionLabel = edm::InputTag("horeco");
-//   trackAssociator_.theDTRecSegment4DCollectionLabel = edm::InputTag("dt4DSegmets");
-//   trackAssociator_.theCSCSegmentCollectionLabel = edm::InputTag("cscSegments");
-
-  
   fileTag 					= iConfig.getUntrackedParameter<std::string>("fileTag");
 
   MaxEventDebug_             = (unsigned int) iConfig.getUntrackedParameter<int>("MaxEventDebug");

@@ -10,8 +10,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/06/23 05:36:37 $
-// $Revision: 1.4 $
+// $Date: 2007/08/04 22:13:07 $
+// $Revision: 1.5 $
 //
 #include <vector>
 #include "CMS1/TableMaker/interface/TableMaker.h"
@@ -39,8 +39,6 @@ namespace cms1 {
 	     BaseAnalyzer::processEvent( iEvent );
 	     
 	     // run user code
-	     //Breaking FWLite for now by adding iSetup to fix MET for muons - PDK
-	     theData.iSetup = &iSetup;
 	     processEvent( iEvent );
 	     finishEvent();
 	  }

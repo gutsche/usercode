@@ -42,4 +42,8 @@ module tableMaker = TableMakerFW
   untracked bool   makeNtuples          = true
   untracked bool   candidateBasedNtuples = true
   untracked string fileName             = "ntuple.root"
+
+  untracked string referenceMuonType = "AllGlobalMuons"
+  untracked string referenceElectronType = "AllElectrons"
+
 }
