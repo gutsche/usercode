@@ -11,8 +11,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: sani $
-// $Date: 2007/07/13 20:30:59 $
-// $Revision: 1.20 $
+// $Date: 2007/08/08 15:44:13 $
+// $Revision: 1.21 $
 //
 
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
@@ -27,11 +27,7 @@ namespace cms1 {
   public:
     Electrons(): BlackBox() {}
     
-    // These are "types of electrons" that we define. We can add as many as we want as
-    // people invent new electron requirements
-    enum ElectronType {AllElectrons, TightElectrons, LooseElectrons, TruthMatchedElectrons, Golden, BigBrem, Narrow, Showering};
-    
-    std::vector<const reco::Candidate*> getElectrons (const ElectronType, const Cuts&,
+    std::vector<const reco::Candidate*> getElectrons (const std::string& electronType, const Cuts& = Cuts(),
                                                       Cuts::IsolationType isolated = Cuts::NotIsolated);
     void removeElectrons(const std::vector<reco::PixelMatchGsfElectron>*);
     
