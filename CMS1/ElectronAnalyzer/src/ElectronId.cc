@@ -25,7 +25,7 @@ void cms1::ElectronId::finishProcessing() {
 
 void cms1::ElectronId::processEvent(const edm::Event& iEvent) {
   
-  std::vector<const reco::Candidate*> electrons = theElectrons.getElectrons(Electrons::AllElectrons, Cuts());
+  std::vector<const reco::Candidate*> electrons = theElectrons.getElectrons("AllElectrons", Cuts());
   std::vector<const HepMC::GenParticle*> mcel = theMCInfo.getMCInfo(MCInfo::Electrons, Cuts());
   elidUserData.fill(theData, electrons, mcel);  
   nCandidates->addData(electrons.size());

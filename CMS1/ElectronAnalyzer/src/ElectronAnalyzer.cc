@@ -121,10 +121,10 @@ void cms1::ElectronAnalyzer::processEvent(const Event & event) {
   vector<const reco::Candidate*>::const_iterator it;
   vector<const reco::Candidate*> el[4];
 
-  el[0] = theElectrons.getElectrons(Electrons::Golden, cuts);
-  el[1] = theElectrons.getElectrons(Electrons::BigBrem, cuts);
-  el[2] = theElectrons.getElectrons(Electrons::Narrow, cuts);
-  el[3] = theElectrons.getElectrons(Electrons::Showering, cuts);
+  el[0] = theElectrons.getElectrons("Golden", cuts);
+  el[1] = theElectrons.getElectrons("BigBrem", cuts);
+  el[2] = theElectrons.getElectrons("Narrow", cuts);
+  el[3] = theElectrons.getElectrons("Showering", cuts);
   
   // to define a Custom electron you must define an object ElectronDef setting the cuts (default values are those for "Golden")
   //ElectronDef def;
