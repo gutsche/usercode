@@ -3,11 +3,13 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/07/06 19:22:54 $
-// $Revision: 1.7 $
+// $Date: 2007/08/07 11:13:30 $
+// $Revision: 1.1 $
 //
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "CMS1/Base/interface/MuonStreamer.h"
+#include "RecoMuon/MuonIdentification/interface/IdGlobalFunctions.h"
+
 cms1::MuonStreamer::MuonStreamer() 
 {
    varNMatches     = addInt("nmatches",      " number of stations with matched segments", -999 );
@@ -27,6 +29,17 @@ cms1::MuonStreamer::MuonStreamer()
    varIsoR05_hadEt = addFloat("iso05_hadEt", " sum of hcal Et for cone of 0.5", -999);
    varIsoR05_hoEt  = addFloat("iso05_hoEt",  " sum of ho Et for cone of 0.5", -999);
    varIsoR05_ntrk  = addInt("iso05_ntrk",    " number of tracks in the cone of 0.5", -999);
+   var_pid_TMLastStationLoose = 
+     addInt("pid_TMLastStationLoose",     " loose tracker muon identification based on muon/hadron penetration depth difference", -999);
+   var_pid_TMLastStationTight = 
+     addInt("pid_TMLastStationTight",     " tight tracker muon identification based on muon/hadron penetration depth difference", -999);
+   var_pid_TM2DCompatibilityLoose = 
+     addInt("pid_TM2DCompatibilityLoose", " loose tracker muon likelihood identification based on muon matches and calo depositions", -999);
+   var_pid_TM2DCompatibilityTight = 
+     addInt("pid_TM2DCompatibilityTight", " tight tracker muon likelihood identification based on muon matches and calo depositions", -999);
+   var_gfit_chi2 = addFloat("gfit_chi2",  " chi2 of the global muon fit", -999); 
+   var_gfit_ndof = addFloat("gfit_ndof",  " number of degree of freedom of the global muon fit", -999);
+   var_gfit_validHits = addInt("gfit_validHits", " number of valid hits of the global muon fit", -999);
 }
 
 void cms1::MuonStreamer::fill( const reco::Candidate* candidate, bool reset )
@@ -45,6 +58,7 @@ void cms1::MuonStreamer::fill( const reco::Candidate* candidate, bool reset )
 	
 	// hack for 15X
 	reco::Muon* muon = const_cast<reco::Muon*>(aMuon);
+	
 	*varNMatches     = muon->isMatchesValid() ? muon->numberOfMatches(): -999;
 	*varIsoR03_ntrk  = muon->isIsolationValid() ? muon->getIsolationR03().nTracks:-999;
 	*varIsoR05_ntrk  = muon->isIsolationValid() ? muon->getIsolationR05().nTracks:-999;
@@ -56,6 +70,18 @@ void cms1::MuonStreamer::fill( const reco::Candidate* candidate, bool reset )
 	*varIsoR05_hadEt = muon->isIsolationValid() ? muon->getIsolationR05().hadEt:-999;
 	*varIsoR03_hoEt  = muon->isIsolationValid() ? muon->getIsolationR03().hoEt:-999;
 	*varIsoR05_hoEt  = muon->isIsolationValid() ? muon->getIsolationR05().hoEt:-999;
+	
+	*var_gfit_chi2 = muon->combinedMuon().isNonnull() ? muon->combinedMuon()->chi2() : -999;
+	*var_gfit_ndof = muon->combinedMuon().isNonnull() ? muon->combinedMuon()->ndof() : -999;
+	*var_gfit_validHits = muon->combinedMuon().isNonnull() ? muon->combinedMuon()->numberOfValidHits() : -999;
+	
+	// fill muon id flags.
+        if ( muon->isMatchesValid() ) {
+	   *var_pid_TMLastStationLoose = muonid::isGoodMuon(*muon,muonid::TMLastStationLoose);
+	   *var_pid_TMLastStationTight = muonid::isGoodMuon(*muon,muonid::TMLastStationTight);
+	   *var_pid_TM2DCompatibilityLoose = muonid::isGoodMuon(*muon,muonid::TM2DCompatibilityLoose);
+	   *var_pid_TM2DCompatibilityTight = muonid::isGoodMuon(*muon,muonid::TM2DCompatibilityTight);
+	}
      }
 }
 
