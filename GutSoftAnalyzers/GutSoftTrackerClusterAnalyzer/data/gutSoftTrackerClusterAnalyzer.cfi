@@ -1,8 +1,0 @@
-module gutSoftTrackerClusterAnalyzer = GutSoftTrackerClusterAnalyzer 
-{
-  untracked InputTag PixelClusterInputTag  = siPixelClusters
-  untracked InputTag StripClusterInputTag  = siStripClusters
-
-  untracked string BaseDirectoryName = "TrackerCluster"
-
-}
