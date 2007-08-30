@@ -38,4 +38,4 @@
    <use name=Utilities/Timing>
    <use name=TrackingTools/TrackAssociator>
 </export>
-# <Flags CXXFLAGS=-g>
+# <Flags CXXFLAGS="-g -O0">

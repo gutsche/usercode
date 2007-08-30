@@ -7,8 +7,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/06/14 05:59:57 $
-// $Revision: 1.12 $
+// $Date: 2007/08/04 22:13:04 $
+// $Revision: 1.13 $
 //
 #include "CMS1/BaseAnalyzer/interface/BaseAnalyzer.h"
 #include "DataFormats/Common/interface/Handle.h"
@@ -31,6 +31,8 @@ void cms1::BaseAnalyzer::configure(const edm::ParameterSet& iConfig)
    makeNtuples = iConfig.getUntrackedParameter<bool>("makeNtuples");
    candidateBasedNtuples = iConfig.getUntrackedParameter<bool>("candidateBasedNtuples");
    std::string ntupleFileName = iConfig.getUntrackedParameter<std::string>("fileName");
+   referenceMuonType = iConfig.getUntrackedParameter<string>("referenceMuonType");
+   referenceElectronType = iConfig.getUntrackedParameter<string>("referenceElectronType");
    
    theTracks.setEventData    ( &theData );
    
@@ -64,11 +66,13 @@ void cms1::BaseAnalyzer::processEvent(const edm::Event& iEvent)
    
    timers.push("BaseAnalyzer::processEvent::makeLegoPlot");
    // fill CaloTowers
-   edm::Handle<CaloTowerCollection> caloTowers;
-   iEvent.getByLabel( "towerMaker", caloTowers );
-   legoPtr->Reset();
-   for(CaloTowerCollection::const_iterator tower = caloTowers->begin(); tower != caloTowers->end(); ++tower)
-     legoPtr->Fill(tower->eta(), tower->phi(), tower->et());
+   if ( makeNtuples ) {
+      edm::Handle<CaloTowerCollection> caloTowers;
+      iEvent.getByLabel( "towerMaker", caloTowers );
+      legoPtr->Reset();
+      for(CaloTowerCollection::const_iterator tower = caloTowers->begin(); tower != caloTowers->end(); ++tower)
+	legoPtr->Fill(tower->eta(), tower->phi(), tower->et());
+   }
    
    theData.setEvent( &iEvent );
    
@@ -86,6 +90,10 @@ void cms1::BaseAnalyzer::processEvent(const edm::Event& iEvent)
    theData.jetInfo = *(jetCollectionHandle.product());
 
    timers.pop_and_push("BaseAnalyzer::processEvent::fillUserData");
+   
+   theData.addBBCollection("refMuons",       theMuons.getMuons( referenceMuonType) );
+   theData.addBBCollection("refElectrons",   theElectrons.getElectrons( referenceElectronType) );
+
    // ntuples
    if (makeNtuples) fillUserData( theData );
 }

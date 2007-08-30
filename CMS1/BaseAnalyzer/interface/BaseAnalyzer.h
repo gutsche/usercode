@@ -9,8 +9,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/05/22 07:14:57 $
-// $Revision: 1.6 $
+// $Date: 2007/06/01 09:32:05 $
+// $Revision: 1.7 $
 //
 #include <vector>
 #include "CMS1/Base/interface/EventData.h"
@@ -70,9 +70,12 @@ namespace cms1 {
       MET           theMET;
       MCInfo        theMCInfo;
       Tracks        theTracks;
+      std::string   referenceMuonType;
+      std::string   referenceElectronType;
 
     private:
       edm::InputTag genJetInputTag_;
+      
     };
 }
 
