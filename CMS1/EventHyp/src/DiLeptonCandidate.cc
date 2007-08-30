@@ -24,8 +24,11 @@ cms1::DiLeptonCandidate::DiLeptonCandidate( EventData* event,
    MET_uncorr = met;
    METphi_uncorr = metPhi;
    
-   // MET correction for muons ( full correction ) 
-   MET::correctMETmuons( event, met, metPhi );
+   // MET correction for muons ( full correction ) using only hypothesis muons
+   std::vector<const reco::Candidate*> muons;
+   if ( t == MuEl || t == MuMu ) muons.push_back(lt);
+   if ( t == ElMu || t == MuMu ) muons.push_back(ll);
+   MET::correctMETmuons( *event, muons, met, metPhi );
  /*  
    dl->MET_muon_corr = met;
    dl->METphi_muon_corr = metPhi;

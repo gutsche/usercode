@@ -29,8 +29,8 @@ namespace cms1 {
 		      std::vector<const reco::Candidate*> jets,
 		      double met,
 		      double metPhi,
-		      Cuts metCut,
-		      Cuts metCutAroundZ );
+		      Cuts metCut = Cuts(),
+		      Cuts metCutAroundZ = Cuts() );
     private:
       std::vector<cms1::DiLeptonCandidate> candidateStore;
 

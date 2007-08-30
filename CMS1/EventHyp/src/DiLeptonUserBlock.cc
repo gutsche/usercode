@@ -24,22 +24,24 @@ void cms1::DiLeptonUserBlock::registerBlock(EventData& event, const std::string&
    otherJets.registerBlock( event, name_prefix + "other_jets_", title_prefix + " other jets," );
    
    addEntry(event.p4UserData,    p4Hyp,           name_prefix + "p4",             title_prefix + " p4");
-   addEntry(event.floatUserData, met,             name_prefix + "met",            title_prefix + " MET with full muon correction");
-   addEntry(event.floatUserData, metPhi,          name_prefix + "metPhi",         title_prefix + " phi of the MET with full muon correction");
-   addEntry(event.floatUserData, metCone,         name_prefix + "metCone",        title_prefix + " MET with calo correction in a large area");
-   addEntry(event.floatUserData, metPhiCone,      name_prefix + "metPhiCone",     title_prefix + " MET phi with calo correction in a large area");
-   addEntry(event.floatUserData, metNoCalo,       name_prefix + "metNoCalo",      title_prefix + " MET corrected only for muon momentum");
-   addEntry(event.floatUserData, metPhiNoCalo,    name_prefix + "metPhiNoCalo",   title_prefix + " phi of MET corrected only for muon momentum");
-   addEntry(event.floatUserData, metJes5,         name_prefix + "metJes5",        title_prefix + " MET, muon + jet energy scale correction (jet pt>5)");
-   addEntry(event.floatUserData, metPhiJes5,      name_prefix + "metPhiJes5",     title_prefix + " MET phi, muon + jet energy scale correction (jet pt>5)");
-   addEntry(event.floatUserData, metJes10,        name_prefix + "metJes10",       title_prefix + " MET, muon + jet energy scale correction (jet pt>10)");
-   addEntry(event.floatUserData, metPhiJes10,     name_prefix + "metPhiJes10",    title_prefix + " MET phi, muon + jet energy scale correction (jet pt>10)");
-   addEntry(event.floatUserData, metJes15,        name_prefix + "metJes15",       title_prefix + " MET, muon + jet energy scale correction (jet pt>15)");
-   addEntry(event.floatUserData, metPhiJes15,     name_prefix + "metPhiJes15",    title_prefix + " MET phi, muon + jet energy scale correction (jet pt>15)");
-   addEntry(event.floatUserData, metJes30,        name_prefix + "metJes30",       title_prefix + " MET, muon + jet energy scale correction (jet pt>30)");
-   addEntry(event.floatUserData, metPhiJes30,     name_prefix + "metPhiJes30",    title_prefix + " MET phi, muon + jet energy scale correction (jet pt>30)");
-   addEntry(event.floatUserData, metJes50,        name_prefix + "metJes50",       title_prefix + " MET, muon + jet energy scale correction (jet pt>50)");
-   addEntry(event.floatUserData, metPhiJes50,     name_prefix + "metPhiJes50",    title_prefix + " MET phi, muon + jet energy scale correction (jet pt>50)");
+   addEntry(event.floatUserData, met,             name_prefix + "met",            title_prefix + " MET with full muon correction using only hypothesis muons");
+   addEntry(event.floatUserData, metPhi,          name_prefix + "metPhi",         title_prefix + " phi of the MET with full muon correction using only hypothesis muons");
+   addEntry(event.floatUserData, metCone,         name_prefix + "metCone",        title_prefix + " MET with muon calo correction in a large area using only hypothesis muons");
+   addEntry(event.floatUserData, metPhiCone,      name_prefix + "metPhiCone",     title_prefix + " MET phi with muon calo correction in a large area using only hypothesis muons");
+   addEntry(event.floatUserData, metNoCalo,       name_prefix + "metNoCalo",      title_prefix + " MET corrected only for muon momentum using only hypothesis muons");
+   addEntry(event.floatUserData, metPhiNoCalo,    name_prefix + "metPhiNoCalo",   title_prefix + " phi of MET corrected only for muon momentum using only hypothesis muons");
+   addEntry(event.floatUserData, metAll,          name_prefix + "metAll",         title_prefix + " MET with full muon correction using all muons");
+   addEntry(event.floatUserData, metPhiAll,       name_prefix + "metPhiAll",      title_prefix + " phi of the MET with full muon correction using all muons");
+   addEntry(event.floatUserData, metJes5,         name_prefix + "metJes5",        title_prefix + " MET, muon + jet energy scale correction (jet pt>5) using only hypothesis muons");
+   addEntry(event.floatUserData, metPhiJes5,      name_prefix + "metPhiJes5",     title_prefix + " MET phi, muon + jet energy scale correction (jet pt>5) using only hypothesis muons");
+   addEntry(event.floatUserData, metJes10,        name_prefix + "metJes10",       title_prefix + " MET, muon + jet energy scale correction (jet pt>10) using only hypothesis muons");
+   addEntry(event.floatUserData, metPhiJes10,     name_prefix + "metPhiJes10",    title_prefix + " MET phi, muon + jet energy scale correction (jet pt>10) using only hypothesis muons");
+   addEntry(event.floatUserData, metJes15,        name_prefix + "metJes15",       title_prefix + " MET, muon + jet energy scale correction (jet pt>15) using only hypothesis muons");
+   addEntry(event.floatUserData, metPhiJes15,     name_prefix + "metPhiJes15",    title_prefix + " MET phi, muon + jet energy scale correction (jet pt>15) using only hypothesis muons");
+   addEntry(event.floatUserData, metJes30,        name_prefix + "metJes30",       title_prefix + " MET, muon + jet energy scale correction (jet pt>30) using only hypothesis muons");
+   addEntry(event.floatUserData, metPhiJes30,     name_prefix + "metPhiJes30",    title_prefix + " MET phi, muon + jet energy scale correction (jet pt>30) using only hypothesis muons");
+   addEntry(event.floatUserData, metJes50,        name_prefix + "metJes50",       title_prefix + " MET, muon + jet energy scale correction (jet pt>50) using only hypothesis muons");
+   addEntry(event.floatUserData, metPhiJes50,     name_prefix + "metPhiJes50",    title_prefix + " MET phi, muon + jet energy scale correction (jet pt>50) using only hypothesis muons");
    // addEntry(event.floatUserData, metMuonCorr,     name_prefix + "metMuonCorr",    title_prefix + " ");
    // addEntry(event.floatUserData, metPhiMuonCorr,  name_prefix + "metPhiMuonCorr", title_prefix + " ");
    addEntry(event.floatUserData, metDPhiJet10,    name_prefix + "metDPhiJet10",   title_prefix + " MET dPhi wrt closest jet with pt>10 (muon corrected)");
@@ -76,12 +78,25 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
    type->addData( candidate.candidateType );
    met->addData( candidate.MET );
    metPhi->addData( candidate.METphi );
+   std::vector<const reco::Candidate*> hypMuons;
+   if ( candidate.candidateType == DiLeptonCandidate::MuEl || candidate.candidateType == DiLeptonCandidate::MuMu ) hypMuons.push_back(candidate.lTight);
+   if ( candidate.candidateType == DiLeptonCandidate::ElMu || candidate.candidateType == DiLeptonCandidate::MuMu ) hypMuons.push_back(candidate.lLoose);
+   const std::vector<const reco::Candidate*>& metMuons = event.getBBCollection("MuonsForMETCorrection");
+   
+   // calculate full muon correction using all muons
+     {
+	double tmpMet = candidate.MET_uncorr;
+	double tmpMetPhi = candidate.METphi_uncorr;
+	MET::correctMETmuons( event, metMuons, tmpMet, tmpMetPhi);
+	metAll->addData( tmpMet );
+	metPhiAll->addData( tmpMetPhi );
+     }
    
    // calculate simple muon correction (no calo MIP correction)
      {
 	double tmpMet = candidate.MET_uncorr;
 	double tmpMetPhi = candidate.METphi_uncorr;
-	MET::correctMETmuons( &event, tmpMet, tmpMetPhi, false );
+	MET::correctMETmuons( event, hypMuons, tmpMet, tmpMetPhi, false );
 	metNoCalo->addData( tmpMet );
 	metPhiNoCalo->addData( tmpMetPhi );
      }
@@ -90,7 +105,7 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
      {
 	double tmpMet = candidate.MET_uncorr;
 	double tmpMetPhi = candidate.METphi_uncorr;
-	MET::correctMETmuons( &event, tmpMet, tmpMetPhi, true, false );
+	MET::correctMETmuons( event, hypMuons, tmpMet, tmpMetPhi, true, false );
 	metCone->addData( tmpMet );
 	metPhiCone->addData( tmpMetPhi );
      }
@@ -130,30 +145,38 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
    const std::vector<const reco::Candidate*>& refMuons     = event.getBBCollection("refMuons");
    const std::vector<const reco::Candidate*>& refElectrons = event.getBBCollection("refElectrons");
    if ( candidate.candidateType == DiLeptonCandidate::MuMu || candidate.candidateType == DiLeptonCandidate::MuEl ){
+      int index = -1;
       for (unsigned int i=0; i<refMuons.size(); ++i)
-	if (candidate.lTight == refMuons[i]) { 
-	   ltIndex->addData( i );
+	if (candidate.lTight == refMuons[i]) {
+	   index = i;
 	   break;
 	}
+      ltIndex->addData( index );
    }else{
+      int index = -1;
       for (unsigned int i=0; i<refElectrons.size(); ++i)
 	if (candidate.lTight == refElectrons[i]) { 
-	   ltIndex->addData( i );
+	   index = i;
 	   break;
 	}
+      ltIndex->addData( index );
    }
     if ( candidate.candidateType == DiLeptonCandidate::MuEl || candidate.candidateType == DiLeptonCandidate::ElEl ){
+      int index = -1;
       for (unsigned int i=0; i<refElectrons.size(); ++i)
 	if (candidate.lLoose == refElectrons[i]) { 
-	   llIndex->addData( i );
+	   index = i;
 	   break;
 	}
+       llIndex->addData( index );
    }else{
+      int index = -1;
       for (unsigned int i=0; i<refMuons.size(); ++i)
 	if (candidate.lLoose == refMuons[i]) { 
-	   llIndex->addData( i );
+	   index = i;
 	   break;
 	}
+      llIndex->addData( index );
    }
    
    
@@ -174,35 +197,35 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
      {
 	double tmpMet = candidate.MET;
 	double tmpMetPhi = candidate.METphi;
-	MET::correctedJetMET( &event, &jetsnoel, tmpMet, tmpMetPhi, 5 );
+	MET::correctedJetMET( event, jetsnoel, tmpMet, tmpMetPhi, 5 );
 	metJes5->addData( tmpMet );
 	metPhiJes5->addData( tmpMetPhi );
      }
      {
 	double tmpMet = candidate.MET;
 	double tmpMetPhi = candidate.METphi;
-	MET::correctedJetMET( &event, &jetsnoel, tmpMet, tmpMetPhi, 10 );
+	MET::correctedJetMET( event, jetsnoel, tmpMet, tmpMetPhi, 10 );
 	metJes10->addData( tmpMet );
 	metPhiJes10->addData( tmpMetPhi );
      }
      {
 	double tmpMet = candidate.MET;
 	double tmpMetPhi = candidate.METphi;
-	MET::correctedJetMET( &event, &jetsnoel, tmpMet, tmpMetPhi, 15 );
+	MET::correctedJetMET( event, jetsnoel, tmpMet, tmpMetPhi, 15 );
 	metJes15->addData( tmpMet );
 	metPhiJes15->addData( tmpMetPhi );
      }
      {
 	double tmpMet = candidate.MET;
 	double tmpMetPhi = candidate.METphi;
-	MET::correctedJetMET( &event, &jetsnoel, tmpMet, tmpMetPhi, 30 );
+	MET::correctedJetMET( event, jetsnoel, tmpMet, tmpMetPhi, 30 );
 	metJes30->addData( tmpMet );
 	metPhiJes30->addData( tmpMetPhi );
      }
      {
 	double tmpMet = candidate.MET;
 	double tmpMetPhi = candidate.METphi;
-	MET::correctedJetMET( &event, &jetsnoel, tmpMet, tmpMetPhi, 50 );
+	MET::correctedJetMET( event, jetsnoel, tmpMet, tmpMetPhi, 50 );
 	metJes50->addData( tmpMet );
 	metPhiJes50->addData( tmpMetPhi );
      }
