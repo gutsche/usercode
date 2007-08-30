@@ -1,0 +1,7 @@
+# Format:
+#  CMSSW_X_Y_Z <package name> <tag>
+# Example:
+#  CMSSW_1_5_* DataFormats/MuonReco V06-02-02
+
+CMSSW_1_5_* RecoMuon/MuonIdentification V01-00-13_15X
+CMSSW_1_5_* DataFormats/MuonReco V06-02-02
