@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/06/23 05:36:35 $
-// $Revision: 1.15 $
+// $Date: 2007/07/27 06:59:58 $
+// $Revision: 1.16 $
 //
 
 #include "CMS1/Jets/interface/Jets.h"
@@ -18,167 +18,115 @@
 #include "DataFormats/EgammaReco/interface/SuperCluster.h"
 #include "CMS1/CommonTools/interface/UserDataTools.h"
 
-std::vector<const reco::Candidate*> cms1::Jets::getJets( const JetType jetType,
-						       const Cuts& userCuts )
+std::vector<const reco::Candidate*> cms1::Jets::getJets( const std::string jetType,
+							 const Cuts& userCuts )
 {
-  // this is the output list
-  std::vector<const reco::Candidate*> output_list;
+   // this is the output list
+   std::vector<const reco::Candidate*> output_list;
+   if (! data_ ) {
+      std::cout << "ERROR: jet black box doesn't know where to find EvenData." << std::endl;
+      assert(0);
+   }
    
-   switch (jetType) {
-    case DefaultJets:
-	{
-	   if (! data_ ) {
-	      std::cout << "ERROR: jet black box doesn't know where to find EvenData." << std::endl;
-	      return output_list;
-	   }
-	   const std::vector<reco::CaloJet>* collection = data_->getData<std::vector<reco::CaloJet> >("midPointCone5CaloJets");
-	   if ( ! collection ) {
-	      std::cout << "ERROR: jet collection is not found in the event. Return nothing." << std::endl;
-	      return output_list;
-	   }
-       
-	   // set the default cuts for this type
-	   Cuts cuts;
-	   cuts.pt_min = 20;
-	   cuts.eta_min = -2.5;
-	   cuts.eta_max = +2.5;
-	   cuts.AND(userCuts);
-       
-	   for ( std::vector<reco::CaloJet>::const_iterator jet = collection->begin();
-		 jet != collection->end();
-		 ++jet ) 
-	     {
-		if ( cuts.testCandidate(*jet) ) output_list.push_back(&*jet);
-	     }
-	}
-      break;
-    case LooseJets:
-	{
-	   if (! data_ ) {
-	      std::cout << "ERROR: jet black box doesn't know where to find EvenData." << std::endl;
-	      return output_list;
-	   }
-	   const std::vector<reco::CaloJet>* collection = data_->getData<std::vector<reco::CaloJet> >("midPointCone5CaloJets");
-	   if ( ! collection ) {
-	      std::cout << "ERROR: jet collection is not found in the event. Return nothing." << std::endl;
-	      return output_list;
-	   }
-       
-	   // set the default cuts for this type
-	   Cuts cuts;
-	   cuts.pt_min = 15;
-	   cuts.eta_min = -3.0;
-	   cuts.eta_max = +3.0;
-	   cuts.AND(userCuts);
-       
-	   for ( std::vector<reco::CaloJet>::const_iterator jet = collection->begin();
-		 jet != collection->end();
-		 ++jet ) 
-	     {
-		if ( cuts.testCandidate(*jet) ) output_list.push_back(&*jet);
-	     }
-	}
-      break;
-    case JetsWithoutElectrons:
-	{
-	   // get a set of preselected jets
-	   std::vector<const reco::Candidate*> jets = getJets(DefaultJets,Cuts());
-	   
-	   // get a set of veto electrons (they should be clean so that the jet 
-	   // selection efficiency is not too low )
-	   // 
-	   // one way would be calling another black box:
-	   //   Electron myElectron;
-	   //   myElectron.setEventData(data_);
-	   //   std::vector<const reco::Candidate*> electrons = 
-	   //         myElectron.getElectrons(TightElectrons, Cuts(), Cuts::Isolated);
-	   // 
-	   // However it would introduce cross dependencies between black boxes and it this moment
-	   // it's not clear whether it's a good practice, so let's just clean up electrons ourself
-	   // for this type of Jets 
-
-	   if (! data_ ) {
-	      std::cout << "ERROR: electron black box doesn't know where to find EvenData." << std::endl;
-	      return output_list;
-	   }
-	   const std::vector<reco::PixelMatchGsfElectron>* electronCollection = 
-	     data_->getData<std::vector<reco::PixelMatchGsfElectron> >("pixelMatchGsfElectron");
-	   if ( ! electronCollection ) {
-	      std::cout << "ERROR: electron muon collection is not found in the event. Return nothing." << std::endl;
-	      return output_list;
-	   }
-
-	   std::vector<const reco::Candidate*> vetoElectrons;
-	   
-	   // set the default cuts for this type
-	   Cuts cuts;
-	   cuts.pt_min = 20;
-	   cuts.eta_min = -2.4;
-	   cuts.eta_max = -2.4;
-	   cuts.isolated = Cuts::Isolated;
-	   cuts.setEventData( data_ );
-	   
-	   for ( std::vector<reco::PixelMatchGsfElectron>::const_iterator electron = electronCollection->begin();
-		 electron != electronCollection->end();
-		 ++electron ) 
-	     {
-		if ( ! cuts.testCandidate(*electron) ) continue;
-		if ( ! userCuts.testCandidate(*electron) ) continue;
-		
-		// cut on E/p
-		double energy = electron->superCluster()->energy();
-		if (electron->p() < 1 || energy/electron->p() <0.5) continue;
-		
-		vetoElectrons.push_back(&*electron);
-	     }
-	   
-	   // finally we have veto electron, so let's clean up jets
-	   for ( std::vector<const reco::Candidate*>::const_iterator jet = jets.begin();
-		 jet != jets.end(); ++ jet )
-	     {
-		if ( ! cuts.testCandidate(**jet) ) continue;
-		if ( ! cuts.testJetForElectrons(**jet, vetoElectrons ) ) continue;
-		output_list.push_back(*jet);
-	     }
-	}
-      break;
-    case AllJets:
-	{
-	   if (! data_ ) {
-	      std::cout << "ERROR: jet black box doesn't know where to find EvenData." << std::endl;
-	      return output_list;
-	   }
-	   const std::vector<reco::CaloJet>* collection = data_->getData<std::vector<reco::CaloJet> >("midPointCone5CaloJets");
-	   if ( ! collection ) {
-	      std::cout << "ERROR: jet collection is not found in the event. Return nothing." << std::endl;
-	      return output_list;
-	   }
-	   for ( std::vector<reco::CaloJet>::const_iterator jet = collection->begin();
-		 jet != collection->end(); ++jet ) 
-	     output_list.push_back(&*jet);
-	}
-      break;
-   case AllCorrectedJets:
+   ///////////////////////////////////////////////////////////////////
+   
+   if ( jetType.compare("AllMidPointCone5CaloJets")==0 )
      {
-       if (! data_ ) {
-	 std::cout << "ERROR: jet black box doesn't know where to find EvenData." << std::endl;
-	 return output_list;
-       }
-       const std::vector<reco::CaloJet>* collection = data_->getData<std::vector<reco::CaloJet> >("MCJetCorJetMcone5");
-	   if ( ! collection ) {
-	     std::cout << "ERROR: Corrected Jet collection is not found in the event. Return nothing." << std::endl;
-	     return output_list;
-	   }
-	   for ( std::vector<reco::CaloJet>::const_iterator jet = collection->begin();
-		 jet != collection->end(); ++jet ) 
-	     output_list.push_back(&*jet);
+	const std::vector<reco::CaloJet>* collection = data_->getData<std::vector<reco::CaloJet> >("midPointCone5CaloJets");
+	if ( ! collection ) {
+	   std::cout << "ERROR: jet collection is not found in the event. Return nothing." << std::endl;
+	   return output_list;
+	}
+       
+	Cuts cuts;
+	cuts.AND(userCuts);
+       
+	for ( std::vector<reco::CaloJet>::const_iterator jet = collection->begin(); jet != collection->end(); ++jet ) 
+	  if ( cuts.testCandidate(*jet) ) output_list.push_back(&*jet);
+	return output_list;
      }
-     break;
-     // You get here if you have requested a "jetType" that is not implemented
-  default:
-    std::cout << "Unkown or not implemented jet type" << std::endl;
-  }
-  return output_list;
+   
+   ///////////////////////////////////////////////////////////////////
+   
+   if ( jetType.compare("LooseMidPointCone5CaloJets")==0 )
+     {
+	const std::vector<const reco::Candidate*> collection = getJets( "AllMidPointCone5CaloJets" );
+	Cuts cuts;
+	cuts.pt_min = 15;
+	cuts.eta_min = -3.0;
+	cuts.eta_max = +3.0;
+	cuts.AND(userCuts);
+       
+	for ( std::vector<const reco::Candidate*>::const_iterator jet = collection.begin(); jet != collection.end(); ++jet ) 
+	  if ( cuts.testCandidate(**jet) ) output_list.push_back(*jet);
+	return output_list;
+     }
+   
+   ///////////////////////////////////////////////////////////////////
+
+   if ( jetType.compare("AllIterativeCone5CaloJets")==0 )
+     {
+	const std::vector<reco::CaloJet>* collection = data_->getData<std::vector<reco::CaloJet> >("iterativeCone5CaloJets");
+	if ( ! collection ) {
+	   std::cout << "ERROR: jet collection is not found in the event. Return nothing." << std::endl;
+	   return output_list;
+	}
+       
+	Cuts cuts;
+	cuts.AND(userCuts);
+       
+	for ( std::vector<reco::CaloJet>::const_iterator jet = collection->begin(); jet != collection->end(); ++jet ) 
+	  if ( cuts.testCandidate(*jet) ) output_list.push_back(&*jet);
+	return output_list;
+     }
+
+   ///////////////////////////////////////////////////////////////////
+ 
+   if ( jetType.compare("LooseIterativeCone5CaloJets")==0 )
+     {
+	const std::vector<const reco::Candidate*> collection = getJets( "AllIterativeCone5CaloJets" );
+	Cuts cuts;
+	cuts.pt_min = 15;
+	cuts.eta_min = -3.0;
+	cuts.eta_max = +3.0;
+	cuts.AND(userCuts);
+       
+	for ( std::vector<const reco::Candidate*>::const_iterator jet = collection.begin(); jet != collection.end(); ++jet ) 
+	  if ( cuts.testCandidate(**jet) ) output_list.push_back(*jet);
+	return output_list;
+     }
+   
+   ///////////////////////////////////////////////////////////////////
+ 
+   if ( jetType.compare("MCJetCorJetIcone5")==0 )
+     {
+	const std::vector<reco::CaloJet>* collection = data_->getData<std::vector<reco::CaloJet> >("MCJetCorJetIcone5");
+	if ( ! collection ) {
+	   std::cout << "ERROR: jet collection is not found in the event. Return nothing." << std::endl;
+	   return output_list;
+	}
+	for ( std::vector<reco::CaloJet>::const_iterator jet = collection->begin(); jet != collection->end(); ++jet ) 
+	  output_list.push_back(&*jet);
+	return output_list;
+     }
+
+   ///////////////////////////////////////////////////////////////////
+ 
+   if ( jetType.compare("MCJetCorrectorIcone5")==0 )
+     {
+	const std::vector<reco::CaloJet>* collection = data_->getData<std::vector<reco::CaloJet> >("MCJetCorrectorIcone5");
+	if ( ! collection ) {
+	   std::cout << "ERROR: jet collection is not found in the event. Return nothing." << std::endl;
+	   return output_list;
+	}
+	for ( std::vector<reco::CaloJet>::const_iterator jet = collection->begin(); jet != collection->end(); ++jet ) 
+	  output_list.push_back(&*jet);
+	return output_list;
+     }
+   
+   std::cout << "ERROR: unkown or not implemented jet type: " << jetType << "\nAbort" << std::endl;
+   assert(0);
+   return output_list;
 }
 
 void cms1::Jets::dump(std::ostream& o, std::vector<const reco::Candidate*> ml) {
@@ -203,12 +151,10 @@ void cms1::Jets::registerEventUserData()
 
 void cms1::Jets::fillEventUserData()
 {
-   std::vector<const reco::Candidate*> jets = getJets(AllJets,Cuts());
+   std::vector<const reco::Candidate*> jets = getJets("AllIterativeCone5CaloJets");
    data_->addBBCollection("refJets", jets);
    /*
    evtJets.fill( getStreamerArguments(data_, jets) );
    nJets->addData( jets.size() );
     */
 }
-
-

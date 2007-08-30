@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: kalavase $
-// $Date: 2007/06/05 01:07:24 $
-// $Revision: 1.11 $
+// $Author: dmytro $
+// $Date: 2007/07/27 06:59:58 $
+// $Revision: 1.12 $
 //
 
 #include "DataFormats/JetReco/interface/CaloJet.h"
@@ -26,20 +26,17 @@
 #include "Math/VectorUtil.h"
 
 namespace cms1 {
-   class Jets: public BlackBox  {
+    class Jets: public BlackBox  {
   public:
-      Jets():BlackBox(){}
-      
-      enum JetType { DefaultJets, LooseJets, JetsWithoutElectrons, AllJets, AllCorrectedJets };
-     
-      std::vector<const reco::Candidate*> getJets ( const JetType, const Cuts& );
-      void dump(std::ostream& o, std::vector<const reco::Candidate*>);
-      void registerEventUserData();
-      void fillEventUserData();
-    private:
-      VectorUserBlock<JetStreamer> evtJets;
-      UserDataInt*                 nJets;
-
+       Jets():BlackBox(){}
+       
+       std::vector<const reco::Candidate*> getJets ( const std::string jetType, const Cuts& = Cuts() );
+       void dump(std::ostream& o, std::vector<const reco::Candidate*>);
+       void registerEventUserData();
+       void fillEventUserData();
+     private:
+       VectorUserBlock<JetStreamer> evtJets;
+       UserDataInt*                 nJets;
   };
 }
 
