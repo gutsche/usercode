@@ -10,7 +10,7 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/03/09 19:40:49 $
+// $Date: 2007/03/16 07:00:21 $
 // $Revision: 1.1 $
 //
 
@@ -32,5 +32,4 @@ namespace cms1 {
       EventData* data_;
   };
 }
-
 #endif

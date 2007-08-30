@@ -4,9 +4,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: kalavase $
-// $Date: 2007/06/08 19:23:01 $
-// $Revision: 1.3 $
+// $Author: dmytro $
+// $Date: 2007/08/07 11:13:28 $
+// $Revision: 1.4 $
 //
 #include "CMS1/Base/interface/UserData.h"
 #include "CMS1/Base/interface/EventData.h"
@@ -27,9 +27,12 @@ namespace cms1 {
     const reco::GenJet*       genJet;
     const reco::Track*        track;
     float                     jetcorrection;
+     // float                     ecalTrueEnergy;
+     // float                     hcalTrueEnergyCorrected;
     
     StreamerArguments():
       candidate(0),genParticle(0),genJet(0),track(0),jetcorrection(0)
+       // ,ecalTrueEnergy(0), hcalTrueEnergyCorrected(0)
     {}
   };
    
