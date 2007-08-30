@@ -9,8 +9,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/07/03 05:23:03 $
-// $Revision: 1.14 $
+// $Date: 2007/08/04 22:13:04 $
+// $Revision: 1.15 $
 //
 
 #include "CLHEP/HepMC/GenParticle.h"
@@ -26,15 +26,12 @@ class TrackDetectorAssociator;
 namespace cms1 {
    struct EventData 
      {
-	EventData():iSetup(0), mcInfo(0), jetInfo(0){}
+	EventData():mcInfo(0), jetInfo(0){}
 	
 	// event data
 	const edm::Event* iEvent;
 	void setEvent( const edm::Event* iEvent );
 	
-	// GET RID OF ME !!!
-	//PDK - added temporary Event Setup for track associator 
-	const edm::EventSetup* iSetup; 
 	TrackDetectorAssociator* trackAssociator;
 
 	// reference collections
@@ -107,7 +104,9 @@ namespace cms1 {
 		     continue;
 		  }
 		  if (nCandidates != int((*itr)->getVector()->size()) ) {
-		     std::cout << "Sorry, data structure is inconsistent. Number of candidates in different blocks is different. Abort" << std::endl;
+		     std::cout << "Sorry, data structure is inconsistent. Number of candidates in different blocks is different." <<
+		       "\n name of the block: " << (*itr)->name() << "\t #Candidates in this block: " << (*itr)->getVector()->size() <<
+		       "\t #Candidates in other blocks: " << nCandidates <<"\nAbort" << std::endl;
 		     assert(0);
 		  }
 	       }
