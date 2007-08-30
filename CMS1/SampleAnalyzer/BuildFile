@@ -6,4 +6,4 @@
 <export>
    <lib name=CMS1SampleAnalyzer>
 </export>
-# <Flags CXXFLAGS=-g>
+# <Flags CXXFLAGS="-g -O0">

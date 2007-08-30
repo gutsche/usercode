@@ -7,8 +7,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/04/08 22:55:38 $
-// $Revision: 1.3 $
+// $Date: 2007/04/17 05:03:39 $
+// $Revision: 1.4 $
 //
 #include "CMS1/SampleAnalyzer/interface/SampleAnalyzer.h"
 #include <iostream>
@@ -31,7 +31,7 @@ void cms1::SampleAnalyzer::processEvent( const edm::Event& iEvent )
    // passing the "TightGlobalMuons" cuts                                                          //usercode
    // These will be the muons that we work with                                                    //usercode
    std::vector<const reco::Candidate*> selectedMuons =                                             //usercode
-     theMuons.getMuons(Muons::AllGlobalMuons,thisCuts);                                            //usercode
+     theMuons.getMuons("AllGlobalMuons",thisCuts);                                                 //usercode
                                                                                                    //usercode
    // number of muons in the event                                                                 //usercode
    std::cout << "Number of AllGlobalMuons: " << selectedMuons.size() << std::endl;                 //usercode
