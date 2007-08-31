@@ -1,8 +1,0 @@
-# include GutSoftHistogramFileService
-include "GutSoftTools/GutSoftHistogramFileService/data/gutSoftHistogramFileService.cfi"
-
-# pdt
-include "SimGeneral/HepPDTESSource/data/pdt.cfi"
-
-# include analyzer
-include "GutSoftAnalyzers/GutSoftHepMCAnalyzer/data/gutSoftHepMCAnalyzer.cfi"
