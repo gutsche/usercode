@@ -7,8 +7,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/08/04 22:13:04 $
-// $Revision: 1.13 $
+// $Date: 2007/08/30 13:19:45 $
+// $Revision: 1.14 $
 //
 #include "CMS1/BaseAnalyzer/interface/BaseAnalyzer.h"
 #include "DataFormats/Common/interface/Handle.h"
@@ -26,29 +26,36 @@ void cms1::BaseAnalyzer::configure(const edm::ParameterSet& iConfig)
    theJets.setEventData      ( &theData );
    theMET.setEventData       ( &theData );
    theMCInfo.setEventData    ( &theData );   
-
-   genJetInputTag_ = iConfig.getUntrackedParameter<edm::InputTag>("GenJetInputTag", edm::InputTag("midPointCone5GenJets"));
-   makeNtuples = iConfig.getUntrackedParameter<bool>("makeNtuples");
-   candidateBasedNtuples = iConfig.getUntrackedParameter<bool>("candidateBasedNtuples");
-   std::string ntupleFileName = iConfig.getUntrackedParameter<std::string>("fileName");
-   referenceMuonType = iConfig.getUntrackedParameter<string>("referenceMuonType");
-   referenceElectronType = iConfig.getUntrackedParameter<string>("referenceElectronType");
-   
    theTracks.setEventData    ( &theData );
+
+   genJetInputTag_ =             iConfig.getUntrackedParameter<edm::InputTag>("GenJetInputTag", edm::InputTag("midPointCone5GenJets"));
+   candidateBasedNtuples =       iConfig.getUntrackedParameter<bool>("candidateBasedNtuples");
+   std::string ntupleFileName =  iConfig.getUntrackedParameter<std::string>("fileName");
+   referenceMuonType =           iConfig.getUntrackedParameter<string>("referenceMuonType");
+   referenceElectronType =       iConfig.getUntrackedParameter<string>("referenceElectronType");
+   
+   makeNtuples =   iConfig.getUntrackedParameter<bool>("makeNtuples");
+   fillMuons =     iConfig.getUntrackedParameter<bool>("fillMuons");
+   fillElectrons = iConfig.getUntrackedParameter<bool>("fillElectrons");
+   fillJets =      iConfig.getUntrackedParameter<bool>("fillJets");
+   fillMET =       iConfig.getUntrackedParameter<bool>("fillMET");
+   fillMCInfo =    iConfig.getUntrackedParameter<bool>("fillMCInfo");
+   fillTracks =    iConfig.getUntrackedParameter<bool>("fillTracks");
+   storePlots =    iConfig.getUntrackedParameter<bool>("storePlots");
    
    if ( makeNtuples ) {
       // ntuples & userdata registration
-      theMuons.registerEventUserData();
-      theTracks.registerEventUserData();
-      theElectrons.registerEventUserData();
-      theJets.registerEventUserData();
-      theMET.registerEventUserData();
-      theMCInfo.registerEventUserData();
+      if ( fillMuons )  theMuons.registerEventUserData();
+      if ( fillTracks ) theTracks.registerEventUserData();
+      if ( fillElectrons ) theElectrons.registerEventUserData();
+      if ( fillJets )   theJets.registerEventUserData();
+      if ( fillMET )    theMET.registerEventUserData();
+      if ( fillMCInfo ) theMCInfo.registerEventUserData();
       
       // ntuple stuff
       theRootFile = new TFile(ntupleFileName.c_str(),"RECREATE");
       theTree = new TTree("event","Event data");
-      legoPtr = new TH2F("lego","CaloTower Et distribution",120,-5.220,5.220,36,-3.1416,3.1416);
+      if ( storePlots ) legoPtr = new TH2F("lego","CaloTower Et distribution",120,-5.220,5.220,36,-3.1416,3.1416);
    }
    branchesInitialized = false;
 }
@@ -61,12 +68,12 @@ void cms1::BaseAnalyzer::processEvent(const edm::Event& iEvent)
       theData.addBranches(*theTree, candidateBasedNtuples);
       branchesInitialized = true;
       // event display
-      theTree->Branch("evt_lego","TH2F",&legoPtr);
+      if ( storePlots ) theTree->Branch("evt_lego","TH2F",&legoPtr);
    }
    
    timers.push("BaseAnalyzer::processEvent::makeLegoPlot");
    // fill CaloTowers
-   if ( makeNtuples ) {
+   if ( makeNtuples && storePlots ) {
       edm::Handle<CaloTowerCollection> caloTowers;
       iEvent.getByLabel( "towerMaker", caloTowers );
       legoPtr->Reset();
@@ -118,17 +125,17 @@ void cms1::BaseAnalyzer::fillUserData( EventData& event )
    if (makeNtuples){
       TimerStack timers;
       timers.push("BaseAnalyzer::fillUserData::Event::Muons");
-      theMuons.fillEventUserData();
+      if ( fillMuons ) theMuons.fillEventUserData();
       timers.pop_and_push("BaseAnalyzer::fillUserData::Event::Tracks");
-      theTracks.fillEventUserData();
+      if ( fillTracks ) theTracks.fillEventUserData();
       timers.pop_and_push("BaseAnalyzer::fillUserData::Event::Electrons");
-      theElectrons.fillEventUserData();
+      if ( fillElectrons ) theElectrons.fillEventUserData();
       timers.pop_and_push("BaseAnalyzer::fillUserData::Event::Jets");
-      theJets.fillEventUserData();
+      if ( fillJets ) theJets.fillEventUserData();
       timers.pop_and_push("BaseAnalyzer::fillUserData::Event::MET");
-      theMET.fillEventUserData();
+      if ( fillMET ) theMET.fillEventUserData();
       timers.pop_and_push("BaseAnalyzer::fillUserData::Event::MCInfo");
-      theMCInfo.fillEventUserData();
+      if ( fillMCInfo ) theMCInfo.fillEventUserData();
    }
 }
 

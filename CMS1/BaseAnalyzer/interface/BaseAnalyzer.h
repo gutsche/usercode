@@ -9,8 +9,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/06/01 09:32:05 $
-// $Revision: 1.7 $
+// $Date: 2007/08/30 13:19:45 $
+// $Revision: 1.8 $
 //
 #include <vector>
 #include "CMS1/Base/interface/EventData.h"
@@ -72,6 +72,14 @@ namespace cms1 {
       Tracks        theTracks;
       std::string   referenceMuonType;
       std::string   referenceElectronType;
+      bool          fillMuons;
+      bool          fillElectrons;
+      bool          fillTracks;
+      bool          fillJets;
+      bool          fillMET;
+      bool          fillMCInfo;
+      bool          storePlots;
+       
 
     private:
       edm::InputTag genJetInputTag_;

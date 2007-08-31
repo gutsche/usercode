@@ -1,0 +1,12 @@
+untracked string referenceMuonType     = "AllGlobalMuons"
+untracked string referenceElectronType = "AllElectrons"
+untracked string fileName              = "ntuple.root"
+untracked bool   makeNtuples           = true
+untracked bool   candidateBasedNtuples = true
+untracked bool   fillMuons             = true
+untracked bool   fillTracks            = true
+untracked bool   fillElectrons         = true
+untracked bool   fillJets              = true
+untracked bool   fillMET               = true
+untracked bool   fillMCInfo            = true
+untracked bool   storePlots            = false
