@@ -42,5 +42,5 @@ replace PoolSource.fileNames = {
 '/store/mc/2007/8/28/CSA07-W4jet_100ptw300-alpgen-2189/0003/F6587288-5E56-DC11-9CC4-00304889D41C.root',
 '/store/mc/2007/8/28/CSA07-W4jet_100ptw300-alpgen-2189/0003/FEE81FFB-5A56-DC11-944A-0030488A0F06.root'
 }
-replace ntupleMaker.inclusiveCrossSection = 370   # pb 
-replace ntupleMaker.exclusiveCrossSection = 40    # pb, https://twiki.cern.ch/twiki/bin/view/CMS/GeneratorProduction2007CSA07
+replace ntupleMaker.inclusiveCrossSection = 123.5   # pb 
+replace ntupleMaker.exclusiveCrossSection = 40      # pb, https://twiki.cern.ch/twiki/bin/view/CMS/GeneratorProduction2007CSA07
