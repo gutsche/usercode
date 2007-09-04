@@ -2,9 +2,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: dmytro $
-// $Date: 2007/08/07 11:13:30 $
-// $Revision: 1.2 $
+// $Author: sani $
+// $Date: 2007/09/04 10:43:53 $
+// $Revision: 1.3 $
 //
 #include "CLHEP/HepMC/GenVertex.h"
 #include "CMS1/Base/interface/GenParticleStreamer.h"
@@ -25,16 +25,14 @@ void cms1::GenParticleStreamer::fill( const HepMC::GenParticle* p, bool reset) {
    if (!p) 
      return;
 
-   std::cout << "POINT1" << std::endl;
    *varP4 = LorentzVector(p->momentum().px(), 
 			  p->momentum().py(), 
 			  p->momentum().pz(), 
 			  p->momentum().e());
    *varPdgId = p->pdg_id();
    
-   std::cout << "POINT2" << std::endl;
    HepMC::GenVertex* pVertex = p->production_vertex();
-   std::cout << "POINT3" << std::endl;
+
    int motherid = 0;
    
    if (pVertex) {
@@ -48,9 +46,8 @@ void cms1::GenParticleStreamer::fill( const HepMC::GenParticle* p, bool reset) {
        motherid = (*iter)->pdg_id();
      }
    }  
-   std::cout << "POINT4" << std::endl;
    *varPdgMother = motherid;
-   std::cout << "POINT5:" << motherid << std::endl;
+
    /*
      HepMC::GenVertex* eVertex = p->end_vertex();
      if (eVertex)
