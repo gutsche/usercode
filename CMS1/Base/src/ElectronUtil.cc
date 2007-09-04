@@ -111,10 +111,10 @@ bool cms1::identify(const reco::PixelMatchGsfElectron* electron, const reco::Bas
     if (h > deltaPhiOut[icut+type*8]) 
       return false;
     
-    if (sqrt(i) < sigmaEtaEtaMin[icut+type*8] || sqrt(i) > sigmaEtaEtaMax[icut+type*8]) 
+    if (i < sigmaEtaEtaMin[icut+type*8] || i > sigmaEtaEtaMax[icut+type*8]) 
       return false;
     
-    if (sqrt(l) < sigmaPhiPhiMin[icut+type*8] || sqrt(l) > sigmaPhiPhiMax[icut+type*8]) 
+    if (l < sigmaPhiPhiMin[icut+type*8] || l > sigmaPhiPhiMax[icut+type*8]) 
       return false;
     
     return true;
