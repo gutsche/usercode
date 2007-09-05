@@ -608,5 +608,5 @@ replace PoolSource.fileNames = {
    "/store/mc/2007/8/20/CSA07-DrellYan_ll_40-2178/0001/04910A24-7A52-DC11-AEA2-000423D98E54.root",
    "/store/mc/2007/8/20/CSA07-DrellYan_ll_40-2178/0001/B6B8664F-7D52-DC11-8DE0-000423D94534.root"
 }
-replace ntupleMaker.inclusiveCrossSection = 1797   # pb LO
-replace ntupleMaker.exclusiveCrossSection = 181    # pb 
+replace ntupleMaker.inclusiveCrossSection = -1   # pb LO
+replace ntupleMaker.exclusiveCrossSection = 5391    # pb 
