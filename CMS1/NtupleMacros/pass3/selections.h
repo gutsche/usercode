@@ -1,0 +1,11 @@
+bool goodGlobalMuon(int index);
+bool pass2Met();
+bool pass2Iso();
+bool pass2Selection(bool oppSign=true);
+int getDrellYanType();
+bool isDYee();
+bool isDYmm();
+bool isDYtt();
+void dumpDocLines();
+bool simplified_electron_selection(int index);
+bool electron_selection(int index, int type=0);
