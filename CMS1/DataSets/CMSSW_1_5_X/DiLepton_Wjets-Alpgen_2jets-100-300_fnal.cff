@@ -1,0 +1,12 @@
+replace PoolSource.fileNames = {
+'dcache:/pnfs/cms/WAX/2/jribnik/W2jet_100ptw300-alpgen/reco_10.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W2jet_100ptw300-alpgen/reco_29.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W2jet_100ptw300-alpgen/reco_30.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W2jet_100ptw300-alpgen/reco_32.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W2jet_100ptw300-alpgen/reco_36.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W2jet_100ptw300-alpgen/reco_50.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W2jet_100ptw300-alpgen/reco_56.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W2jet_100ptw300-alpgen/reco_63.root'
+}
+replace ntupleMaker.inclusiveCrossSection = 694.4   # pb LO
+replace ntupleMaker.exclusiveCrossSection = 225     # pb, https://twiki.cern.ch/twiki/bin/view/CMS/GeneratorProduction2007CSA07 
