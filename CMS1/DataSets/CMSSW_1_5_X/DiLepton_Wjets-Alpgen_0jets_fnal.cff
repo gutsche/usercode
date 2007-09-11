@@ -58,4 +58,4 @@ replace PoolSource.fileNames = {
 "dcache:/pnfs/cms/WAX/2/jribnik/W0jet-alpgen/reco_9.root"
 }
 replace ntupleMaker.inclusiveCrossSection = 1.39e5   # pb LO
-replace ntupleMaker.exclusiveCrossSection = 4.5e4    # pb 
+replace ntupleMaker.exclusiveCrossSection = 4.5e4    # pb, https://twiki.cern.ch/twiki/bin/view/CMS/GeneratorProduction2007CSA07
