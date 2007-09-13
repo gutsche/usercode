@@ -396,9 +396,13 @@ int ScanTree ( TTree* tree, char * prefix="", int specDY=-1) {
 	  // 1750 pb is the x-section for mass>40 DY->ee  (same for mm, tautau)
 	  // The cross-section that was used is evt_xsec_excl in pb
 	  // the factor of 1.2 is there for NLO
+     //
+     // UPDATE -- the DY x-section has been updated in the cfg and the ntuple now
+     // has the correct scaling factor
 	  float kFactor=1.0;
 	  if (specDY == 0 || specDY == 1 || specDY == 2) {
-	    kFactor = 1.2 * (3. * 1750) / evt_xsec_excl;
+	    //kFactor = 1.2 * (3. * 1750) / evt_xsec_excl;
+	    kFactor = 1.2;
 	  }
 
 	  // Apply all the Pass2 cuts
