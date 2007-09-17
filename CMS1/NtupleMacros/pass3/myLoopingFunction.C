@@ -416,7 +416,14 @@ int ScanTree ( TTree* tree, char * prefix="", int specDY=-1) {
 	  if (abs(hyp_ll_id) == 13) {
 	    if ( !goodGlobalMuon(hyp_ll_index) ) continue;
 	  }
-	    
+
+     // Muon isolation cuts from Matt L.
+	  if (abs(hyp_lt_id) == 13) {
+        if (mus_iso03_sumPt->at(hyp_lt_index)+mus_iso03_emEt->at(hyp_lt_index)+mus_iso03_hadEt->at(hyp_lt_index)>6.5) continue;
+	  }
+	  if (abs(hyp_ll_id) == 13) {
+        if (mus_iso03_sumPt->at(hyp_ll_index)+mus_iso03_emEt->at(hyp_ll_index)+mus_iso03_hadEt->at(hyp_ll_index)>6.5) continue;
+	  }
 
 	  // Electron quality cuts.  For starters, apply loose to both (?)
 	  if (abs(hyp_lt_id) == 11) {
