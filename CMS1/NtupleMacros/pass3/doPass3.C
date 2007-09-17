@@ -28,6 +28,14 @@ TTree *tDY  = (TTree*)(gROOT->FindObject("event"));
 TFile *fWZ = TFile::Open("data/ntuplemaker_WZ.root");
 TTree *tWZ  = (TTree*)(gROOT->FindObject("event"));
 
+//ZZ file
+TFile *fZZ = TFile::Open("data/ntuplemaker_ZZ_incl.root");
+TTree *tZZ  = (TTree*)(gROOT->FindObject("event"));
+
+//Wjets file
+TFile *fWjets = TFile::Open("data/ntuplemaker_Wjets-Alpgen.root");
+TTree *tWjets  = (TTree*)(gROOT->FindObject("event"));
+
 
 // Define colors numbers:
 gStyle->SetPalette(1);
@@ -45,6 +53,14 @@ hist::color("ww", kRed);
 cout << "Processing WZ.."<<endl;
 ScanTree(tww,"wz");
 hist::color("wz", kBlue);
+
+cout << "Processing ZZ.."<<endl;
+ScanTree(tZZ,"zz");
+hist::color("zz", kGreen);
+
+cout << "Processing Wjets.."<<endl;
+ScanTree(tWjets,"wjets");
+hist::color("wjets", 40);
 
 cout << "Processing DY->tautau" << endl;
 ScanTree(tDY,"DYtt",2);
