@@ -301,4 +301,4 @@ replace PoolSource.fileNames = {
 '/store/Production/2007/8/15/FNALdataOps-DrellYan_ll_10-40-2165/0000/FEE776CC-894B-DC11-B6EE-00304875AAE5.root'
 }
 replace ntupleMaker.inclusiveCrossSection = -1   # pb LO
-replace ntupleMaker.exclusiveCrossSection = 1616    # pb 
+replace ntupleMaker.exclusiveCrossSection = 17983    # pb 
