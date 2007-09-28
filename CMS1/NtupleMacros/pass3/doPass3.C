@@ -51,7 +51,7 @@ ScanTree(tww,"ww");
 hist::color("ww", kRed);
 
 cout << "Processing WZ.."<<endl;
-ScanTree(twz,"wz");
+ScanTree(tWZ,"wz");
 hist::color("wz", kBlue);
 
 cout << "Processing ZZ.."<<endl;
