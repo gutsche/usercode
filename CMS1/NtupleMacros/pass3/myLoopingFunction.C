@@ -236,6 +236,14 @@ int ScanTree ( TTree* tree, char * prefix="", int specDY=-1) {
 	tree->SetBranchAddress("evt_scale1fb", &evt_scale1fb);
 
 
+	// A flag to pick what isolation cut to use
+	bool passTwoIso = false;
+	if (passTwoIso) {
+	  std::cout << "Running with exact same isolation requirements as pass 2" << std::endl;
+	} else {
+	  std::cout << "Running with different isolation requirements than pass 2" << std::endl;
+	}
+
 	// Make sure the specDY flag is kosher
 	if (specDY < -1 || specDY > 2) {
 	  std::cout << "specDY flag is not allowed...quit" << std::endl;
@@ -406,7 +414,11 @@ int ScanTree ( TTree* tree, char * prefix="", int specDY=-1) {
 	  }
 
 	  // Apply all the Pass2 cuts
-	  if (! pass2Selection() ) continue;
+	  if (passTwoIso) {
+	    if (! pass2Selection() ) continue;
+	  } else {
+	    if (! pass2SelectionWithBetterMuIso() ) continue;
+	  }
 
 
 	  // Muon quality cuts
@@ -417,13 +429,6 @@ int ScanTree ( TTree* tree, char * prefix="", int specDY=-1) {
 	    if ( !goodGlobalMuon(hyp_ll_index) ) continue;
 	  }
 
-     // Muon isolation cuts from Matt L.
-	  if (abs(hyp_lt_id) == 13) {
-        if (mus_iso03_sumPt->at(hyp_lt_index)+mus_iso03_emEt->at(hyp_lt_index)+mus_iso03_hadEt->at(hyp_lt_index)>6.5) continue;
-	  }
-	  if (abs(hyp_ll_id) == 13) {
-        if (mus_iso03_sumPt->at(hyp_ll_index)+mus_iso03_emEt->at(hyp_ll_index)+mus_iso03_hadEt->at(hyp_ll_index)>6.5) continue;
-	  }
 
 	  // Electron quality cuts.  For starters, apply loose to both (?)
 	  if (abs(hyp_lt_id) == 11) {

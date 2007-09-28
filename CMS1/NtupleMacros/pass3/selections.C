@@ -58,6 +58,39 @@ bool pass2Selection(bool oppSign) {
   }
   return true;
 }
+//---------------------------------------------
+// Pass2 selection with better muon isolation
+//--------------------------------------------
+bool pass2SelectionWithBetterMuIso(bool oppSign) {
+  if (!pass2Met()) return false;
+  if (oppSign) {
+    if ( hyp_lt_id * hyp_ll_id > 0 ) return false;
+  } else {
+    if ( hyp_lt_id * hyp_ll_id < 0 ) return false;
+  }
+
+  if (abs(hyp_lt_id) == 13) {
+    if (!betterMuonIsolation(hyp_lt_index)) return false;
+  } else {
+    if (hyp_lt_iso > 5) return false;
+  }
+
+  if (abs(hyp_ll_id) == 13) {
+    if (!betterMuonIsolation(hyp_ll_index)) return false;
+  } else {
+    if (hyp_ll_iso > 5) return false;
+  }
+
+  return true;
+}
+//-------------------------------------------------
+// Better Muon Isolation
+//-------------------------------------------------
+bool betterMuonIsolation(int index) {
+  if (mus_iso03_sumPt->at(index)+mus_iso03_emEt->at(index)+mus_iso03_hadEt->at(index)>6.5)  
+    return false;
+  return true;
+}
 //-------------------------------------------------
 // Auxiliary function to scan the doc line and 
 // identify DY-> ee vs mm vs tt
