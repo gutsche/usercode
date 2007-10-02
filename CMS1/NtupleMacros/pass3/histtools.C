@@ -94,12 +94,15 @@ namespace hist {
 
    //Return a pointer to a TLegend with an entry for each histogram drawn on a
    //given TCanvas.  Display either the line, point or fill values.  Optionally
-   //apply colors to all histograms.
+   //apply colors to all histograms.  By default, entry labels are the names of
+   //their respective histograms.  Optionally, if histogram names are of the
+   //form XX_YY_ZZ_WW, entry labels can be XX (token=0), YY (token=1), etc.
 
-   TLegend* legend(TCanvas* canvas, Option_t* option = "lpf", Bool_t addColor = kFALSE) {
+   TLegend* legend(TCanvas* canvas, Option_t* option = "lpf", Bool_t addColor = kFALSE, Int_t token = -1,
+                   Float_t xmin = 0.75, Float_t ymin = 0.75, Float_t xmax = 0.99, Float_t ymax = 0.99) {
       if(! canvas) return 0;
 
-      TLegend* leg = new TLegend(0.75, 0.75, 0.99, 0.99);
+      TLegend* leg = new TLegend(xmin, ymin, xmax, ymax);
       TList* list = canvas->GetListOfPrimitives();
       TIterator* iter = list->MakeIterator();
 
@@ -116,7 +119,16 @@ namespace hist {
             ++colorIt;
          }
 
-         leg->AddEntry(obj, obj->GetName(), option);
+         if (token == -1)
+            leg->AddEntry(obj, obj->GetName(), option);
+         else {
+            TString name(obj->GetName());
+            TObjArray* a = name.Tokenize("_");
+            if (a->GetEntries() <= token)
+               leg->AddEntry(obj, obj->GetName(), option);
+            else
+               leg->AddEntry(obj, a->At(token)->GetName(), option);
+         }
       }
 
       return leg;
@@ -128,10 +140,11 @@ namespace hist {
    //their respective histograms.  Optionally, if histogram names are of the
    //form XX_YY_ZZ_WW, entry labels can be XX (token=0), YY (token=1), etc.
 
-   TLegend* legend(THStack* stack, Option_t* option = "lpf", Bool_t addColor = kFALSE, Int_t token = -1) {
+   TLegend* legend(THStack* stack, Option_t* option = "lpf", Bool_t addColor = kFALSE, Int_t token = -1,
+                   Float_t xmin = 0.75, Float_t ymin = 0.75, Float_t xmax = 0.99, Float_t ymax = 0.99) {
       if(! stack) return 0;
 
-      TLegend* leg = new TLegend(0.75, 0.75, 0.99, 0.99);
+      TLegend* leg = new TLegend(xmin, ymin, xmax, ymax);
       TList* list = stack->GetHists();
       TIterator* iter = list->MakeIterator();
 
