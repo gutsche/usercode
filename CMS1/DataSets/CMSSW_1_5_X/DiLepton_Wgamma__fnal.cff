@@ -1,18 +1,18 @@
 replace PoolSource.fileNames = {
-   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma/reco_0.root",
-   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma/reco_10.root",
-   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma/reco_12.root",
-   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma/reco_13.root",
-   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma/reco_14.root",
-   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma/reco_18.root",
-   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma/reco_2.root",
-   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma/reco_3.root",
-   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma/reco_4.root",
-   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma/reco_5.root",
-   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma/reco_6.root",
-   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma/reco_7.root",
-   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma/reco_8.root",
-   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma/reco_9.root"
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma_cmssw144/reco_0.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma_cmssw144/reco_10.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma_cmssw144/reco_12.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma_cmssw144/reco_13.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma_cmssw144/reco_14.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma_cmssw144/reco_18.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma_cmssw144/reco_2.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma_cmssw144/reco_3.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma_cmssw144/reco_4.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma_cmssw144/reco_5.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma_cmssw144/reco_6.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma_cmssw144/reco_7.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma_cmssw144/reco_8.root",
+   "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma_cmssw144/reco_9.root"
 }
 replace ntupleMaker.inclusiveCrossSection = 14.41   # pb LO
 replace ntupleMaker.exclusiveCrossSection = 4.67    # pb
