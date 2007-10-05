@@ -1,0 +1,26 @@
+replace PoolSource.fileNames = {
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_12.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_13.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_14.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_16.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_17.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_32.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_35.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_37.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_3.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_40.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_42.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_45.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_46.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_47.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_48.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_49.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_51.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_53.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_60.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_6.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_7.root',
+'dcache:/pnfs/cms/WAX/2/jribnik/W4jet_0ptw100-alpgen/reco_9.root'
+}
+replace ntupleMaker.inclusiveCrossSection = 386   # pb LO
+replace ntupleMaker.exclusiveCrossSection = 125    # pb, https://twiki.cern.ch/twiki/bin/view/CMS/GeneratorProduction2007CSA07
