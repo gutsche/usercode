@@ -14,5 +14,5 @@ replace PoolSource.fileNames = {
    "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma_cmssw144/reco_8.root",
    "dcache:/pnfs/cms/WAX/8/cms1/DiLepton/samples/CMSSW_1_5_3/Wgamma_cmssw144/reco_9.root"
 }
-replace ntupleMaker.inclusiveCrossSection = 14.41   # pb LO
-replace ntupleMaker.exclusiveCrossSection = 4.67    # pb
+replace ntupleMaker.inclusiveCrossSection = 59.5      # pb LO
+replace ntupleMaker.exclusiveCrossSection = 19.278    # pb
