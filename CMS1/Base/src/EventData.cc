@@ -13,6 +13,15 @@ const std::vector<const reco::Candidate*>& cms1::EventData::getBBCollection( con
    
 }
 
+bool cms1::EventData::checkBBCollection( const std::string& name )
+{
+   std::map<std::string, std::vector<const reco::Candidate*> >::const_iterator coll = collections.find(name);
+   if (coll == collections.end())
+     return false;
+   else
+     return true;
+}
+
 void cms1::EventData::addBBCollection( const std::string& name, 
 				       const std::vector<const reco::Candidate*>& coll )
 {

@@ -26,7 +26,14 @@ float cms1::JetCorrection(const reco::CaloJet* jet, EventData* data) {
       std::cout << "ERROR JetCorrection.cc: doesn't know where to find EvenData." << std::endl;
       return -997;
     }
-
+   
+    static int nWarnings = 0;
+    if ( ! data->checkBBCollection("CorrectedJets") ) {
+       if ( nWarnings < 10 ) std::cout << "WARNING in JetCorrection.cc: cannot find BB collection CorrectedJets." << std::endl;
+       ++nWarnings;
+       return -999;
+    }
+   
     // Get the corrected jet collection and quit if it doesn't exist
     const std::vector<const reco::Candidate*>& collection = data->getBBCollection("CorrectedJets");
 

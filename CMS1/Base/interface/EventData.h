@@ -9,8 +9,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/08/04 22:13:04 $
-// $Revision: 1.15 $
+// $Date: 2007/08/30 13:13:52 $
+// $Revision: 1.16 $
 //
 
 #include "CLHEP/HepMC/GenParticle.h"
@@ -42,6 +42,7 @@ namespace cms1 {
 	// ------------ BLACK BOX COLLECTIONS ---------------
       public:
 	const std::vector<const reco::Candidate*>&    getBBCollection( const std::string& name );
+	bool                                          checkBBCollection( const std::string& name );
 	
 	// Add collection to the list of the blackbox collections.
 	// If a vector of candidates corresponding to a given name is found, 
@@ -87,6 +88,16 @@ namespace cms1 {
 	     edm::Handle<T> t;
 	     iEvent->getByLabel(label,instance,t);
 	     return t.product();
+	  }
+	
+	template <class T> std::vector<const reco::Candidate*> getCandidates(const std::string label, const std::string instance = "") const
+	  {
+	     edm::Handle<std::vector<T> > t;
+	     iEvent->getByLabel(label,instance,t);
+	     std::vector<const reco::Candidate*> v;
+	     for ( typename std::vector<T>::const_iterator i = t->begin(); i != t->end(); ++i )
+	       v.push_back( &*i );
+	     return v;
 	  }
 
 	template <class T> edm::Handle<T> getHandle(const std::string label, const std::string instance = "") {
