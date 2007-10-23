@@ -10,9 +10,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: sani $
-// $Date: 2007/08/08 15:44:13 $
-// $Revision: 1.21 $
+// $Author: dmytro $
+// $Date: 2007/08/30 13:26:13 $
+// $Revision: 1.22 $
 //
 
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
@@ -38,6 +38,7 @@ namespace cms1 {
   private:
     VectorUserBlock<ElectronStreamer> evtElectrons;
     UserDataInt *nElectrons;
+    UserDataInt1D *iClosestMuon;
   };
 }
 

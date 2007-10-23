@@ -209,3 +209,28 @@ test_cuts(TCut& cut1, TCut& cut2)
    n2 = ttt->Draw("hyp_met",cut2,"goff");
    cout << "TTbar:          Eff: " << n2/(n1+1e-5) << "\t N1: " << n1 << "\t N2: " << n2 << endl;
 }
+
+TCanvas* compatibility(std::string variable, 
+		     const TTree* tree1, const TTree* tree2,
+		     TCut cut1, TCut cut2,
+		     int nbins, double var_min, double var_max)
+{
+   c1 = new TCanvas("c1","c1",600,600);
+   h1 = new TH1F("h1","h1",nbins,var_min,var_max);
+   h1->Sumw2();
+   h2 = new TH1F("h2","h2",nbins,var_min,var_max);
+   h2->Sumw2();
+   cout << tree1->Draw((variable+">>h1").c_str(),cut1,"goff") << endl;
+   cout << tree2->Draw((variable+">>h2").c_str(),cut2,"goff") << endl;
+   if ( h1->GetEntries()>1 && h2->GetEntries()>1 ) 
+     {
+	h2->Scale(h1->GetEntries()/h2->GetEntries());
+	std::cout<< "Probability: " << h1->KolmogorovTest(h2)<< std::endl;
+	h1->SetLineColor(kRed);
+	h1->Draw();
+	h2->SetLineColor(kBlue);
+	h2->Draw("same");
+     }
+   
+   return c1;
+}

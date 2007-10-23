@@ -11,8 +11,8 @@
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/07/07 17:52:07 $
-// $Revision: 1.12 $
+// $Date: 2007/08/30 13:33:37 $
+// $Revision: 1.13 $
 //
 #include <iostream>
 
@@ -27,6 +27,9 @@
 namespace cms1 {
    class MET: public BlackBox  {
   public:
+      // all muon corrections assume p4 correction is applied
+      enum CorrectionType { NoCaloCorrection, CrossedEnergyCorrection, S9EnergyCorrection, ExpectedMipEnergyCorrection };
+	   
       MET(): BlackBox()	{}
 
       const reco::CaloMET* getMET ( const std::string& metType );
@@ -34,7 +37,7 @@ namespace cms1 {
       // here should be all corrections
       static void correctMETmuons(EventData& event, const std::vector<const reco::Candidate*>& muons,
 				  double& met, double& metPhi, 
-				  bool caloCorr = true, bool crossedEnergy = true);
+				  CorrectionType type = CrossedEnergyCorrection);
       static void correctedJetMET(EventData& event, const std::vector<const reco::Candidate*>& jets,
 				  double& met, double& metPhi,
 				  const double min_pt=30);

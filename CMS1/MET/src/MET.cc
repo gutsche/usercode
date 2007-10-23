@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/08/14 21:36:43 $
-// $Revision: 1.16 $
+// $Date: 2007/08/30 13:33:38 $
+// $Revision: 1.17 $
 //
 
 #include <iostream>
@@ -47,7 +47,7 @@ const reco::CaloMET* cms1::MET::getMET(const std::string& type)
 // correct MET energies for Muons
 // (input parameters are corrected by the algorithm)
 void cms1::MET::correctMETmuons(EventData& event, const std::vector<const reco::Candidate*>& metMuons, 
-				double& met, double& metPhi, bool caloCorr, bool crossedEnergy )
+				double& met, double& metPhi, CorrectionType type)
 {
    // first, account for muon momentum
    // const std::vector<const reco::Candidate*>& metMuons = event->getBBCollection("MuonsForMETCorrection");
@@ -63,7 +63,7 @@ void cms1::MET::correctMETmuons(EventData& event, const std::vector<const reco::
    met = std::sqrt(metx*metx+mety*mety);
    metPhi = std::atan2(mety, metx);
    
-   if (! caloCorr) return;
+   if ( type == NoCaloCorrection ) return;
    
    double muEx = 0.0;
    double muEy = 0.0;
@@ -87,13 +87,31 @@ void cms1::MET::correctMETmuons(EventData& event, const std::vector<const reco::
 	    phi = mu_track->extra()->outerPosition().phi();
 	 }
 	 */
-	   
-	 if (crossedEnergy) {
+	  
+	 switch (type) {
+	  case CrossedEnergyCorrection:
 	    muEx += ( mu->getCalEnergy().em + mu->getCalEnergy().had + mu->getCalEnergy().ho )*sin(theta)*cos( phi );
 	    muEy += ( mu->getCalEnergy().em + mu->getCalEnergy().had + mu->getCalEnergy().ho )*sin(theta)*sin( phi );
-	 }else{
+	    break;
+	  case S9EnergyCorrection:
 	    muEx += ( mu->getCalEnergy().emS9 + mu->getCalEnergy().hadS9 + mu->getCalEnergy().hoS9 )*sin(theta)*cos( phi );
 	    muEy += ( mu->getCalEnergy().emS9 + mu->getCalEnergy().hadS9 + mu->getCalEnergy().hoS9 )*sin(theta)*sin( phi );
+	    break;
+	  case ExpectedMipEnergyCorrection:
+	    // numbers are essential a wild guess
+	    if ( fabs(mu->eta()) < 1.5 ) { 
+	       // barrel
+	       muEx += ( 0.3 + 3.0 + 1.0 )*sin(theta)*cos( phi );
+	       muEy += ( 0.3 + 3.0 + 1.0 )*sin(theta)*sin( phi );
+	    } else {
+	       // endcap
+	       muEx += ( 0.35 + 3.5 )*sin(theta)*cos( phi );
+	       muEy += ( 0.35 + 3.5 )*sin(theta)*sin( phi );
+	    }
+	    break;
+	  default:
+	    std::cout << "Uknown MET correction type. Abort" << std::endl;
+	    assert(0);
 	 }
       }
    }

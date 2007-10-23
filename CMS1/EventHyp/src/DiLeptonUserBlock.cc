@@ -26,12 +26,16 @@ void cms1::DiLeptonUserBlock::registerBlock(EventData& event, const std::string&
    addEntry(event.p4UserData,    p4Hyp,           name_prefix + "p4",             title_prefix + " p4");
    addEntry(event.floatUserData, met,             name_prefix + "met",            title_prefix + " MET with full muon correction using only hypothesis muons");
    addEntry(event.floatUserData, metPhi,          name_prefix + "metPhi",         title_prefix + " phi of the MET with full muon correction using only hypothesis muons");
+   addEntry(event.floatUserData, metCaloExp,      name_prefix + "metCaloExp",     title_prefix + " MET with full muon correction and expected MIP energy in calorimeter");
+   addEntry(event.floatUserData, metPhiCaloExp,   name_prefix + "metPhiCaloExp",  title_prefix + " phi of the MET with full muon correction and expected MIP energy in calorimeter");
    addEntry(event.floatUserData, metCone,         name_prefix + "metCone",        title_prefix + " MET with muon calo correction in a large area using only hypothesis muons");
    addEntry(event.floatUserData, metPhiCone,      name_prefix + "metPhiCone",     title_prefix + " MET phi with muon calo correction in a large area using only hypothesis muons");
    addEntry(event.floatUserData, metNoCalo,       name_prefix + "metNoCalo",      title_prefix + " MET corrected only for muon momentum using only hypothesis muons");
    addEntry(event.floatUserData, metPhiNoCalo,    name_prefix + "metPhiNoCalo",   title_prefix + " phi of MET corrected only for muon momentum using only hypothesis muons");
    addEntry(event.floatUserData, metAll,          name_prefix + "metAll",         title_prefix + " MET with full muon correction using all muons");
    addEntry(event.floatUserData, metPhiAll,       name_prefix + "metPhiAll",      title_prefix + " phi of the MET with full muon correction using all muons");
+   addEntry(event.floatUserData, metAllCaloExp,   name_prefix + "metAllCaloExp",  title_prefix + " MET with full muon correction using all muons and expected MIP energy");
+   addEntry(event.floatUserData, metPhiAllCaloExp,name_prefix+"metPhiAllCaloExp", title_prefix + " phi of the MET with full muon correction using all muons and expected MIP energy");
    addEntry(event.floatUserData, metJes5,         name_prefix + "metJes5",        title_prefix + " MET, muon + jet energy scale correction (jet pt>5) using only hypothesis muons");
    addEntry(event.floatUserData, metPhiJes5,      name_prefix + "metPhiJes5",     title_prefix + " MET phi, muon + jet energy scale correction (jet pt>5) using only hypothesis muons");
    addEntry(event.floatUserData, metJes10,        name_prefix + "metJes10",       title_prefix + " MET, muon + jet energy scale correction (jet pt>10) using only hypothesis muons");
@@ -92,11 +96,29 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
 	metPhiAll->addData( tmpMetPhi );
      }
    
+   // calculate full muon correction using all muons and expected MIP energy deposition
+     {
+	double tmpMet = candidate.MET_uncorr;
+	double tmpMetPhi = candidate.METphi_uncorr;
+	MET::correctMETmuons( event, metMuons, tmpMet, tmpMetPhi, MET::ExpectedMipEnergyCorrection);
+	metAllCaloExp->addData( tmpMet );
+	metPhiAllCaloExp->addData( tmpMetPhi );
+     }
+   
+   // calculate full muon correction using only hypothesis muons and expected MIP energy deposition
+     {
+	double tmpMet = candidate.MET_uncorr;
+	double tmpMetPhi = candidate.METphi_uncorr;
+	MET::correctMETmuons( event, hypMuons, tmpMet, tmpMetPhi, MET::ExpectedMipEnergyCorrection);
+	metCaloExp->addData( tmpMet );
+	metPhiCaloExp->addData( tmpMetPhi );
+     }
+   
    // calculate simple muon correction (no calo MIP correction)
      {
 	double tmpMet = candidate.MET_uncorr;
 	double tmpMetPhi = candidate.METphi_uncorr;
-	MET::correctMETmuons( event, hypMuons, tmpMet, tmpMetPhi, false );
+	MET::correctMETmuons( event, hypMuons, tmpMet, tmpMetPhi, MET::NoCaloCorrection );
 	metNoCalo->addData( tmpMet );
 	metPhiNoCalo->addData( tmpMetPhi );
      }
@@ -105,7 +127,7 @@ void cms1::DiLeptonUserBlock::fill(EventData& event, const DiLeptonCandidate& ca
      {
 	double tmpMet = candidate.MET_uncorr;
 	double tmpMetPhi = candidate.METphi_uncorr;
-	MET::correctMETmuons( event, hypMuons, tmpMet, tmpMetPhi, true, false );
+	MET::correctMETmuons( event, hypMuons, tmpMet, tmpMetPhi, MET::S9EnergyCorrection );
 	metCone->addData( tmpMet );
 	metPhiCone->addData( tmpMetPhi );
      }

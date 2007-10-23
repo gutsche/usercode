@@ -30,8 +30,12 @@ namespace cms1 {
 	UserDataP4*         p4Hyp;
 	UserDataFloat*      met;     // default met
 	UserDataFloat*      metPhi;  // default met
+	UserDataFloat*      metCaloExp;
+	UserDataFloat*      metPhiCaloExp;
 	UserDataFloat*      metAll;     // met using all muons
 	UserDataFloat*      metPhiAll;  // met using all muons 
+	UserDataFloat*      metAllCaloExp;
+	UserDataFloat*      metPhiAllCaloExp;
 	UserDataFloat*      metCone;     // met corrected with energy in a cone around track projection on calo
 	UserDataFloat*      metPhiCone;  // met corrected with energy in a cone around track projection on calo
 	UserDataFloat*      metNoCalo;     // met with partial muon correction (no calo MIP)

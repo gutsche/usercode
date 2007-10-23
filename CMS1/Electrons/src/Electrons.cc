@@ -7,9 +7,9 @@
 // Original Author: Oliver Gutsche, gutsche@fnal.gov
 // Created:         Wed Feb 21 00:15:42 UTC 2007
 //
-// $Author: sani $
-// $Date: 2007/08/08 15:44:21 $
-// $Revision: 1.30 $
+// $Author: dmytro $
+// $Date: 2007/08/30 13:26:14 $
+// $Revision: 1.31 $
 //
 
 #include "CMS1/Electrons/interface/Electrons.h"
@@ -20,6 +20,7 @@
 #include "DataFormats/EcalDetId/interface/EcalSubdetector.h"
 #include "CMS1/CommonTools/interface/UserDataTools.h"
 #include "CMS1/Base/interface/ElectronUtil.h"
+#include "DataFormats/Math/interface/deltaR.h"
 
 void cms1::Electrons::removeElectrons(const std::vector<reco::PixelMatchGsfElectron>* collection) {
   
@@ -206,6 +207,8 @@ void cms1::Electrons::registerEventUserData() {
   evtElectrons.registerBlock( *data_, "els_", "reference electrons,");
   data_->intUserData.push_back( new UserData<int>("evt_nels", "number of electrons in the reference collection", false) );
   nElectrons = data_->intUserData.back();
+  data_->intUserData1D.push_back( new UserDataInt1D("els_closestMuon", "Index of closest muon within dR=0.1", false) );
+  iClosestMuon = data_->intUserData1D.back(); 
 }
 
 void cms1::Electrons::fillEventUserData() {
@@ -221,6 +224,26 @@ void cms1::Electrons::fillEventUserData() {
   evtElectrons.addCollections(&(*tracks));
   evtElectrons.fill( getStreamerArguments(data_, els) );
   nElectrons->addData(els.size());
+   
+   std::vector<int> refs;
+   std::vector<const reco::Candidate*> muons = data_->getBBCollection("refMuons");
+   for ( std::vector<const reco::Candidate*>::const_iterator el = els.begin();
+	 el != els.end(); ++el )
+     {
+	int index = -1;
+	double minDR = 0.1;
+	for ( unsigned int i = 0; i < muons.size(); ++i ) {
+	   if ( const reco::Muon* muon = dynamic_cast<const reco::Muon*>(muons[i]) ) {
+	      double dR = deltaR(*(*el),*muon->track().get());
+	      if ( dR < minDR ) {
+		 minDR = dR;
+		 index = i;
+	      }
+	   }
+	}
+	refs.push_back(index);
+     }
+   iClosestMuon->addData(refs);
 }  
 
 
