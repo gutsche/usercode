@@ -4,9 +4,9 @@
 //
 // Original Author: Dmytro Kovalskyi
 //
-// $Author: sani $
-// $Date: 2007/08/08 15:48:19 $
-// $Revision: 1.6 $
+// $Author: dmytro $
+// $Date: 2007/08/30 13:17:27 $
+// $Revision: 1.7 $
 //
 #include "CMS1/Base/interface/BaseStreamer.h"
 namespace cms1 {
@@ -20,7 +20,7 @@ namespace cms1 {
 	void fill( const StreamerArguments& args, bool reset = true );
       protected:
 	float mass_;
-	int *varValidHits, *varlostHits, *varPdgId, *varMotherId;
+	int *varValidHits, *varlostHits, *varPdgId, *varMotherId, *varCharge;
 	float *varD0, *varZ0, *varVertexPhi, *varChi2, *varNdof, *varD0Err, *varZ0Err, 
 	  *varPtErr, *varEtaErr, *varPhiErr;
 	LorentzVector *varP4, *varTrkP4, *varMCP4;

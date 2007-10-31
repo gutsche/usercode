@@ -3,8 +3,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/08/13 08:39:26 $
-// $Revision: 1.10 $
+// $Date: 2007/08/30 13:17:27 $
+// $Revision: 1.11 $
 //
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
@@ -30,6 +30,7 @@ cms1::TrackStreamer::TrackStreamer()
    // truth matching
    varMCP4      = addP4("mc_p4", " p4 of matched MC particle", LorentzVector(0,0,0,0) );
    varPdgId     = addInt("mc_id", " PDG id of matched MC particle", 0 );
+   varCharge    = addInt("charge", " charge", 0 );
    varMotherId  = addInt("mc_motherid", " PDG id of the mother of the particle", -1);
    // var_sim_energy_em = addFloat("sim_em", " Simulated ECAL energy", 0);
    // var_sim_energy_had = addFloat("sim_had", " Simulated HCAL energy (corrected for sampling nature of the detector)", 0);
@@ -62,6 +63,7 @@ void cms1::TrackStreamer::fill( const reco::Track* track, bool reset )
    *varlostHits = track->numberOfLostHits() ;
    *varEtaErr = track->etaError() ;
    *varPhiErr = track->phiError() ;
+   *varCharge = track->charge();
 
    float pt = track->pt();
    float p = track->p();
