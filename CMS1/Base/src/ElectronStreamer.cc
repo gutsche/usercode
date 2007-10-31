@@ -3,8 +3,8 @@
 // Original Author: Matteo Sani
 //
 // $Author: sani $
-// $Date: 2007/08/08 15:52:59 $
-// $Revision: 1.2 $
+// $Date: 2007/10/31 11:26:38 $
+// $Revision: 1.3 $
 //
 
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
@@ -24,7 +24,7 @@ cms1::ElectronStreamer::ElectronStreamer() {
   cms_class = addInt("class", " CMSSW electron classification", -999);
 
   simpleId   = addInt("simpleId",   " Simple Id based on 5 cuts", -999);
-  oldlooseId = addInt("oldlooseId", " Old Loose Id based on 6 categories", -999);
+  oldlooseId = addInt("pass3looseId", " Old Loose Id based on 6 categories", -999);
   robustId   = addInt("robustId",   " Robust Id based on 4 cuts ", -999);
   looseId    = addInt("looseId",    " Loose Id based on 3 categories", -999);
   tightId    = addInt("tightId",    " Tight Id based on 3 categories", -999);
