@@ -121,88 +121,58 @@ bool cms1::identify(const reco::PixelMatchGsfElectron* electron, const reco::Bas
   }
   
   if (type == 0) { 
-    
-    float cutsee[]  = {0.014,  0.012,  0.0115, 0.,
-                       0.0275, 0.0265, 0.0265, 0.};  // first row barrel, second endcap
-    float cutdeta[] = {0.009,  0.0045, 0.085, 0.,
-                       0.0105, 0.0068, 0.010, 0.};
-    float cuteop2[] = {0.11,   0.91,    0.11,    0.,
-                       0.0,    0.85,    0.0,     0.};
-    float cutdphi[] = {0.05,   0.025,  0.053,   0.09,
-                       0.0,    0.85,   0.0,     0.};
-    float cuthoe[]  = {0.115,  0.10,   0.055,  0.,
-                       0.145,  0.12,   0.15,   0.};
+    int eb;	 
+    float cutsee[] = {0.018, 0.015, 0.0125,0.0115, 0.010, 0.010,  0., 0.,
+                      0.020, 0.020, 0.020, 0.020 , 0.020, 0.020,  0., 0.};  // first row barrel, second endcap
+    float cutdeta[] = {0.010, 0.010, 0.010, 0.007,  0.009, 0.004,  0., 0.,
+                       0.010, 0.010, 0.010, 0.007,  0.009, 0.004,  0., 0.};
+    float cuteop2[] = {0.6,   0.8,   0.7,   0.5,   0.5,    0.9,    0., 0.,
+                       0.6,   0.8,   0.7,   0.5,   0.5,    0.9,    0., 0.};
     
     int cat = classify(electron);
-    
-    double eta = fabs(electron->p4().Eta());
-    // const reco::ClusterShapeRef& shapeRef = getClusterShape(electron, e);
-    
-    double eOverP = electron->eSuperClusterOverP();
-    double eSeed = electron->superCluster()->seed()->energy();
-    double pin  = electron->trackMomentumAtVtx().R();   
-    double eSeedOverPin = eSeed/pin; 
-    double pout = electron->trackMomentumOut().R(); 
-    double fBrem = (pin-pout)/pin;
-    double hOverE = electron->hadronicOverEm();
-    double sigmaee = l;
-    double deltaPhiIn = electron->deltaPhiSuperClusterTrackAtVtx();
-    double deltaEtaIn = electron->deltaEtaSuperClusterTrackAtVtx();
-    
-    int eb;
-    if (eta < 1.479) 
+    if(fabs(electron->p4().Eta()) < 1.45) 
       eb = 0;
-    else {
-      eb = 1; 
-      sigmaee = sigmaee - 0.02*(fabs(eta) - 2.3);   //correct sigmaetaeta dependence on eta in endcap
+    else 
+      eb = 1;
+    
+    if(cat < 6) {
+      if(pow(i, 0.5) < cutsee[cat+eb*8]) {
+        if(electron->deltaEtaSuperClusterTrackAtVtx() < cutdeta[cat+eb*8]) {
+          if(electron->eSeedClusterOverPout() > cuteop2[cat+eb*8]) {
+            return true;
+          }
+        }
+      }
     }
-    
-    // LOOSE Selection
-    if ((eOverP < 0.8) && (fBrem < 0.2)) 
-      return false;
-    
-    if (hOverE > cuthoe[cat+eb*4]) 
-      return false;    
-    
-    if (sigmaee > cutsee[cat+4*eb]) 
-      return false;    
-    
-    if (eOverP < 1.5) {
-      if (fabs(deltaPhiIn) > cutdphi[cat+4*eb]) 
-	return false;    
-    } else {
-      if (fabs(deltaPhiIn) > cutdphi[3+4*eb])
-	return false;
-    }
-    
-    if (fabs(deltaEtaIn) > cutdeta[cat+4*eb]) 
-      return false;    
-    
-    if (eSeedOverPin < cuteop2[cat+4*eb]) 
-      return false;  
-    
-    return true; 
+    return false;
   }
-
   return false;
 }
 
 int cms1::classify(const reco::PixelMatchGsfElectron* electron) {
   
-  double eta = electron->p4().Eta();
   double eOverP = electron->eSuperClusterOverP();
   double pin  = electron->trackMomentumAtVtx().R(); 
   double pout = electron->trackMomentumOut().R(); 
   double fBrem = (pin-pout)/pin;
   
-  int cat;
-  
-  if((fabs(eta)<1.479 && fBrem<0.06) || (fabs(eta)>1.479 && fBrem<0.1)) 
-    cat=1;
-  else if (eOverP < 1.2 && eOverP > 0.8) 
-    cat=0;
-  else 
-    cat=2;
+  int cat=6;
+  if(eOverP > 0.9*(1-fBrem)) {
+    if(fBrem > 0.06) {
+      if(eOverP > 1.5) 
+        cat=2;
+      else if(eOverP > 1.2) 
+        cat=1;
+      else if(eOverP > 0.8) 
+        cat=0;
+      else 
+        cat=4;
+    }
+    else if(eOverP > 1.5) 
+      cat=5;
+    else 
+      cat=3;
+  } 
   
   return cat;
 }
