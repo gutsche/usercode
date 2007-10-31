@@ -18,7 +18,7 @@ namespace cms1 {
     void fill(const StreamerArguments&, bool reset = true);
     
   protected:
-    int *nSeed, *cms_class, *looseId, *tightId;
+    int *nSeed, *cms_class, *looseId, *tightId, *robustId, *simpleId, *oldlooseId;
     float *hOverE, *fBrem, *dEtaIn, *dEtaOut, *dPhiIn, *dPhiOut, *varEsc, *varRawEsc, *vare3x3, *vare5x5;
     float *eOverPIn, *eOverPOut, *eSeed, *sPhiPhi, *sEtaEta, *tkIso;
 

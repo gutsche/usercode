@@ -3,8 +3,8 @@
 // Original Author: Matteo Sani
 //
 // $Author: sani $
-// $Date: 2007/08/08 15:51:09 $
-// $Revision: 1.1 $
+// $Date: 2007/08/08 15:52:59 $
+// $Revision: 1.2 $
 //
 
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
@@ -16,12 +16,18 @@
 #include "CMS1/Base/interface/ElectronUtil.h"
 #include "CMS1/Base/interface/ElectronStreamer.h"
 
+#include <iostream>
+
 cms1::ElectronStreamer::ElectronStreamer() {
 
   nSeed = addInt("nSeed", " Number of basic clusters in the super cluster  ", -999);
   cms_class = addInt("class", " CMSSW electron classification", -999);
-  looseId = addInt("looseId", " Loose identification result", -999);
-  tightId = addInt("tightId", " Tight identification result", -999);
+
+  simpleId   = addInt("simpleId",   " Simple Id based on 5 cuts", -999);
+  oldlooseId = addInt("oldlooseId", " Old Loose Id based on 6 categories", -999);
+  robustId   = addInt("robustId",   " Robust Id based on 4 cuts ", -999);
+  looseId    = addInt("looseId",    " Loose Id based on 3 categories", -999);
+  tightId    = addInt("tightId",    " Tight Id based on 3 categories", -999);
    
   hOverE = addFloat("hOverE", " Hadronic over Electromagnetic energy", -999);
   eOverPIn = addFloat("eOverPIn", " Super cluster energy over momentum at vertex", -999);
@@ -55,13 +61,20 @@ void cms1::ElectronStreamer::fill(const reco::Candidate* candidate, bool reset) 
     *nSeed = aElectron->numberOfClusters()-1;
     *cms_class = aElectron->classification();
     
-    int id1=0, id2=0;
-    if (identify(aElectron,barrelClShp,endcapClShp, 0))
-      id1 = 1;
-    if (identify(aElectron,barrelClShp,endcapClShp, 1))
-      id2 = 1;
-    *looseId = id1;
-    *tightId = id2;
+    int id[5];
+    for(int i=0; i<5; ++i) {
+      std::cout << i <<" type:" << identify(aElectron,barrelClShp,endcapClShp, i) << std::endl;
+      if (identify(aElectron,barrelClShp,endcapClShp, i)) 
+	id[i] = 1;
+      else
+	id[i] = 0;
+    }
+
+    *robustId = id[0];
+    *looseId = id[1];
+    *tightId = id[2];
+    *simpleId = id[3];
+    *oldlooseId = id[4];
     
     *hOverE = aElectron->hadronicOverEm();
     *eOverPIn = aElectron->eSuperClusterOverP();

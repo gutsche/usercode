@@ -14,6 +14,7 @@ namespace cms1 {
   bool identify(const reco::PixelMatchGsfElectron*, const reco::BasicClusterShapeAssociationCollection* barrelClShp,
                 const reco::BasicClusterShapeAssociationCollection* endcapClShp, int);
   int classify(const reco::PixelMatchGsfElectron*);
+  int classify_old(const reco::PixelMatchGsfElectron*);
 }
 
 #endif
