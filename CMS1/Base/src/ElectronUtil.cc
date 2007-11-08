@@ -31,6 +31,7 @@ bool cms1::identify(const reco::PixelMatchGsfElectron* electron, const reco::Bas
   
   float dummy, e3x3, e5x5, i, l; 
   R9_25(barrelClShp, endcapClShp, electron, dummy, e3x3, e5x5, l, i);
+  int eb;
   
   if (type == 2) {
     
@@ -70,7 +71,10 @@ bool cms1::identify(const reco::PixelMatchGsfElectron* electron, const reco::Bas
     float f = e3x3/e5x5;
     float g = electron->eSeedClusterOverPout();
     float h = electron->deltaPhiSeedClusterTrackAtCalo();
-    
+
+    if (electron->classification() == 40) 
+      return true;
+
     switch (electron->classification()) {
     case 0: icut=0;  break;
     case 10: icut=1; break;
@@ -92,31 +96,36 @@ bool cms1::identify(const reco::PixelMatchGsfElectron* electron, const reco::Bas
       return false;
     }
     
-    if (b < EoverPInMin[icut+type*8] || b > EoverPInMax[icut+type*8]) 
+    if (icut > 3) 
+      eb = 1;
+    else
+      eb = 0;
+
+    if (b < EoverPInMin[icut+eb*8] || b > EoverPInMax[icut+eb*8]) 
       return false;
     
-    if (c > deltaEtaIn[icut+type*8]) 
+    if (c > deltaEtaIn[icut+eb*8]) 
       return false;
     
-    if (d > deltaPhiIn[icut+type*8]) 
+    if (d > deltaPhiIn[icut+eb*8]) 
       return false;
     
-    if (e > HoverE[icut+type*8]) 
+    if (e > HoverE[icut+eb*8]) 
       return false;
     
-    if (f < E9overE25[icut+type*8]) 
+    if (f < E9overE25[icut+eb*8]) 
       return false;
     
-    if (g < EoverPOutMin[icut+type*8] || g > EoverPOutMax[icut+type*8]) 
+    if (g < EoverPOutMin[icut+eb*8] || g > EoverPOutMax[icut+eb*8]) 
       return false;
     
-    if (h > deltaPhiOut[icut+type*8]) 
+    if (h > deltaPhiOut[icut+eb*8]) 
       return false;
     
-    if (i < sigmaEtaEtaMin[icut+type*8] || i > sigmaEtaEtaMax[icut+type*8]) 
+    if (i < sigmaEtaEtaMin[icut+eb*8] || i > sigmaEtaEtaMax[icut+eb*8]) 
       return false;
     
-    if (l < sigmaPhiPhiMin[icut+type*8] || l > sigmaPhiPhiMax[icut+type*8]) 
+    if (l < sigmaPhiPhiMin[icut+eb*8] || l > sigmaPhiPhiMax[icut+eb*8]) 
       return false;
     
     return true;
@@ -136,7 +145,6 @@ bool cms1::identify(const reco::PixelMatchGsfElectron* electron, const reco::Bas
   double deltaEtaIn = electron->deltaEtaSuperClusterTrackAtVtx();
   double eta = fabs(electron->p4().Eta());
 
-  int eb;
   if (eta < 1.479) 
     eb = 0;
   else {
@@ -148,12 +156,12 @@ bool cms1::identify(const reco::PixelMatchGsfElectron* electron, const reco::Bas
     
     float cutsee[]  = {0.014,  0.012,  0.0115, 0.,
                        0.0275, 0.0265, 0.0265, 0.};  // first row barrel, second endcap
-    float cutdeta[] = {0.009,  0.0045, 0.085,  0.,
+    float cutdeta[] = {0.009,  0.0045, 0.0085, 0.,
                        0.0105, 0.0068, 0.010,  0.};
     float cuteop2[] = {0.11,   0.91,    0.11,  0.,
 		       0.0,    0.85,    0.0,   0.};
     float cutdphi[] = {0.05,   0.025,  0.053,  0.09,
-		       0.0,    0.85,   0.0,    0.};
+		       0.07,   0.03,   0.092,  0.092};
     float cuthoe[]  = {0.115,  0.10,   0.055,  0.,
 		       0.145,  0.12,   0.15,   0.};
     
@@ -291,3 +299,4 @@ int cms1::classify(const reco::PixelMatchGsfElectron* electron) {
   
   return cat;
 }
+
