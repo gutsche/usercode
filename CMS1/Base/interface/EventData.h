@@ -9,8 +9,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/08/30 13:13:52 $
-// $Revision: 1.16 $
+// $Date: 2007/10/23 10:39:09 $
+// $Revision: 1.17 $
 //
 
 #include "CLHEP/HepMC/GenParticle.h"
@@ -22,6 +22,7 @@
 #include "CMS1/Base/interface/UserData.h"
 #include "TTree.h"
 #include <vector>
+#include <boost/regex.hpp>
 class TrackDetectorAssociator;
 namespace cms1 {
    struct EventData 
@@ -129,7 +130,67 @@ namespace cms1 {
 		  *((*itr)->get()) = (*itr)->getVector()->at(index);
 	       }
 	  }
-
+	
+	// EMD ntuple stuff
+	
+	template <class tEDProducer, class tData> void registerProducts( tEDProducer* producer,
+									 std::vector<UserData<tData>*>& data )
+	  {
+	     for(typename std::vector<UserData<tData>*>::iterator itr=data.begin(); itr!=data.end(); ++itr)
+	       {
+		  // get rid of underscores
+		  std::string instanceName = (*itr)->name();
+		  static boost::regex const re("_+");
+		  instanceName = boost::regex_replace(instanceName, re,"");
+		  if ( (*itr)->isCandidate() )
+		    producer->template produces<typename std::vector<tData> >( instanceName ).setBranchAlias( (*itr)->name() );
+		  else
+		    producer->template produces<tData>( instanceName ).setBranchAlias( (*itr)->name() );
+	       }
+	  }
+	
+	template <class tEDProducer> void registerProducts( tEDProducer* producer )
+	  {
+	     registerProducts( producer, intUserData );
+	     registerProducts( producer, intUserData1D );
+	     registerProducts( producer, floatUserData );
+	     registerProducts( producer, floatUserData1D );
+	     registerProducts( producer, p4UserData );
+	     registerProducts( producer, p4UserData1D );
+	  }
+	
+	template <class tEvent, class tData> void putProducts( tEvent& iEvent,
+						 std::vector<UserData<tData>*>& data )
+	  {
+	     for(typename std::vector<UserData<tData>*>::iterator itr=data.begin(); itr!=data.end(); ++itr)
+	       {
+		  // get rid of underscores
+		  std::string instanceName = (*itr)->name();
+		  static boost::regex const re("_+");
+		  instanceName = boost::regex_replace(instanceName, re,"");
+		  if ( (*itr)->isCandidate() ) 
+		    {
+		       std::auto_ptr<std::vector<tData> > product( new typename std::vector<tData>( *((*itr)->getVector()) ) );
+		       iEvent.put( product, instanceName );
+		    }
+		  else
+		    {
+		       std::auto_ptr<tData > product( new tData( *((*itr)->get()) ) );
+		       iEvent.put( product, instanceName );
+		    }
+	       }
+	  }
+	
+	template <class tEvent> void putProducts( tEvent& iEvent )
+	  {
+	     putProducts( iEvent, intUserData );
+	     putProducts( iEvent, intUserData1D );
+	     putProducts( iEvent, floatUserData );
+	     putProducts( iEvent, floatUserData1D );
+	     putProducts( iEvent, p4UserData );
+	     putProducts( iEvent, p4UserData1D );
+	  }
+	
      };
    
 }
