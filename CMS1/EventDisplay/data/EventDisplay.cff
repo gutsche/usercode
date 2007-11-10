@@ -12,3 +12,7 @@ include "Geometry/TrackerNumberingBuilder/data/trackerNumberingGeometry.cfi"
 
 # include EventDisplay analyzer
 include "CMS1/EventDisplay/data/EventDisplay.cfi"
+
+include "SimGeneral/TrackingAnalysis/data/trackingParticles.cfi"
+
+sequence eventDisplaySequence = { trackingParticles, eventDisplay }

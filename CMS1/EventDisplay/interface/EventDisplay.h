@@ -11,8 +11,8 @@
 // Created:         Tue Apr  3 21:47:43 UTC 2007
 //
 // $Author: latb $
-// $Date: 2007/07/10 23:55:43 $
-// $Revision: 1.4 $
+// $Date: 2007/07/11 18:25:07 $
+// $Revision: 1.5 $
 //
 
 #include <string>
@@ -52,6 +52,8 @@
 #include <TColor.h>
 #include <TPolyLine.h>
 
+#include <sstream>
+
 class EventDisplay : public edm::EDAnalyzer {
  public:
   explicit EventDisplay(const edm::ParameterSet&);
@@ -81,6 +83,7 @@ class EventDisplay : public edm::EDAnalyzer {
 
   TCanvas *canvas_;
   TPad    *xy_pad_;
+  TPad    *info_pad_;
   TPad    *ef_pad_left_;
   TPad    *xy_pad_right_;
   TPad    *rz_pad_;
@@ -106,7 +109,7 @@ class EventDisplay : public edm::EDAnalyzer {
 
   edm::InputTag trackingTruthInputTag_;
   edm::InputTag trajectorySeedInputTag_;
-   
+
   double minTrackPt_;
 
 	int hadColor_;
@@ -125,7 +128,50 @@ class EventDisplay : public edm::EDAnalyzer {
 	std::vector<unsigned int> runEventList_;
 	bool filterRunEventList_;
 	int nFiltered_;
-	
+   
+   std::vector<edm::InputTag> displayVectorOfInts_, displayVectorOfFloats_, displayVectorOfP4s_;
+   
+   std::string display( int a )
+     {
+	std::ostringstream sout;
+	sout << a;
+	return sout.str();
+     }
+
+   std::string display( float a )
+     {
+	std::ostringstream sout;
+	sout << a;
+	return sout.str();
+     }
+   
+   template <class T> std::string display( T a )
+     {
+	std::ostringstream sout;
+	sout << "(" << a.pt() << ", " << a.eta() << ", " << a.phi() << ", " << a.mass() << ")";
+	return sout.str();
+     }
+
+   template <class T> void getText( const edm::Event& iEvent,
+				    std::vector<std::string>& output, 
+				    const std::vector<edm::InputTag>& tags )
+     {
+	for ( std::vector<edm::InputTag>::const_iterator name = tags.begin(); name != tags.end(); ++name)
+	  {
+	     // get rid of underscores just in case ntuple names are used
+	     output.push_back( name->label() + ":" + name->instance() );
+	     std::string instance = name->instance();
+	     static boost::regex const re("_+");
+	     instance = boost::regex_replace(instance, re,"");
+	     edm::InputTag tag( name->label(), instance );
+	     edm::Handle<T> data;
+	     iEvent.getByLabel( tag, data );
+	     
+	     for ( typename T::const_iterator itr = data->begin(); itr != data->end(); ++itr )
+	       output.push_back( "\t" + display( *itr ) );
+	  }
+     }
+   
 };
 
 #endif

@@ -1,8 +1,12 @@
 module eventDisplay = EventDisplay 
 {
 
-  untracked InputTag TrackingTruthInputTag  = trackingtruth:TrackTruth
+  untracked InputTag TrackingTruthInputTag  = trackingParticles
   untracked InputTag TrajectorySeedInputTag = roadSearchSeeds
+  
+  untracked VInputTag DisplayVectorOfInts = {}
+  untracked VInputTag DisplayVectorOfFloats = {}
+  untracked VInputTag DisplayVectorOfP4s = {}
 
   untracked string RingLabel = ""
   untracked string RoadLabel = ""
