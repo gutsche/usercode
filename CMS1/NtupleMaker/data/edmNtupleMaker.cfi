@@ -1,0 +1,22 @@
+# -*-sh-*-
+module edmNtupleMaker = EdmNtupleMakerFW
+{
+  # selection
+  untracked string tightMuonType     = "VeryLooseGlobalMuons"
+  untracked string looseMuonType     = "VeryLooseGlobalMuons"
+
+  untracked string metMuonType       = "AllGlobalMuons"
+  
+  untracked string tightElectronType     = "TightElectrons"
+  untracked string looseElectronType     = "LooseElectrons"
+  
+  untracked string jetType           = "LooseIterativeCone5CaloJets"
+  untracked string referenceJetType  = "AllIterativeCone5CaloJets"
+  untracked string correctedJetType  = "MCJetCorJetIcone5"
+
+  untracked double inclusiveCrossSection = 0
+  untracked double exclusiveCrossSection = 0
+  
+  # ntuples stuff
+  include "CMS1/BaseAnalyzer/data/baseAnalyzer.cff"
+}
