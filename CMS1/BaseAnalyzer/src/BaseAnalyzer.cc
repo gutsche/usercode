@@ -7,8 +7,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/08/30 13:19:45 $
-// $Revision: 1.14 $
+// $Date: 2007/08/31 01:56:48 $
+// $Revision: 1.15 $
 //
 #include "CMS1/BaseAnalyzer/interface/BaseAnalyzer.h"
 #include "DataFormats/Common/interface/Handle.h"
@@ -52,10 +52,12 @@ void cms1::BaseAnalyzer::configure(const edm::ParameterSet& iConfig)
       if ( fillMET )    theMET.registerEventUserData();
       if ( fillMCInfo ) theMCInfo.registerEventUserData();
       
-      // ntuple stuff
-      theRootFile = new TFile(ntupleFileName.c_str(),"RECREATE");
-      theTree = new TTree("event","Event data");
-      if ( storePlots ) legoPtr = new TH2F("lego","CaloTower Et distribution",120,-5.220,5.220,36,-3.1416,3.1416);
+      if ( isPlainRootNtuple() ) {
+	 // ntuple stuff
+	 theRootFile = new TFile(ntupleFileName.c_str(),"RECREATE");
+	 theTree = new TTree("event","Event data");
+	 if ( storePlots ) legoPtr = new TH2F("lego","CaloTower Et distribution",120,-5.220,5.220,36,-3.1416,3.1416);
+      }
    }
    branchesInitialized = false;
 }
@@ -64,7 +66,10 @@ void cms1::BaseAnalyzer::processEvent(const edm::Event& iEvent)
 {
    TimerStack timers;
    timers.push("BaseAnalyzer::processEvent");
-   if (! branchesInitialized && makeNtuples) {
+   // we don't call branch initialization for ntuples
+   // in configure(..) because we want to allow a derived
+   // class to add its data as well.
+   if (! branchesInitialized && makeNtuples && isPlainRootNtuple() ) {
       theData.addBranches(*theTree, candidateBasedNtuples);
       branchesInitialized = true;
       // event display
@@ -110,7 +115,7 @@ void cms1::BaseAnalyzer::finishEvent()
    TimerStack timers;
    timers.push("BaseAnalyzer::finishEvent");
    // store data in the ntuple
-   if (makeNtuples) theData.fillEvent(*theTree, candidateBasedNtuples);
+   if ( makeNtuples && isPlainRootNtuple() ) theData.fillEvent(*theTree, candidateBasedNtuples);
    // clear stored data to avoid memory leaks
    if (makeNtuples) theData.clearUserData();
 }
@@ -141,7 +146,7 @@ void cms1::BaseAnalyzer::fillUserData( EventData& event )
 
 void cms1::BaseAnalyzer::finishProcessing()
 {
-   if (makeNtuples) theRootFile->Write();
+   if ( makeNtuples && isPlainRootNtuple() ) theRootFile->Write();
    TimingReport::current()->dump(std::cout);
 }
 

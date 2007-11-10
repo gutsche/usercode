@@ -9,8 +9,8 @@
 // Original Author: Dmytro Kovalskyi
 //
 // $Author: dmytro $
-// $Date: 2007/08/30 13:19:45 $
-// $Revision: 1.8 $
+// $Date: 2007/08/31 01:56:48 $
+// $Revision: 1.9 $
 //
 #include <vector>
 #include "CMS1/Base/interface/EventData.h"
@@ -50,7 +50,10 @@ namespace cms1 {
 
       // User code to finilize data processing
       virtual void finishProcessing();
-    
+       
+      // What time of ntuples to create (EDM or plain ROOT)
+      virtual bool isPlainRootNtuple() { return true; }
+       
       // fill ntuple and userdata
       void fillUserData( EventData& event );
       TFile* theRootFile;
