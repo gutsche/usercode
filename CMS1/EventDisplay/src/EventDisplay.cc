@@ -8,8 +8,8 @@
 // Created:         Tue Apr  3 21:47:43 UTC 2007
 //
 // $Author: latb $
-// $Date: 2007/07/10 23:55:43 $
-// $Revision: 1.4 $
+// $Date: 2007/07/11 18:25:07 $
+// $Revision: 1.5 $
 //
 #include "CMS1/EventDisplay/interface/EventDisplay.h"
 
@@ -41,7 +41,8 @@
 #include "TGraph.h"
 #include "TEllipse.h"
 #include "TBox.h"
-
+#include "TLatex.h"
+#include "DataFormats/Math/interface/LorentzVector.h"
 
 /*
 ECAL: Volume (minR, maxR, minZ, maxZ): 129.054, 160.52, 315.899, 342.844
@@ -67,6 +68,10 @@ EventDisplay::EventDisplay(const edm::ParameterSet& iConfig)
 	
 	minTrackPt_             = iConfig.getUntrackedParameter<double>("MinTrackPt");
 
+        displayVectorOfInts_    = iConfig.getUntrackedParameter<std::vector<edm::InputTag> >("DisplayVectorOfInts");
+        displayVectorOfFloats_  = iConfig.getUntrackedParameter<std::vector<edm::InputTag> >("DisplayVectorOfFloats");
+        displayVectorOfP4s_     = iConfig.getUntrackedParameter<std::vector<edm::InputTag> >("DisplayVectorOfP4s");
+   
 	RZprojective_ = iConfig.getUntrackedParameter<bool>("RZprojective");
 	XYshowEndcaps_ = iConfig.getUntrackedParameter<bool>("XYshowEndcaps");
 	hadColor_ = 34; //TColor::GetColor(190,190,255);
@@ -384,6 +389,35 @@ void
 		particles.push_back(graph);
 	}
 
+
+   info_pad_->cd();
+   info_pad_->Clear();
+   // Display information
+   TLatex display;
+   display.SetTextAlign(12);
+   double tsize = 0.025;
+   display.SetTextSize(tsize);
+   
+   int line(0),column(0);
+   // ints first
+   std::vector<std::string> messages;
+   getText<std::vector<int> >(iEvent, messages, displayVectorOfInts_);
+   getText<std::vector<float> >(iEvent, messages, displayVectorOfFloats_);
+   getText<std::vector<math::XYZTLorentzVector> >(iEvent, messages, displayVectorOfP4s_);
+   
+   for ( std::vector<std::string>::const_iterator message = messages.begin();
+	 message != messages.end(); ++message )
+     {
+	display.DrawText(0.05+column*0.5, 1 - (0.05 + tsize*line*1.5), message->c_str() );
+	std::cout << message->c_str() << std::endl;
+	++line;
+	if (1 - (0.05 + tsize*line*1.5) < 0 ) 
+	  {
+	     ++column;
+	     line = 0;
+	  }
+     }
+
 	canvas_->Print(outputFileName_.c_str());
 
 	// delete graphs
@@ -392,7 +426,6 @@ void
 	++graph ) {
 		delete *graph;
 	}
-
 
 }
 
@@ -478,7 +511,7 @@ void
 	}
 
 	// start canvas
-	canvas_ = new TCanvas("event_display","Event Display",640,640);
+	canvas_ = new TCanvas("event_display","Event Display",900,600);
 	canvas_->SetTopMargin(0.02);
 	canvas_->SetFrameBorderMode(0);
 	canvas_->SetBorderMode(0);
@@ -489,9 +522,10 @@ void
 	canvas_->Divide(1,2);
 	xy_pad_ = (TPad*)canvas_->GetPrimitive("event_display_1");
 	rz_pad_ = (TPad*)canvas_->GetPrimitive("event_display_2");
-	xy_pad_->Divide(2,1);
+	xy_pad_->Divide(3,1);
 	ef_pad_left_ = (TPad*)xy_pad_->GetPrimitive("event_display_1_1");
 	xy_pad_right_ = (TPad*)xy_pad_->GetPrimitive("event_display_1_2");
+	info_pad_ = (TPad*)xy_pad_->GetPrimitive("event_display_1_3");
 
 	// begin file with plots
 	canvas_->Print(outputFileNameBegin_.c_str());
