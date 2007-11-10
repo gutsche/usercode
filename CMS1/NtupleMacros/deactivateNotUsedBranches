@@ -1,0 +1,61 @@
+#!/bin/env perl
+# Author: Dmytro Kovalskyi, UCSB (2007)
+use strict;
+use warnings;
+die "Usage: \n\t$0 <header file> <source file>\n\nExample:\n\t$0 CMS1.h CMS1.C\n\n" if (@ARGV !=2);
+
+# parse header file
+die "File doesn't exist: $ARGV[0]\n" if (! -e $ARGV[0]);
+my $header_input = `cat $ARGV[0]`;
+my $header_output = "";
+my %known_branches = ();
+foreach my $line (split(/\n/,$header_input)){
+    $known_branches{$1}=0 if ($line =~ /SetBranchAddress\s*\(\s*[\"\']+([^\"\']+)[\"\']/);
+}
+print "Number of known branches: ", scalar keys %known_branches,"\n";
+
+# parse source file
+# note:
+#   all words present in the source file that match branch name
+#   will activate the corresponding branch
+
+die "File doesn't exist: $ARGV[1]\n" if (! -e $ARGV[1]);
+my $source_input = `cat $ARGV[1]`;
+my $active_branches = 0;
+while ($source_input =~ /([\w\d\_]+)/gs){
+    my $keyword = $1;
+    if (defined $known_branches{$keyword}){
+	if ($known_branches{$keyword}==0){
+	    $active_branches++;
+	    print "\t$keyword\n";
+	}
+	$known_branches{$keyword}=1;
+    }
+}
+
+print "Number of active branches: $active_branches\n";
+
+# add branch deactivation to the header file
+my $init_block = 0;
+foreach my $line (split(/\n/,$header_input)){
+    if ($line =~ /^\s*void\s+Init/){
+	$init_block = 1;
+	$header_output .= "$line\n";
+	next;
+    }
+    next if ($line =~ /SetBranchStatus/);
+    if ( $init_block == 1 && $line =~ /^\s*\}/ ){
+	$init_block = 0;
+	$header_output .= "\t".'tree->SetBranchStatus("*",1);'."\n";
+	foreach my $branch (sort keys %known_branches){
+	    if ( $known_branches{$branch} == 0 ){
+		$header_output .= "\t".'tree->SetBranchStatus("'.($branch).'*",0);'."\n"
+	    }
+	}
+    }
+    $header_output .= "$line\n";
+}
+open(OUT,">$ARGV[0]")||die "Cannot write updated header version\n$!\n";
+print OUT $header_output;
+close OUT;
+exit
