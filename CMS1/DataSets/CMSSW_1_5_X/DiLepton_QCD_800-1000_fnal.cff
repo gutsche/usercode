@@ -1415,3 +1415,4 @@ replace PoolSource.fileNames = {
 }
 replace ntupleMaker.inclusiveCrossSection = 35.1 # pb 
 replace ntupleMaker.exclusiveCrossSection = 35.1 # pb 
+replace ntupleMaker.kfactor = 1
