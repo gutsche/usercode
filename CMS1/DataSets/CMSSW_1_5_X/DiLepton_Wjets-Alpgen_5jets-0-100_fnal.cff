@@ -1,4 +1,4 @@
 replace PoolSource.fileNames = {} 
 replace ntupleMaker.inclusiveCrossSection = 260   # pb LO
 replace ntupleMaker.exclusiveCrossSection = 85# pb, https://twiki.cern.ch/twiki/bin/view/CMS/GeneratorProduction2007CSA07 
-replace ntupleMaker.kfactor = 0.0000474
+replace ntupleMaker.kfactor = 1 
