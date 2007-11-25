@@ -1,5 +1,0 @@
-module gutSoftTrajectorySeedAnalyzer = GutSoftTrajectorySeedAnalyzer
-{
-  untracked InputTag TrajectorySeedInputTag = roadSearchSeeds
-  untracked string   BaseDirectoryName      = "TrajectorySeeds"
-}
