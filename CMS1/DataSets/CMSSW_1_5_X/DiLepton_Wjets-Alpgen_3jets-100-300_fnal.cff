@@ -200,5 +200,5 @@ replace PoolSource.fileNames = {
 '/store/mc/2007/8/22/CSA07-W3jet_100ptw300-alpgen-2188/0016/F6363777-5951-DC11-86EB-000423D99BF2.root'
 }
 replace ntupleMaker.inclusiveCrossSection = 309   # pb LO
-replace ntupleMaker.exclusiveCrossSection = 100    # pb, https://twiki.cern.ch/twiki/bin/view/CMS/GeneratorProduction2007CSA07 
+replace ntupleMaker.exclusiveCrossSection = 100   # pb, https://twiki.cern.ch/twiki/bin/view/CMS/GeneratorProduction2007CSA07 
 replace ntupleMaker.kfactor = 1
