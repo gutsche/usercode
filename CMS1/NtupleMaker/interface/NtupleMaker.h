@@ -9,8 +9,8 @@
 // Description:     EDAnalyzer filling table for di-lepton analysis dependent on number of jets
 //
 // $Author: dmytro $
-// $Date: 2007/08/04 22:13:07 $
-// $Revision: 1.22 $
+// $Date: 2007/08/30 20:27:38 $
+// $Revision: 1.2 $
 //
 
 #include <vector>
@@ -46,8 +46,10 @@ namespace cms1 {
      UserDataInt* nCandidates;
      UserDataFloat* inclusiveCrossSection;
      UserDataFloat* exclusiveCrossSection;
+     UserDataFloat* kfactor;
      double inclusiveCrossSectionValue;
      double exclusiveCrossSectionValue;
+     double kfactorValue;
      
      // input types
      std::string  tightMuonType;

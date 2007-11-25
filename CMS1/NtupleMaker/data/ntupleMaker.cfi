@@ -16,6 +16,7 @@ module ntupleMaker = NtupleMakerFW
 
   untracked double inclusiveCrossSection = 0
   untracked double exclusiveCrossSection = 0
+  untracked double kfactor = 1
 
   # ntuples stuff
   include "CMS1/BaseAnalyzer/data/baseAnalyzer.cff"

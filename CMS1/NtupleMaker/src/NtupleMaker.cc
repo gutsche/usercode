@@ -3,8 +3,8 @@
 // Class:           NtupleMaker
 //
 // $Author: dmytro $
-// $Date: 2007/08/07 11:13:37 $
-// $Revision: 1.34 $
+// $Date: 2007/08/30 20:27:39 $
+// $Revision: 1.2 $
 //
 
 #include <vector>
@@ -94,6 +94,7 @@ cms1::NtupleMaker::processEvent( const edm::Event& iEvent )
    nCandidates->addData(dlCandidates.size());
    inclusiveCrossSection->addData(inclusiveCrossSectionValue);
    exclusiveCrossSection->addData(exclusiveCrossSectionValue);
+   kfactor->addData(kfactorValue);
    
    for ( std::vector<const cms1::DiLeptonCandidate*>::iterator cand = dlCandidates.begin(); cand != dlCandidates.end(); ++cand )
      diLeptonUserData.fill(theData,**cand);
@@ -114,12 +115,15 @@ void cms1::NtupleMaker::configure(const edm::ParameterSet& iConfig)
    
    inclusiveCrossSectionValue = iConfig.getUntrackedParameter<double>("inclusiveCrossSection");
    exclusiveCrossSectionValue = iConfig.getUntrackedParameter<double>("exclusiveCrossSection");
+   kfactorValue = iConfig.getUntrackedParameter<double>("kfactor");
       
    diLeptonUserData.registerBlock(theData, "hyp_", "hypothesis");
    theData.intUserData.push_back( new UserData<int>("evt_nCand", "number of dilepton hypotheses in the event", false) );
    nCandidates = theData.intUserData.back();
    theData.floatUserData.push_back( new UserData<float>("evt_xsec_incl", "Best estimate of the process inclusive crossection to all standard model final states", false) );
    inclusiveCrossSection = theData.floatUserData.back();
-   theData.floatUserData.push_back( new UserData<float>("evt_xsec_excl", "Best estimate of the process exclusve crossection (inslusive x branching ratio)", false) );
+   theData.floatUserData.push_back( new UserData<float>("evt_xsec_excl", "Best estimate of the process exclusive crossection (inclusive x branching ratio)", false) );
    exclusiveCrossSection = theData.floatUserData.back();
+   theData.floatUserData.push_back( new UserData<float>("evt_kfactor", "K-factor used in calculation of luminosity scale factor", false) );
+   kfactor = theData.floatUserData.back();
 }
