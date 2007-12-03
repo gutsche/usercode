@@ -3,8 +3,8 @@
 // Original Author: Matteo Sani
 //
 // $Author: sani $
-// $Date: 2007/10/31 11:26:38 $
-// $Revision: 1.3 $
+// $Date: 2007/10/31 11:28:28 $
+// $Revision: 1.4 $
 //
 
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
@@ -23,8 +23,9 @@ cms1::ElectronStreamer::ElectronStreamer() {
   nSeed = addInt("nSeed", " Number of basic clusters in the super cluster  ", -999);
   cms_class = addInt("class", " CMSSW electron classification", -999);
 
-  simpleId   = addInt("simpleId",   " Simple Id based on 5 cuts", -999);
+  simpleId   = addInt("pass3simpleId",   " Simple Id based on 5 cuts", -999);
   oldlooseId = addInt("pass3looseId", " Old Loose Id based on 6 categories", -999);
+  oldtightId = addInt("pass3tightId", " Old Tight Id based on 6 categories", -999);
   robustId   = addInt("robustId",   " Robust Id based on 4 cuts ", -999);
   looseId    = addInt("looseId",    " Loose Id based on 3 categories", -999);
   tightId    = addInt("tightId",    " Tight Id based on 3 categories", -999);
@@ -61,13 +62,13 @@ void cms1::ElectronStreamer::fill(const reco::Candidate* candidate, bool reset) 
     *nSeed = aElectron->numberOfClusters()-1;
     *cms_class = aElectron->classification();
     
-    int id[5];
-    for(int i=0; i<5; ++i) {
+    int id[6];
+    for(int i=0; i<6; ++i) {
       std::cout << i <<" type:" << identify(aElectron,barrelClShp,endcapClShp, i) << std::endl;
       if (identify(aElectron,barrelClShp,endcapClShp, i)) 
-	id[i] = 1;
+        id[i] = 1;
       else
-	id[i] = 0;
+        id[i] = 0;
     }
 
     *robustId = id[0];
@@ -75,6 +76,7 @@ void cms1::ElectronStreamer::fill(const reco::Candidate* candidate, bool reset) 
     *tightId = id[2];
     *simpleId = id[3];
     *oldlooseId = id[4];
+    *oldtightId = id[5];
     
     *hOverE = aElectron->hadronicOverEm();
     *eOverPIn = aElectron->eSuperClusterOverP();

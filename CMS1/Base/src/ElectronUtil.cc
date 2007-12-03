@@ -27,109 +27,11 @@ void cms1::R9_25(const reco::BasicClusterShapeAssociationCollection* barrelClShp
 bool cms1::identify(const reco::PixelMatchGsfElectron* electron, const reco::BasicClusterShapeAssociationCollection* barrelClShp,
                     const reco::BasicClusterShapeAssociationCollection* endcapClShp, int type) {
   
-  // type = 0 robust (looser and safe), 1 loose, 2 tight, 3 simple (old robust), 4 old loose (6 categories) 
+  // type = 0 robust (looser and safe), 1 loose, 2 tight, 3 simple (old robust), 4 old loose (6 categories), 5 old tight (6 categories) 
   
   float dummy, e3x3, e5x5, i, l; 
   R9_25(barrelClShp, endcapClShp, electron, dummy, e3x3, e5x5, l, i);
   int eb;
-  
-  if (type == 2) {
-    
-    const double EoverPInMax[]    = { 999.,  999., 999.,   999.,  999.,  999.,  999.,  999.,     // first row loose  
-                                      1.3,   1.2,   1.3,   999.,  999.,  999.,  999.,  999. };   // second row tight
-    const double EoverPInMin[]    = { 0.,    0.,    0.,    0.,    0.,    0.,    0.,    0.,   
-                                      0.9,   0.9,   0.9,   0.6,   0.9,   0.9,   0.9,   0.7 };
-    const double deltaEtaIn[]     = { 999.,  999.,  999.,  999.,  999.,  999.,  999.,  999., 
-                                      0.004, 0.006, 0.005, 0.007, 0.007, 0.008, 0.007, 0.008 };
-    const double deltaPhiIn[]     = { 999.,  999.,  999.,  999.,  999.,  999.,  999.,  999.,  
-                                      0.04,  0.07,  0.04,  0.08,  0.06,  0.07,  0.06,  0.07 };
-    const double HoverE[]         = { 999.,  999.,  999.,  999.,  999.,  999.,  999.,  999.,  
-                                      0.06,  0.05,  0.06,  0.14,  0.1,   0.1,   0.1,   0.12 };
-    const double E9overE25[]      = { 0.,    0.,    0.,    0.,    0.,    0.,    0.,    0.,
-                                      0.7,   0.75,  0.8,   0.,    0.85,  0.75,  0.8,   0. };
-    const double EoverPOutMax[]   = { 999.,  999.,  999.,  999.,  999.,  999.,  999.,  999.,
-                                      2.5,   999.,  999.,  999.,  2.,    999.,  999.,  999. };
-    const double EoverPOutMin[]   = { 0.,    0.,    0.,    0.,    0.,    0.,   0.,     0.,  
-                                      0.6,   1.8,   1.,    0.75,  0.6,   1.5,   1.,    0.8 };  
-    const double deltaPhiOut[]    = { 999.,  999.,  999.,  999., 999.,   999.,  999.,  999.,
-                                      0.011, 999.,  999.,  999.,  0.02,  999.,  999.,  999.};
-    const double sigmaEtaEtaMax[] = { 999.,  999.,  999.,  999.,  999.,  999.,  999.,  999.,
-                                      0.011, 0.011, 0.011, 0.011, 0.022, 0.022, 0.022, 0.3 };
-    const double sigmaEtaEtaMin[] = { 0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   00.,
-                                      0.005, 0.005, 0.005, 0.005, 0.008, 0.008, 0.008, 00. };
-    const double sigmaPhiPhiMax[] = { 999.,  999.,  999.,  999.,  999.,  999.,  999.,  999.,
-                                      0.015, 999.,  999.,  999.,  0.02,  999.,  999.,  999. };
-    const double sigmaPhiPhiMin[] = { 0.,    0.,    0.,    0.,    0.,    0.,    0.,    0.,  
-                                      0.005, 0.,    0.,    0.,    0.,    0.,    0.,    0. };
-    
-    int icut;
-    
-    float b = electron->eSuperClusterOverP();
-    float c = electron->deltaEtaSuperClusterTrackAtVtx();
-    float d = electron->deltaPhiSuperClusterTrackAtVtx();
-    float e = electron->hadronicOverEm();
-    float f = e3x3/e5x5;
-    float g = electron->eSeedClusterOverPout();
-    float h = electron->deltaPhiSeedClusterTrackAtCalo();
-
-    if (electron->classification() == 40) 
-      return true;
-
-    switch (electron->classification()) {
-    case 0: icut=0;  break;
-    case 10: icut=1; break;
-    case 20: icut=2; break;
-    case 30: icut=3; break;
-    case 31: icut=3; break;
-    case 32: icut=3; break;
-    case 33: icut=3; break;
-    case 34: icut=3; break;
-    case 100: icut=4; break;
-    case 110: icut=5; break;
-    case 120: icut=6; break;
-    case 130: icut=7; break;
-    case 131: icut=7; break;
-    case 132: icut=7; break;
-    case 133: icut=7; break;
-    case 134: icut=7; break;
-    default:
-      return false;
-    }
-    
-    if (icut > 3) 
-      eb = 1;
-    else
-      eb = 0;
-
-    if (b < EoverPInMin[icut+eb*8] || b > EoverPInMax[icut+eb*8]) 
-      return false;
-    
-    if (c > deltaEtaIn[icut+eb*8]) 
-      return false;
-    
-    if (d > deltaPhiIn[icut+eb*8]) 
-      return false;
-    
-    if (e > HoverE[icut+eb*8]) 
-      return false;
-    
-    if (f < E9overE25[icut+eb*8]) 
-      return false;
-    
-    if (g < EoverPOutMin[icut+eb*8] || g > EoverPOutMax[icut+eb*8]) 
-      return false;
-    
-    if (h > deltaPhiOut[icut+eb*8]) 
-      return false;
-    
-    if (i < sigmaEtaEtaMin[icut+eb*8] || i > sigmaEtaEtaMax[icut+eb*8]) 
-      return false;
-    
-    if (l < sigmaPhiPhiMin[icut+eb*8] || l > sigmaPhiPhiMax[icut+eb*8]) 
-      return false;
-    
-    return true;
-  }
   
   double eOverP = electron->eSuperClusterOverP();
   double eSeedOverPOut = electron->eSeedClusterOverPout();
@@ -151,6 +53,51 @@ bool cms1::identify(const reco::PixelMatchGsfElectron* electron, const reco::Bas
     eb = 1; 
     sigmaeecor = sigmaee - 0.02*(fabs(eta) - 2.3);   //correct sigmaetaeta dependence on eta in endcap
   }
+  
+  if (type == 2) { 
+    
+    float cuthoe[]  = {0.05,    0.042,  0.045,  0.,  
+                       0.055,   0.037,  0.050,  0.};
+    float cutsee[]  = {0.0125,  0.011,  0.01,   0.,
+                       0.0265,  0.0252, 0.026,  0.};
+    float cutdphi[] = {0.032,   0.016,  0.0525, 0.09, 
+                       0.025,   0.035,  0.065,  0.092};
+    float cutdeta[] = {0.0055,  0.0030, 0.0065, 0.,
+                       0.0060,  0.0055, 0.0075, 0.}; 
+    float cuteop2[] = {0.24,    0.94,   0.11,   0.,   
+                       0.32,    0.83,   0.,     0.}; 
+    
+    int cat = classify(electron);
+        
+    // TIGHT Selection
+    if ((eOverP < 0.8) && (fBrem < 0.2)) 
+      return false;
+    
+    if (eOverP < 0.9*(1-fBrem))
+      return false;
+    
+    if (hOverE > cuthoe[cat+eb*4]) 
+      return false;    
+    
+    if (sigmaeecor > cutsee[cat+4*eb]) 
+      return false;    
+    
+    if (eOverP < 1.5) {
+      if (fabs(deltaPhiIn) > cutdphi[cat+4*eb]) 
+        return false;    
+    } else {
+      if (fabs(deltaPhiIn) > cutdphi[3+4*eb])
+        return false;
+    }
+    
+    if (fabs(deltaEtaIn) > cutdeta[cat+4*eb]) 
+      return false;    
+    
+    if (eSeedOverPin < cuteop2[cat+4*eb]) 
+      return false;  
+    
+    return true; 
+  }
 
   if (type == 1) { 
     
@@ -159,11 +106,11 @@ bool cms1::identify(const reco::PixelMatchGsfElectron* electron, const reco::Bas
     float cutdeta[] = {0.009,  0.0045, 0.0085, 0.,
                        0.0105, 0.0068, 0.010,  0.};
     float cuteop2[] = {0.11,   0.91,    0.11,  0.,
-		       0.0,    0.85,    0.0,   0.};
+                       0.0,    0.85,    0.0,   0.};
     float cutdphi[] = {0.05,   0.025,  0.053,  0.09,
-		       0.07,   0.03,   0.092,  0.092};
+                       0.07,   0.03,   0.092,  0.092};
     float cuthoe[]  = {0.115,  0.10,   0.055,  0.,
-		       0.145,  0.12,   0.15,   0.};
+                       0.145,  0.12,   0.15,   0.};
     
     int cat = classify(electron);
     
@@ -198,8 +145,8 @@ bool cms1::identify(const reco::PixelMatchGsfElectron* electron, const reco::Bas
 
   if (type == 0) {
     
-    double cut[] = {0.115, 0.0140, 0.053, 0.0090,
-		    0.150, 0.0275, 0.092, 0.0105};
+    double cut[] = {0.115, 0.0140, 0.090, 0.0090,
+                    0.150, 0.0275, 0.092, 0.0105};
     
     if (hOverE > cut[0+eb*4]) 
       return false;    
@@ -215,43 +162,79 @@ bool cms1::identify(const reco::PixelMatchGsfElectron* electron, const reco::Bas
     
     return true;
   }
-
+  
   if (type == 3) {
     double dRIn = sqrt(pow(deltaEtaIn,2)+pow(deltaPhiIn,2));
-    if ((eta > 1.5 || sigmaee < 0.012) && sigmaee < 0.03 && 
-	fabs(deltaEtaIn) < 0.012 && hOverE < 0.1 && eOverP > .9 && dRIn < 0.1)
+    if ((eta > 1.479 || sigmaee < 0.012) && sigmaee < 0.03 && 
+        fabs(deltaEtaIn) < 0.012 && hOverE < 0.1 && eOverP > 0.9 && dRIn < 0.1)
       return true;
-
+    
     return false;
   }
-
+  
   if (type == 4) {
- 
+    
     int cat_old = classify_old(electron);
     
-    float cutsee[] =  {0.018, 0.015, 0.0125, 0.0115, 0.010, 0.010,
-                       0.020, 0.020, 0.020,  0.020 , 0.020, 0.020};  // first row barrel, second endcap
-    float cutdeta[] = {0.010, 0.010, 0.010,  0.007,  0.009, 0.004,
-                       0.010, 0.010, 0.010,  0.007,  0.009, 0.004};
-    float cuteop2[] = {0.6,   0.8,   0.7,    0.5,    0.5,   0.9,
-                       0.6,   0.8,   0.7,    0.5,    0.5,   0.9};
+    float cutsee[] =  {0.014,  0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 
+                       0.031,  0.028,  0.028,  0.028,  0.028,  0.028,  0.028,  0.028}; // first row barrel, second endcap
+    float cutdeta[] = {0.009,  0.0085, 0.0085, 0.0035, 0.0085, 0.0035, 0.0085, 0.0085,
+                       0.009,  0.009,  0.009,  0.009,  0.009,  0.009,  0.009,  0.009};
+    float cutdphi[] = {0.06,   0.06,   0.10,   0.02,   0.06,   0.06,   0.06,   0.06,
+                       0.06,   0.10,   0.10,   0.02,   0.10,   0.10,   0.10,   0.10};
+    float cuthoe[] =  {0.125,  0.055,  0.055,  0.10,   0.055,  0.055,  0.055,  0.055,
+                       0.125,  0.10,   0.10,   0.10,   0.10,   0.10,   0.10,   0.10};
+    float cuteop2[] = {0.55,   0.88,   0.88,   0.88,   0.88,   0.88,   0.88,   0.88,
+                       0.85,   0.85,   0.85,   0.85,   0.85,   0.85,   0.85,   0.85};
     
-    if(cat_old < 6) {
-      if(sigmaee < cutsee[cat_old+eb*6]) {
-        if(deltaEtaIn < cutdeta[cat_old+eb*6]) {
-          if(eSeedOverPOut > cuteop2[cat_old+eb*6]) {
-            return true;
+    if(sigmaeecor < cutsee[cat_old+eb*8]) {
+      if(fabs(deltaEtaIn) < cutdeta[cat_old+eb*8]) {
+        if(fabs(deltaPhiIn) < cutdphi[cat_old+eb*8]) {
+          if(eSeedOverPOut > cuteop2[cat_old+eb*8]) {
+            if(hOverE < cuthoe[cat_old+eb*8]) {
+              return true;
+            }
           }
         }
       }
     }
-
+  
     return false;
   }
 
+  if (type == 5) {
+    
+    int cat_old = classify_old(electron);
+    
+    float cutsee[] =  {0.014,  0.012,  0.012,  0.012,  0.012,  0.012,  0.012,  0.012, 
+                       0.027,  0.026,  0.026,  0.026,  0.026,  0.026,  0.026,  0.026}; // first row barrel, second endcap
+    float cutdeta[] = {0.009,  0.0055, 0.0055, 0.004,  0.0055, 0.004,  0.0055, 0.0055,
+                       0.008,  0.008,  0.008,  0.008,  0.008,  0.008,  0.008,  0.008};
+    float cutdphi[] = {0.04,   0.04,   0.07,   0.02,   0.04,   0.04,   0.04,   0.04,
+                       0.055,  0.085,  0.085,  0.02,   0.085,  0.085,  0.085,  0.085};
+    float cuthoe[] =  {0.12,   0.055,  0.055,  0.095,  0.055,  0.055,  0.055,  0.055,
+                       0.05,   0.03,   0.03,   0.03,   0.03,   0.03,   0.03,   0.03};
+    float cuteop2[] = {0.55,   0.91,   0.91,   0.91,   0.91,   0.91,   0.91,   0.91,
+                       0.85,   0.85,   0.85,   0.85,   0.85,   0.85,   0.85,   0.85};
+    
+    if(sigmaeecor < cutsee[cat_old+eb*8]) {
+      if(fabs(deltaEtaIn) < cutdeta[cat_old+eb*8]) {
+        if(fabs(deltaPhiIn) < cutdphi[cat_old+eb*8]) {
+          if(eSeedOverPOut > cuteop2[cat_old+eb*8]) {
+            if(hOverE < cuthoe[cat_old+eb*8]) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+    
+    return false;
+  }
+  
   return false;
 }
-
+  
 int cms1::classify_old(const reco::PixelMatchGsfElectron* electron) {
    
   double eOverP = electron->eSuperClusterOverP();
