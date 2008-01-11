@@ -8,8 +8,8 @@
 // Created:         Wed Feb 21 00:50:30 UTC 2007
 //
 // $Author: dmytro $
-// $Date: 2007/07/27 06:59:58 $
-// $Revision: 1.16 $
+// $Date: 2007/08/30 13:32:26 $
+// $Revision: 1.17 $
 //
 
 #include "CMS1/Jets/interface/Jets.h"
@@ -142,19 +142,15 @@ void cms1::Jets::dump(std::ostream& o, std::vector<const reco::Candidate*> ml) {
 
 void cms1::Jets::registerEventUserData()
 {
-   /*
-   evtJets.registerBlock( *data_, "jets_", "cms1_jets_");
-   data_->intUserData.push_back( new UserData<int>("njets", "evt_", "cms1_evt_", false) );
-   nJets = data_->intUserData.back();
-    */
+//    evtJets.registerBlock( *data_, "jets_", "reference jets,");
+//    data_->intUserData.push_back( new UserData<int>("evt_njets", "number of jets in the reference collection", false) );
+//    nJets = data_->intUserData.back();
 }
 
 void cms1::Jets::fillEventUserData()
 {
-   std::vector<const reco::Candidate*> jets = getJets("AllIterativeCone5CaloJets");
-   data_->addBBCollection("refJets", jets);
-   /*
-   evtJets.fill( getStreamerArguments(data_, jets) );
-   nJets->addData( jets.size() );
-    */
+//   std::vector<const reco::Candidate*> jets = getJets("AllIterativeCone5CaloJets", Cuts());
+//   data_->addBBCollection("refJets", jets);
+//   evtJets.fill( getStreamerArguments(data_, jets) );
+//   nJets->addData( jets.size() );
 }

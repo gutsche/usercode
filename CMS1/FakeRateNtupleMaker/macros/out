@@ -1,0 +1,229 @@
+
+Processing process_QCD_Pt_3000_3500.C...
+Processing: 421368 entries.
+Event: 0
+Event: 1000
+Event: 2000
+Event: 3000
+Event: 4000
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_1.root, got 0 of 13
+Error in <TBranchElement::GetBasket>: File: /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_1.root at byte:0, branch:evt_lego, entry:4920, badread=0
+Event: 5000
+Event: 6000
+Event: 7000
+Event: 8000
+Event: 9000
+Event: 10000
+Event: 11000
+Event: 12000
+Event: 13000
+Event: 14000
+Event: 15000
+Event: 16000
+Event: 17000
+Event: 18000
+Event: 19000
+Event: 20000
+Event: 21000
+Event: 22000
+Event: 23000
+Event: 24000
+Event: 25000
+Event: 26000
+Event: 27000
+Event: 28000
+Event: 29000
+Event: 30000
+Event: 31000
+Event: 32000
+SysError in <TFile::Seek>: cannot seek to position 7738135728422810439 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7738135728422810439 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root, retpos=-1 (Invalid argument)
+Event: 33000
+SysError in <TFile::Seek>: cannot seek to position 7738135728422810439 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root, retpos=-1 (Invalid argument)
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root, got 2606273 of 3418312
+Error in <TBranchElement::GetBasket>: File: /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root at byte:0, branch:evt_lego, entry:3103, badread=0
+SysError in <TFile::Seek>: cannot seek to position 7738135728422810439 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root, retpos=-1 (Invalid argument)
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root, got 2606273 of 3418312
+Error in <TBranchElement::GetBasket>: File: /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root at byte:0, branch:evt_lego, entry:3334, badread=0
+SysError in <TFile::Seek>: cannot seek to position 7738135728422810439 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root, retpos=-1 (Invalid argument)
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root, got 2606273 of 3418312
+Error in <TBranchElement::GetBasket>: File: /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root at byte:0, branch:evt_lego, entry:3565, badread=0
+Event: 34000
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root, got 0 of 13
+Error in <TBranchElement::GetBasket>: File: /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root at byte:0, branch:evt_lego, entry:4026, badread=0
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root, got 0 of 13
+Error in <TBranchElement::GetBasket>: File: /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root at byte:0, branch:trks_p4.fCoordinates.fX, entry:4257, badread=0
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root, got 0 of 13
+Error in <TBranchElement::GetBasket>: File: /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root at byte:0, branch:evt_lego, entry:4488, badread=0
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root, got 0 of 13
+Error in <TBranchElement::GetBasket>: File: /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_105.root at byte:0, branch:evt_lego, entry:4719, badread=0
+Event: 35000
+Event: 36000
+Event: 37000
+Event: 38000
+Event: 39000
+Event: 40000
+Event: 41000
+Event: 42000
+Event: 43000
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_12.root, got 0 of 13
+Error in <TBranchElement::GetBasket>: File: /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_12.root at byte:0, branch:genps_p4.fCoordinates.fX, entry:3987, badread=0
+Event: 44000
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_12.root, got 0 of 13
+Error in <TBranchElement::GetBasket>: File: /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_12.root at byte:0, branch:evt_lego, entry:4216, badread=0
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_12.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_12.root, got 0 of 13
+ file probably overwritten: stopping reporting error messages
+Event: 45000
+Event: 46000
+Event: 47000
+Event: 48000
+Event: 49000
+Event: 50000
+Event: 51000
+Event: 52000
+Event: 53000
+Event: 54000
+Event: 55000
+Event: 56000
+Event: 57000
+Event: 58000
+Event: 59000
+Event: 60000
+Event: 61000
+Event: 62000
+Event: 63000
+Event: 64000
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_18.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_18.root, got 0 of 13
+Event: 65000
+Event: 66000
+Event: 67000
+Event: 68000
+Event: 69000
+Event: 70000
+Event: 71000
+Event: 72000
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668800 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_2.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668800 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_2.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668800 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_2.root, retpos=-1 (Invalid argument)
+Event: 73000
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668800 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_2.root, retpos=-1 (Invalid argument)
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_2.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_2.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_2.root, got 0 of 13
+Event: 74000
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_2.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_2.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_2.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_2.root, got 0 of 13
+Event: 75000
+Event: 76000
+Event: 77000
+Event: 78000
+SysError in <TFile::Seek>: cannot seek to position 7738135728422810439 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_26.root, retpos=-1 (Invalid argument)
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_26.root, got 0 of 13
+Event: 79000
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_26.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_26.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_26.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_26.root, got 0 of 13
+Event: 80000
+Event: 81000
+Event: 82000
+SysError in <TFile::Seek>: cannot seek to position 7738135728422810439 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_27.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7738135728422810439 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_27.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7738135728422810439 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_27.root, retpos=-1 (Invalid argument)
+Event: 83000
+SysError in <TFile::Seek>: cannot seek to position 7738135728422810439 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_27.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7738135728422810439 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_27.root, retpos=-1 (Invalid argument)
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_27.root, got 0 of 13
+Event: 84000
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_27.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_27.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_27.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_27.root, got 0 of 13
+Event: 85000
+Event: 86000
+Event: 87000
+Event: 88000
+Event: 89000
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_28.root, got 0 of 13
+Event: 90000
+Event: 91000
+Event: 92000
+Event: 93000
+Event: 94000
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_29.root, got 0 of 13
+Event: 95000
+Event: 96000
+Event: 97000
+Event: 98000
+Event: 99000
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_3.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_3.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_3.root, got 0 of 13
+Event: 100000
+Event: 101000
+Event: 102000
+SysError in <TFile::Seek>: cannot seek to position 7738135728422810439 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_31.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7738135728422810439 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_31.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7738135728422810439 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_31.root, retpos=-1 (Invalid argument)
+Event: 103000
+SysError in <TFile::Seek>: cannot seek to position 7738135728422810439 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_31.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7738135728422810439 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_31.root, retpos=-1 (Invalid argument)
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_31.root, got 0 of 13
+Event: 104000
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_31.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_31.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_31.root, got 0 of 13
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_31.root, got 0 of 13
+Event: 105000
+Event: 106000
+Event: 107000
+Event: 108000
+Event: 109000
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_32.root, retpos=-1 (Invalid argument)
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_32.root, got 1494017 of 10426568
+Event: 110000
+Event: 111000
+Event: 112000
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_33.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_33.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_33.root, retpos=-1 (Invalid argument)
+Event: 113000
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_33.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_33.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_33.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_33.root, retpos=-1 (Invalid argument)
+Event: 114000
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_33.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_33.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_33.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_33.root, retpos=-1 (Invalid argument)
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_33.root, got 1835630 of 2775240
+Event: 115000
+Event: 116000
+Event: 117000
+Event: 118000
+Event: 119000
+Event: 120000
+Event: 121000
+Event: 122000
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_35.root, retpos=-1 (Invalid argument)
+Event: 123000
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_35.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_35.root, retpos=-1 (Invalid argument)
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_35.root, retpos=-1 (Invalid argument)
+Event: 124000
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_35.root, retpos=-1 (Invalid argument)
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_35.root, got 7203681 of 7592136
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_35.root, retpos=-1 (Invalid argument)
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_35.root, got 7203681 of 7592136
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_35.root, retpos=-1 (Invalid argument)
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_35.root, got 6119326 of 7592136
+SysError in <TFile::Seek>: cannot seek to position 7882536557878668897 in file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_35.root, retpos=-1 (Invalid argument)
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor/070930_02_20/ntuple_35.root, got 1736906 of 7592136
+Error: Symbol G__exception is not defined in current scope  process_QCD_Pt_3000_3500.C:9:
+Error: type G__exception not defined FILE:/uscms/home/gutsche/work/software/CMS1/CMSSW_1_5_2/src/CMS1/FakeRateNtupleMaker/macros/./process_QCD_Pt_3000_3500.C LINE:9
+*** Interpreter error recovered ***

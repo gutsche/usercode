@@ -1,0 +1,54 @@
+070908_231524: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -create -submit -cfg crab_qcd_pt_50_80.cfg
+070908_231856: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -status
+070908_232142: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -kill 3
+070908_232155: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -resubmit 3
+070908_232624: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -create -submit -cfg crab_qcd_pt_50_80.cfg
+070908_233014: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -create -submit -cfg crab_qcd_pt_80_120.cfg
+070908_233206: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -create -submit -cfg crab_qcd_pt_30_50.cfg
+070908_233708: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -status -c crab_qcd_pt_50_80
+070908_233834: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -status -c crab_qcd_pt_80_120
+070930_152707: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -create -submit -cfg crab_qcd_pt_20_30.cfg
+070930_153109: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -create -submit -cfg crab_qcd_pt_20_30.cfg
+070930_153500: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -create -submit -cfg crab_qcd_pt_80_120.cfg
+070930_154115: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -status -c crab_qcd_pt_20_30
+070930_155505: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -status -c crab_qcd_pt_20_30
+070930_160523: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -getoutput 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+070930_160540: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -getoutput 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 -c crab_qcd_pt_20_30
+070930_160928: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -create -cfg crab_qcd_pt_20_30.cfg
+070930_161128: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -submit 1 -c crab_qcd_pt_20_30
+070930_161442: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -status -c crab_qcd_pt_20_30
+070930_163838: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -create -cfg crab_qcd_pt_20_30.cfg
+070930_164057: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -submit 1 -c crab_qcd_pt_20_30
+070930_180206: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -submit -c crab_qcd_pt_20_30
+070930_180502: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -create -submit -cfg crab_qcd_pt_80_120.cfg
+070930_180947: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -create -submit -cfg crab_qcd_pt_3000_3500.cfg
+070930_205132: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -status -c crab_qcd_pt_20_30
+070930_205318: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -status -c crab_qcd_pt_80_120
+070930_205401: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -status -c crab_qcd_pt_3000_3500
+070930_205411: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -getoutput -c crab_qcd_pt_20_30
+070930_205459: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -getoutput -c crab_qcd_pt_80_120
+070930_205512: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -status -c crab_qcd_pt_20_30
+070930_205543: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -getoutput -c crab_qcd_pt_3000_3500
+070930_205551: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -status -c crab_qcd_pt_80_120
+070930_205616: /uscmst1/prod/grid/CRAB_1_5_4/python/crab.py -status -c crab_qcd_pt_3000_3500
+071104_204619: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -create -submit -cfg crab_qcd_pt_80_120.cfg
+071104_204927: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -status
+071104_204946: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -getoutput
+071104_205007: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -status
+071104_210654: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -create -submit -cfg crab_qcd_pt_80_120.cfg
+071104_211135: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -status
+071104_211157: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -getoutput
+071104_211259: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -status
+071104_211523: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -create -submit -cfg crab_qcd_pt_80_120.cfg
+071104_211921: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -status
+071104_211936: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -getoutput
+071104_212108: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -status
+071104_212311: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -create -submit -cfg crab_qcd_pt_80_120.cfg
+071104_212716: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -status
+071104_212730: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -getoutput
+071104_212736: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -status
+071104_213244: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -create -submit -cfg crab_qcd_pt_80_120.cfg
+071104_213703: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -status
+071104_213716: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -status
+071104_213734: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -getoutput
+071104_213744: /uscms/home/gutsche/work/software/CRAB/COMP/CRAB/python/crab.py -status

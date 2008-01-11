@@ -1,0 +1,34 @@
+{
+	TChain *chain = new TChain("event");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_10.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_11.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_12.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_13.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_14.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_15.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_16.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_17.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_18.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_19.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_1.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_20.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_21.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_22.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_23.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_24.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_25.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_26.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_27.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_28.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_29.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_2.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_30.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_3.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_4.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_5.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_6.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_7.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_8.root");
+	chain->Add("dcache:/pnfs/cms/WAX/resilient/gutsche/condor/071104_01_17/ntuple_9.root");
+	cout << "Chain contains: " << chain->GetEntries() << " events." << endl;
+}

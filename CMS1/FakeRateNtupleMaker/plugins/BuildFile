@@ -1,0 +1,20 @@
+<library name=CMS1FakeRateNtupleMakerPlugin file="*.cc">
+<use name=FWCore/Framework>
+<use name=Foundation/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=FWCore/ServiceRegistry>>
+<use name=DataFormats/MuonReco>
+<use name=CMS1/BaseAnalyzer>
+<use name=CMS1/Muons>
+<use name=CMS1/Electrons>
+<use name=CMS1/Jets>
+<use name=CMS1/MET>
+<use name=CMS1/EventHyp>
+<use name=DataFormats/Math>
+<use name=root>
+<use name=SimDataFormats/HepMCProduct>
+<use name=clhep>
+<use name=CMS1/FakeRateNtupleMaker>
+</library>
+<Flags CXXFLAGS=-g>
+

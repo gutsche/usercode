@@ -1,0 +1,25 @@
+# -*-sh-*-
+module fakeRateNtupleMakerFW = FakeRateNtupleMakerFW
+{
+  # selection
+  untracked string tightMuonType     = "VeryLooseGlobalMuons"
+  untracked string looseMuonType     = "VeryLooseGlobalMuons"
+
+  untracked string metMuonType       = "AllGlobalMuons"
+  untracked string referenceMuonType = "AllGlobalMuons"
+  
+  untracked string tightElectronType     = "TightElectrons"
+  untracked string looseElectronType     = "LooseElectrons"
+  untracked string referenceElectronType = "AllElectrons"
+  
+  untracked string jetType           = "LooseIterativeCone5CaloJets"
+  untracked string referenceJetType  = "AllIterativeCone5CaloJets"
+  untracked string correctedJetType  = "MCJetCorJetIcone5"
+
+  untracked double crossSection = 0
+
+  # ntuples stuff
+  untracked bool   makeNtuples           = true
+  untracked bool   candidateBasedNtuples = false
+  untracked string fileName              = "ntuple.root"
+}
