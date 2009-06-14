@@ -1,0 +1,98 @@
+\documentclass{cmspaper}
+
+\usepackage[pdftex]{graphicx}
+
+% bibstyle
+\bibliographystyle{unsrt}
+
+\begin{document}
+
+\begin{titlepage}
+
+  \analysisnote{2009/XXX}
+
+  \date{\today}
+
+  \title{STEP'09: Scale Testing for the Experimental Program in 2009}
+
+  \begin{Authlist}
+    D.~Bonacorsi
+    \Instfoot{bologna}{INFN Bologna, Italy}
+     O.~Gutsche
+    \Instfoot{fnal}{Fermi National Accelerator Laboratory, Batavia, Illinois}
+  \end{Authlist}
+
+  % if needed, use the following:
+  \collaboration{CMS collaboration}
+
+  \begin{abstract}
+    This notes presents the STEP'09 tests and their post mortem
+    analysis as well as lessons learned for the CMS computing
+    infrastructure and its operation.
+  \end{abstract} 
+
+
+\end{titlepage}
+
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+\label{sec:intro}
+
+\newpage
+
+\section{Tests}
+\label{sec:tests}
+
+% T0 test
+\input{t0}
+
+% T1 pre-staging and processing test
+\input{t1}
+
+% transfer tests
+\input{transfer}
+
+% analysis tests
+\input{analysis}
+
+\newpage
+
+\section{Site reports}
+\label{sec:sites}
+
+% ASGC
+\input{asgc}
+
+% CNAF
+\input{cnaf}
+
+% FNAL
+\input{fnal}
+
+% FZK
+\input{fzk}
+
+% IN2P3
+\input{in2p3}
+
+% PIC
+\input{pic}
+
+% RAL
+\input{ral}
+
+\newpage
+
+\section{Conclusions}
+\label{sec:con}
+
+
+% \addcontentsline{toc}{section}{References}
+%\begin{thebibliography}{99}
+%\end{thebibliography}
+
+\end{document}
